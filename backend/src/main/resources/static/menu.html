@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html project-id="P201804111903105551018ozUvjWVkVGo" data-site="TU_MOM" data-page="menu" page-id="PG201804131339108411000P97hMYKNBo7" data-language="ko" contextPath="/TU_Platform" class=' w-mod-js w-mod-no-touch w-mod-video w-mod-no-ios'>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <meta name='generator' content='Mica' />
+    <meta http-equiv='CACHE-CONTROL' content='NO-CACHE' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <link rel='stylesheet' type='text/css' href='/TU_Platform/Content/css/site.css' />
+    <link rel='stylesheet' type='text/css' href='/TU_Platform/Content/jqwidgets/styles/jqx.base.css' />
+    <link rel='stylesheet' type='text/css' href='/TU_Platform/Content/theme/css/datetimepicker/jquery.datetimepicker.css' />
+    <link rel="stylesheet" type="text/css" href="/TU_Platform/TU_MOM.css"/>
+
+    <script src='/TU_Platform/Content/js/jquery.min-1.11.1.js'></script>
+    <script src='/TU_Platform/Content/js/jquery-ui.min.js'></script>
+    <script src='/TU_Platform/Content/js/normalize.js'></script>
+    <script src='/TU_Platform/Content/amcharts/amcharts.js'></script>
+    <script src='/TU_Platform/Content/amcharts/serial.js'></script>
+    <script src='/TU_Platform/Content/theme/js/plugins/jqGrid/jquery.jqGrid.min.js'></script>
+    <script src='/TU_Platform/Content/theme/js/plugins/jqGrid/i18n/grid.locale-en.js'></script>
+    <script src='/TU_Platform/Content/theme/js/plugins/bootstrap/bootstrap.min.js'></script>
+    <script src='/TU_Platform/Content/theme/js/plugins/select2/select2.min.js'></script>
+    <script src="/TU_Platform/Content/theme/js/plugins/datetimepicker/jquery.datetimepicker.full.js"></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxcore.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxlistbox.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxcombobox.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxexpander.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxsplitter.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxbuttons.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxscrollbar.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxdata.js'></script>
+    <script src="/TU_Platform/Content/jqwidgets/jqxmenu.js"></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxtree.js'></script>
+    <script src='/TU_Platform/Content/jqwidgets/jqxpanel.js'></script>
+    <script src="/TU_Platform/Content/jqwidgets/jqxnotification.js"></script>
+
+    <!-- MICA -->
+    <script src="/TU_Platform/Content/js/common.js"></script>
+    <script src='/TU_Platform/Content/js/mica.js'></script>
+    <script src="/TU_Platform/Content/js/mica/export.js"></script>
+    <script src="/TU_Platform/Content/js/mica/mica.common.js"></script>
+    
+    <!-- auiGrid -->
+	<link href="/TU_Platform/Content/AUIGrid/AUIGrid_style.css" rel="stylesheet" type="text/css">
+	<script src="/TU_Platform/Content/AUIGrid/AUIGridLicense.js"></script>
+	<script src="/TU_Platform/Content/AUIGrid/AUIGrid.js"></script>
+   	<link href="/TU_Platform/Content/css/auigridEditor.css" rel="stylesheet">
+	<!--  auiGrid Excel Export -->
+	<script src="/TU_Platform/Content/AUIGrid/FileSaver.min.js"></script>
+	<!-- echart -->
+	<script src="/TU_Platform/Content/PopUp/EChart/js/echarts/echarts.min.js"></script>
+	
+	<!-- new Common -->
+	<script src="/TU_Platform/Content/resources/js/common.js" type="text/javascript" ></script> 
+	
+    <!-- 다국어 -->
+    <script src="/TU_Platform/Content/js/regional.js"></script>
+	<script type="text/javascript" src="/TU_Platform/TU_MOM.lang.js"></script>
+
+    <script type="text/javascript" src="/TU_Platform/TU_MOM.common.js"></script> 
+</head>
+<body style="overflow:auto;">
+	<div class="section">
+		<div tmpIconHTML="<div class='fa undefined'></div>" class="mom-logo"></div>
+		<div tmpIconHTML="<div class='fa undefined'></div>" class="w-clearfix topbar">
+			<div class="navicon-right">
+				<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block btnrightmenu">
+					<div tmpIconHTML="<div class='fa fa-bell-o'></div>" data-undefined="fa-bell-o" class="w-icon fa fa-bell-o icon"></div>
+					<div class="number"></div>
+				</a>
+				<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block btnrightmenu">
+					<div tmpIconHTML="<div class='fa fa-cog'></div>" data-undefined="fa-cog" class="w-icon fa fa-cog icon"></div>
+				</a>
+			</div>
+			<div class="usernav">
+				<div class="w-dropdown menu-sam-width userdd">
+					<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width useddropdown">
+						<div>Admin</div>
+						<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down"></div>
+					</div>
+					<nav class="w-dropdown-list header-nav userdropdownlist">
+						<ul class="depth2 userdropdownnav">
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="usernavbar">
+								<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-clearfix w-inline-block userlink">
+									<div tmpTabId="five" tmpIconHTML="<div class='fa fa-user'></div>" data-undefined="fa-user" class="w-icon fa fa-user icon r5 user"></div>
+									<div multi-lang="" style="display:none;" class="textblock">Edit Profile</div>
+								</a>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="usernavbar">
+								<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-clearfix w-inline-block userlink">
+									<div tmpTabId="four" tmpIconHTML="<div class='fa fa-star-o'></div>" data-undefined="fa-star-o" class="w-icon fa fa-star-o icon r5 user"></div>
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Favorites</div>
+								</a>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="usernavbar">
+								<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-clearfix w-inline-block userlink">
+									<div tmpTabId="three" tmpIconHTML="<div class='fa fa-sign-out'></div>" data-undefined="fa-sign-out" class="w-icon fa fa-sign-out icon r5 user"></div>
+									<div multi-lang="" style="display:none;" class="textblock">Sign Out</div>
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<div tmpIconHTML="<div class='fa undefined'></div>" class="w-clearfix content">
+			<div tmpIconHTML="<div class='fa undefined'></div>" class="layoutmenu">
+				<ul id="ul" class="w-list-unstyled">
+					<li tmpIconHTML="<div class='fa undefined'></div>" class="w-clearfix">
+						<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block navicon-left">
+							<div tmpTabId="seven" tmpIconHTML="<div class='fa fa-chevron-left'></div>" data-undefined="fa-chevron-left" class="w-icon fa fa-chevron-left icon"></div>
+						</a>
+					</li>
+					<li tmpIconHTML="<div class='fa undefined'></div>">
+						<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block lefttab active">
+							<div tmpTabId="six" tmpIconHTML="<div class='fa fa-list-ul'></div>" data-undefined="fa-list-ul" class="w-icon fa fa-list-ul icon b5"></div>
+							<div>M<br>O<br>M</div>
+						</a>
+					</li>
+					<li>
+						<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block lefttab">
+							<div tmpTabId="four" tmpIconHTML="<div class='fa fa-reorder'></div>" data-undefined="fa-reorder" class="w-icon fa fa-reorder icon b5"></div>
+							<div tmpIconHTML="<div class='fa undefined'></div>">M<br>O<br>F</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="contentarea">
+				<div class="w-tabs tabs">
+					<div class="w-tab-menu w-clearfix tabsmenu">
+						<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block arrowbutton">
+							<div tmpTabId="six" tmpIconHTML="<div class='fa fa-angle-left'></div>" data-undefined="fa-angle-left" class="w-icon fa fa-angle-left icon"></div>
+						</a>
+						<a tmpIconHTML="<div class='fa undefined'></div>" data-w-tab="Tab 1" class="w-tab-link selected w--current w-clearfix w-inline-block tablink first">
+							<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Dashboard</div>
+							<div class="close-img"></div>
+						</a>
+						<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block arrowbutton floatr">
+							<div tmpTabId="six" tmpIconHTML="<div class='fa fa-angle-right'></div>" data-undefined="fa-angle-right" class="w-icon fa fa-angle-right icon"></div>
+						</a>
+						<a data-w-tab="Tab 2" class="w-tab-link w-inline-block tablink">
+							<div>Tab 2</div>
+						</a>
+					</div>
+					<div class="w-tab-content tabcontent">
+						<div tmpIconHTML="<div class='fa undefined'></div>" data-w-tab="Tab 1" class="w-tab-pane w--tab-active tabpane"></div>
+						<div data-w-tab="Tab 2" class="w-tab-pane"></div>
+					</div>
+				</div>
+			</div>
+			<div data-animation="default" data-easing2="ease-in-out" widgetId="W2018041313443077410040QmdGzBgE8y" data-duration="200" data-contain="1" class="w-nav navbarleft" data-collapse="bigmedium">
+				<div class="w-container container">
+					<div class="searchbar">
+						<div class="w-clearfix fitterbox">
+							<input maxlength="256" name="field" id="field" placeholder="Search" type="text" class="w-input searchfield" date-format="date"></input>
+							<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block searchbtn">
+								<div tmpTabId="four" tmpIconHTML="<div class='fa fa-search'></div>" data-undefined="fa-search" class="w-icon fa fa-search icon"></div>
+							</a>
+						</div>
+					</div>
+					<nav role="navigation" class="w-nav-menu navmenu">
+						<div class="w-clearfix sidebar-label">
+							<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">NAVIGATION</div>
+						</div>
+						<ul class="depth1 navbarmenu">
+							<li class="depth1-menu w-clearfix nav">
+								<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block navlink active">
+									<div tmpTabId="three" tmpIconHTML="<div class='fa fa-home'></div>" data-undefined="fa-home" class="w-icon fa fa-home icon"></div>
+									<div class="w-clearfix textarea">
+										<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Dashboard</div>
+									</div>
+								</a>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">오더/생산관리</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpIconHTML="<div class='fa fa-cart-arrow-down'></div>" data-undefined="fa-cart-arrow-down" class="w-icon fa fa-cart-arrow-down icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">구매관리</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpTabId="four" tmpIconHTML="<div class='fa fa-shopping-basket'></div>" data-undefined="fa-shopping-basket" class="w-icon fa fa-shopping-basket icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">공정관리</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpTabId="four" tmpIconHTML="<div class='fa fa-road'></div>" data-undefined="fa-road" class="w-icon fa fa-road icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">품질관리</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpTabId="eight" tmpIconHTML="<div class='fa fa-stack-overflow'></div>" data-undefined="fa-stack-overflow" class="w-icon fa fa-stack-overflow icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">출하관리</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpTabId="one" tmpIconHTML="<div class='fa fa-bus'></div>" data-undefined="fa-bus" class="w-icon fa fa-bus icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">마감관리</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpIconHTML="<div class='fa fa-clock-o'></div>" data-undefined="fa-clock-o" class="w-icon fa fa-clock-o icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">기준정보</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpIconHTML="<div class='fa fa-calculator'></div>" data-undefined="fa-calculator" class="w-icon fa fa-calculator icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">관리자</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpTabId="four" tmpIconHTML="<div class='fa fa-group'></div>" data-undefined="fa-group" class="w-icon fa fa-group icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+							<li tmpIconHTML="<div class='fa undefined'></div>" class="depth1-menu w210">
+								<div class="w-dropdown menu-sam-width dropdownmenu">
+									<div tmpIconHTML="<div class='fa undefined'></div>" class="w-dropdown-toggle menu-sam-width w-clearfix navlink">
+										<div class="textblock dptext">프로젝트관리</div>
+										<div tmpIconHTML="<div class='fa fa-angle-down'></div>" class="w-icon fa fa-angle-down icon right"></div>
+										<div tmpTabId="three" tmpIconHTML="<div class='fa fa-folder-open'></div>" data-undefined="fa-folder-open" class="w-icon fa fa-folder-open icon left"></div>
+									</div>
+									<nav class="w-dropdown-list header-nav dropdownlist">
+										<ul class="depth2 depth1 menusub depth2">
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+											<li class="navitem">
+												<a href="#" class="w-clearfix w-inline-block navitemlink">
+													<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Cards &amp; Widgets</div>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</li>
+						</ul>
+					</nav>
+					<div class="w-nav-button">
+						<div class="w-icon fa fa-angle-down"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div tmpIconHTML="<div class='fa undefined'></div>" class="w-clearfix footer">
+			<div class="footerbtns">
+				<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-inline-block btnfooter">
+					<div tmpTabId="six" tmpIconHTML="<div class='fa fa-th-large'></div>" data-undefined="fa-th-large" class="w-icon fa fa-th-large icon"></div>
+				</a>
+			</div>
+			<div class="footernav">
+				<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-clearfix w-inline-block btnnav">
+					<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Dashboard</div>
+					<div tmpTabId="six" tmpIconHTML="<div class='fa fa-angle-right'></div>" data-undefined="fa-angle-right" class="w-icon fa fa-angle-right icon l3"></div>
+				</a>
+				<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-clearfix w-inline-block btnnav">
+					<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">구매관리</div>
+					<div tmpTabId="six" tmpIconHTML="<div class='fa fa-angle-right'></div>" data-undefined="fa-angle-right" class="w-icon fa fa-angle-right icon l3"></div>
+				</a>
+				<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-clearfix w-inline-block btnnav">
+					<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock">Material Ledger</div>
+					<div tmpTabId="six" tmpIconHTML="<div class='fa fa-angle-right'></div>" data-undefined="fa-angle-right" class="w-icon fa fa-angle-right icon l3"></div>
+				</a>
+				<a tmpIconHTML="<div class='fa undefined'></div>" href="#" class="w-clearfix w-inline-block btnnav active">
+					<div tmpIconHTML="<div class='fa undefined'></div>" class="textblock" multi-lang="" style="display:none;">MESSAGES11103</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+	<script type="text/javascript" src="./menu.js"></script>
+</html>

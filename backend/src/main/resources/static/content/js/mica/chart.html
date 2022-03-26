@@ -1,0 +1,58 @@
+﻿﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Mica">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="/micaweb/Content/css/site.css">
+
+    <script src="/micaweb/Content/js/jquery.min-1.11.1.js"></script>
+    <script src="/micaweb/Content/js/jquery-ui.min.js"></script>
+    <script src="/micaweb/Content/amcharts/amcharts.js"></script>
+    <script src="/micaweb/Content/theme/js/plugins/jqGrid/jquery.jqGrid.min.js"></script>
+    <script src="/micaweb/Content/theme/js/plugins/jqGrid/i18n/grid.locale-en.js"></script>
+    <script src="/micaweb/Content/js/mica.js"></script>
+    <script src="/micaweb/PopUp/EChart/js/echarts/echarts.min.js"></script>
+    
+    <style>
+        .export-grouping-header-1 {
+            font-size: 14px;
+            background: rgb(234, 241, 199);
+            font-weight: bold;
+        }
+    </style>
+    <script src="/micaweb/Content/js/mica/mica.common.js"></script>
+    <script src="/micaweb/Content/js/mica/ajaxService.js"></script>
+
+    <script src="/micaweb/Content/amcharts/serial.js"></script>
+</head>
+<body>
+    <div id="chart" style="height:100%; width:100%;">
+        <div style="top: 45%;position: absolute;left: 45%;font-size: x-large; height:100%; width:100%;" class="fa fa-area-chart"></div>
+    </div>
+    <script>
+        var gOptions = { colModel: [{ name: "test" }], data: [] }
+        $("html").css({ overflow: "hidden" });
+        frmUrl = location.href;
+        varCut = frmUrl.indexOf("?");
+        varCheck = frmUrl.substring(varCut + 1);
+        var iframe = $(parent.document.all[varCheck]);
+        var value = iframe.attr("value");
+        var param = JSON.parse(value);
+        if (param.chart != null) {
+            
+            var chart = document.getElementById('chart');
+            var myChart = echarts.init(chart);
+            myChart.setOption(param.chart);
+            
+            window.onresize = function(){
+                myChart.resize();
+            };
+            
+             //micaCommon.chart.set("#chart", param, param.options, param.callBack);
+        }
+    </script>
+</body>
+</html>

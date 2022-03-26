@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUSM3020">
+	<resultMap id="get_defaultInfo_result" type="com.mom.dto.LowerHashMap">
+	<result property="PROGRAM_ID" column="PROGRAM_ID" />
+	<result property="MENU_ID" column="MENU_ID" />
+	<result property="GRID_PROPERTY"   column="GRID_PROPERTY"/>
+	<result property="COLUMN_PROPERTY" column="COLUMN_PROPERTY" jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="SEARCH_PROPERTY" column="SEARCH_PROPERTY" jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="POPUP_PROPERTY"  column="POPUP_PROPERTY"  jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="BUTTON_PROPERTY" column="BUTTON_PROPERTY"/>
+	</resultMap>
+
+	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+		SELECT MCD.COMPANY_CD
+	         , MCD.COMPANY_NM
+		     , MCD.DIVISION_CD
+		     , MCD.DIVISION_NM
+		     , MCC.CODE_CATEGORY
+		     , MCC.CODE_CATEGORY_NM
+		     , MCC.SORT_NO
+		     , MCC.USE_YN
+		     , MCC.DESCRIPTION
+		FROM   MOM_COM_DIV_V MCD
+	         , MOM_CODE_CATEGORY MCC
+		WHERE  MCD.COMPANY_CD  = MCC.COMPANY_CD   
+		AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+		AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+		ORDER BY MCD.COMPANY_CD, MCD.DIVISION_CD, MCC.SORT_NO, MCC.CODE_CATEGORY
+	</select>
+    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+        INSERT INTO MOM_CODE_CATEGORY(
+							           COMPANY_CD
+									 , DIVISION_CD
+									 , CODE_CATEGORY
+									 , CODE_CATEGORY_NM
+									 , SORT_NO
+									 , USE_YN
+									 , DESCRIPTION
+									 , CREATE_BY
+									 , CREATE_DATE
+									 , UPDATE_BY
+									 , UPDATE_DATE
+					         )     
+        VALUES
+                <foreach item="item" collection="list" index="i" separator=" " open="">
+				          (    TRIM(#{item.companyCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.divisionCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.categoryCd, jdbcType=VARCHAR})
+				             , #{item.categoryNm, jdbcType=VARCHAR}
+				             , TRIM(#{item.sortNo, jdbcType=INTEGER})
+				             , UPPER(TRIM(#{item.useYn, jdbcType=VARCHAR}))
+				             , #{item.description, jdbcType=VARCHAR}     
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  
+				          )		             
+	            </foreach>			               
+   </insert>   
+   <update id="modify_defaultInfo1" parameterType="java.util.List">     
+      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+        UPDATE MOM_CODE_CATEGORY SET 
+		       CODE_CATEGORY_NM = #{item.categoryNm, jdbcType=VARCHAR}
+             , SORT_NO          = #{item.sortNo, jdbcType=INTEGER}
+		     , USE_YN 		    = #{item.useYn, jdbcType=VARCHAR}
+ 		     , DESCRIPTION      = #{item.description, jdbcType=VARCHAR}
+		     , UPDATE_BY        = #{item.userId, jdbcType=VARCHAR}
+		     , UPDATE_DATE      = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+         <where>
+               COMPANY_CD     = #{item.companyCd} 
+          AND  DIVISION_CD    = #{item.divisionCd} 
+          AND  CODE_CATEGORY  = #{item.categoryCd} 
+         </where>
+      </foreach>
+   </update> 
+	<delete id = "remove_defaultInfo1" parameterType ="java.util.List">
+                DELETE FROM MOM_CODE_CATEGORY
+               <where>
+               <foreach collection="list" item="item"  open="" separator="OR" close="">
+               (      COMPANY_CD    = #{item.companyCd,   jdbcType=VARCHAR}
+                  AND DIVISION_CD   = #{item.divisionCd,  jdbcType=VARCHAR}
+                  AND CODE_CATEGORY = #{item.categoryCd,      jdbcType=VARCHAR}
+               )      
+             </foreach>
+            </where>  
+    </delete>
+    <insert id="upsert_defaultInfo2" parameterType="java.util.List">
+	    MERGE INTO MOM_GROUP_CODE MGC
+	    USING (
+	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
+	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
+	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
+	                              TRIM(#{item.codeCategory, jdbcType=VARCHAR}) 																   as codeCategory,   
+	                              TRIM(#{item.groupCd, jdbcType=VARCHAR}) 																       as groupCd,   
+	                              #{item.groupCodeNm, jdbcType=VARCHAR} 																       as groupCodeNm,      														   
+					              TRIM(#{item.parentGroupCd, jdbcType=VARCHAR})																   as parentGroupCd,             															   
+					              #{i} 																                                           as sortNo, 	
+					              TRIM(#{item.codeType, jdbcType=VARCHAR}) 	  												                   as codeType, 												           
+					              TRIM(#{item.useYn, jdbcType=VARCHAR}) 	  												                   as useYn, 
+					              #{item.description, jdbcType=VARCHAR}																           as description,
+					              TRIM(#{item.userId, jdbcType=VARCHAR})       															       as createBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
+					              TRIM(#{item.userId, jdbcType=VARCHAR})                                                                       as updateBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
+	             FROM DUAL
+	        </foreach>
+	    ) PARAM 
+	    ON ( MGC.COMPANY_CD   = PARAM.companyCd
+	    AND  MGC.DIVISION_CD  = PARAM.divisionCd
+	    AND  MGC.GROUP_CD     = PARAM.groupCd	   	    	    
+	       )
+	    WHEN MATCHED THEN
+	    UPDATE
+	    SET		  MCC.CODE_CATEGORY_NM  = PARAM.menuNm
+	            , MCC.SORT_NO           = PARAM.sortNo
+	            , MCC.USE_YN            = PARAM.useYn
+	            , MCC.DESCRIPTION       = PARAM.description
+			    , MCC.UPDATE_BY         = PARAM.updateBy
+			    , MCC.UPDATE_DATE       = PARAM.updateDate
+			    	       
+	    WHEN NOT MATCHED THEN
+		INSERT (  COMPANY_CD
+			    , DIVISION_CD
+				, CODE_CATEGORY
+				, CODE_CATEGORY_NM
+				, SORT_NO
+				, USE_YN
+				, DESCRIPTION
+				, CREATE_BY
+				, CREATE_DATE
+				, UPDATE_BY
+				, UPDATE_DATE
+	    )   
+	    VALUES ( PARAM.companyCd
+			   , PARAM.divisionCd
+               , PARAM.categoryCd
+			   , PARAM.categoryNm
+			   , PARAM.sortNo
+	           , PARAM.useYn
+	           , PARAM.description
+			   , PARAM.createBy
+			   , PARAM.createDate
+			   , PARAM.updateBy
+			   , PARAM.updateDate
+	    )	 
+	</insert>
+	
+	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	    SELECT MCD.COMPANY_CD
+	         , MCD.COMPANY_NM
+		     , MCD.DIVISION_CD
+		     , MCD.DIVISION_NM
+		     , MCC.CODE_CATEGORY
+		     , MCC.CODE_CATEGORY_NM
+		     , MGC.PARENT_GROUP_CD
+		     , MGC.GROUP_CD
+		     , MGC.GROUP_CODE_NM
+		     , MGC.CODE_TYPE
+	         , ( SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(#{companyCd, jdbcType=VARCHAR}, #{divisionCd, jdbcType=VARCHAR}, 'SM0014',CODE_TYPE,#{langCd, jdbcType=VARCHAR})
+	             FROM   DUAL  ) AS CODE_TYPE_NM
+		     , MGC.SORT_NO 
+		     , MGC.USE_YN
+		FROM   MOM_COM_DIV_V MCD
+		     , MOM_CODE_CATEGORY MCC
+		     , MOM_GROUP_CODE MGC
+		WHERE  MCC.COMPANY_CD     = MCD.COMPANY_CD   
+		AND    MCC.DIVISION_CD    = MCD.DIVISION_CD
+		AND    MCC.COMPANY_CD     = MGC.COMPANY_CD
+		AND    MCC.DIVISION_CD    = MGC.DIVISION_CD
+		AND    MCC.CODE_CATEGORY  = MGC.CODE_CATEGORY
+		AND    MCC.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
+		AND    MCC.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
+	    <if test = "codeCategory != null and codeCategory != ''">
+		AND    MCC.CODE_CATEGORY  = #{codeCategory, jdbcType=VARCHAR}
+	    </if>
+		<if test = "groupCdNm != null and groupCdNm != ''">
+		AND  (UPPER(MGC.GROUP_CD)  LIKE '%' || UPPER(#{groupCdNm, jdbcType=VARCHAR}) || '%'  OR UPPER(MGC.GROUP_CODE_NM)  LIKE '%' || UPPER(#{groupCdNm, jdbcType=VARCHAR}) || '%')
+		</if>
+		ORDER BY MCD.COMPANY_CD, MCD.DIVISION_CD, MCC.SORT_NO, MGC.GROUP_CD 
+	</select>
+	<select id="get_defaultInfo3" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	    SELECT *
+        FROM   MOM_CODE_V MV
+        WHERE  1=1
+        AND    MV.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+		AND    MV.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+		<if test = "groupCd != null and groupCd != ''">
+	    AND    MV.GROUP_CD        = #{groupCd, jdbcType=VARCHAR}
+	    </if>
+	</select>
+    <select id="get_defaultInfo4" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+		    SELECT MC.COMPANY_CD
+	     , MDV.COMPANY_NM
+	     , MC.DIVISION_CD
+	     , MDV.DIVISION_NM
+	     , MC.CODE                     AS LANG_CD
+	     , MC.CODE_NM             AS LANG_NM
+	     , #{code, jdbcType=VARCHAR}       AS CODE
+	     , (SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE(MC.COMPANY_CD,MC.DIVISION_CD,MC.CODE,'CODE',#{code, jdbcType=VARCHAR})
+	            FROM   DUAL ) AS CODE_NM
+	FROM   MOM_CODE MC
+	     , MOM_DIVISION_V MDV
+	WHERE  MC.COMPANY_CD  = MDV.COMPANY_CD
+	AND    MC.DIVISION_CD = MDV.DIVISION_CD
+	AND    MC.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND    MC.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	AND    MC.GROUP_CD    = 'SM0012'
+	AND    MC.USE_YN      = 'Y'
+	ORDER BY MC.COMPANY_CD, MC.DIVISION_CD, MC.SORT_NO
+	</select>
+</mapper>

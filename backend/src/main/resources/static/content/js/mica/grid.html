@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Mica">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="/micaweb/Content/css/site.css">
+   	<link rel="stylesheet" href="/micaweb/Content/AUIGrid/AUIGrid_style.css">
+   	<link rel="stylesheet" href="/micaweb/Content/css/auigridEditor.css">
+    <script src="/micaweb/Content/js/jquery.min-1.11.1.js"></script>
+    <script src="/micaweb/Content/js/jquery-ui.min.js"></script>
+    <script src="/micaweb/Content/theme/js/plugins/jqGrid/jquery.jqGrid.min.js"></script>
+    <script src="/micaweb/Content/theme/js/plugins/jqGrid/i18n/grid.locale-en.js"></script>
+    <script src="/micaweb/Content/js/mica.js"></script>
+	<script src="/micaweb/Content/AUIGrid/AUIGridLicense.js"></script>
+	<script src="/micaweb/Content/AUIGrid/AUIGrid.js"></script>
+	<style>
+        .export-grouping-header-1 {
+            font-size: 14px;
+            background: rgb(234, 241, 199);
+            font-weight: bold;
+        }
+    </style>
+    <script src="/micaweb/Content/js/mica/mica.common.js"></script>
+    <script src="/micaweb/Content/js/mica/ajaxService.js"></script>
+</head>
+<body>
+
+<div id="tableDiv" style="height:100%; width:100%;">
+    <div style="top: 45%;position: absolute;left: 45%;font-size: x-large;" class="fa fa-th"></div>
+    <table id="table" style="height:100%; width:100%;"></table>
+    <div id="tablePage"></div>
+</div>
+<script> 
+    AUIGrid.destroy("#table");
+    frmUrl = location.href;
+    varCut = frmUrl.indexOf("?");
+    varCheck = frmUrl.substring(varCut + 1);
+    var iframe = $(parent.document.all[varCheck]);
+    var value = iframe.attr("value");
+    var param = JSON.parse(value);
+
+    if(param.gridProps != null && param.gridProps["groupingSummarySetStyle"])
+   	{
+    	param.gridProps["rowStyleFunction"] = function(rowIndex, item) {
+            if(item._$isGroupSumField) {
+                switch(item._$depth) { 
+                case 2:
+                    return "aui-grid-row-depth1-style";
+                case 3:
+                    return "aui-grid-row-depth2-style";
+                case 4:
+                    return "aui-grid-row-depth3-style";
+                default:
+                    return "aui-grid-row-depth-default-style";
+                }
+            }
+            return null;
+        };
+   	}
+   	
+    
+    AUIGrid.create("#table", param.colModel, param.gridProps);
+	
+	// AUIGrid Footer적용
+	if (param.gridProps != null)
+		if(param.gridProps["showFooter"])
+			AUIGrid.setFooter("#table", param.footerData);
+
+	// column hide
+	var hideColumn = [];
+	for (var i = 0; i < param.colModel.length; i++) {
+		if (param.colModel[i].hide)
+			hideColumn.push(param.colModel[i].dataField)
+	}
+	AUIGrid.hideColumnByDataField("#table", hideColumn)
+	// column fixed
+	AUIGrid.setFixedColumnCount("#table",param.columnFixed);
+	// AUIGrid Data 삽입
+	
+	for (var fnc in param.gridEvent) {
+		AUIGrid.bind("#table", fnc, function(event){
+			return new Function(event, eval(param.gridEvent[event.type]));
+		});
+	}
+	AUIGrid.setGridData("#table", param.data);
+	 $(window).on("resize", function () {
+	     AUIGrid.resize("#table",iframe.width(),iframe.height()) 
+	 });
+</script>
+</body>
+</html>

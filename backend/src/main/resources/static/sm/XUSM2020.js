@@ -1,0 +1,69 @@
+
+var menuId = 'XUSM2020';
+var XUSM2020 = {
+	initParam		:  undefined,
+	columnProperty1	: undefined,
+	createdFlag		: undefined,
+	init: function() {
+		var that = this;	
+		that.event();
+		
+		//momWidget.findBtnClicked(0, {}, true, 'INIT',menuId,XUSM2020,[]);
+	},
+	event: function() {
+		var that = this;
+		var isExpanded = true;
+		$(document).on("click", "#showBigMenuBtn1", function() {
+			
+			if (!isExpanded) {
+				AUIGrid.expandAll(momWidget.grid[0]);
+				isExpanded = true;
+			} else {
+				AUIGrid.collapseAll(momWidget.grid[0]);
+				isExpanded = false;
+			}
+		});
+	},
+	cellClickCallBack: function(index,e) {
+		if(index==0){
+			var item = e.item;		
+			var rowIdField;
+			var rowId;
+
+		/*	rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); // rowIdField 얻기
+			rowId = item[rowIdField];
+
+			AUIGrid.setCheckedRowsByIds(e.pid, rowId);*/
+			momWidget.findBtnClicked(1, {menuId:item.menuId,menuNm:item.menuNm}, true, 'INIT',menuId,XUSM2020,[]);
+		}
+	
+	},
+	saveCallInit: function(index,your,action,btnId,param){
+		if(index == 1){
+			for(var i=0;i<param.length;i++){
+				param[i].msgType = 'MENU';
+				//param[i].menuId   = AUIGrid.getGridData(momWidget.grid[index])[0]['menuId'];
+			}
+		}
+		
+		
+	},
+	searchCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==1 && btnId =='saveBtn2'){	
+			var gridItem = AUIGrid.getGridData(momWidget.grid[index])
+			if(gridItem =='FAIL'){
+				result = 'FAIL';
+				return;
+			}
+			param.menuId = gridItem[0].menuId;
+			result = 'SUCCESS';			
+		}
+
+	}	
+};
+
+$(document).ready(function(event){
+	momWidget.init(1, menuId, XUSM2020);
+	momWidget.init(2, menuId, XUSM2020);
+	XUSM2020.init();
+});

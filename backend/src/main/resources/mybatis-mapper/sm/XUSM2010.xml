@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUSM2010">
+	<select id="get_menu" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+		SELECT  PARENT_MENU_ID AS PARENT
+               ,MENU_ID AS ID
+               ,MENU_NM
+               ,MENU_TYPE
+               , ( SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(#{companyCd, jdbcType=VARCHAR}, #{divisionCd, jdbcType=VARCHAR}, 'SM0015',MENU_TYPE,#{langCd, jdbcType=VARCHAR})
+	                                       FROM   DUAL  ) AS MENU_TYPE_NM
+		       ,URL
+		       ,PROGRAM_ID
+		       ,ICON,SORT_NO
+		       ,USE_YN
+		       ,PARAM     
+		FROM  MOM_MENU
+		ORDER BY SORT_NO
+	</select>
+    <select id="get_menuTree"  parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+          SELECT LEVEL
+               , PARENT_MENU_ID AS PARENT
+               , MENU_ID AS ID 
+               , MENU_NM
+               , MENU_TYPE
+               , ( SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(#{companyCd, jdbcType=VARCHAR}, #{divisionCd, jdbcType=VARCHAR}, 'SM0015',MENU_TYPE,#{langCd, jdbcType=VARCHAR})
+	                                       FROM   DUAL  ) AS MENU_TYPE_NM
+               , PROGRAM_ID
+               , SORT_NO
+               , URL
+               , ICON
+               , PARAM
+               , USE_YN
+          FROM  MOM_MENU  A   
+                START WITH A.PARENT_MENU_ID = '-' 
+                CONNECT BY PRIOR A.MENU_ID = A.PARENT_MENU_ID 
+                ORDER SIBLINGS BY A.SORT_NO, A.MENU_ID        
+    </select>
+    <update id="upsert_menu" parameterType="java.util.List">
+    MERGE INTO MOM_MENU MM
+    USING (
+        <foreach collection="list" item="item" open="" close="" index="index" separator="UNION">
+             SELECT
+                          TRIM(#{item.menuId, jdbcType=VARCHAR})           																   as menuId
+				             , #{item.menuNm, jdbcType=VARCHAR}             															   as menuNm
+                             , TRIM(#{item.menuType, jdbcType=VARCHAR}) 																   as menuType
+				             , TRIM(#{item.parentMenuId, jdbcType=VARCHAR}) 													           as parentMenuId
+				             , TRIM(#{item.sortNo, jdbcType=INTEGER})      												                   as menuSeq
+				             , TRIM(#{item.url, jdbcType=VARCHAR})         													               as url
+				             , TRIM(#{item.icon, jdbcType=VARCHAR})         														       as icon
+				             , TRIM(#{item.useYn, jdbcType=VARCHAR})        															   as useYn
+				             , TRIM(#{item.description, jdbcType=VARCHAR}) 																   as description   
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})       															   as createBy
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR}) as createDate
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})                                                                      as updateBy
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR}) as updateDate
+				             , 'Y'           																							   as standardFlag
+				             , TRIM(#{item.param, jdbcType=VARCHAR})                                                                       as param
+				             , TRIM(#{item.programId, jdbcType=VARCHAR})                                                                   as programId
+             FROM DUAL
+        </foreach>
+    ) PARAM 
+    ON (MM.menu_ID = PARAM.menuId)
+    WHEN MATCHED THEN
+    UPDATE
+        SET
+		      MM.MENU_NM        = PARAM.menuNm
+            , MM.SORT_NO        = PARAM.menuSeq
+            , MM.MENU_TYPE      = PARAM.menuType
+            , MM.URL            = PARAM.url
+		    , MM.ICON 		    = PARAM.icon
+		    , MM.USE_YN 		= PARAM.useYn
+ 		    , MM.DESCRIPTION 	= PARAM.description
+		    , MM.UPDATE_BY      = PARAM.updateBy
+		    , MM.UPDATE_DATE    = PARAM.updateDate
+		    , MM.STANDARD_FLAG  = PARAM.standardFlag
+		    , MM.PARAM          = PARAM.param
+		    , MM.PROGRAM_ID     = PARAM.programId
+
+    WHEN NOT MATCHED THEN
+    INSERT (
+	            MENU_ID
+	         ,  MENU_NM
+	         ,  MENU_TYPE
+	         ,  PARENT_MENU_ID
+	         ,  SORT_NO
+	         ,  URL
+	         ,  ICON
+	         ,  USE_YN
+	         ,  DESCRIPTION
+	         ,  CREATE_BY
+	         ,  CREATE_DATE
+	         ,  UPDATE_BY
+	         ,  UPDATE_DATE
+	         ,  STANDARD_FLAG
+	         ,  PARAM
+	         ,  PROGRAM_ID 
+	       )   
+    VALUES (
+             PARAM.menuId
+		   , PARAM.menuNm
+		   , PARAM.menuType
+		   , PARAM.parentMenuId
+           , PARAM.menuSeq
+           , PARAM.url
+		   , PARAM.icon
+		   , PARAM.useYn
+ 		   , PARAM.description
+		   , PARAM.createBy
+		   , PARAM.createDate
+		   , PARAM.updateBy
+		   , PARAM.updateDate
+		   , PARAM.standardFlag
+		   , PARAM.param
+		   , PARAM.programId
+    )
+</update>
+    <insert id="create_menu" parameterType="java.util.List">  
+        INSERT INTO MOM_MENU(
+					            MENU_ID
+					         ,  MENU_NM
+					         ,  MENU_TYPE
+					         ,  PARENT_MENU_ID
+					         ,  SORT_NO
+					         ,  URL
+					         ,  ICON
+					         ,  USE_YN
+					         ,  DESCRIPTION
+					         ,  CREATE_BY
+					         ,  CREATE_DATE
+					         ,  UPDATE_BY
+					         ,  UPDATE_DATE
+					         ,  STANDARD_FLAG
+					         ,  PARAM
+					         ,  PROGRAM_ID )     
+        VALUES
+                <foreach item="item" collection="list" index="i" separator=" " open="">
+				           (   TRIM(#{item.menuId, jdbcType=VARCHAR})
+				             , #{item.menuNm, jdbcType=VARCHAR}
+				             , TRIM(#{item.menuType, jdbcType=VARCHAR})
+				             , TRIM(#{item.parentMenuId, jdbcType=VARCHAR})
+				             , TRIM(#{item.sortNo, jdbcType=INTEGER})
+				             , TRIM(#{item.url, jdbcType=VARCHAR})
+				             , TRIM(#{item.icon, jdbcType=VARCHAR})
+				             , TRIM(#{item.useYn, jdbcType=VARCHAR})
+				             , TRIM(#{item.description, jdbcType=VARCHAR})     
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+				             , 'Y'
+				             , TRIM(#{item.param, jdbcType=VARCHAR})   
+				             , TRIM(#{item.programId, jdbcType=VARCHAR}) )				             
+	            </foreach>			               
+    </insert>
+    
+    <update id="modify_menu" parameterType="java.util.List">     
+      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+        UPDATE MOM_MENU SET 
+		       MENU_NM        = #{item.menuNm, jdbcType=VARCHAR}
+		     , MENU_TYPE      = #{item.menuType, jdbcType=VARCHAR}
+             , SORT_NO        = #{item.sortNo, jdbcType=INTEGER}
+             , URL            = #{item.url, jdbcType=VARCHAR}
+		     , ICON 		  = #{item.icon, jdbcType=VARCHAR}
+		     , USE_YN 		  = #{item.useYn, jdbcType=VARCHAR}
+ 		     , DESCRIPTION    = #{item.description, jdbcType=VARCHAR}
+		     , UPDATE_BY      = #{item.userId, jdbcType=VARCHAR}
+		     , UPDATE_DATE    = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+		     , STANDARD_FLAG  = #{item.standardFlag, jdbcType=VARCHAR}
+		     , PARAM          = #{item.param, jdbcType=VARCHAR}
+		     , PROGRAM_ID     = #{item.programId, jdbcType=VARCHAR}
+         <where>
+               MENU_ID        = #{item.menuId} 
+         </where>
+      </foreach>
+    </update> 
+    
+    <delete id = "remove_menu" parameterType ="java.util.List">
+            DELETE FROM MOM_MENU
+             <where>
+               <foreach collection="list" item="item"  open="" separator="OR" close="">
+                (PARENT_MENU_ID = #{item.parentMenuId} AND MENU_ID =  #{item.menuId})         
+               </foreach>
+            </where>  
+    </delete>
+    
+    
+</mapper>

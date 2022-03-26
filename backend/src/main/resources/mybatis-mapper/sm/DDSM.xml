@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.DDSM">
+  <select id="get_DDSM0001" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
+	SELECT  CODE
+         ,  CODE_NM AS LABEL
+	FROM    MOM_CODE
+	WHERE   DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND     GROUP_CD    = #{groupCd, jdbcType=VARCHAR}
+	AND     USE_YN      = 'Y'
+	ORDER BY SORT_NO
+  </select> 
+  <select id="get_DDSM0004" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+    SELECT   DEPT_CD AS CODE 
+	     ,   DEPT_CD ||'('|| DEPT_NM ||')' AS LABEL
+    FROM     MOM_DEPARTMENT
+    ORDER BY DEPT_NM
+  </select> 
+
+<!--   <select id="get_DDSM0003" parameterType="java.util.HashMap" resultType="map">
+    SELECT MDDD.DETAIL_ID AS CODE
+    ,      MDDD.DETAIL_NM AS LABEL
+	FROM   MOM_DROP_DOWN MDD
+    ,      MOM_DROP_DOWN_DETAIL MDDD
+	WHERE 1=1
+    AND   MDD.COMPANY_CD  = MDDD.COMPANY_CD
+    AND   MDD.DIVISION_CD = MDDD.DIVISION_CD
+    AND   MDD.DROPDWON_ID = MDDD.DROPDWON_ID
+    AND   MDDD.USE_YN     = 'Y'
+    AND   MDD.DROPDWON_ID = #{groupCd, jdbcType=VARCHAR}
+  </select> -->
+  <select id="get_DDSM0007" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	  SELECT TEMPLATE_ID AS CODE
+           , TEMPLATE_ID ||'('|| TEMPLATE_NM ||')' AS LABEL
+	  FROM   MOM_GRID_TEMPLATE
+	  ORDER BY TEMPLATE_ID 
+  </select>	
+  <select id="get_DDSM0008" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	  SELECT AUTH_GROUP_CD AS CODE 
+	     ,   AUTH_GROUP_CD ||'('|| AUTH_GROUP_NM ||')' AS LABEL
+      FROM   MOM_AUTH_GROUP
+      WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	  AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+      ORDER BY AUTH_GROUP_NM
+  </select>	
+  
+  <select id="get_DDSM0012" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	  SELECT MC.COMPANY_CD
+	 	   , MC.COMPANY_NM
+      FROM   MOM_COMPANY  MC
+      WHERE  MC.USE_YN = 'Y'
+     <if test = "companyCd != null and companyCd != ''">
+      AND    MD.COMPANY_CD = #{companyCd, jdbcType=VARCHAR}
+     </if>
+      ORDER BY COMPANY_NM
+  </select>	
+  <select id="get_DDSM0013" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+		 SELECT DIVISION_CD
+			  , DIVISION_NM
+	     FROM   MOM_DIVISION_V	
+	     WHERE 1=1
+	    <if test = "companyCd != null and companyCd != ''">
+	     AND    COMPANY_CD = #{companyCd, jdbcType=VARCHAR}
+	    </if>
+	    ORDER BY DIVISION_NM
+  </select>	
+  <select id="get_DDSM0014" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
+	SELECT CODE_CATEGORY AS CODE 
+	     , CODE_CATEGORY ||'('|| CODE_CATEGORY_NM ||')' AS LABEL
+	FROM   MOM_CODE_CATEGORY 
+	WHERE  USE_YN = 'Y'
+	AND    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+	ORDER BY SORT_NO, CODE_CATEGORY_NM 
+  </select>  
+  <select id="get_DDSM0015" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
+	SELECT GROUP_CD AS CODE 
+	     , GROUP_CODE_NM AS LABEL
+    FROM   MOM_GROUP_CODE 
+	WHERE  USE_YN = 'Y'
+	AND    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+    ORDER BY SORT_NO, GROUP_CODE_NM
+  </select>  
+</mapper>

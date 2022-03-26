@@ -1,0 +1,14 @@
+var national = Object.freeze({KO:0,EN:1,JA:2,ZH:3});
+var multiBuff = [];
+multiBuff['bSubmit'] = ['전송',  'Submit',  'Submit(JP)',  'Submit(JP)' ];
+multiBuff['m_delete'] = ['삭제',  'Delete',  'Delete(JP)',  'Delete(CN)' ];
+multiBuff['bCancel'] = ['취소',  'Cancel',  'Cancel(JP)',  'Cancel(CN)' ];
+multiBuff['bNo'] = ['아니오',  'No',  'No(JP)',  'No' ];
+multiBuff['bYes'] = ['네',  'Yes',  'Yes(JP)',  'Yes(CN)' ];
+multiBuff['m_complete'] = ['완료',  'Complete',  'Complete(JP)',  'Complete(CN)' ];
+multiBuff['addCaption'] = ['추가',  'Add',  'Add(JP)',  'Add(CN)' ];
+multiBuff['m_completed'] = ['완료',  'Complete',  'Complete(JP)',  'Complete(CN)' ];
+multiBuff['editCaption'] = ['수정',  'Edit',  'Edit(JP)',  'Edit(CN)' ];
+multiBuff['delMsg'] = ['삭제하시겠습니까?', 'Are you sure that you want to delete?', 'Are you sure that you want to delete?(JP)', 'Are you sure that you want to delete?(CN)'];
+multiBuff['msg'] = ['삭제하시겠습니까?', 'Are you sure that you want to delete?', 'Are you sure that you want to delete?(JP)', 'Are you sure that you want to delete?(CN)'];
+multiBuff['selMsg'] = ['row를 선택해 주세요.', 'Please Select Row.', 'Cancel(JP)', 'Cancel(CN)'];
