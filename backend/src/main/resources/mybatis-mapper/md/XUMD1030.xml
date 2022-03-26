@@ -43,7 +43,7 @@
 		    <if test="useYn != null and useYn != ''">
 		    AND MP.USE_YN = #{useYn, jdbcType=VARCHAR}
 			</if>
-		    ORDER BY MP.SORT_NO, MP.PARTNER_NM							
+		    ORDER BY  MP.PARTNER_NM							
 	</select>
     <insert id="create_defaultInfo1" parameterType="java.util.List">  
         INSERT INTO MOM_PARTNER(
