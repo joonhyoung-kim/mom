@@ -76,11 +76,11 @@
                 <foreach item="item" collection="list" index="i" separator=" " open="">
 				          (    TRIM(#{item.companyCd,  jdbcType=VARCHAR})
 				             , TRIM(#{item.divisionCd, jdbcType=VARCHAR})
-				             , TRIM(#{item.plantNm,    jdbcType=VARCHAR})
+				             , TRIM(#{item.plantCd,    jdbcType=VARCHAR})
 				             , TRIM(#{item.locationCd, jdbcType=VARCHAR})
 				             , #{item.locationNm,      jdbcType=VARCHAR}
 				             , TRIM(#{item.locationGroupCd, jdbcType=VARCHAR})
-				             , #{item.locationTypeNm,    jdbcType=VARCHAR}
+				             , #{item.locationType,    jdbcType=VARCHAR}
 				             , TRIM(#{item.parentCd,   jdbcType=VARCHAR})
 				             , #{item.sortNo,          jdbcType=INTEGER}
 				             , TRIM(#{item.useYn,      jdbcType=VARCHAR})
@@ -97,7 +97,7 @@
         UPDATE MOM_LOCATION
         SET    LOCATION_NM       = #{item.locationNm,       jdbcType=VARCHAR}
 			 , LOCATION_GROUP_CD = #{item.locationGroupCd,  jdbcType=VARCHAR}
-			 , LOCATION_TYPE     = #{item.locationTypeNm,     jdbcType=VARCHAR}
+			 , LOCATION_TYPE     = #{item.locationType,     jdbcType=VARCHAR}
 			 , PARTNER_CD        = #{item.partnerCd,        jdbcType=VARCHAR}
              , SORT_NO           = #{item.sortNo,           jdbcType=INTEGER}
 		     , USE_YN 		     = #{item.useYn,            jdbcType=VARCHAR}
@@ -107,7 +107,7 @@
          <where>
                COMPANY_CD        = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
          AND   DIVISION_CD       = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
-         AND   PLANT_CD          = TRIM(#{item.plantNm,    jdbcType=VARCHAR}) 
+         AND   PLANT_CD          = TRIM(#{item.plantCd,    jdbcType=VARCHAR}) 
          AND   LOCATION_CD       = TRIM(#{item.locationCd, jdbcType=VARCHAR})
          </where>
       </foreach>

@@ -1,0 +1,605 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>SheetJS Live Grid Demo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <link rel="icon" type="image/png" href="/micaweb/Content/ExcelUploadimg/logo.png" />
+        <link rel="stylesheet" href="/micaweb/Content/ExcelUpload/css/sheetjs.css">
+    </head>
+    <body>
+        <script src="/micaweb/Content/ExcelUpload/js/alertify.js"></script>
+        <script src="/micaweb/Content/ExcelUpload/js/jquery.min.js"></script>
+        <!--<script src="/micaweb/Content/livechart/vendor/jquery/plugins/handsontable/jquery.handsontable.js"></script>-->
+        <script src="/micaweb/Content/ExcelUpload/js/jquery.handsontable.full.js"></script>
+        <!--<script src="/micaweb/Content/livechart/vendor/jquery/plugins/handsontable/jquery.handsontable.removerow.js"></script>-->
+        <script src="/micaweb/Content/js/auigrid.js" charset="utf-8"></script>
+
+        <link rel="stylesheet" media="screen" href="/micaweb/Content/ExcelUpload/css/jquery.handsontable.full.css">
+        <link rel="stylesheet" media="screen" href="/micaweb/Content/ExcelUpload/css/samples.css">
+        <link rel="stylesheet" media="screen" href="/micaweb/Content/ExcelUpload/css/alertify.css">
+        <!--<link rel="stylesheet" media="screen" href="/micaweb/Content/liveChart/dist/css/ameditor.core.css">
+        <link rel="stylesheet" media="screen" href="/micaweb/Content/liveChart/dist/css/ameditor.icons.css">-->
+        <!--<link href="/micaweb/Content/livechart/vendor/jquery/plugins/handsontable/jquery.handsontable.removerow.css" rel="stylesheet" />-->
+
+        <div id="body">
+            <div class="xlsDrop">
+                <div id="drop">Drop a file here</div>
+            </div>
+            <div class="xlsLoading">
+                <div id="header" style="height: 38px;padding-left: 40px;">
+
+                    <div class=" xlsloading">
+                    <!--<input id="xlsUloadText" type="text" />-->
+                    <button id="uploadBtn" multi-lang="" style="display:none;">MESSAGES10840</button>
+                    <button id="cancelBtn" multi-lang="" style="display:none;">MESSAGES11457</button>
+                </div>
+                </div>
+                <div id="hot" style="overflow: scroll" class="handsontable am-editor-table "></div>
+            </div>
+        </div>
+        <script src="/micaweb/Content/ExcelUpload/js/shim.js"></script>
+        <script src="/micaweb/Content/ExcelUpload/js/cpexcel.js"></script>
+        <script src="/micaweb/Content/ExcelUpload/js/xls.js"></script>
+        <script src="/micaweb/Content/ExcelUpload/js/jszip.js"></script>
+        <script src="/micaweb/Content/ExcelUpload/js/xlsx.js"></script>
+        <script src="/micaweb/Content/ExcelUpload/js/dropsheet.js"></script>
+        <script src="/micaweb/Content/ExcelUpload/js/main.js"></script>
+        <!--<script src="/micaweb/Content/ExcelUpload/js/ods.js"></script>-->
+        <script src="/micaweb/Content/ExcelUpload/js/spin.js"></script>
+        <script src="/micaweb/Content/js/mica/mica.common.js"></script>
+
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-36810333-1']);
+          _gaq.push(['_setDomainName', 'sheetjs.com']);
+          _gaq.push(['_setAllowLinker', true]);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+          //xlsLoading
+          //uploadBtn
+            //cancelBtn
+            $(".xlsLoading").hide();
+            $("#uploadBtn").click(function () {
+                var getData = $("#hot").handsontable('getData');
+                var text = $("#xlsUloadText").val();
+                var postJson = {
+                    text: text,
+                    data: JSON.stringify(getData)
+                }
+                $(".xlsLoading").hide();
+                $(".xlsDrop").show();
+                $("#hot").handsontable("destroy");
+                micaCommon.fncS.callBackExec(options.after, getData, window);
+                window.close();
+                //if (typeof options == "undefined") {
+                //    $.ajax({
+                //        type: "post",
+                //        url: "/Popup/AjaxExcelUPload/",
+                //        data: postJson,
+                //        success: function (data) {
+                //            console.debug(data);
+                //            $(".xlsLoading").hide();
+                //            $(".xlsDrop").show();
+                //            $("#hot").handsontable("destroy");
+                //            micaCommon.fncS.callBackExec(options.after, window);
+                //            window.close();
+                //        }
+                //    });
+                //} else {
+                //    var url = options.url || "/Popup/AjaxExcelUPload/";
+                //    if (options.ajaxService) {
+                //        options.ajaxService(getData).done(function (data) {
+                //            $(".xlsLoading").hide();
+                //            $(".xlsDrop").show();
+                //            $("#hot").handsontable("destroy");
+                //            micaCommon.fncS.callBackExec(options.after, window);
+                //            window.close();
+                //        });
+                //    } else {
+                //        $.ajax({
+                //            type: "post",
+                //            url: url,
+                //            data: postJson,
+                //            success: function (data) {
+                //                console.debug(data);
+                //                $(".xlsLoading").hide();
+                //                $(".xlsDrop").show();
+                //                $("#hot").handsontable("destroy");
+                //                micaCommon.fncS.callBackExec(options.after, window);
+                //                window.close();
+                //            }
+                //        });
+                //    }
+                //}
+            });
+
+            $("#cancelBtn").click(function () {
+                $("#hot").handsontable("destroy");
+                $(".xlsLoading").hide();
+                $(".xlsDrop").show();
+            });
+            var base64;
+            var XML_HEADER;
+            $("#downloadBtn").click(function () {
+                XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n'
+                base64 = writeXmlZip([], $("#hot").handsontable('getData'));
+                ///MICAApi/JqgridExcel
+                //AUIGrid.exportAsXlsx("#hot");
+                $.ajax({
+                    type: "post",
+                    url: "/MICAApi/JqgridExcel",
+                    data: { apple: base64 },
+                    success: function (data) {
+                        //console.debug(data);
+                        //$(".xlsLoading").hide();
+                        //$(".xlsDrop").show();
+                        //$("#hot").handsontable("destroy");
+                    }
+                });
+            });
+
+            function writeXmlZip(a, b) {
+                var c = new ba._$77073096();
+                var f = "";
+                var d = XML_HEADER + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml" PartName="/xl/sharedStrings.xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>';
+                var e = XML_HEADER + '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>';
+                var g = XML_HEADER + '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Microsoft Excel</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Worksheets</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size="1" baseType="lpstr"><vt:lpstr>Sheet1</vt:lpstr></vt:vector></TitlesOfParts></Properties>';
+                var h = XML_HEADER + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+                f = "[Content_Types].xml";
+                c.file(f, d);
+                f = "docProps/core.xml";
+                c.file(f, e);
+                f = "docProps/app.xml";
+                c.file(f, g);
+                f = "_rels/.rels";
+                c.file(f, h);
+                c = write_xl_parts(c, a, b);
+                var i = c.generate();
+                return i
+            }
+            function write_xl_parts(b, c, d) {
+                var e = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n', relXml = e + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>', themeXml = e + '<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="Office 테마"><a:themeElements><a:clrScheme name="Office"><a:dk1><a:sysClr val="windowText" lastClr="000000"/></a:dk1><a:lt1><a:sysClr val="window" lastClr="FFFFFF"/></a:lt1><a:dk2><a:srgbClr val="44546A"/></a:dk2><a:lt2><a:srgbClr val="E7E6E6"/></a:lt2><a:accent1><a:srgbClr val="5B9BD5"/></a:accent1><a:accent2><a:srgbClr val="ED7D31"/></a:accent2><a:accent3><a:srgbClr val="A5A5A5"/></a:accent3><a:accent4><a:srgbClr val="FFC000"/></a:accent4><a:accent5><a:srgbClr val="4472C4"/></a:accent5><a:accent6><a:srgbClr val="70AD47"/></a:accent6><a:hlink><a:srgbClr val="0563C1"/></a:hlink><a:folHlink><a:srgbClr val="954F72"/></a:folHlink></a:clrScheme><a:fontScheme name="Office"><a:majorFont><a:latin typeface="Calibri Light" panose="020F0302020204030204"/><a:ea typeface=""/><a:cs typeface=""/><a:font script="Jpan" typeface="�Ｓ Ｐゴシック"/><a:font script="Hang" typeface="맑은 고딕"/><a:font script="Hans" typeface="宋体"/><a:font script="Hant" typeface="新細明體"/><a:font script="Arab" typeface="Times New Roman"/><a:font script="Hebr" typeface="Times New Roman"/><a:font script="Thai" typeface="Tahoma"/><a:font script="Ethi" typeface="Nyala"/><a:font script="Beng" typeface="Vrinda"/><a:font script="Gujr" typeface="Shruti"/><a:font script="Khmr" typeface="MoolBoran"/><a:font script="Knda" typeface="Tunga"/><a:font script="Guru" typeface="Raavi"/><a:font script="Cans" typeface="Euphemia"/><a:font script="Cher" typeface="Plantagenet Cherokee"/><a:font script="Yiii" typeface="Microsoft Yi Baiti"/><a:font script="Tibt" typeface="Microsoft Himalaya"/><a:font script="Thaa" typeface="MV Boli"/><a:font script="Deva" typeface="Mangal"/><a:font script="Telu" typeface="Gautami"/><a:font script="Taml" typeface="Latha"/><a:font script="Syrc" typeface="Estrangelo Edessa"/><a:font script="Orya" typeface="Kalinga"/><a:font script="Mlym" typeface="Kartika"/><a:font script="Laoo" typeface="DokChampa"/><a:font script="Sinh" typeface="Iskoola Pota"/><a:font script="Mong" typeface="Mongolian Baiti"/><a:font script="Viet" typeface="Times New Roman"/><a:font script="Uigh" typeface="Microsoft Uighur"/><a:font script="Geor" typeface="Sylfaen"/></a:majorFont><a:minorFont><a:latin typeface="Calibri" panose="020F0502020204030204"/><a:ea typeface=""/><a:cs typeface=""/><a:font script="Jpan" typeface="�Ｓ Ｐゴシック"/><a:font script="Hang" typeface="맑은 고딕"/><a:font script="Hans" typeface="宋体"/><a:font script="Hant" typeface="新細明體"/><a:font script="Arab" typeface="Arial"/><a:font script="Hebr" typeface="Arial"/><a:font script="Thai" typeface="Tahoma"/><a:font script="Ethi" typeface="Nyala"/><a:font script="Beng" typeface="Vrinda"/><a:font script="Gujr" typeface="Shruti"/><a:font script="Khmr" typeface="DaunPenh"/><a:font script="Knda" typeface="Tunga"/><a:font script="Guru" typeface="Raavi"/><a:font script="Cans" typeface="Euphemia"/><a:font script="Cher" typeface="Plantagenet Cherokee"/><a:font script="Yiii" typeface="Microsoft Yi Baiti"/><a:font script="Tibt" typeface="Microsoft Himalaya"/><a:font script="Thaa" typeface="MV Boli"/><a:font script="Deva" typeface="Mangal"/><a:font script="Telu" typeface="Gautami"/><a:font script="Taml" typeface="Latha"/><a:font script="Syrc" typeface="Estrangelo Edessa"/><a:font script="Orya" typeface="Kalinga"/><a:font script="Mlym" typeface="Kartika"/><a:font script="Laoo" typeface="DokChampa"/><a:font script="Sinh" typeface="Iskoola Pota"/><a:font script="Mong" typeface="Mongolian Baiti"/><a:font script="Viet" typeface="Arial"/><a:font script="Uigh" typeface="Microsoft Uighur"/><a:font script="Geor" typeface="Sylfaen"/></a:minorFont></a:fontScheme><a:fmtScheme name="Office"><a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:gradFill rotWithShape="1"><a:gsLst><a:gs pos="0"><a:schemeClr val="phClr"><a:lumMod val="110000"/><a:satMod val="105000"/><a:tint val="67000"/></a:schemeClr></a:gs><a:gs pos="50000"><a:schemeClr val="phClr"><a:lumMod val="105000"/><a:satMod val="103000"/><a:tint val="73000"/></a:schemeClr></a:gs><a:gs pos="100000"><a:schemeClr val="phClr"><a:lumMod val="105000"/><a:satMod val="109000"/><a:tint val="81000"/></a:schemeClr></a:gs></a:gsLst><a:lin ang="5400000" scaled="0"/></a:gradFill><a:gradFill rotWithShape="1"><a:gsLst><a:gs pos="0"><a:schemeClr val="phClr"><a:satMod val="103000"/><a:lumMod val="102000"/><a:tint val="94000"/></a:schemeClr></a:gs><a:gs pos="50000"><a:schemeClr val="phClr"><a:satMod val="110000"/><a:lumMod val="100000"/><a:shade val="100000"/></a:schemeClr></a:gs><a:gs pos="100000"><a:schemeClr val="phClr"><a:lumMod val="99000"/><a:satMod val="120000"/><a:shade val="78000"/></a:schemeClr></a:gs></a:gsLst><a:lin ang="5400000" scaled="0"/></a:gradFill></a:fillStyleLst><a:lnStyleLst><a:ln w="6350" cap="flat" cmpd="sng" algn="ctr"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:prstDash val="solid"/><a:miter lim="800000"/></a:ln><a:ln w="12700" cap="flat" cmpd="sng" algn="ctr"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:prstDash val="solid"/><a:miter lim="800000"/></a:ln><a:ln w="19050" cap="flat" cmpd="sng" algn="ctr"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:prstDash val="solid"/><a:miter lim="800000"/></a:ln></a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst><a:outerShdw blurRad="57150" dist="19050" dir="5400000" algn="ctr" rotWithShape="0"><a:srgbClr val="000000"><a:alpha val="63000"/></a:srgbClr></a:outerShdw></a:effectLst></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"><a:tint val="95000"/><a:satMod val="170000"/></a:schemeClr></a:solidFill><a:gradFill rotWithShape="1"><a:gsLst><a:gs pos="0"><a:schemeClr val="phClr"><a:tint val="93000"/><a:satMod val="150000"/><a:shade val="98000"/><a:lumMod val="102000"/></a:schemeClr></a:gs><a:gs pos="50000"><a:schemeClr val="phClr"><a:tint val="98000"/><a:satMod val="130000"/><a:shade val="90000"/><a:lumMod val="103000"/></a:schemeClr></a:gs><a:gs pos="100000"><a:schemeClr val="phClr"><a:shade val="63000"/><a:satMod val="120000"/></a:schemeClr></a:gs></a:gsLst><a:lin ang="5400000" scaled="0"/></a:gradFill></a:bgFillStyleLst></a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/><a:extLst><a:ext uri="{05A4C25C-085E-4340-85A3-A5531E510DB2}"><thm15:themeFamily xmlns:thm15="http://schemas.microsoft.com/office/thememl/2012/main" name="Office Theme" id="{62F939B6-93AF-4DB8-9C6B-D6C7DFDC589F}" vid="{4A3C46E8-61CC-4603-A589-7422A47A8E4A}"/></a:ext></a:extLst></a:theme>', workbookXml = e + '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x15" xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml/2010/11/main"><fileVersion appName="xl" lastEdited="6" lowestEdited="6" rupBuild="14420"/><workbookPr/><bookViews><workbookView xWindow="0" yWindow="0" windowWidth="27855" windowHeight="12975"/></bookViews><sheets><sheet name="Sheet 1" sheetId="1" r:id="rId1"/></sheets><calcPr calcId="0"/></workbook>', styleXml = e + '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">', mergeCells = [], cols = [], columnDatLen = c.length, sharedStringCache = doSharedString([]),
+                    //rowBackgroundStyles = q.rowBackgroundStyles, headerRowCount = q._6IO,
+                    rowBackgroundStyles = [], headerRowCount = 1,
+                    sheet1Xml, f, headerRows = [], bodyRows = [], footerRow = "", addingStyle, i, rowstr, m, headerStyleArr, o, baseFontSize, fixedRowCnt, fixedColumnCount, dimension, styleObject = {
+                    fonts: [],
+                    fills: ['<fill><patternFill patternType="none"/></fill>', '<fill><patternFill patternType="gray125"/></fill>'],
+                    xfs: ['<xf borderId="0" fillId="0" fontId="0" numFmtId="0" xfId="0"><alignment vertical="center"/></xf>']
+                };
+                //if (p) {
+                if(false){
+                    addingStyle = "";
+                    m = bb._$41047A60("aui-grid");
+                    if (m.color && m.color != "") {
+                        baseColor = bb._$36034AF6(m.color, true)
+                    } else {
+                        baseColor = "FF000000"
+                    }
+                    if (m.fontSize && m.fontSize != "") {
+                        baseFontSize = bb.px2pt(m.fontSize.substr(0, m.fontSize.length - 2))
+                    } else {
+                        baseFontSize = 10
+                    }
+                    styleObject.baseFontSize = baseFontSize;
+                    styleObject.baseColor = baseColor;
+                    if (m.fontWeight == "bold") {
+                        addingStyle += "<b/>"
+                    }
+                    if (m.textDecoration == "underline") {
+                        addingStyle += "<u/>"
+                    }
+                    styleObject.fonts[0] = "<font>" + addingStyle + '<sz val="' + baseFontSize + '"/><color rgb="' + baseColor + '"/><name val="맑은 고딕"/><family val="2"/><charset val="129"/><scheme val="minor"/></font>';
+                    q._columnCssStyleList = [];
+                    for (i = 0; i < columnDatLen; i++) {
+                        if (c[i].style) {
+                            q._columnCssStyleList[i] = bb._$41047A60(c[i].style)
+                        } else {
+                            q._columnCssStyleList[i] = null
+                        }
+                    }
+                    headerStyleArr = bb._$41047A60("aui-grid-default-header", true);
+                    m = {};
+                    for (i = headerStyleArr.length - 1; i >= 0; i--) {
+                        m = createOwnStyleObject(m, headerStyleArr[i])
+                    }
+                    styleObject.baseHeaderStyles = bb.extend({}, m);
+                    addingStyle = "<font>";
+                    if (m.fontWeight == "bold") {
+                        addingStyle += "<b/>"
+                    }
+                    if (m.textDecoration == "underline") {
+                        addingStyle += "<u/>"
+                    }
+                    if (m.color && m.color != "") {
+                        addingStyle += '<color rgb="' + bb._$36034AF6(m.color, true) + '"/>'
+                    } else {
+                        addingStyle += '<color rgb="' + baseColor + '"/>'
+                    }
+                    if (m.fontSize.indexOf("em") > 0) {
+                        addingStyle += '<sz val="' + (baseFontSize * Number(m.fontSize.substr(0, m.fontSize.length - 2))).toFixed(0) + '"/>'
+                    } else {
+                        if (m.fontSize.indexOf("px") > 0) {
+                            addingStyle += '<sz val="' + bb.px2pt(m.fontSize.substr(0, m.fontSize.length - 2));
+                            + '"/>'
+                        } else {
+                            addingStyle += '<sz val="' + baseFontSize + '"/>'
+                        }
+                    }
+                    addingStyle += '<name val="맑은 고딕"/><family val="2"/><charset val="129"/><scheme val="minor"/></font>';
+                    styleObject.fonts[1] = addingStyle;
+                    if (m.background && m.background != "") {
+                        o = bb._$36034AF6(m.background, true)
+                    } else {
+                        o = "FFFFFFFF"
+                    }
+                    styleObject.fills[2] = '<fill><patternFill patternType="solid"><fgColor rgb="' + o + '"/><bgColor indexed="64"/></patternFill></fill>';
+                    styleObject.xfs[1] = '<xf borderId="1" fillId="2" fontId="1" numFmtId="0" xfId="0" applyBorder="1" applyFill="1"><alignment vertical="center" horizontal="' + (m.textAlign || "left") + '"/></xf>';
+                    headerStyleArr = bb._$41047A60("aui-grid-default-column", true);
+                    m = {};
+                    for (i = headerStyleArr.length - 1; i >= 0; i--) {
+                        m = createOwnStyleObject(m, headerStyleArr[i]);
+                    }
+                    styleObject.baseCellStyles = bb.extend({}, m);
+                    styleObject.xfs[2] = '<xf borderId="1" fillId="3" fontId="0" numFmtId="0" xfId="0" applyBorder="1" applyFill="1"><alignment vertical="center" horizontal="' + (m.textAlign || "left") + '"/></xf>';
+                    styleObject.xfs[3] = '<xf borderId="1" fillId="4" fontId="0" numFmtId="0" xfId="0" applyBorder="1" applyFill="1"><alignment vertical="center" horizontal="' + (m.textAlign || "left") + '"/></xf>';
+                    styleObject.xfs[4] = '<xf borderId="1" fillId="3" fontId="0" numFmtId="0" applyNumberFormat="1" xfId="0" applyBorder="1" applyFill="1"><alignment vertical="center" horizontal="' + (m.textAlign || "left") + '"/></xf>';
+                    styleObject.xfs[5] = '<xf borderId="1" fillId="4" fontId="0" numFmtId="0" applyNumberFormat="1" xfId="0" applyBorder="1" applyFill="1"><alignment vertical="center" horizontal="' + (m.textAlign || "left") + '"/></xf>';
+                    bb.each(rowBackgroundStyles, function (n, v) {
+                        var a, m = bb._$41047A60(v);
+                        if (m.background && m.background != "") {
+                            a = bb._$36034AF6(m.background, true)
+                        } else {
+                            a = "FFFFFFFF"
+                        }
+                        styleObject.fills.push('<fill><patternFill patternType="solid"><fgColor rgb="' + a + '"/><bgColor indexed="64"/></patternFill></fill>')
+                    });
+                    headerStyleArr = bb._$41047A60("aui-grid-default-footer", true);
+                    m = {};
+                    for (i = headerStyleArr.length - 1; i >= 0; i--) {
+                        m = createOwnStyleObject(m, headerStyleArr[i])
+                    }
+                    styleObject.baseFooterStyles = bb.extend({}, m);
+                    addingStyle = "<font>";
+                    if (m.fontWeight == "bold") {
+                        addingStyle += "<b/>"
+                    }
+                    if (m.textDecoration == "underline") {
+                        addingStyle += "<u/>"
+                    }
+                    if (m.color && m.color != "") {
+                        addingStyle += '<color rgb="' + bb._$36034AF6(m.color, true) + '"/>'
+                    } else {
+                        addingStyle += '<color rgb="' + baseColor + '"/>'
+                    }
+                    if (m.fontSize.indexOf("em") > 0) {
+                        addingStyle += '<sz val="' + (baseFontSize * Number(m.fontSize.substr(0, m.fontSize.length - 2))).toFixed(0) + '"/>'
+                    } else {
+                        if (m.fontSize.indexOf("px") > 0) {
+                            addingStyle += '<sz val="' + bb.px2pt(m.fontSize.substr(0, m.fontSize.length - 2));
+                            + '"/>'
+                        } else {
+                            addingStyle += '<sz val="' + baseFontSize + '"/>'
+                        }
+                    }
+                    addingStyle += '<name val="맑은 고딕"/><family val="2"/><charset val="129"/><scheme val="minor"/></font>';
+                    styleObject.fonts[2] = addingStyle;
+                    if (m.background && m.background != "") {
+                        o = bb._$36034AF6(m.background, true)
+                    } else {
+                        o = "FFFFFFFF"
+                    }
+                    styleObject.fills[5] = '<fill><patternFill patternType="solid"><fgColor rgb="' + o + '"/><bgColor indexed="64"/></patternFill></fill>';
+                    styleObject.xfs[6] = '<xf borderId="1" fillId="5" fontId="2" numFmtId="0" xfId="0" applyBorder="1" applyFill="1"><alignment vertical="center" horizontal="' + (m.textAlign || "left") + '"/></xf>'
+                }
+                //if (q.showHeader) {
+                //    headerRows = commitHeader(mergeCells, cols, sharedStringCache, styleObject)
+                //}
+                bodyRows = commitBody(mergeCells, sharedStringCache, styleObject);
+                //if (q.showFooter && q._2jB) {
+                //    footerRow = commitFooter(bodyRows.length + headerRowCount + 1, sharedStringCache, styleObject)
+                //}
+                f = "xl/_rels/workbook.xml.rels";
+                b.file(f, relXml);
+                f = "xl/theme/theme1.xml";
+                b.file(f, themeXml);
+                f = "xl/workbook.xml";
+                b.file(f, workbookXml);
+                f = "xl/worksheets/sheet1.xml";
+                sheet1Xml = e + '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">';
+                dimension = '<dimension ref="A1:' + getExcelCharCode(columnDatLen - 1) + (headerRows.length + bodyRows.length) + '"/>', sheet1Xml += dimension;
+                //fixedRowCnt = q.fixedRowCount + headerRowCount;
+                fixedRowCnt = 1;
+                fixedColumnCount = 1;
+                addingStyle = '<sheetViews><sheetView workbookViewId="0" tabSelected="1"><pane state="frozen" activePane="bottomLeft" topLeftCell="' + getExcelCharCode(fixedColumnCount) + (fixedRowCnt + 1) + '" ySplit="' + fixedRowCnt + '" xSplit="' + fixedColumnCount + '"/></sheetView></sheetViews>';
+                sheet1Xml += addingStyle;
+                if (cols.length > 0) {
+                    addingStyle = "<cols>";
+                    addingStyle += cols.join("");
+                    addingStyle += "</cols>";
+                    sheet1Xml += addingStyle
+                }
+                sheet1Xml += "<sheetData>";
+                //if (q.showHeader) {
+                if (false) {
+                    rowstr = headerRows.join("");
+                    sheet1Xml += rowstr
+                }
+                rowstr = bodyRows.join("");
+                sheet1Xml += rowstr;
+                //if (q.showFooter) {
+                if (false) {
+                    sheet1Xml += footerRow
+                }
+                sheet1Xml += "</sheetData>";
+                if (mergeCells.length > 0) {
+                    var g = '<mergeCells count="' + mergeCells.length + '">';
+                    g += mergeCells.join("");
+                    g += "</mergeCells>";
+                    sheet1Xml += g
+                }
+                var h = commitExtList(c, d);
+                if (h.cfs.length > 0) {
+                    addingStyle = h.cfs;
+                    sheet1Xml += addingStyle
+                }
+                if (h.cfExt.length > 0) {
+                    addingStyle = h.cfExt;
+                    sheet1Xml += "<extLst>" + addingStyle;
+                    if (h.sparkExt.length <= 0) {
+                        sheet1Xml += "</extLst>"
+                    }
+                }
+                if (h.sparkExt.length > 0) {
+                    addingStyle = h.sparkExt;
+                    if (h.cfExt.length <= 0) {
+                        sheet1Xml += "<extLst>"
+                    }
+                    sheet1Xml += addingStyle + "</extLst>"
+                }
+                sheet1Xml += "</worksheet>";
+                b.file(f, sheet1Xml);
+                f = "xl/sharedStrings.xml";
+                var j = "";
+                var k = sharedStringCache.length;
+                var l = e + '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="' + k + '" uniqueCount="' + k + '">';
+                for (i = 0; i < k; i++) {
+                    j += "<si><t><![CDATA[" + sharedStringCache[i] + "]]></t></si>"
+                }
+                l += j + "</sst>";
+                b.file(f, l);
+                //if (p) {
+                if(false){
+                    addingStyle = '<numFmts count="1"><numFmt numFmtId="178" formatCode="0&quot;%&quot;"/>';
+                    addingStyle += "</numFmts>";
+                    styleXml += addingStyle;
+                    addingStyle = '<fonts count="' + styleObject.fonts.length + '" x14ac:knownFonts="1">' + styleObject.fonts.join("") + "</fonts>";
+                    styleXml += addingStyle;
+                    addingStyle = '<fills count="' + styleObject.fills.length + '">' + styleObject.fills.join("") + "</fills>";
+                    styleXml += addingStyle;
+                    borderStyle = ".aui-grid-vertical-grid-lines";
+                    var m = bb._$41047A60("aui-grid-vertical-grid-lines");
+                    var o = bb._$36034AF6(m.background, true);
+                    addingStyle = '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="' + o + '"/></left>-<right style="thin"><color rgb="' + o + '"/></right><top style="thin"><color rgb="' + o + '"/></top><bottom style="thin"><color rgb="' + o + '"/></bottom><diagonal/></border></borders>';
+                    styleXml += addingStyle;
+                    addingStyle = '<cellStyleXfs count="1"><xf borderId="0" fillId="0" fontId="0" numFmtId="0"><alignment vertical="center"/></xf></cellStyleXfs>';
+                    styleXml += addingStyle;
+                    addingStyle = '<cellXfs count="' + styleObject.xfs.length + '">' + styleObject.xfs.join("") + "</cellXfs>";
+                    styleXml += addingStyle;
+                    addingStyle = '<cellStyles count="1"><cellStyle name="표준" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/><extLst><ext uri="{EB79DEF2-80B8-43e5-95BD-54CBDDF9020C}" xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"><x14:slicerStyles defaultSlicerStyle="SlicerStyleLight1"/></ext><ext uri="{9260A510-F301-46a8-8635-F512D64BE5F5}" xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml/2010/11/main"><x15:timelineStyles defaultTimelineStyle="TimeSlicerStyleLight1"/></ext></extLst></styleSheet>';
+                    styleXml += addingStyle
+                } else {
+                    styleXml += '<fonts count="1" x14ac:knownFonts="1"><font><sz val="9"/><color theme="1"/><name val="맑은 고딕"/><family val="2"/><charset val="129"/><scheme val="minor"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"><alignment vertical="center"/></xf></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"><alignment vertical="center"/></xf></cellXfs><cellStyles count="1"><cellStyle name="표준" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/><extLst><ext uri="{EB79DEF2-80B8-43e5-95BD-54CBDDF9020C}" xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"><x14:slicerStyles defaultSlicerStyle="SlicerStyleLight1"/></ext><ext uri="{9260A510-F301-46a8-8635-F512D64BE5F5}" xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml/2010/11/main"><x15:timelineStyles defaultTimelineStyle="TimeSlicerStyleLight1"/></ext></extLst></styleSheet>'
+                }
+                f = "xl/styles.xml";
+                b.file(f, styleXml);
+                return b;
+            }
+            function doSharedString(a) {
+                //doStartHeaderSharedString(q._UAM.obj, a);
+                //commitBodySharedString(q._43K, q._geT, a);
+                //commitFooterSharedString(q._FjP, q._2jB, a);
+                //return bb.removeArrayDuplicate(a)
+                return [];
+            }
+            function doStartHeaderSharedString(a, b) {
+                var c;
+                commitHeaderSharedString(a, b);
+                for (var i = 0, l = a.length; i < l; i++) {
+                    c = a[i];
+                    if (!_$DF60EFC3(c.children)) {
+                        doStartHeaderSharedString(c.children, b)
+                    }
+                }
+            }
+            function commitHeaderSharedString(a, b) {
+                var c;
+                for (var i = 0, len = a.length; i < len; i++) {
+                    c = a[i].headerText;
+                    if (typeof c == "undefined") {
+                        c = a[i].dataField || ""
+                    }
+                    if (!isNumber(c)) {
+                        b[b.length] = c.replace("<br>", "\r\n")
+                    }
+                }
+                return b
+            }
+            function commitBody(a, b, c) {
+                //var d = q._43K, textDataProvider = q._textDataProvider, dataLen = d.length, headerCount = q._6IO, rowHeight = bb.px2pt(q.rowHeight), columnData = q._geT, rows = [], row, i;
+                var d = $("#hot").handsontable('getData'), textDataProvider = [], dataLen = $("#hot").handsontable('getData').length, headerCount = 0, rowHeight = 20, columnData = [], rows = [], row, i;
+                
+                for (i = 1; i <= dataLen; i++) {
+                    row = '<row r="' + (i + headerCount) + '" customHeight="1" ht="' + rowHeight + '">';
+                    rows[rows.length] = row
+                }
+                genBodyRows(d, textDataProvider, columnData, rows, a, b, c);
+                bb.each(rows, function (n, v) {
+                    rows[n] += "</row>"
+                });
+                return rows
+            }
+            function genBodyRows(a, b, c, d, e, f, g) {
+                //var h = q._6IO, rowNum, cell, row, textItem, item;
+                var h = 1, rowNum, cell, row, textItem, item;
+                for (var i = 0, l = a.length; i < l; i++) {
+                    item = a[i];
+                    rowNum = i + h + 1;
+                    textItem = b[i];
+                    cell = genBodyCellXml(item, textItem, rowNum, i, c, e, f, g);
+                    row = d[i];
+                    row += cell;
+                    d[i] = row
+                }
+            }
+            function genBodyCellXml(a, b, c, d, e, f, g, h) {
+                //var j, valueIndex = -1, cItem, dataField, text, columnCssStyleList = q._columnCssStyleList, baseCellStyles = h.baseCellStyles, ownStyleObj = null, ownStyleName = null, rowStyleFunction = q.rowStyleFunction, cellStyleFunction = null, styleIndex = 0, fillIndex = d % 2 == 0 ? 3 : 4, fontIndex = 0, treeView = q._eaQ, treeColumnIndex = q.treeColumnIndex, _$3B6E20C8 = q._$3B6E20C8, indent = "", enableCellMerge = q.enableCellMerge, groupingFields = q.groupingFields, p = q._exportWithStyle, wordWrap = q.wordWrap, wordWrapText = "", cells = "", i, len, mergeStartFlag, mergeCount;
+                var j, valueIndex = -1, cItem, dataField, text, columnCssStyleList = [], baseCellStyles = h.baseCellStyles, ownStyleObj = null, ownStyleName = null, rowStyleFunction = null, cellStyleFunction = null, styleIndex = 0, fillIndex = d % 2 == 0 ? 3 : 4, fontIndex = 0,
+                    treeView = false, treeColumnIndex = 0, _$3B6E20C8 = [], indent = "", enableCellMerge = false, groupingFields = null, p = false, wordWrap = false, wordWrapText = "", cells = "", i, len, mergeStartFlag, mergeCount;
+                var k = "";
+                if (wordWrap) {
+                    wordWrapText = ' wrapText="1" '
+                }
+                for (i = 0, len = e.length; i < len; i++) {
+                    cItem = e[i];
+                    text = b[i];
+                    dataField = cItem.dataField;
+                    k = cItem.formatString;
+                    if (text != "" && cItem.dataType != "numeric") {
+                        valueIndex = g.indexOf(text)
+                    }
+                    j = getExcelCharCode(cItem.columnIndex);
+                    if (p) {
+                        if (valueIndex == -1) {
+                            styleIndex = d % 2 == 0 ? 4 : 5
+                        } else {
+                            styleIndex = d % 2 == 0 ? 2 : 3
+                        }
+                        ownStyleObj = createOwnStyleObject(ownStyleObj, baseCellStyles);
+                        if (columnCssStyleList[i]) {
+                            ownStyleObj = createOwnStyleObject(ownStyleObj, columnCssStyleList[i])
+                        }
+                        if (_$A867DF55(rowStyleFunction)) {
+                            ownStyleName = rowStyleFunction(d, a);
+                            if (ownStyleName && ownStyleName.length > 0) {
+                                ownStyleObj = createOwnStyleObject(ownStyleObj, bb._$41047A60(ownStyleName))
+                            }
+                        }
+                        cellStyleFunction = cItem.styleFunction;
+                        if (_$A867DF55(cellStyleFunction)) {
+                            ownStyleName = cellStyleFunction(c, i, a[dataField], cItem.headerText, a, dataField) || "";
+                            if (ownStyleName && ownStyleName.length > 0) {
+                                ownStyleObj = createOwnStyleObject(ownStyleObj, bb._$41047A60(ownStyleName))
+                            }
+                        }
+                        if (ownStyleObj) {
+                            if (treeView && i == treeColumnIndex && _$3B6E20C8[0][i].className == "_$646BA8C0") {
+                                indent = ' indent="' + (a._$depth - 1) + '" '
+                            } else {
+                                indent = ""
+                            }
+                            styleIndex = combineStyleInfos(h, ownStyleObj, styleIndex, fillIndex, fontIndex, valueIndex, indent, wordWrapText, k)
+                        }
+                    } else {
+                        styleIndex = 0
+                    }
+                    if (valueIndex != -1) {
+                        cells += '<c r="' + j + c + '" t="s" s="' + styleIndex + '"><v>' + valueIndex + "</v></c>"
+                    } else {
+                        cells += '<c r="' + j + c + '" s="' + styleIndex + '"><v>' + text + "</v></c>"
+                    }
+                    if (enableCellMerge) {
+                        if (cItem.cellMerge === true) {
+                            mergeStartFlag = a["_$ms" + dataField];
+                            mergeCount = a["_$mc" + dataField];
+                            if (mergeStartFlag && mergeCount != 1) {
+                                f[f.length] = '<mergeCell ref="' + j + c + ":" + j + (mergeCount + c - 1) + '"/>'
+                            }
+                        }
+                    }
+                    valueIndex = -1;
+                    ownStyleObj = ownStyleName = null
+                }
+                if (enableCellMerge) {
+                    if (groupingFields) {
+                        for (i = 0, len = groupingFields.length; i < len; i++) {
+                            dataField = groupingFields[i];
+                            mergeStartFlag = a["_$ms" + dataField];
+                            mergeCount = a["_$mc" + dataField];
+                            j = getExcelCharCode(i);
+                            if (mergeStartFlag && mergeCount != 1) {
+                                f[f.length] = '<mergeCell ref="' + j + c + ":" + j + (mergeCount + c - 1) + '"/>'
+                            }
+                        }
+                    }
+                }
+                return cells
+            }
+            function getExcelCharCode(a) {
+                var b = 0, charCode = "";
+                b = parseInt(a / 26);
+                a = a + 65;
+                a = a - b * 26;
+                if (b > 0) {
+                    charCode += String.fromCharCode(64 + b)
+                }
+                charCode += String.fromCharCode(a);
+                return charCode
+            }
+            function commitExtList(a, b) {
+                //var i, len, cItem, renderer, startRow = q._6IO + 1, endRow = startRow + b.length, barObj, cfs = [], cfExts = [], sparkLines = [], cfsCount = 0, cfXml = "", conditionalFormattings = '<ext xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" uri="{78C0D931-6437-407d-A8EE-F0AAD7539E65}">', sparkGroups = '<ext xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" uri="{05C60535-1F16-4fd2-B633-F4F36F0B64E0}">';
+                var i, len, cItem, renderer, startRow = 1, endRow = startRow + b.length, barObj, cfs = [], cfExts = [], sparkLines = [], cfsCount = 0, cfXml = "", conditionalFormattings = '<ext xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" uri="{78C0D931-6437-407d-A8EE-F0AAD7539E65}">', sparkGroups = '<ext xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" uri="{05C60535-1F16-4fd2-B633-F4F36F0B64E0}">';
+                sparkGroups += '<x14:sparklineGroups xmlns:xm="http://schemas.microsoft.com/office/excel/2006/main">';
+                for (i = 0, len = a.length; i < len; i++) {
+                    cItem = a[i];
+                    renderer = cItem.renderer;
+                    if (renderer) {
+                        if (renderer.type == "SparkColumnRenderer") {
+                            sparkLines[sparkLines.length] = genSparkXml(cItem, startRow, endRow, b, "column")
+                        } else {
+                            if (renderer.type == "SparkLineRenderer") {
+                                sparkLines[sparkLines.length] = genSparkXml(cItem, startRow, endRow, b, "line")
+                            } else {
+                                if (renderer.type == "SparkWinLossRenderer") {
+                                    sparkLines[sparkLines.length] = genSparkXml(cItem, startRow, endRow, b, "stacked")
+                                } else {
+                                    if (renderer.type == "BarRenderer") {
+                                        barObj = genConditionalFormattingXml(cItem, startRow, endRow - 1, cfsCount);
+                                        cfs[cfs.length] = barObj.cf;
+                                        cfExts[cfExts.length] = barObj.cfExt;
+                                        cfsCount++
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (sparkLines.length > 0) {
+                    sparkGroups += sparkLines.join("") + "</x14:sparklineGroups></ext>"
+                } else {
+                    sparkGroups = ""
+                }
+                if (cfExts.length > 0) {
+                    conditionalFormattings += "<x14:conditionalFormattings>" + cfExts.join("") + "</x14:conditionalFormattings></ext>"
+                } else {
+                    conditionalFormattings = ""
+                }
+                if (cfs.length > 0) {
+                    cfXml = cfs.join("")
+                } else {
+                    cfXml = ""
+                }
+                return {
+                    cfs: cfXml,
+                    cfExt: conditionalFormattings,
+                    sparkExt: sparkGroups
+                }
+            }
+        </script>
+    </body>
+</html>

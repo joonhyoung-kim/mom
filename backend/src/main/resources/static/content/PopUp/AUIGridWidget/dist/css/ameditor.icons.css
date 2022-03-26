@@ -1,0 +1,99 @@
+.am {
+  position: relative;
+  display: inline-block;
+  line-height: 16px;
+
+  top: 3px;
+  margin: 0;
+  padding: 0;
+
+  height: 18px;
+  width: 18px;
+
+  background-repeat: no-repeat;
+  background-position: center
+}
+
+span + .am {
+  margin: 0 0 0 10px; 
+}
+.am + span {
+  margin: 0 0 0 10px; 
+}
+
+.am-save {
+  background-image: url(../../static/img/icons/save.png);
+}
+.am-save-draft {
+	background-image: url(../../static/img/icons/savedraft.png);
+}
+.am-fork {
+	background-image: url(../../static/img/icons/fork.png);
+}
+.am-new {
+	background-image: url(../../static/img/icons/new.png);
+}
+.am-share {
+	background-image: url(../../static/img/icons/share.png);
+}
+.am-edit {
+  background-image: url(../../static/img/landing/edit_over.png);
+}
+.am-accordion-toggle {
+  background-image: url(../../static/img/icons/accordion_minus.png);
+}
+h3.collapsed .am-accordion-toggle {
+  background-image: url(../../static/img/icons/accordion_plus.png);
+}
+
+.am-add {
+  background-image: url(../../static/img/icons/circle_plus.png);
+}
+.am-remove {
+  background-image: url(../../static/img/icons/circle_x_dis.png);
+}
+a:hover .am-remove,
+.am-remove:hover,
+.app-modal .am-remove {
+  background-image: url(../../static/img/icons/circle_x.png);
+}
+
+
+.am-data {
+  background-image: url(../../static/img/icons/data.png);
+  width: 19px;
+  height: 17px;
+}
+.am-code {
+  background-image: url(../../static/img/icons/code.png);
+  width: 25px;
+  height: 17px;
+}
+.am-tab-error i.am-code {
+  background-image: url(../../static/img/icons/code_error.png);
+}
+.am-tab-error span {
+  color: #de4c4f;
+}
+.am-add-row {
+  background-image: url(../../static/img/icons/row.png);
+}
+.am-add-col {
+  background-image: url(../../static/img/icons/col.png);
+}
+.am-import {
+  background-image: url(../../static/img/icons/import.png);
+}
+.am-export {
+  background-image: url(../../static/img/icons/export.png);
+}
+.am-login {
+  background-image: url(../../static/img/icons/login.png);
+}
+
+.am-customize {
+  background-image: url(../../static/img/icons/customize.png);
+}
+.am-publish {
+  background-image: url(../../static/img/icons/publish.png);
+}
