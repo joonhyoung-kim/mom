@@ -22,7 +22,6 @@
 			     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(ML.COMPANY_CD,ML.DIVISION_CD,'MD0016', ML.LOCATION_TYPE, #{langCd, jdbcType=VARCHAR})  FROM DUAL ) AS LOCATION_TYPE_NM
 			     , ML.PARTNER_CD
 			     , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(ML.COMPANY_CD, ML.DIVISION_CD, ML.PARTNER_CD) FROM DUAL ) AS PARTNER_NM
-			     , ML.SORT_NO
 			     , ML.USE_YN
 			     , ML.CREATE_BY
 			     , ML.CREATE_DATE
@@ -52,7 +51,7 @@
 		    <if test="useYn != null and useYn != ''">
 		    AND ML.USE_YN = #{useYn, jdbcType=VARCHAR}
 			</if>
-		    ORDER BY ML.SORT_NO, ML.LOCATION_NM							
+		    ORDER BY ML.LOCATION_NM							
 	    </select>
     <insert id="create_defaultInfo1" parameterType="java.util.List">  
         INSERT INTO MOM_LOCATION(
@@ -63,8 +62,7 @@
 								, LOCATION_NM
 								, LOCATION_GROUP_CD
 								, LOCATION_TYPE
-								, PARTNER_CD
-								, SORT_NO
+								, PARTNER_CD								
 								, USE_YN
 								, DESCRIPTION
 								, CREATE_BY
@@ -99,7 +97,6 @@
 			 , LOCATION_GROUP_CD = #{item.locationGroupCd,  jdbcType=VARCHAR}
 			 , LOCATION_TYPE     = #{item.locationType,     jdbcType=VARCHAR}
 			 , PARTNER_CD        = #{item.partnerCd,        jdbcType=VARCHAR}
-             , SORT_NO           = #{item.sortNo,           jdbcType=INTEGER}
 		     , USE_YN 		     = #{item.useYn,            jdbcType=VARCHAR}
  		     , DESCRIPTION       = #{item.description,      jdbcType=VARCHAR}
 		     , UPDATE_BY         = #{item.userId,           jdbcType=VARCHAR}

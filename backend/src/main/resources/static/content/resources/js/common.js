@@ -844,9 +844,9 @@ var mCommon = {
 			    '<h3>Main</h3>'+
 			   '</li>'+
 			   '<li class="slide is-expanded">'+
-			    '<a class="side-menu__item" data-bs-toggle="slide" href="index.html">'+
+			    '<a class="side-menu__item" data-bs-toggle="slide" href="main2.html">'+
 			     '<i class="side-menu__icon fe fe-home"></i>'+
-			     '<span class="side-menu__label">Dashboard</span>'+
+			     '<span class="side-menu__label">HOME</span>'+
 			    '</a>'+
 			   '</li>';
 		

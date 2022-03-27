@@ -1505,8 +1505,14 @@ var momWidget = {
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	setGridEvent: function(index, your) {
 		var that =  this;	
+	/*	$(document).on('focus', '.slide', function() {
+			$('.slide').css('background','red !important');
+				alert('감지!');
+		});*/
+		
 		$(document).on('click', '#upBtn1', function() {
 			AUIGrid.moveRowsToUp(momWidget.grid[index]);
+		
 		});
 		
 		$(document).on('click', '#downBtn1', function() {

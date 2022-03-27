@@ -14,7 +14,6 @@
 			     , MCD.DIVISION_NM
 			     , MP.PLANT_CD
 			     , MP.PLANT_NM
-			     , MP.SORT_NO
 			     , MP.USE_YN
 			     , MP.DESCRIPTION
 			FROM   MOM_COM_DIV_V MCD
@@ -30,7 +29,7 @@
 		    <if test="useYn != null and useYn != ''">
 		    AND MP.USE_YN = #{useYn, jdbcType=VARCHAR}
 		    </if>
-			ORDER BY MP.SORT_NO, MP.PLANT_NM							
+			ORDER BY  MP.PLANT_NM							
 	    </select>
     <insert id="create_defaultInfo1" parameterType="java.util.List">  
         INSERT INTO MOM_PLANT(
@@ -38,7 +37,6 @@
 						        , DIVISION_CD
 							    , PLANT_CD
 							    , PLANT_NM
-								, SORT_NO
 								, USE_YN
 								, DESCRIPTION
 								, CREATE_BY
@@ -52,7 +50,6 @@
 				             , TRIM(#{item.divisionCd, jdbcType=VARCHAR})
 				             , TRIM(#{item.plantCd, jdbcType=VARCHAR})
 				             , #{item.plantNm, jdbcType=VARCHAR}
-				             , #{item.sortNo, jdbcType=INTEGER}
 				             , TRIM(#{item.useYn, jdbcType=VARCHAR})
 				             , #{item.description, jdbcType=VARCHAR}    
 				             , TRIM(#{item.userId, jdbcType=VARCHAR})
@@ -66,7 +63,6 @@
       <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
         UPDATE MOM_PLANT 
         SET    PLANT_NM       = #{item.plantNm,     jdbcType=VARCHAR}
-             , SORT_NO        = #{item.sortNo,      jdbcType=INTEGER}
 		     , USE_YN 		  = #{item.useYn,       jdbcType=VARCHAR}
  		     , DESCRIPTION    = #{item.description, jdbcType=VARCHAR}
 		     , UPDATE_BY      = #{item.userId,      jdbcType=VARCHAR}
