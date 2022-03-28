@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUMD2010">
+   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+     SELECT MCD.COMPANY_CD
+	      , MCD.COMPANY_NM
+	      , MCD.DIVISION_CD
+	      , MCD.DIVISION_NM
+	      , MI.ITEM_ID
+	      , MI.ITEM_NM
+	      , MI.ITEM_GROUP_CD
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0001', MI.ITEM_GROUP_CD, 'KR') FROM DUAL) AS ITEM_GROUP_NM
+	      , MI.ITEM_TYPE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL) AS ITEM_TYPE_NM     
+	      , MI.ITEM_SPEC
+	      , MI.UNIT
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.UNIT, 'KR') FROM DUAL) AS UNIT_NM          
+	      , MI.PROCUREMENT_TYPE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0004', MI.PROCUREMENT_TYPE, 'KR') FROM DUAL) AS PROCUREMENT_TYPE_NM   
+	      , MI.MATERIAL_TYPE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0005', MI.MATERIAL_TYPE, 'KR') FROM DUAL) AS MATERIAL_TYPE_NM   
+	      , MI.NET_WEIGHT
+	      , MI.NET_WEIGHT_UNIT
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.NET_WEIGHT_UNIT, 'KR') FROM DUAL) AS NET_WEIGHT_UNIT_NM  
+	      , MI.GROSS_WEIGHT
+	      , MI.GROSS_WEIGHT_UNIT
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.GROSS_WEIGHT_UNIT, 'KR') FROM DUAL) AS GROSS_WEIGHT_UNIT_NM  
+	      , MI.IN_LOCATION_CD
+	      , MI.OUT_LOCATION_CD
+	      , MI.ISSUE_TYPE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0006', MI.ISSUE_TYPE, 'KR') FROM DUAL) AS ISSUE_TYPE_NM  
+	      , MI.ISSUE_UNIT
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.ISSUE_UNIT, 'KR') FROM DUAL) AS ISSUE_UNIT_NM  
+	      , MI.VENDOR_CD
+	      , MI.DEPARTURE_VENDOR_CD
+	      , MI.TEST_REPORT_FLAG
+	      , MI.IQC_FLAG
+	      , MI.PQC_FLAG
+	      , MI.FQC_FLAG
+	      , MI.OQC_FLAG
+	      , MI.RP_ITEM_ID
+	      , MI.ITEM_CATEGROY_L
+	      , MI.ITEM_CATEGROY_M
+	      , MI.ITEM_CATEGROY_S
+	      , MI.EXECPTION_ISSUE_FLAG
+	      , MI.COLOR
+	      , MI.CUTOMER_DIVISION_CD
+	      , MI.MAKER
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0007', MI.MAKER, 'KR') FROM DUAL) AS MAKER_NM  
+	      , MI.ABC_TYPE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0008', MI.ABC_TYPE, 'KR') FROM DUAL) AS ABC_TYPE_NM  
+	      , MI.DRAWING_NO
+	      , MI.HS_CD
+	      , MI.REORDER_POINT
+	      , MI.SAFETY_STOCK_QTY
+	      , MI.PHANTOM_FLAG
+	      , MI.MRP_FLAG
+	      , MI.USE_YN
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'SM0001', MI.USE_YN, 'KR') FROM DUAL) AS USE_YN_NM  
+	      , MI.DESCRIPTION
+	      , MI.CREATE_BY
+	      , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.CREATE_BY) FROM DUAL ) AS CREATEBYNM
+	      , TO_CHAR(MI.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+	      , MI.UPDATE_BY  
+	      , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+	      , TO_CHAR(MI.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+     FROM   MOM_COM_DIV_V MCD
+          , MOM_ITEM MI
+	 WHERE  MCD.COMPANY_CD  = MI.COMPANY_CD
+	 AND    MCD.DIVISION_CD = MI.DIVISION_CD    		
+	 <if test="itemId != null and itemId != ''">
+	 AND (MI.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	 </if>
+	 <if test="itemNm != null and itemNm != ''">
+     AND (MI.ITEM_NM LIKE '%' || TRIM(UPPER(#{itemNm , jdbcType=VARCHAR})) || '%' )
+	 </if>
+	 <if test="itemType != null and itemType != ''">
+     AND MI.ITEM_TYPE IN (${itemType})
+	 </if>
+	 <if test="itemSpec != null and itemSpec != ''">
+     AND (MI.ITEM_SPEC LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' )
+	 </if>
+     <if test="useYn != null and useYn != ''">
+     AND MI.USE_YN = #{useYn, jdbcType=VARCHAR}
+	 </if>
+	ORDER BY MCD.COMPANY_NM,  MCD.DIVISION_NM, MI.ITEM_ID						
+	</select>
+    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+        INSERT INTO MOM_ITEM(
+					              COMPANY_CD
+								, DIVISION_CD
+								, PARTNER_CD
+								, PARTNER_NM
+								, PARTNER_NM_ENG
+								, PARTNER_TYPE
+								, BUSINESS_NO
+								, BUSINESS_ITEM
+								, BUSINESS_TYPE
+								, TEL_NO
+								, FAX_NO
+								, EMAIL
+								, ADDRESS
+								, REPRESENTATIVE_NM
+								, PARTNER_USER_NM
+								, USE_YN
+								, DESCRIPTION
+								, CREATE_BY
+								, CREATE_DATE
+								, UPDATE_BY
+								, UPDATE_DATE
+					         )     
+        VALUES
+                <foreach item="item" collection="list" index="i" separator=" " open="">
+				          (    #{item.companyCd,     jdbcType=VARCHAR}
+				             , #{item.divisionCd,    jdbcType=VARCHAR}
+				             , #{item.partnerCd,     jdbcType=VARCHAR}
+				             , #{item.partnerNm,     jdbcType=VARCHAR}
+				             , #{item.partnerNmEng,  jdbcType=VARCHAR}
+				             , #{item.partnerType,   jdbcType=VARCHAR}
+				             , #{item.businessNo,    jdbcType=VARCHAR}
+				             , #{item.businessItem,  jdbcType=VARCHAR}
+				             , #{item.businessType,  jdbcType=VARCHAR}
+				             , #{item.telNo,         jdbcType=VARCHAR}
+				             , #{item.faxNo,         jdbcType=VARCHAR}
+				             , #{item.email,         jdbcType=VARCHAR}
+				             , #{item.address,       jdbcType=INTEGER}
+				             , #{item.representativeNm,      jdbcType=VARCHAR}
+				             , #{item.partnerUserNm,         jdbcType=VARCHAR}
+				             , #{item.useYn,   				 jdbcType=VARCHAR}  
+				             , #{item.description,           jdbcType=VARCHAR}    
+				             , TRIM(#{item.userId,           jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.userId,   jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})  
+				          )		             
+	            </foreach>			               
+   </insert>   
+   <update id="modify_defaultInfo1" parameterType="java.util.List">     
+      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+        UPDATE MOM_PARTNER
+        SET    PARTNER_NM        = #{item.partnerNm,       jdbcType=VARCHAR}
+			 , PARTNER_NM_ENG    = #{item.partnerNmEng,    jdbcType=VARCHAR}
+			 , PARTNER_TYPE      = #{item.partnerType,    jdbcType=VARCHAR}
+			 , BUSINESS_NO       = #{item.businessNo,       jdbcType=VARCHAR}
+             , BUSINESS_ITEM     = #{item.businessItem,    jdbcType=VARCHAR}
+             , BUSINESS_TYPE     = #{item.businessType,    jdbcType=VARCHAR}
+             , TEL_NO            = #{item.telNo,           jdbcType=VARCHAR}
+             , FAX_NO            = #{item.faxNo,           jdbcType=VARCHAR}
+             , EMAIL             = #{item.email,           jdbcType=VARCHAR}
+             , REPRESENTATIVE_NM = #{item.representativeNm, jdbcType=VARCHAR}
+             , PARTNER_USER_NM   = #{item.partnerUserNm,    jdbcType=VARCHAR}
+             , ADDRESS           = #{item.address,         jdbcType=VARCHAR}
+		     , USE_YN 		     = #{item.useYn,           jdbcType=VARCHAR}
+ 		     , DESCRIPTION       = #{item.description,     jdbcType=VARCHAR}
+		     , UPDATE_BY         = #{item.userId,          jdbcType=VARCHAR}
+		     , UPDATE_DATE       = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR}, #{item.divisionCd, jdbcType=VARCHAR})
+         <where>
+               COMPANY_CD        = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
+         AND   DIVISION_CD       = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
+         AND   PARTNER_CD        = TRIM(#{item.partnerCd,    jdbcType=VARCHAR}) 
+         </where>
+      </foreach>
+   </update> 
+   <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
+	   DELETE
+	   FROM    MOM_PARTNER
+       <where> 
+        <foreach collection="list" item="item" open="" close="" separator="OR"> 
+          (   
+	               COMPANY_CD     = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
+	         AND   DIVISION_CD    = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
+	         AND   PARTNER_CD     = TRIM(#{item.partnerCd,    jdbcType=VARCHAR}) 
+          )
+        </foreach>
+       </where>
+   </delete>
+   <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
+	    MERGE INTO MOM_PROGRAM MP
+	    USING (
+	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
+	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
+	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
+	                              TRIM(#{item.programId, jdbcType=VARCHAR})                                                                    as programId,
+					              #{item.programNm, jdbcType=VARCHAR}           															   as programNm,
+					              TRIM(#{item.programType, jdbcType=VARCHAR})    															   as programType,
+					              TRIM(#{item.templateId, jdbcType=INTEGER})     															   as templateId,
+					              TRIM(#{item.logYn, jdbcType=VARCHAR})          															   as logYn,
+					              TRIM(#{item.useYn, jdbcType=VARCHAR})         															   as useYn,
+					              TRIM(#{item.description, jdbcType=VARCHAR})    															   as description,
+					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as createBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
+					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as updateBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
+	             FROM DUAL
+	        </foreach>
+	    ) PARAM 
+	    ON (  PROGRAM_ID    = PARAM.programId  )
+	    WHEN MATCHED THEN
+	    UPDATE
+	    SET		  PROGRAM_NM     = PARAM.programNm
+                , PROGRAM_TYPE   = PARAM.programType
+                , TEMPLATE_ID    = PARAM.templateId
+                , LOG_YN         = PARAM.logYn
+		        , USE_YN 		 = PARAM.useYn
+ 		        , DESCRIPTION    = PARAM.description
+		        , UPDATE_BY      = PARAM.updateBy
+		        , UPDATE_DATE    = PARAM.updateDate
+			    	       
+	    WHEN NOT MATCHED THEN
+		INSERT ( 
+			      PROGRAM_ID
+		        , PROGRAM_NM
+		        , PROGRAM_TYPE
+		        , TEMPLATE_ID
+		        , LOG_YN
+		        , USE_YN
+		        , DESCRIPTION
+		        , CREATE_BY
+		        , CREATE_DATE
+		        , UPDATE_BY
+		        , UPDATE_DATE
+	    )   
+	    VALUES (
+                 PARAM.programId
+			   , PARAM.programNm
+			   , PARAM.programType
+	           , PARAM.templateId
+	           , PARAM.logYn
+	           , PARAM.useYn
+	           , PARAM.description
+			   , PARAM.createBy
+			   , PARAM.createDate
+			   , PARAM.updateBy
+			   , PARAM.updateDate
+	    )	 
+	</insert>
+</mapper>

@@ -484,7 +484,7 @@
 				             , #{item.dataType,          jdbcType=VARCHAR}
 				             , #{item.dataFormat,        jdbcType=VARCHAR} 
 				             , #{item.columnAlign,       jdbcType=VARCHAR}
-				             , #{i}+1
+				             , NVL(#{item.sortNo,        jdbcType=INTEGER},0)
 				             , #{item.sortMethod,        jdbcType=VARCHAR}
 				             , #{item.columnWidth,       jdbcType=VARCHAR}
 				             , #{item.columnEditable,    jdbcType=VARCHAR} 

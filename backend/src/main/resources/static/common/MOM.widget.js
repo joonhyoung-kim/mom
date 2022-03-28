@@ -114,8 +114,8 @@ var momWidget = {
 			  ----------------------------------------------------------------------------------------------------------------------------------     
 			  * 위젯세팅 정보 이용해 html 동적생성 
 			  ----------------------------------------------------------------------------------------------------------------------------------
-			  */  var gridExceptList = ['checkId','gridTitle','popupTitle','headerColor','initSearch']; 	
-			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch'};
+			  */  var gridExceptList = ['checkId','gridTitle','popupRowNum','popupTitle','headerColor','initSearch']; 	
+			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch'};
 			      for(var i=0,max=gridExceptList.length; i<max;i++){
 			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[index][0][gridExceptList[i]];			    	  
 			    	   delete that.gridProperty[index][0][gridExceptList[i]];
@@ -259,6 +259,7 @@ var momWidget = {
 			      var isCheckBox = 'N';
 			      var isDropDown ='N';
 			      var columnId = '';
+			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
 			    	 if(index == 0){
 			    		 var createFrontArea ={};  
 			    			createFrontArea["tm1st"] = that.tm1st;
@@ -273,7 +274,7 @@ var momWidget = {
 			    	 }				    				    	
 				      $('#contentArea'+(index+1)).append(searchAreaHtml); 	
 			    	 if(that.popupProperty[index].length > 0){
-			    		  var popupAreaHtml = that.createPopup.defaultPop(index+1,3,popupItem,that.gridExtraProperty[index]['popupTitle']);
+			    		  var popupAreaHtml = that.createPopup.defaultPop(index+1,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle']);
 			    		   $('body').append(popupAreaHtml);
 			    	 }   			       
 			         $('#contentArea'+(index+1)).append(gridAreaHtml); 	
@@ -842,16 +843,16 @@ var momWidget = {
 	    var midHtml = '';
 		var botHtml = '';
 		var rowCnt  = 1;
-		var forCnt  = 3;
+		var forCnt  = coulnmCnt;
 		var tmpCnt  = 1;
 		var fieldCnt = popupItem.length%coulnmCnt;
 		if(popupItem.length%coulnmCnt>0){
 			rowCnt  = Math.floor((popupItem.length/coulnmCnt))+1;
-			forCnt	= Math.floor((popupItem.length/coulnmCnt))*3+1;
+			forCnt	= Math.floor((popupItem.length/coulnmCnt))*coulnmCnt+1;
 		}
 		else{
 			rowCnt  =  Math.floor(popupItem.length/coulnmCnt);
-			forCnt  =  Math.floor((popupItem.length/coulnmCnt))*3;
+			forCnt  =  Math.floor((popupItem.length/coulnmCnt))*coulnmCnt;
 		}
 		
 	/*    var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-R'+rowCnt+'">'
@@ -865,7 +866,7 @@ var momWidget = {
 	    	        +     '</div>'
 	    	        +    '</div>'
 	    	        +    '<div class = "searcharea-pop-row'+rowCnt+'">';*/
-		    var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-R'+rowCnt+'">'
+		    var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-C'+coulnmCnt+'-R'+rowCnt+'">'
 	        +    '<div class="panelheader">' 
 	        +     '<div class="modal-header-title">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -876,10 +877,10 @@ var momWidget = {
 	        +     '</div>'
 	        +    '</div>'
 	        +    '<div class = "searcharea-pop-row'+rowCnt+'">';
-	    for(var i=0;i<forCnt;i+=3){	
+	    for(var i=0;i<forCnt;i+=coulnmCnt){	
 	        if(tmpCnt == rowCnt && fieldCnt==1){
 		       	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
-	             +           '<div class ="w-col w-col-4">'
+	             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	             +            '<div class ="labelbox">'
 	             +              '<div class ='+popupItem[i].circleClass+'></div>'
 	             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
@@ -891,16 +892,16 @@ var momWidget = {
 		    		 tmpCnt ++;
 		    	 }
 	        }
-	        else if(tmpCnt == rowCnt && fieldCnt==2){
+	        else if(tmpCnt == rowCnt && fieldCnt==coulnmCnt-1){
 			       	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
-		             +           '<div class ="w-col w-col-4">'
+		             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 		             +            '<div class ="labelbox">'
 		             +              '<div class ='+popupItem[i].circleClass+'></div>'
 		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
 		             +            '</div>'
 		             +          popupItem[i].labelField
 		             +           '</div>'
-		             +           '<div class ="w-col w-col-4">'
+		             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 		             +            '<div class ="labelbox">'
 		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
 		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
@@ -912,23 +913,95 @@ var momWidget = {
 			    		 tmpCnt ++;
 			    	 }
 	        }
-	        else{
+	        else if (coulnmCnt ==3){
 	        	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
-	               +           '<div class ="w-col w-col-4">'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-4">'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+1].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-4">'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+2].labelField
+	               +           '</div>'
+	               +          '</div>'; 
+		    	 if(rowCnt>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	          else if (coulnmCnt ==5){
+	        	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+1].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+2].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+3].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+3].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+3].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+4].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+4].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+4].labelField
+	               +           '</div>'
+	               +          '</div>'; 
+		    	 if(rowCnt>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	          else{
+	        	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+1].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
@@ -2479,7 +2552,7 @@ var momWidget = {
 				
 				col3: function() {
 					var html =
-						 '<div class="w-col w-col-4">'
+						 '<div class="w-col w-col-'+coulnmCnt+'">'
 						+'    <div class="w-clearfix listitem">'
 						+'	    <div class="w-col w-col-6">'
 						+'   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'

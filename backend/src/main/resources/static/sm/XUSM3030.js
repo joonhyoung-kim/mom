@@ -385,7 +385,7 @@ var XUSM3030 = {
 			}
 		},
 		{
-			  dataField 	: 'sortSeq' 
+			  dataField 	: 'sortNo' 
 			, headerText 	: '정렬순서'
 			, width			: 80
 			, style         : 'my-column-style-edit3'
@@ -1810,7 +1810,7 @@ var XUSM3030 = {
 							filterEnable: 'N',
 							filterIconShow: 'N',
 							sortMethod: "NONE",
-							sortSeq: ""
+							sortNo: ""
 		            }
 			}
 			else if (chooseTab=='search'){
@@ -1926,7 +1926,7 @@ var XUSM3030 = {
 	},
 	setComboBox: function() {
 		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120});	
-		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 100, height: 20,dropDownHeight: 120,disabled: true});	
+		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 100, height: 20,dropDownHeight: 120});	
 		$('#programId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120});	
 		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {
 		      if(result != 'SUCCESS') {

@@ -1162,6 +1162,25 @@ border-color: #d8dce3 !important;
 	background-attachment: scroll;
 	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
 }
+.searcharea-pop-row14 {
+	border: none;
+	padding-top: 12px;
+	padding-bottom: 15px;
+	background-color: white;
+    width: 97%;
+    left: 1rem;
+    height: 78%;
+    position: relative;
+	margin-bottom: 8px;
+	padding-left: 5px;
+	background-color: #f8f9fa;
+	background-image: none;
+	background-position: left top;
+	background-size: auto;
+	background-repeat: repeat;
+	background-attachment: scroll;
+	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
+}
 .modal-contents-row1{
     margin-top: -0.1rem;	
     /* height: 50%; */
@@ -1194,6 +1213,54 @@ border-color: #d8dce3 !important;
 }
 .modal-contents-row6{
     margin-top: 28rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row7{
+    margin-top: 34rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row8{
+    margin-top: 40rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row9{
+    margin-top: 46rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row10{
+    margin-top: 52rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row11{
+    margin-top: 58rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row12{
+    margin-top: 64rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row13{
+    margin-top: 70rem;	
+   /* height: 50%; */
+    position: relative;
+    margin-left: 0.4rem; 
+}
+.modal-contents-row14{
+    margin-top: 76rem;	
    /* height: 50%; */
     position: relative;
     margin-left: 0.4rem; 
@@ -2618,7 +2685,7 @@ border-color: #d8dce3 !important;
     margin-top: -50rem !important;
     background: white !important; 
 }
-.defaultPop-R1 {
+.defaultPop-C3-R1 {
 	z-index: 1050;
 /* 	display: none ; */
 	float: none !important;
@@ -2634,7 +2701,7 @@ border-color: #d8dce3 !important;
     border: 1px solid #4d4d4e !important;
    
 }
-.defaultPop-R2 {
+.defaultPop-C3-R2 {
     z-index: 1050;
 /* 	display: none ; */
 	float: none !important;
@@ -2650,7 +2717,7 @@ border-color: #d8dce3 !important;
     border: 1px solid #4d4d4e !important;
    
 }
-.defaultPop-R3 {
+.defaultPop-C3-R3 {
     z-index: 1050;
     /* display: none; */
     float: none !important;
@@ -2665,7 +2732,7 @@ border-color: #d8dce3 !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
 }
-.defaultPop-R4 {
+.defaultPop-C3-R4 {
     z-index: 1050;
 /* 	display: none ; */
 	float: none !important;
@@ -2718,7 +2785,7 @@ border-color: #d8dce3 !important;
 	color:red !important;
 	
 } */
-.defaultPop-R5 {
+.defaultPop-C3-R5 {
     z-index: 1050;
 /* 	display: none ; */
 	float: none !important;
@@ -2730,6 +2797,22 @@ border-color: #d8dce3 !important;
     margin-top: -64rem !important;
     background: white !important; 
     height: 39rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
+.defaultPop-C5-R8 {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+   /*  overflow-y:auto !important;  */
+    width: 62rem !important;
+    position: relative !important;
+    margin-left: 40rem !important;
+    margin-top: -70rem !important;
+    background: white !important; 
+    height: 90rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
    
@@ -2822,7 +2905,7 @@ border-color: #d8dce3 !important;
 	background: #d8d8d8 !important;
     color:red !important;
 }  */
-.defaultPop-R6 {
+.defaultPop-C3-R6 {
     z-index: 1050;
 /* 	display: none ; */
 	float: none !important;
@@ -3068,7 +3151,7 @@ border-color: #d8dce3 !important;
     text-align: center;
     position: relative;
     top: -0rem;
-    border-top: 1px solid #bcbdbd;
+    /* border-top: 1px solid #bcbdbd; */
 }
 .alert-pop-img{	
     display: flex;
