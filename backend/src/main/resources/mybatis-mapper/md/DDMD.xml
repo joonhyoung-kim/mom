@@ -26,4 +26,12 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    ORDER BY LOCATION_NM    
 </select>
+<select id="get_DDMD0004" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT ITEM_ID    AS CODE 
+        , ITEM_ID  ||'('|| ITEM_NM    ||')' AS LABEL
+   FROM   MOM_ITEM   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY ITEM_NM    
+</select>
 </mapper>

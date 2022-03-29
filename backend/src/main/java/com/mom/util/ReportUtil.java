@@ -2,7 +2,10 @@ package com.mom.util;
 
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URL;
 
 import java.sql.Connection;
@@ -23,6 +26,15 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 @Component
 public class ReportUtil {
 	  /** The connection. */ 
@@ -57,23 +69,25 @@ public class ReportUtil {
      *  
      * @param args the arguments 
      */  
-  public Map<String,Object> createReport(String fileName,String fileType,Map<String,Object> param ){
+  @SuppressWarnings("deprecation")
+public Map<String,Object> createReport(String fileName,String fileType,Map<String,Object> param ){
         JasperReport jasperReport;  
         JasperPrint jasperPrint;  
            
         long start = System.currentTimeMillis();  
            
         try {  
-        	String pdfJasperPath = "";
-        	String pdfFilePath = "";      	
+        	String jasperPath = "";
+        	String filePath = "";      	
             // Log log4j configuration  
         	if(fileType.equals("pdf")) {
-        	       pdfJasperPath = "\\src\\main\\resources\\static\\report-design\\";
-        		   pdfFilePath = "\\src\\main\\resources\\static\\report-pdf\\";
+        		jasperPath = "\\src\\main\\resources\\static\\report-design\\";
+        		filePath = "\\src\\main\\resources\\static\\report-pdf\\";
         		   
         	}
         	else {
-        		
+        		jasperPath = "\\src\\main\\resources\\static\\report-design\\";
+        		filePath = "\\src\\main\\resources\\static\\report-xlsx\\";
         	}
             
             System.out.println("Start");  
@@ -82,7 +96,8 @@ public class ReportUtil {
             System.out.println("Compile Jasper XML Report");  
             //URL resource = getClass().getClassLoader().getResource("report1.jrxml");
            // String filePath = resource.getPath();
-            String rootPath = System.getProperty("user.dir");;
+             String rootPath = System.getProperty("user.dir");
+            //String rootPath = "C:\\MOM\\apache-tomcat-8.5.77\\webapps\\MOM\\WEB-INF\\classes\\static\\report-design";
             System.out.println("현재 프로젝트의 경로 : "+rootPath );
             
           // jasperReport = JasperCompileManager.compileReport(filePath);  
@@ -104,21 +119,38 @@ public class ReportUtil {
                }
             }   
             System.out.println("파라미터?"+parameters);  
-            jasperPrint =  JasperFillManager.fillReport(rootPath+pdfJasperPath+fileName+".jasper", parameters, connection);
+            jasperPrint =  JasperFillManager.fillReport(rootPath+jasperPath+fileName+".jasper", parameters, connection);
             //jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);  
             System.out.println("time : " + (System.currentTimeMillis() - start)+ " ms.");  
                
-            System.out.println("Generated PDF");  
-            JasperExportManager.exportReportToPdfFile(jasperPrint, rootPath+pdfFilePath+fileName+"."+fileType);  
-            System.out.println("time : " + (System.currentTimeMillis() - start)+ " ms.");  
-               
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }  
+            if(fileType.equals("pdf")) {
+            	 JasperExportManager.exportReportToPdfFile(jasperPrint, rootPath+filePath+fileName+"."+fileType); 
+            }
+            else {
+            	SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+            	configuration.setOnePagePerSheet(true);
+            	configuration.setIgnoreGraphics(false);
+            	File outputFile = new File(rootPath+filePath+fileName+"."+fileType);
+            	ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            	     OutputStream fileOutputStream = new FileOutputStream(outputFile); 
+            	    Exporter exporter = new JRXlsxExporter();
+            	    exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            	    exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(byteArrayOutputStream));
+            	    exporter.setConfiguration(configuration);
+            	    exporter.exportReport();
+            	    byteArrayOutputStream.writeTo(fileOutputStream);
+            	/*  JasperExportManager.exportReportToXmlFile(jasperPrint, rootPath+filePath+fileName+"."+fileType, true);*/
+            	      System.out.println("time : " + (System.currentTimeMillis() - start)+ " ms.");  
+            
+       
+        } 
         System.out.println("--------");  
         System.out.println("Done");
-		return param;  
+		
     }  
-
-
+        catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        return param;  
+}
 }

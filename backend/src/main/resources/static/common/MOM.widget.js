@@ -149,6 +149,9 @@ var momWidget = {
 			    	  else if (that.searchProperty[index][i]['searchType']=='M'){
 			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></select>';
 			    	  }
+			    	   else if (that.searchProperty[index][i]['searchType']=='C'){
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></div>';
+			    	  }
 			    	  else{
 			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId'] +' input-type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
 			    	  }
@@ -426,7 +429,7 @@ var momWidget = {
 		  */																							
 			
 			//that.setAddBtnEvent(index, your);				    // 행추가버튼 이벤트 핸들러 등록
-		    that.setSearchComboData(index, your);               // 검색조건 콤보박스 세팅
+		    that.setSearchSet(index, your);                     // 검색조건 세팅
 		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
 		    that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
@@ -504,7 +507,7 @@ var momWidget = {
 			});*/
 	},	
 
-	setSearchComboData: function(index,your){
+	setSearchSet: function(index,your){
 		var that = this;
 		var searchId = undefined;
 		var dropdownId = undefined;
@@ -516,6 +519,7 @@ var momWidget = {
 		var splitArray1 = undefined;
 		var splitArray2 = undefined;
 		var defaultValue = undefined;
+		
 		if(that.searchProperty[index] == undefined || that.searchProperty[index] == ''){
 			return;
 		}
@@ -527,7 +531,7 @@ var momWidget = {
 			headerDropdownParam = that.searchProperty[index][i]['headerDropdownParam'];
 		    searchType       = that.searchProperty[index][i]['searchType']; 
 		    headerSearchType = that.searchProperty[index][i]['headerType']; 
-		    defaultValue     = momWidget.searchProperty[index][i]['defaultValue'];
+		    defaultValue     = that.searchProperty[index][i]['defaultValue'] == "" ? 'TODAY':that.searchProperty[index][i]['defaultValue'];
 		    nameSpace        = dropdownId.substr(0, 4);  
 		    queryId          = '';
 		    paramMap.length = 0;
@@ -590,6 +594,46 @@ var momWidget = {
 						//momWidget.splashHide();
 					   
 			}, undefined, undefined, this, false);
+			}
+			else if(searchType == 'C' ){
+					var today = new Date();  
+					var year  = undefined; // 년도
+				    var month = undefined;;  // 월
+				    var date  = undefined;;  // 날짜
+				if(defaultValue == 'TODAY'){
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				    
+				}
+				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
+				var dateNum  =	defaultValue.substring(5,7);
+				var dateType =	defaultValue.substring(7,8);
+				  if(dateType == 'M'){
+					 today = new Date(today .setMonth(today .getMonth() +Number(dateNum)));
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				  }
+				  else if (dateType == 'D'){
+					
+				  }
+				  else{
+					
+				  }
+				
+				}
+				else{
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				}
+						
+				 var calendar = new Date();
+                 calendar.setFullYear(year, month, date);
+				$('#'+searchId).jqxDateTimeInput({ width: '200px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId).jqxDateTimeInput('setDate', calendar);
+				
 			}
 			else{
 				
@@ -876,10 +920,10 @@ var momWidget = {
 	        +     '<a href="#" class="bntpopclose"></a>'
 	        +     '</div>'
 	        +    '</div>'
-	        +    '<div class = "searcharea-pop-row'+rowCnt+'">';
+	        +    '<div class = "searcharea-pop-C'+coulnmCnt+'-R'+rowCnt+'">';
 	    for(var i=0;i<forCnt;i+=coulnmCnt){	
 	        if(tmpCnt == rowCnt && fieldCnt==1){
-		       	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
+		       	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
 	             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	             +            '<div class ="labelbox">'
 	             +              '<div class ='+popupItem[i].circleClass+'></div>'
@@ -893,7 +937,7 @@ var momWidget = {
 		    	 }
 	        }
 	        else if(tmpCnt == rowCnt && fieldCnt==coulnmCnt-1){
-			       	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
+			       	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
 		             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 		             +            '<div class ="labelbox">'
 		             +              '<div class ='+popupItem[i].circleClass+'></div>'
@@ -914,7 +958,7 @@ var momWidget = {
 			    	 }
 	        }
 	        else if (coulnmCnt ==3){
-	        	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
+	        	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
 	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i].circleClass+'></div>'
@@ -943,7 +987,7 @@ var momWidget = {
 	        	
 	        }
 	          else if (coulnmCnt ==5){
-	        	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
+	        	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
 	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i].circleClass+'></div>'
@@ -968,14 +1012,14 @@ var momWidget = {
 	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+3].circleClass+'></div>'
-	               +              '<div class ='+popupItem[i+3].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +              '<div class ='+popupItem[i+3].textClass+'>'+popupItem[i+3].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+3].labelField
 	               +           '</div>'
 	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+4].circleClass+'></div>'
-	               +              '<div class ='+popupItem[i+4].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +              '<div class ='+popupItem[i+4].textClass+'>'+popupItem[i+4].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+4].labelField
 	               +           '</div>'
@@ -986,7 +1030,7 @@ var momWidget = {
 	        	
 	        }
 	          else{
-	        	 midHtml +=   '<div class ="modal-contents-row'+tmpCnt+'">'
+	        	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
 	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i].circleClass+'></div>'
@@ -1806,7 +1850,7 @@ var momWidget = {
 					}			
 					param = that.getCheckedRowItems(that.grid[index]);	
 					param[0].fileName  = that.pageProperty[index]['menuId']+'_'+(index+1);
-					param[0].fileType = 'pdf';
+					param[0].fileType = 'xlsx';
 			   // param = that.checkSearchParam(index,param,your); 	   
 				$.ajax({
     				url:common.contextPath() + '/createReport',
@@ -1821,7 +1865,9 @@ var momWidget = {
     				success: function(data){
 	                  setTimeout(function() {
 	                    momWidget.splashHide();
-    					window.open('../report-pdf/'+param[0].fileName+'.'+param[0].fileType, '_blank','resizable=no,width=2000,height=1300,left=740,top=520');	
+    					//window.open('../report-xlsx/'+param[0].fileName+'.'+param[0].fileType, '_blank','resizable=no,width=2000,height=1300,left=740,top=520');	
+    					//history.pushState(null, null, '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType)
+           				location.href  = '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType;
     					},7000);
     				},
     				error: function(e) {    				
