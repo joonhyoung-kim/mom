@@ -1238,9 +1238,14 @@ var momWidget = {
     				        	     AUIGrid.setGridData(that.grid[index], data);    
     				           
                                   							  						
-    					           if(your.retrieveCallBack != undefined) {
+    					           /*if(your.retrieveCallBack != undefined) {
     					        	   your.retrieveCallBack('SUCCESS', data, param, undefined, indexInfo, your);
-    					           }
+    					           }*/
+    					            if(that.checkActionCallBack(index, 'R',  param, btnId, your,data)['result'] != 'SUCCESS') {
+										  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
+										  momWidget.splashHide();
+									      return;
+			 }
     					           $('td').removeClass('aui-grid-default-column');
     					             that.splashHide();
     			}, undefined, undefined, this, true);
@@ -1328,10 +1333,10 @@ var momWidget = {
 	checkSearchProperty: function(index, param, your) { //인덱스  파라미터 
 		var that = momWidget;
 		//param = (param == undefined || jQuery.isEmptyObject(param) || param == '' || param == null) == true ?   that.getSearchParam(index, '#searchArea'+(index+1),searchParam) : param;
-        if(that.searchProperty != undefined && jQuery.isEmptyObject(that.searchProperty)==false){ 
-            for(var i = 0, max = that.searchProperty[index].length; i< max; i++){
-  		      if(that.searchProperty[index][i]['columnRequire'] == 'Y' && param[0][searchProperty[index][i]['searchId']] != undefined && param[0][searchProperty[index][i]['searchId']] ==''){
-  			      that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchProperty[index][i]['searchNm'] + ' 은(는) 필수 항목입니다.'});
+        if(momWidget.searchProperty != undefined && jQuery.isEmptyObject(momWidget.searchProperty)==false){ 
+            for(var i = 0, max = momWidget.searchProperty[index].length; i< max; i++){
+  		      if(momWidget.searchProperty[index][i]['columnRequire'] == 'Y' && param[momWidget.searchProperty[index][i]['searchId']] != undefined && param[momWidget.searchProperty[index][i]['searchId']] ==''){
+  			      that.messageBox({type: 'warning', width: '400', height: '145', html: momWidget.searchProperty[index][i]['searchNm'] + ' 은(는) 필수 항목입니다.'});
   			      return false;
   		      }										
   		  
@@ -4471,7 +4476,7 @@ var momWidget = {
 
 	},
 	// Callback 함수 처리
-	 checkActionCallBack: function(index, action, param, btnId, your) {
+	 checkActionCallBack: function(index, action, param, btnId, your,data) {
 		var result = 'SUCCESS';
 		if(your == undefined) {
 			return 'FAIL';
@@ -4485,8 +4490,8 @@ var momWidget = {
 		else if(action == 'E' && your.excelCallBack != undefined) {
 			your.excelCallBack(index,your,action,btnId,param,result,result);	
 		}
-		else if(action == 'R' && your.retrieveCallBack != undefined) {
-			your.retrieveCallBack(index,your,action,btnId,param,result);	
+		else if(action == 'R' && your.searchCallBack != undefined) {
+			your.searchCallBack(index,your,action,btnId,param,result,data);	
 		}
 		else if(action == 'GS' && your.saveCallBack != undefined) {
 				your.saveCallBack(index,your,action,btnId,param,result);				
@@ -4500,9 +4505,9 @@ var momWidget = {
 		else if(action == 'U' && your.updateCalBack != undefined) {
 			     your.updateCalBack(index,your,action,btnId,param,result);	
 		}
-		else{
-			return {result:'SUCCESS',param:param};
-		}
+		
+			return {result:result,param:param};
+		
 
 		
 	},
