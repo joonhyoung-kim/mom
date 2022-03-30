@@ -76,11 +76,22 @@
   </select>  
   <select id="get_DDSM0015" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
 	SELECT GROUP_CD AS CODE 
-	     , GROUP_CODE_NM AS LABEL
+	     , GROUP_CD ||'('|| GROUP_CODE_NM ||')'  AS LABEL
     FROM   MOM_GROUP_CODE 
 	WHERE  USE_YN = 'Y'
 	AND    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
     ORDER BY SORT_NO, GROUP_CODE_NM
   </select>  
+  <select id="get_DDSM0090" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
+	SELECT B.TABLE_NAME AS CODE
+         , B.TABLE_NAME ||'('|| B.COMMENTS ||')' AS LABEL
+    FROM   ALL_OBJECTS A
+       ,   ALL_TAB_COMMENTS B
+	WHERE  OBJECT_TYPE = 'TABLE'
+	AND    B.OWNER = 'MOM_MASTER'
+	AND    B.TABLE_NAME = A.OBJECT_NAME 
+	ORDER BY LABEL
+  </select>  
+
 </mapper>
