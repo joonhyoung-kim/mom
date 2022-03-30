@@ -39,12 +39,12 @@
 	      , MI.FQC_FLAG
 	      , MI.OQC_FLAG
 	      , MI.RP_ITEM_ID
-	      , MI.ITEM_CATEGROY_L
-	      , MI.ITEM_CATEGROY_M
-	      , MI.ITEM_CATEGROY_S
-	      , MI.EXECPTION_ISSUE_FLAG
+	      , MI.ITEM_CATEGORY_L
+	      , MI.ITEM_CATEGORY_M
+	      , MI.ITEM_CATEGORY_S
+	      , MI.EXCEPTION_ISSUE_FLAG
 	      , MI.COLOR
-	      , MI.CUTOMER_DIVISION_CD
+	      , MI.CUSTOMER_DIVISION_CD
 	      , MI.MAKER
 	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0007', MI.MAKER, 'KR') FROM DUAL) AS MAKER_NM  
 	      , MI.ABC_TYPE
@@ -71,10 +71,10 @@
 	 AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
      AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  			
 	 <if test="itemId != null and itemId != ''">
-	 AND (MI.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	 AND (MI.ITEM_ID LIKE '%' || TRIM(#{itemId, jdbcType=VARCHAR}) || '%' )
 	 </if>
 	 <if test="itemNm != null and itemNm != ''">
-     AND (MI.ITEM_NM LIKE '%' || TRIM(UPPER(#{itemNm , jdbcType=VARCHAR})) || '%' )
+     AND (MI.ITEM_NM LIKE '%' || TRIM(#{itemNm , jdbcType=VARCHAR}) || '%' )
 	 </if>
 	 <if test="itemType != null and itemType != ''">
      AND MI.ITEM_TYPE IN (${itemType})
@@ -115,12 +115,12 @@
 								, FQC_FLAG
 								, OQC_FLAG
 								, RP_ITEM_ID
-								, ITEM_CATEGROY_L
-								, ITEM_CATEGROY_M
-								, ITEM_CATEGROY_S
-								, EXECPTION_ISSUE_FLAG
+								, ITEM_CATEGOROY_L
+								, ITEM_CATEGOROY_M
+								, ITEM_CATEGOROY_S
+								, EXCEPTION_ISSUE_FLAG
 								, COLOR
-								, CUTOMER_DIVISION_CD
+								, CUSTOMER_DIVISION_CD
 								, MAKER
 								, ABC_TYPE
 								, DRAWING_NO

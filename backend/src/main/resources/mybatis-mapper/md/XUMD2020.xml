@@ -62,47 +62,18 @@
     </choose>						
 	</select>
     <insert id="create_defaultInfo1" parameterType="java.util.List">  
-        INSERT INTO MOM_ITEM(
+        INSERT INTO MOM_BOM(
 					              COMPANY_CD
 								, DIVISION_CD
-								, ITEM_ID
-								, ITEM_NM
-								, ITEM_GROUP_CD
-								, ITEM_TYPE
-								, ITEM_SPEC
-								, UNIT
-								, PROCUREMENT_TYPE
-								, MATERIAL_TYPE
-								, NET_WEIGHT
-								, NET_WEIGHT_UNIT
-								, GROSS_WEIGHT
-								, GROSS_WEIGHT_UNIT
-								, IN_LOCATION_CD
-								, OUT_LOCATION_CD
-								, ISSUE_TYPE
-								, ISSUE_UNIT
-								, VENDOR_CD
-								, DEPARTURE_VENDOR_CD
-								, TEST_REPORT_FLAG
-								, IQC_FLAG
-								, PQC_FLAG
-								, FQC_FLAG
-								, OQC_FLAG
-								, RP_ITEM_ID
-								, ITEM_CATEGROY_L
-								, ITEM_CATEGROY_M
-								, ITEM_CATEGROY_S
-								, EXECPTION_ISSUE_FLAG
-								, COLOR
-								, CUTOMER_DIVISION_CD
-								, MAKER
-								, ABC_TYPE
-								, DRAWING_NO
-								, HS_CD
-								, REORDER_POINT
-								, SAFETY_STOCK_QTY
+								, PARENT_ITEM_ID
+								, CHILD_ITEM_ID
+								, REQ_QTY
+								, START_DATE
+								, END_DATE
 								, PHANTOM_FLAG
 								, MRP_FLAG
+								, ISSUE_TYPE
+								, SORT_NO
 								, USE_YN
 								, DESCRIPTION
 								, CREATE_BY
@@ -114,45 +85,16 @@
                 <foreach item="item" collection="list" index="i" separator=" " open="">
 				          (    #{item.companyCd,          jdbcType=VARCHAR}
 				             , #{item.divisionCd,         jdbcType=VARCHAR}
-				             , #{item.itemId,             jdbcType=VARCHAR}
-				             , #{item.itemNm,             jdbcType=VARCHAR}
-				             , #{item.itemGroupCd,        jdbcType=VARCHAR}
-				             , #{item.itemType,           jdbcType=VARCHAR}
-				             , #{item.itemSpec,           jdbcType=VARCHAR}
-				             , #{item.unit,               jdbcType=VARCHAR}
-				             , #{item.procurementType,    jdbcType=VARCHAR}
-				             , #{item.materialType,       jdbcType=VARCHAR}
-				             , #{item.netWeight,          jdbcType=NUMERIC}
-				             , #{item.netWeightUnit,      jdbcType=VARCHAR}
-				             , #{item.grossWeight,        jdbcType=NUMERIC}
-				             , #{item.grossWeightUnit,    jdbcType=VARCHAR}
-				             , #{item.inLocationCd,       jdbcType=INTEGER}
-				             , #{item.outLocationCd,      jdbcType=VARCHAR}
-				             , #{item.issueType,          jdbcType=VARCHAR}
-				             , #{item.issueUnit,          jdbcType=VARCHAR}
-				             , #{item.vendorCd,           jdbcType=VARCHAR}
-				             , #{item.departureVendorCd,  jdbcType=VARCHAR}
-				             , #{item.testReportFlag,     jdbcType=VARCHAR}
-				             , #{item.iqcFlag,  		  jdbcType=VARCHAR}
-				             , #{item.pqcFlag,  		  jdbcType=VARCHAR}
-				             , #{item.fqcFlag,  		  jdbcType=VARCHAR}
-				             , #{item.oqcFlag,  		  jdbcType=VARCHAR}
-				             , #{item.rpItemId,  		  jdbcType=VARCHAR}
-				             , #{item.itemCategoryL,  	  jdbcType=VARCHAR}
-				             , #{item.itemCategoryM,  	  jdbcType=VARCHAR}
-				             , #{item.itemCategoryS,  	  jdbcType=VARCHAR}
-				             , #{item.exceptionIssueFlag, jdbcType=VARCHAR}
-				             , #{item.color,  		      jdbcType=VARCHAR}
-				             , #{item.customerDivisionCd, jdbcType=VARCHAR}
-				             , #{item.maker,  		      jdbcType=VARCHAR}
-				             , #{item.abcType,  		  jdbcType=VARCHAR}
-				             , #{item.drawingNo,  		  jdbcType=VARCHAR}
-				             , #{item.hsCd,  		      jdbcType=VARCHAR}
-				             , #{item.reorderPoint,       jdbcType=NUMERIC}
-				             , #{item.safetyStockQty,     jdbcType=NUMERIC}
+				             , #{item.parentItemId,       jdbcType=VARCHAR}
+				             , #{item.childItemId,        jdbcType=VARCHAR}
+				             , #{item.reqQty,             jdbcType=NUMERIC}
+				             , #{item.startDate,          jdbcType=VARCHAR}
+				             , #{item.endDate,            jdbcType=VARCHAR}
 				             , #{item.phantomFlag,        jdbcType=VARCHAR}
-				             , #{item.mrpFlag,  	      jdbcType=VARCHAR}
-				             , #{item.useYn,   		      jdbcType=VARCHAR}  
+				             , #{item.mrpFlag,            jdbcType=VARCHAR}
+				             , #{item.issueType,          jdbcType=VARCHAR}
+				             , #{item.sortNo,             jdbcType=NUMERIC}
+				             , #{item.useYn,              jdbcType=VARCHAR}
 				             , #{item.description,        jdbcType=VARCHAR}    
 				             , TRIM(#{item.userId,        jdbcType=VARCHAR})
 				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
@@ -163,64 +105,36 @@
    </insert>   
    <update id="modify_defaultInfo1" parameterType="java.util.List">     
       <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-        UPDATE MOM_ITEM
-        SET         ITEM_NM              = #{item.itemNm,             jdbcType=VARCHAR}
-				  , ITEM_GROUP_CD        = #{item.itemGroupCd,        jdbcType=VARCHAR}
-				  , ITEM_TYPE            = #{item.itemType,           jdbcType=VARCHAR}
-				  , ITEM_SPEC            = #{item.itemSpec,           jdbcType=VARCHAR}
-				  , UNIT                 = #{item.unit,               jdbcType=VARCHAR}
-				  , PROCUREMENT_TYPE     = #{item.procurementType,    jdbcType=VARCHAR}
-	              , MATERIAL_TYPE        = #{item.materialType,       jdbcType=VARCHAR}
-	              , NET_WEIGHT           = #{item.netWeight,          jdbcType=NUMERIC}
-	              , NET_WEIGHT_UNIT      = #{item.netWeightUnit,      jdbcType=VARCHAR}
-	              , GROSS_WEIGHT         = #{item.grossWeight,        jdbcType=NUMERIC}
-	              , GROSS_WEIGHT_UNIT    = #{item.grossWeightUnit,    jdbcType=VARCHAR}
-	              , IN_LOCATION_CD       = #{item.inLocationCd,       jdbcType=INTEGER}
-	              , OUT_LOCATION_CD      = #{item.outLocationCd,      jdbcType=VARCHAR}
-	              , ISSUE_TYPE 		     = #{item.issueType,          jdbcType=VARCHAR}
-	              , ISSUE_UNIT 		     = #{item.issueUnit,          jdbcType=VARCHAR}
-	              , VENDOR_CD 		     = #{item.vendorCd,           jdbcType=VARCHAR}
-	              , DEPARTURE_VENDOR_CD  = #{item.departureVendorCd,  jdbcType=VARCHAR}
-	              , TEST_REPORT_FLAG     = #{item.testReportFlag,     jdbcType=VARCHAR}
-	              , IQC_FLAG             = #{item.iqcFlag,  		  jdbcType=VARCHAR}
-	              , PQC_FLAG             = #{item.pqcFlag,  		  jdbcType=VARCHAR}
-	              , FQC_FLAG             = #{item.fqcFlag,  		  jdbcType=VARCHAR}
-	              , OQC_FLAG             = #{item.oqcFlag,  		  jdbcType=VARCHAR}
-	              , RP_ITEM_ID           = #{item.rpItemId,  		  jdbcType=VARCHAR}
-	              , ITEM_CATEGORY_L      = #{item.itemCategoryL,  	  jdbcType=VARCHAR}
-	              , ITEM_CATEGORY_M      = #{item.itemCategoryM,  	  jdbcType=VARCHAR}
-	              , ITEM_CATEGORY_S      = #{item.itemCategoryS,  	  jdbcType=VARCHAR}
-	              , EXCEPTION_ISSUE_FLAG = #{item.exceptionIssueFlag, jdbcType=VARCHAR}
-	              , COLOR                = #{item.color,  		      jdbcType=VARCHAR}
-	              , CUSTOMER_DIVISION_CD = #{item.customerDivisionCd, jdbcType=VARCHAR}
-	              , MAKER                = #{item.maker,  		      jdbcType=VARCHAR}
-	              , ABC_TYPE             = #{item.abcType,  		  jdbcType=VARCHAR}
-	              , DRAWING_NO           = #{item.drawingNo,  		  jdbcType=VARCHAR}
-	              , HS_CD                = #{item.hsCd,  		      jdbcType=VARCHAR}
-	              , REORDER_POINT        = #{item.reorderPoint,       jdbcType=NUMERIC}
-	              , SAFETY_STOCK_QTY     = #{item.safetyStockQty,     jdbcType=NUMERIC}
-	              , PHANTOM_FLAG         = #{item.phantomFlag,        jdbcType=VARCHAR}
-	              , MRP_FLAG             = #{item.mrpFlag,  	      jdbcType=VARCHAR}
+        UPDATE MOM_BOM
+        SET         REQ_QTY              = #{item.reqQty,             jdbcType=VARCHAR}
+				  , START_DATE           = #{item.startDate,          jdbcType=VARCHAR}
+				  , END_DATE             = #{item.endDate,            jdbcType=VARCHAR}
+				  , SORT_NO              = #{item.sortNo,             jdbcType=VARCHAR}
+				  , MRP_FLAG             = #{item.flag,               jdbcType=VARCHAR}
+				  , ISSUE_TYPE           = #{item.issueType,          jdbcType=VARCHAR}
+	              , PHANTOM_FLAG         = #{item.phantomFlag,        jdbcType=VARCHAR}	         
 	              , USE_YN               = #{item.useYn,   		      jdbcType=VARCHAR}  
 	              , DESCRIPTION          = #{item.description,        jdbcType=VARCHAR}    
-		          , UPDATE_BY            = #{item.userId,          jdbcType=VARCHAR}
+		          , UPDATE_BY            = #{item.userId,             jdbcType=VARCHAR}
 		          , UPDATE_DATE          = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR}, #{item.divisionCd, jdbcType=VARCHAR})
          <where>
-                    COMPANY_CD        = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
-         AND        DIVISION_CD       = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
-         AND        ITEM_ID           = TRIM(#{item.itemId,     jdbcType=VARCHAR}) 
+               COMPANY_CD        = TRIM(#{item.companyCd,     jdbcType=VARCHAR})
+         AND   DIVISION_CD       = TRIM(#{item.divisionCd,    jdbcType=VARCHAR}) 
+         AND   PARENT_ITEM_ID    = TRIM(#{item.parentItemId,  jdbcType=VARCHAR})
+         AND   CHILD_ITEM_ID     = TRIM(#{item.childItemId,   jdbcType=VARCHAR}) 
          </where>
       </foreach>
    </update> 
    <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
 	   DELETE
-	   FROM    MOM_ITEM
+	   FROM    MOM_BOM
        <where> 
         <foreach collection="list" item="item" open="" close="" separator="OR"> 
           (   
-	               COMPANY_CD     = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
-	         AND   DIVISION_CD    = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
-	         AND   ITEM_ID        = TRIM(#{item.itemId,     jdbcType=VARCHAR}) 
+	            COMPANY_CD        = TRIM(#{item.companyCd,     jdbcType=VARCHAR})
+          AND   DIVISION_CD       = TRIM(#{item.divisionCd,    jdbcType=VARCHAR}) 
+          AND   PARENT_ITEM_ID    = TRIM(#{item.parentItemId,  jdbcType=VARCHAR})
+          AND   CHILD_ITEM_ID     = TRIM(#{item.childItemId,   jdbcType=VARCHAR}) 
           )
         </foreach>
        </where>

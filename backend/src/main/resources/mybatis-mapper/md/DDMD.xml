@@ -7,7 +7,7 @@
    FROM   MOM_PLANT  
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-   ORDER BY SORT_NO, PLANT_NM 
+   ORDER BY PLANT_NM 
 </select>
 <select id="get_DDMD0002" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT LOCATION_CD   AS CODE 
@@ -15,7 +15,7 @@
    FROM   MOM_LOCATION   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-   ORDER BY SORT_NO, LOCATION_NM 
+   ORDER BY LOCATION_NM 
 </select>
    
 <select id="get_DDMD0003" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
@@ -24,7 +24,7 @@
    FROM   MOM_PARTNER   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-   ORDER BY LOCATION_NM    
+   ORDER BY PARTNER_NM  
 </select>
 <select id="get_DDMD0004" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT ITEM_ID    AS CODE 

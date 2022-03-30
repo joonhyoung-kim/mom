@@ -1112,7 +1112,7 @@ border-color: #d8dce3 !important;
 	background-color: white;
     width: 96.5%;
     left: 1rem;
-    height: 75%;
+    height: 70%;
     position: relative;
 	margin-bottom: 8px;
 	padding-left: 5px;
@@ -1123,6 +1123,7 @@ border-color: #d8dce3 !important;
 	background-repeat: repeat;
 	background-attachment: scroll;
 	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
+	display: inline-grid;
 }
 .searcharea-pop-C3-R5 {
 	border: none;
@@ -3179,6 +3180,9 @@ border-color: #d8dce3 !important;
 }
 .btn-cancel.danger{
     background-color: #e62a45;
+}
+.btn-cancel.warning{
+	background: #f7b731 !important;
 }
 .btn-cancel.success{
     background-color: rgb(22 192 167);
@@ -5843,7 +5847,7 @@ border-color: #d8dce3 !important;
     color: black;
     height: 100%;
     font-size: 0.9rem;
-    padding-top: 0.3rem;
+    padding-top: 0.45rem;
 }
  .main-tab {
     color: black;

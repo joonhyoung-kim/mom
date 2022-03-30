@@ -482,8 +482,8 @@ table tr td i.fa { font-size: 12px; }
 .panel-success .panel-heading {background-color: rgb(254 254 254) !important;border-color: rgb(255 255 255) !important;color: rgb(255, 255, 255) !important; }
 .panel-info { border-color: #3BAFDA !important; }
 .panel-info .panel-heading { background-color: #3BAFDA !important; border-color: #3BAFDA !important; color: #FFF !important; }
-.panel-warning { border-color: #F6BB42 !important; }
-.panel-warning .panel-heading { background-color: #F6BB42 !important; border-color: #F6BB42 !important; color: #FFF !important; }
+/* .panel-warning { border-color: #F6BB42 !important; } */
+.panel-warning .panel-heading { background-color: rgb(254 254 254) !important; border-color: rgb(255 255 255) !important; color: #FFF !important; }
 /* .panel-danger { border-color: #E9573F !important; } */
 .panel-danger .panel-heading { background-color: rgb(254 254 254) !important;border-color: rgb(255 255 255) !important;color: rgb(255, 255, 255) !important; }
  .btn-grey {

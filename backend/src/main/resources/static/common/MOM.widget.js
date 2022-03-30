@@ -433,6 +433,7 @@ var momWidget = {
 		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
 		    that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
+		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
 		    if(that.gridExtraProperty[index]['initSearch']=='Y'){
 		    	 that.findBtnClicked(index, {}, true, 'INIT',menuId,your,[]);
 		    }
@@ -531,7 +532,7 @@ var momWidget = {
 			headerDropdownParam = that.searchProperty[index][i]['headerDropdownParam'];
 		    searchType       = that.searchProperty[index][i]['searchType']; 
 		    headerSearchType = that.searchProperty[index][i]['headerType']; 
-		    defaultValue     = that.searchProperty[index][i]['defaultValue'] == "" ? 'TODAY':that.searchProperty[index][i]['defaultValue'];
+		    defaultValue     = that.searchProperty[index][i]['defaultValue'];
 		    nameSpace        = dropdownId.substr(0, 4);  
 		    queryId          = '';
 		    paramMap.length = 0;
@@ -606,22 +607,77 @@ var momWidget = {
 				     date = today.getDate();  // 날짜
 				    
 				}
+				else if(defaultValue == 'INIT'){
+					     today = new Date(today.getFullYear(), today.getMonth(), 1);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
+				else if(defaultValue == 'LAST'){
+					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
 				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
 				var dateNum  =	defaultValue.substring(5,7);
 				var dateType =	defaultValue.substring(7,8);
 				  if(dateType == 'M'){
-					 today = new Date(today .setMonth(today .getMonth() +Number(dateNum)));
+					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
 					 year = today.getFullYear(); // 년도
 				     month = today.getMonth() ;  // 월
 				     date = today.getDate();  // 날짜
 				  }
 				  else if (dateType == 'D'){
-					
+					 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+					 year  = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date  = today.getDate();  // 날짜
 				  }
 				  else{
 					
 				  }
 				
+				}
+				else if(defaultValue.includes("INIT") && defaultValue.length>5){
+					var dateNum  =	defaultValue.substring(4,6);
+				    var dateType =	defaultValue.substring(6,7);
+				    today = new Date(today.getFullYear(), today.getMonth(), 1);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
+						
+					  }
+				}
+					else if(defaultValue.includes("LAST") && defaultValue.length>5){
+					var dateNum  =	defaultValue.substring(4,6);
+				    var dateType =	defaultValue.substring(6,7);
+				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
+						
+					  }
 				}
 				else{
 					 year = today.getFullYear(); // 년도
@@ -631,7 +687,7 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+searchId).jqxDateTimeInput({ width: '200px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
 				$('#'+searchId).jqxDateTimeInput('setDate', calendar);
 				
 			}
@@ -2203,6 +2259,16 @@ var momWidget = {
 				             return;
 						} 
 					}
+				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'){
+					 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() !=''){
+						  if(isNaN(Number($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim()))==true){
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: popupItem[i]['popupNm'] +'숫자입력!'});
+							 momWidget.splashHide();
+				             return;
+						  }
+					 }						
+				    }
+					
 				}
 				  var actionType = $('#defaultPop1').attr('actionType');				 
 				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
@@ -2357,7 +2423,10 @@ var momWidget = {
 		  for(var i=0;i<that.popupProperty[index].length;i++){
 			  popupId = that.popupProperty[index][i]['popupId'];
 			  searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
-			  param[popupId]=$('#'+searchId).val(); 
+			
+				param[popupId]=$('#'+searchId).val(); 
+			  
+			  
 		  }
 		  return [param];
 	},
@@ -4398,48 +4467,11 @@ var momWidget = {
 		}
 	},
 	
-	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Proc Window Resize
-	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// 윈도우 리사이즈
-	procResize: function(index) {	
-		var that = this.grid == undefined ? this.momWidget : this;
-		
-		if(index == undefined) {// && that.grid != undefined) {
-			for(var i = 0; i < that.grid.length; i++) {
-				if(that.grid[i] == undefined || document.getElementById('grid' + (index + 1)) == undefined) {
-	                  continue;
-	            }
-				
-				AUIGrid.resize(that.grid[i]);
-				
-				var height = document.getElementById('grid' + (index + 1)).children[0].clientHeight;
-				var width = document.getElementById('grid' + (index + 1)).children[0].clientWidth;
-				
-				$(that.grid[i]).find('.aui-grid').css('height', height + 17 + 'px');
-				$(that.grid[i]).find('.aui-grid').css('width', width + 17 + 'px');
 
-				AUIGrid.resize(that.grid[i]);
-			}
-		} else {// if(index != undefined && that.grid != undefined &&
-				// that.grid[i] != undefined && document.getElementById('grid' +
-				// (index + 1)) != undefined) {
-			const i = index;
-			$(window).resize(function() {
-				setTimeout(function() {
-					AUIGrid.resize(that.grid[i]);
-					
-					var height = document.getElementById('grid' + (i + 1)).children[0].clientHeight;
-					var width = document.getElementById('grid' + (i + 1)).children[0].clientWidth;
-					
-					$(that.grid[i]).find('.aui-grid').css('height', height + 17 + 'px');
-					$(that.grid[i]).find('.aui-grid').css('width', width + 17 + 'px');
+	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-					AUIGrid.resize(that.grid[i]);
-				}, 100);
-			});	
-		}
-	},
+	
+	
 
 	// init 함수 처리
 	 checkActionCallInit: function(index, action, param, btnId, your) {
@@ -4511,6 +4543,44 @@ var momWidget = {
 
 		
 	},
+	// 윈도우 리사이즈
+	htmlResize: function(index,your) {	
+		var that = momWidget;
+		
+		if(index == undefined) {
+			for(var i = 0; i < that.grid.length; i++) {
+				if(that.grid[i] == undefined || document.getElementById('grid' + (index + 1)) == undefined) {
+	                  continue;
+	            }
+				
+				AUIGrid.resize(that.grid[i]);
+				
+				var height = document.getElementById('grid' + (index + 1)).children[0].clientHeight;
+				var width = document.getElementById('grid' + (index + 1)).children[0].clientWidth;
+				
+				$(that.grid[i]).find('.aui-grid').css('height', height + 17 + 'px');
+				$(that.grid[i]).find('.aui-grid').css('width', width + 17 + 'px');
+
+				AUIGrid.resize(that.grid[i]);
+			}
+		} else {
+			const i = index;
+			$(window).resize(function() {
+				setTimeout(function() {
+					AUIGrid.resize(that.grid[i]);
+					
+					var height = document.getElementById('grid' + (i + 1)).children[0].clientHeight;
+					var width = document.getElementById('grid' + (i + 1)).children[0].clientWidth;
+					
+					$(that.grid[i]).find('.aui-grid').css('height', height + 17 + 'px');
+					$(that.grid[i]).find('.aui-grid').css('width', width + 17 + 'px');
+	
+					AUIGrid.resize(that.grid[i]);
+				}, 100);
+			});	
+		}
+	},
+	
 	procCallInitTran: function(index, action, param, indexInfo, your) {
 		if(your == undefined) {
 			return 'SUCCESS';
@@ -6102,11 +6172,24 @@ var momWidget = {
                 +   '</path>'
                 + '</svg>'
                 + '</span>';
+            var warningImg = '<span class="alert-pop-img">'
+                + '<svg xmlns="http://www.w3.org/2000/svg" height="60" width="60" viewBox="0 0 24 24">'
+				+   '<path fill="#fad383" d="M15.728,22H8.272a1.00014,1.00014,0,0,1-.707-.293l-5.272-5.272A1.00014,1.00014,0,0,1,2,15.728V8.272a1.00014,1.00014,0,0,1,.293-.707l5.272-5.272A1.00014,1.00014,0,0,1,8.272,2H15.728a1.00014,1.00014,0,0,1,.707.293l5.272,5.272A1.00014,1.00014,0,0,1,22,8.272V15.728a1.00014,1.00014,0,0,1-.293.707l-5.272,5.272A1.00014,1.00014,0,0,1,15.728,22Z">'
+				+   '</path>'
+				+   '<circle cx="12" cy="16" r="1" fill="#f7b731">'
+				+   '</circle>'
+				+   '<path fill="#f7b731" d="M12,13a1,1,0,0,1-1-1V8a1,1,0,0,1,2,0v4A1,1,0,0,1,12,13Z">'
+				+   '</path>'
+				+   '</svg>'
+				+ '</span>';     
          if(warningType == 'success'){
         	 $('.momMessageBox .panel-body .pop-body').append(successImg);
          }
          else if(warningType == 'danger'){
         	 $('.momMessageBox .panel-body .pop-body').append(dangerImg);
+         }
+          else if(warningType == 'warning'){
+        	 $('.momMessageBox .panel-body .pop-body').append(warningImg);
          }
          else{
         	 $('.momMessageBox .panel-body .pop-body').append(successImg);
