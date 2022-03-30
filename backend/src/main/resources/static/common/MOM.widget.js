@@ -578,11 +578,11 @@ var momWidget = {
 				        }
 				        else{
 				        	if(searchType == 'M'){
-				        		$('#'+searchId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true});
+				        		$('#'+searchId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,dropDownWidth: 220,disabled: false,checkboxes: true});
 				        		$('#'+searchId).val(defaultValue); 
 				        	}
 				        	else{
-				        		$('#'+searchId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false}); 
+				        		$('#'+searchId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,dropDownWidth: 220,disabled: false}); 
 				        		$('#'+searchId).val(defaultValue); 
 				        	}
 				        	  

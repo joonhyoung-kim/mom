@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUSM9010">
+	<resultMap id="get_defaultInfo_result" type="com.mom.dto.LowerHashMap">
+	<result property="PROGRAM_ID" column="PROGRAM_ID" />
+	<result property="MENU_ID" column="MENU_ID" />
+	<result property="GRID_PROPERTY"   column="GRID_PROPERTY"/>
+	<result property="COLUMN_PROPERTY" column="COLUMN_PROPERTY" jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="SEARCH_PROPERTY" column="SEARCH_PROPERTY" jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="POPUP_PROPERTY"  column="POPUP_PROPERTY"  jdbcType="CLOB" javaType="java.lang.String"/>
+	<result property="BUTTON_PROPERTY" column="BUTTON_PROPERTY"/>
+	</resultMap>
+
+	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	 SELECT COLUMN_NAME
+	      , SUBSTR ( REPLACE ( INITCAP ( '1' || COLUMN_NAME ), '_' ), 2) AS COLUMN_NAME2
+          , DATA_TYPE 
+     FROM   ALL_TAB_COLUMNS 
+     WHERE  TABLE_NAME = #{tableId, jdbcType=VARCHAR}
+     AND    OWNER = 'MOM_MASTER'
+     ORDER BY COLUMN_ID
+	</select>
+	
+</mapper>
