@@ -34,4 +34,28 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    ORDER BY ITEM_NM    
 </select>
+<select id="get_DDMD0005" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT WORK_GROUP_CD    AS CODE 
+        , WORK_GROUP_CD  ||'('|| WORK_GROUP_NM    ||')' AS LABEL
+   FROM   MOM_WORK_GROUP   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY WORK_GROUP_NM        
+</select>
+<select id="get_DDMD0006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT WORK_CENTER_CD     AS CODE 
+        , WORK_CENTER_CD   ||'('|| WORK_CENTER_NM     ||')' AS LABEL
+   FROM   MOM_WORK_CENTER   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY WORK_CENTER_NM    
+</select>
+<select id="get_DDMD0007" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT WORK_STATION_CD     AS CODE 
+        , WORK_STATION_CD   ||'('|| WORK_STATION_NM     ||')' AS LABEL
+   FROM   MOM_WORK_STATION   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY WORK_STATION_NM
+</select>          
 </mapper>

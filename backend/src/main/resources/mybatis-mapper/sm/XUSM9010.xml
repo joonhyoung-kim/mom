@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM9010">
-	<resultMap id="get_defaultInfo_result" type="com.mom.dto.LowerHashMap">
-	<result property="PROGRAM_ID" column="PROGRAM_ID" />
-	<result property="MENU_ID" column="MENU_ID" />
-	<result property="GRID_PROPERTY"   column="GRID_PROPERTY"/>
-	<result property="COLUMN_PROPERTY" column="COLUMN_PROPERTY" jdbcType="CLOB" javaType="java.lang.String"/>
-	<result property="SEARCH_PROPERTY" column="SEARCH_PROPERTY" jdbcType="CLOB" javaType="java.lang.String"/>
-	<result property="POPUP_PROPERTY"  column="POPUP_PROPERTY"  jdbcType="CLOB" javaType="java.lang.String"/>
-	<result property="BUTTON_PROPERTY" column="BUTTON_PROPERTY"/>
-	</resultMap>
-
-	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+  <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	 SELECT COLUMN_NAME
 	      , SUBSTR ( REPLACE ( INITCAP ( '1' || COLUMN_NAME ), '_' ), 2) AS COLUMN_NAME2
           , DATA_TYPE 
@@ -19,6 +9,27 @@
      WHERE  TABLE_NAME = #{tableId, jdbcType=VARCHAR}
      AND    OWNER = 'MOM_MASTER'
      ORDER BY COLUMN_ID
-	</select>
+  </select>
+  <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_BOM
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+          ,  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+          ,  PARENT_ITEM_ID = #{item.parentItemId, jdbcType=VARCHAR}
+          ,  CHILD_ITEM_ID = #{item.childItemId, jdbcType=VARCHAR}
+          ,  REQ_QTY = #{item.reqQty, jdbcType=NUMERIC}
+          ,  START_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+          ,  END_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+          ,  PHANTOM_FLAG = #{item.phantomFlag, jdbcType=VARCHAR}
+          ,  MRP_FLAG = #{item.mrpFlag, jdbcType=VARCHAR}
+          ,  ISSUE_TYPE = #{item.issueType, jdbcType=VARCHAR}
+          ,  SORT_NO = #{item.sortNo, jdbcType=NUMERIC}
+          ,  USE_YN = #{item.useYn, jdbcType=VARCHAR}
+          ,  DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+          ,  UPDATE_BY = #{item.updateBy, jdbcType=VARCHAR}
+          ,  UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE 1=1
+    </foreach>
+  </update>
 	
 </mapper>

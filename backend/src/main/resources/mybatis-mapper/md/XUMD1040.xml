@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUMD1040">
+  <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	   SELECT   MCD.COMPANY_CD
+		      , MCD.COMPANY_NM
+		      , MCD.DIVISION_CD
+		      , MCD.DIVISION_NM
+		      , MWG.WORK_GROUP_CD
+		      , MWG.WORK_GROUP_NM
+		      , MWG.USE_YN
+		      , MWG.DESCRIPTION
+		      , MWG.CREATE_BY
+		      ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWG.COMPANY_CD, MWG.DIVISION_CD, MWG.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
+		      , TO_CHAR(MWG.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+		      , MWG.UPDATE_BY
+		      ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWG.COMPANY_CD, MWG.DIVISION_CD, MWG.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		      , TO_CHAR(MWG.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		FROM    MOM_COM_DIV_V MCD
+		      , MOM_WORK_GROUP MWG
+		WHERE   MCD.COMPANY_CD  = MWG.COMPANY_CD
+		AND     MCD.DIVISION_CD = MWG.DIVISION_CD   
+		AND     MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+		AND     MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  		
+		<if test="workGroupCd != null and workGroupCd != ''">
+		AND (MWG.WORK_GROUP_CD LIKE '%' || TRIM(UPPER(#{workGroupCd, jdbcType=VARCHAR})) || '%' )
+		</if>
+		<if test="workGroupNm != null and workGroupNm != ''">
+	    AND (MWG.WORK_GROUP_NM LIKE '%' || TRIM(UPPER(#{workGroupNm, jdbcType=VARCHAR})) || '%' )
+		</if>
+	    <if test="useYn != null and useYn != ''">
+	    AND MWG.USE_YN = #{useYn, jdbcType=VARCHAR}
+		</if>
+		ORDER BY  MWG.WORK_GROUP_NM						
+  </select>
+  <insert id="create_defaultInfo1" parameterType="java.util.List">
+         INSERT INTO MOM_WORK_GROUP (
+                                 COMPANY_CD
+                              ,  DIVISION_CD
+                              ,  WORK_GROUP_CD
+                              ,  WORK_GROUP_NM
+                              ,  USE_YN
+                              ,  DESCRIPTION
+                              ,  CREATE_BY
+                              ,  CREATE_DATE
+                              ,  UPDATE_BY
+                              ,  UPDATE_DATE )
+         VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+                              (   #{item.companyCd, jdbcType=VARCHAR}
+                              ,   #{item.divisionCd, jdbcType=VARCHAR}
+                              ,   #{item.workGroupCd, jdbcType=VARCHAR}
+                              ,   #{item.workGroupNm, jdbcType=VARCHAR}
+                              ,   #{item.useYn, jdbcType=VARCHAR}
+                              ,   #{item.description, jdbcType=VARCHAR}
+                              ,   #{item.userId, jdbcType=VARCHAR}
+                              ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                              ,   #{item.userId, jdbcType=VARCHAR}
+                              ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                              )
+                </foreach>
+  </insert>   
+  <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_WORK_GROUP
+      SET    COMPANY_CD    = #{item.companyCd,     jdbcType=VARCHAR}
+          ,  DIVISION_CD   = #{item.divisionCd,    jdbcType=VARCHAR}
+          ,  WORK_GROUP_CD = #{item.workGroupCd,   jdbcType=VARCHAR}
+          ,  WORK_GROUP_NM = #{item.workGroupNm,   jdbcType=VARCHAR}
+          ,  USE_YN        = #{item.useYn,         jdbcType=VARCHAR}
+          ,  DESCRIPTION   = #{item.description,   jdbcType=VARCHAR}
+          ,  UPDATE_BY     = #{item.userId,        jdbcType=VARCHAR}
+          ,  UPDATE_DATE   = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE 1=1
+      AND   COMPANY_CD     = TRIM(#{item.companyCd,   jdbcType=VARCHAR})
+      AND   DIVISION_CD    = TRIM(#{item.divisionCd,  jdbcType=VARCHAR}) 
+      AND   WORK_GROUP_CD  = TRIM(#{item.workGroupCd, jdbcType=VARCHAR})           
+    </foreach>
+  </update>
+  <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
+	   DELETE
+	   FROM    MOM_WORK_GROUP
+       <where> 
+        <foreach collection="list" item="item" open="" close="" separator="OR"> 
+          (   
+	               COMPANY_CD     = TRIM(#{item.companyCd,   jdbcType=VARCHAR})
+	         AND   DIVISION_CD    = TRIM(#{item.divisionCd,  jdbcType=VARCHAR}) 
+	         AND   WORK_GROUP_CD  = TRIM(#{item.workGroupCd, jdbcType=VARCHAR}) 
+          )
+        </foreach>
+       </where>
+   </delete>
+</mapper>

@@ -23,17 +23,17 @@ var XUSM9010 = {
 			var eventType = $('#eventType').val();
 			var jdbcType  = 'VARCHAR';
 			if(eventType == 'SELECT'){
-				xmlHtml += 'SELECT  ';
+				xmlHtml += '  <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">\n      SELECT  ';
 			  for(var i=0;i<columnItem.length;i++){	
 				 if(i == columnItem.length-1){
-					xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'FROM      '+$('#tableId').val()+'\n'+'WHERE   1=1';
+					xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'        FROM      '+$('#tableId').val()+'\n'+'        WHERE   1=1\n  </select>';
 				}	
 				else{
 					if(columnItem[i]['dataType'] == 'DATE'){
-						 xmlHtml += " TO_CHAR("+columnItem[i]['columnName']+", 'YYYY-MM-DD') AS "+columnItem[i]['columnName']+'\n'+"             ,  ";
+						 xmlHtml += " TO_CHAR("+columnItem[i]['columnName']+", 'YYYY-MM-DD') AS "+columnItem[i]['columnName']+'\n'+"                   ,  ";
 					}
 					else{
-						  xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'             ,  ';
+						  xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'                   ,  ';
 					}
 					
 				}				
@@ -42,10 +42,10 @@ var XUSM9010 = {
 			  }
 		    }
 		    else if(eventType == 'INSERT'){
-			  xmlHtml += 'INSERT INTO '+$('#tableId').val()+' ('+'\n'+'                 ';
+			  xmlHtml += '  <insert id="create_defaultInfo1" parameterType="java.util.List">\n         INSERT INTO '+$('#tableId').val()+' ('+'\n'+'                                ';
 			    for(var i=0;i<columnItem.length;i++){	
 				 if(i == columnItem.length-1){
-					xmlHtml += ' '+columnItem[i]['columnName']+' )'+'\n'+'VALUES <foreach item="item" collection="list" index="i" separator=" " open="">\n                (  ';
+					xmlHtml += ' '+columnItem[i]['columnName']+' )'+'\n'+'         VALUES <foreach item="item" collection="list" index="i" separator=" " open="">\n                              (  ';
 					for(var j=0;j<columnItem.length;j++){
 						if(columnItem[j]['dataType'] == 'VARCHAR' || columnItem[j]['dataType'] == 'VARCHAR2'){
 							jdbcType = 'VARCHAR';
@@ -58,33 +58,69 @@ var XUSM9010 = {
 						}
 						if(j == columnItem.length-1){
 							if(columnItem[j]['dataType'] == 'DATE'){
-						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'                )\n       </foreach>';
+						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'                              )\n                </foreach>\n  </insert>';
 					          }
 					        else{
-						      xmlHtml += ' #{item.'+columnItem[j]['columnName2']+', jdbcType='+jdbcType+'}\n                )\n       </foreach>';
+						      xmlHtml += ' #{item.'+columnItem[j]['columnName2']+', jdbcType='+jdbcType+'}\n                              )\n                </foreach>\n  </insert>';
 					        }
 					    
 				        }
 				        else{
 					          if(columnItem[j]['dataType'] == 'DATE'){
-						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'                ,  ';
+						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'                              ,  ';
 					          }
 					          else{
-						            xmlHtml += ' #{item.'+columnItem[j]['columnName2']+', jdbcType='+jdbcType+'}\n'+'                ,  ';
+						            xmlHtml += ' #{item.'+columnItem[j]['columnName2']+', jdbcType='+jdbcType+'}\n'+'                              ,  ';
 					          }
 					     
 				         }
 					}
 				}	
 				else{
-					xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'                , ';
+					xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'                              , ';
 				}				
 					
 				
 			  }
 			
 		    }
+			else if(eventType == 'UPDATE'){
+			  xmlHtml += '  <update id="modify_defaultInfo1" parameterType="java.util.List">\n    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">\n      UPDATE '+$('#tableId').val()+'\n'+'      SET        ';
+			    for(var i=0;i<columnItem.length;i++){	
+				     if(columnItem[i]['columnName']=='CREATE_BY' || columnItem[i]['columnName']=='CREATE_DATE'){
+					         continue;
+ 				      }
+					if(columnItem[i]['dataType'] == 'VARCHAR' || columnItem[i]['dataType'] == 'VARCHAR2'){
+							jdbcType = 'VARCHAR';
+						}
+						else if(columnItem[i]['dataType'] == 'NUMBER'){
+							jdbcType = 'NUMERIC';
+						}
+						else{
+							jdbcType = 'VARCHAR';
+						}
+				 if(i == columnItem.length-1){
+					if(columnItem[i]['dataType'] == 'DATE'){
+						         xmlHtml += columnItem[i]['columnName']+' = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'      WHERE 1=1\n    </foreach>\n  </update>';
+					          }
+					else{
+						      xmlHtml += ' #{item.'+columnItem[i]['columnName2']+', jdbcType='+jdbcType+'}'+'\n'+'      WHERE 1=1\n  </foreach>';
+					}
+					
+				}	
+				else{
+					  if(columnItem[i]['dataType'] == 'DATE'){
+						         xmlHtml += columnItem[i]['columnName']+' = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'                  ,  ';
+					          }
+					  else{
+						         xmlHtml += columnItem[i]['columnName']+' = #{item.'+columnItem[i]['columnName2']+', jdbcType='+jdbcType+'}\n'+'                  ,  ';
+					  }
+				}				
+					
+				
+			  }
 			
+		    }
 			$('#xmlText').val(xmlHtml);
 			result = 'SUCCESS';			
 		}

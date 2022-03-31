@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD1030">
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-		    SELECT MCD.COMPANY_CD
+	        SELECT MCD.COMPANY_CD
 			     , MCD.COMPANY_NM
 			     , MCD.DIVISION_CD
 			     , MCD.DIVISION_NM
@@ -96,29 +96,28 @@
 	            </foreach>			               
    </insert>   
    <update id="modify_defaultInfo1" parameterType="java.util.List">     
-      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-        UPDATE MOM_PARTNER
-        SET    PARTNER_NM        = #{item.partnerNm,       jdbcType=VARCHAR}
-			 , PARTNER_NM_ENG    = #{item.partnerNmEng,    jdbcType=VARCHAR}
-			 , PARTNER_TYPE      = #{item.partnerType,    jdbcType=VARCHAR}
+     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+       UPDATE MOM_PARTNER
+       SET    PARTNER_NM        = #{item.partnerNm,        jdbcType=VARCHAR}
+			 , PARTNER_NM_ENG    = #{item.partnerNmEng,     jdbcType=VARCHAR}
+			 , PARTNER_TYPE      = #{item.partnerType,      jdbcType=VARCHAR}
 			 , BUSINESS_NO       = #{item.businessNo,       jdbcType=VARCHAR}
-             , BUSINESS_ITEM     = #{item.businessItem,    jdbcType=VARCHAR}
-             , BUSINESS_TYPE     = #{item.businessType,    jdbcType=VARCHAR}
-             , TEL_NO            = #{item.telNo,           jdbcType=VARCHAR}
-             , FAX_NO            = #{item.faxNo,           jdbcType=VARCHAR}
-             , EMAIL             = #{item.email,           jdbcType=VARCHAR}
+             , BUSINESS_ITEM     = #{item.businessItem,     jdbcType=VARCHAR}
+             , BUSINESS_TYPE     = #{item.businessType,     jdbcType=VARCHAR}
+             , TEL_NO            = #{item.telNo,            jdbcType=VARCHAR}
+             , FAX_NO            = #{item.faxNo,            jdbcType=VARCHAR}
+             , EMAIL             = #{item.email,            jdbcType=VARCHAR}
              , REPRESENTATIVE_NM = #{item.representativeNm, jdbcType=VARCHAR}
              , PARTNER_USER_NM   = #{item.partnerUserNm,    jdbcType=VARCHAR}
-             , ADDRESS           = #{item.address,         jdbcType=VARCHAR}
-		     , USE_YN 		     = #{item.useYn,           jdbcType=VARCHAR}
- 		     , DESCRIPTION       = #{item.description,     jdbcType=VARCHAR}
-		     , UPDATE_BY         = #{item.userId,          jdbcType=VARCHAR}
+             , ADDRESS           = #{item.address,          jdbcType=VARCHAR}
+		     , USE_YN 		     = #{item.useYn,            jdbcType=VARCHAR}
+ 		     , DESCRIPTION       = #{item.description,      jdbcType=VARCHAR}
+		     , UPDATE_BY         = #{item.userId,           jdbcType=VARCHAR}
 		     , UPDATE_DATE       = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR}, #{item.divisionCd, jdbcType=VARCHAR})
-         <where>
-               COMPANY_CD        = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
-         AND   DIVISION_CD       = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
-         AND   PARTNER_CD        = TRIM(#{item.partnerCd,    jdbcType=VARCHAR}) 
-         </where>
+       WHERE   1=1
+       AND     COMPANY_CD        = TRIM(#{item.companyCd,    jdbcType=VARCHAR})
+       AND     DIVISION_CD       = TRIM(#{item.divisionCd,   jdbcType=VARCHAR}) 
+       AND     PARTNER_CD        = TRIM(#{item.partnerCd,    jdbcType=VARCHAR})         
       </foreach>
    </update> 
    <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
