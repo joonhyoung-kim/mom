@@ -56,6 +56,6 @@
    FROM   MOM_WORK_STATION   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-   ORDER BY WORK_STATION_NM
+   ORDER BY WORK_STATION_NM   ACS
 </select>          
 </mapper>
