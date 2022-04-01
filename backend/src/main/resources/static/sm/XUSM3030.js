@@ -920,6 +920,24 @@ var XUSM3030 = {
 					}
 			}, 
 			{
+				  dataField 	: 'columnRequire' 
+				, headerText 	: '필수여부'
+				, width			: 70
+				, style			: 'my-column-style-edit'
+				, renderer 		: {
+						  type 		: 'CheckBoxEditRenderer'
+						, editable	: true
+						,checkValue : 'Y' 
+						,unCheckValue : 'N'
+				  }
+			},
+				{
+				  dataField 	: 'defaultValue' 
+				, headerText 	: '기본값'
+				, width			:  60
+				, style			: 'my-column-style-edit2'	
+			},
+			{
 				  dataField 	: 'insertEditFlag' 
 				, headerText 	: '등록'
 				, width			: 50
@@ -955,24 +973,8 @@ var XUSM3030 = {
 						,unCheckValue : 'N'
 				  }
 			},
-			{
-				  dataField 	: 'defaultValue' 
-				, headerText 	: '기본값'
-				, width			:  60
-				, style			: 'my-column-style-edit2'	
-			},
-			{
-				  dataField 	: 'columnRequire' 
-				, headerText 	: '필수여부'
-				, width			: 70
-				, style			: 'my-column-style-edit'
-				, renderer 		: {
-						  type 		: 'CheckBoxEditRenderer'
-						, editable	: true
-						,checkValue : 'Y' 
-						,unCheckValue : 'N'
-				  }
-			},
+		
+		
 			{
 				  dataField 	: 'dropdownId' 
 				, headerText 	: '드롭다운 Lv1'

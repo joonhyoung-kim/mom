@@ -243,6 +243,11 @@
 }
 .gridArea-tm2v-h00-02{
 	background: #f0f0f5;
+    height:calc(100.5% );
+    border: none;
+}
+.gridArea-tm2v-h01-01{
+	background: #f0f0f5;
     height:calc(100% - 0.8rem);
     border: none;
 }

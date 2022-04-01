@@ -481,24 +481,24 @@
 				             , #{i}+1
 				             , #{item.columnId,          jdbcType=VARCHAR} 
 				             , #{item.columnNm,          jdbcType=VARCHAR}
-				             , #{item.dataType,          jdbcType=VARCHAR}
+				             , NVL(#{item.dataType,      jdbcType=VARCHAR},'string')
 				             , #{item.dataFormat,        jdbcType=VARCHAR} 
-				             , #{item.columnAlign,       jdbcType=VARCHAR}
+				             , NVL(#{item.columnAlign,   jdbcType=VARCHAR},'LEFT')
 				             , NVL(#{item.sortNo,        jdbcType=INTEGER},0)
 				             , #{item.sortMethod,        jdbcType=VARCHAR}
-				             , #{item.columnWidth,       jdbcType=VARCHAR}
-				             , #{item.columnEditable,    jdbcType=VARCHAR} 
-				             , #{item.columnShow,        jdbcType=VARCHAR}
-				             , #{item.excelShow,         jdbcType=VARCHAR}
-				             , #{item.excelTemplateShow, jdbcType=VARCHAR}
-				             , #{item.filterEnable,      jdbcType=VARCHAR}
-				             , #{item.filterIconShow,    jdbcType=VARCHAR}
-				             , #{item.headerColor,       jdbcType=VARCHAR}
-				             , #{item.cellColor,         jdbcType=VARCHAR}
-				             , #{item.columnType,        jdbcType=VARCHAR}
-				             , #{item.dropdownId,        jdbcType=VARCHAR}
-				             , #{item.dropdownParam,     jdbcType=VARCHAR}				             
-				             , #{item.userId,            jdbcType=VARCHAR} 
+				             , NVL(#{item.columnWidth,       jdbcType=VARCHAR},0)
+				             , NVL(#{item.columnEditable,    jdbcType=VARCHAR},'N')
+				             , NVL(#{item.columnShow,        jdbcType=VARCHAR},'N')
+				             , NVL(#{item.excelShow,         jdbcType=VARCHAR},'N')
+				             , NVL(#{item.excelTemplateShow, jdbcType=VARCHAR},'N')
+				             , NVL(#{item.filterEnable,      jdbcType=VARCHAR},'N')
+				             , NVL(#{item.filterIconShow,    jdbcType=VARCHAR},'N')
+				             , #{item.headerColor,           jdbcType=VARCHAR}
+				             , #{item.cellColor,             jdbcType=VARCHAR}
+				             , NVL(#{item.columnType,        jdbcType=VARCHAR},'T')
+				             , #{item.dropdownId,            jdbcType=VARCHAR}
+				             , #{item.dropdownParam,         jdbcType=VARCHAR}				             
+				             , #{item.userId,                jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               
     </insert> 
@@ -531,12 +531,12 @@
 				             , #{i}+1
 				             , #{item.searchId,      jdbcType=VARCHAR} 
 				             , #{item.searchNm,      jdbcType=VARCHAR}
-				             , #{item.searchType,    jdbcType=VARCHAR}
+				             , NVL(#{item.searchType,    jdbcType=VARCHAR},'T')
 				             , #{item.defaultValue,  jdbcType=VARCHAR} 
-				             , #{item.columnRequire, jdbcType=VARCHAR}
+				             , NVL(#{item.columnRequire, jdbcType=VARCHAR},'N')
 				             , #{item.dropdownId,    jdbcType=VARCHAR} 
 				             , #{item.dropdownParam, jdbcType=VARCHAR}
-				             , #{item.headerType,    jdbcType=VARCHAR}
+				             ,  NVL(#{item.headerType,    jdbcType=VARCHAR},'T')
 				             , #{item.headerDropdownId,    jdbcType=VARCHAR} 
 				             , #{item.headerDropdownParam, jdbcType=VARCHAR}
 				             , #{item.userId,            jdbcType=VARCHAR} 
@@ -564,15 +564,15 @@
 							 ,DROPDOWN_PARAM 
 							 , CREATE_BY
 						) VALUES(
-                               #{item.companyCd,      jdbcType=VARCHAR}
-				             , #{item.divisionCd,     jdbcType=VARCHAR}
-				             , #{item.menuId,         jdbcType=VARCHAR}
-				             , #{item.gridId,         jdbcType=VARCHAR}
-				             , #{item.actionType,     jdbcType=VARCHAR}
+                               #{item.companyCd,          jdbcType=VARCHAR}
+				             , #{item.divisionCd,         jdbcType=VARCHAR}
+				             , #{item.menuId,             jdbcType=VARCHAR}
+				             , #{item.gridId,             jdbcType=VARCHAR}
+				             , #{item.actionType,         jdbcType=VARCHAR}
 				             , #{i}+1
-				             , #{item.popupId,        jdbcType=VARCHAR} 
-				             , #{item.popupNm,        jdbcType=VARCHAR}
-				             , #{item.popupType,      jdbcType=VARCHAR}
+				             , #{item.popupId,            jdbcType=VARCHAR} 
+				             , #{item.popupNm,            jdbcType=VARCHAR}
+				             , NVL(#{item.popupType,      jdbcType=VARCHAR},'T')
 				             <choose>
 				               <when test='item.insertEditFlag.equals("1")'>
 				                , 'Y' 
@@ -581,7 +581,7 @@
 				                , 'N'
 				               </when>
 				               <otherwise>
-				                , #{item.insertEditFlag, jdbcType=VARCHAR} 
+				                , NVL(#{item.insertEditFlag, jdbcType=VARCHAR},'N')
 				               </otherwise>
 				             </choose>	
 				             <choose>
@@ -592,7 +592,7 @@
 				                , 'N'
 				               </when>
 				               <otherwise>
-				                , #{item.updateEditFlag, jdbcType=VARCHAR} 
+				                , NVL(#{item.updateEditFlag, jdbcType=VARCHAR},'N')
 				               </otherwise>
 				             </choose>	
 				               <choose>
@@ -603,14 +603,14 @@
 				                , 'N'
 				               </when>
 				               <otherwise>
-				                , #{item.upsertEditFlag, jdbcType=VARCHAR} 
+				                , NVL(#{item.upsertEditFlag, jdbcType=VARCHAR},'N') 
 				               </otherwise>
 				             </choose>					             			      
-				             , #{item.defaultValue,   jdbcType=VARCHAR}
-				             , #{item.columnRequire,  jdbcType=VARCHAR}
-				             , #{item.dropdownId,     jdbcType=VARCHAR} 
-				             , #{item.dropdownParam,  jdbcType=VARCHAR}
-				             , #{item.userId,            jdbcType=VARCHAR} 
+					            , #{item.defaultValue,       jdbcType=VARCHAR}
+					            , NVL(#{item.columnRequire,  jdbcType=VARCHAR},'N')
+					            , #{item.dropdownId,         jdbcType=VARCHAR} 
+					            , #{item.dropdownParam,      jdbcType=VARCHAR}
+					            , #{item.userId,             jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               
     </insert> 
@@ -632,18 +632,18 @@
 							   , CHECK_TYPE
 							   , CREATE_BY
 						) VALUES(
-                               #{item.companyCd,      jdbcType=VARCHAR}
-				             , #{item.divisionCd,     jdbcType=VARCHAR}
-				             , #{item.menuId,         jdbcType=VARCHAR}
-				             , #{item.gridId,         jdbcType=VARCHAR}
-				             , #{item.actionType,     jdbcType=VARCHAR}
-				             , #{item.buttonId,       jdbcType=VARCHAR} 
-				             , #{item.buttonNm,       jdbcType=VARCHAR}
+                               #{item.companyCd,         jdbcType=VARCHAR}
+				             , #{item.divisionCd,        jdbcType=VARCHAR}
+				             , #{item.menuId,            jdbcType=VARCHAR}
+				             , #{item.gridId,            jdbcType=VARCHAR}
+				             , #{item.actionType,        jdbcType=VARCHAR}
+				             , #{item.buttonId,          jdbcType=VARCHAR} 
+				             , #{item.buttonNm,          jdbcType=VARCHAR}
 				             , #{i}+1		            
 				             , #{item.eventType,         jdbcType=VARCHAR}
 				             , #{item.buttonParameter,   jdbcType=VARCHAR} 
 				             , #{item.buttonIcon,        jdbcType=VARCHAR}
-				             , #{item.refindFlag,        jdbcType=VARCHAR}
+				             , NVL(#{item.refindFlag,    jdbcType=VARCHAR},'N')
 				             , #{item.checkType,         jdbcType=VARCHAR}
 				             , #{item.userId,            jdbcType=VARCHAR} 
 				        )			  			             

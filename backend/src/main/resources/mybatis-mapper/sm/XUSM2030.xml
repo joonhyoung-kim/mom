@@ -159,7 +159,7 @@
 	       )
 	    WHEN MATCHED THEN
 	    UPDATE
-	    SET		  MAM.USE_YN        = PARAM.useYn
+	    SET		  MAM.USE_YN        = NVL(PARAM.useYn,'N')
 	            , MAM.ROLE_CD       = PARAM.roleCd
 			    , MAM.DESCRIPTION   = PARAM.description
 			    , MAM.UPDATE_BY     = PARAM.updateBy
@@ -183,7 +183,7 @@
 			   , PARAM.authGroupCd	
                , PARAM.menuId
                , PARAM.roleCd
-			   , PARAM.useYn
+			   , NVL(PARAM.useYn,'N')
 			   , PARAM.description
 			   , PARAM.createBy
 			   , PARAM.createDate

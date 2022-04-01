@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUMD1080">
+  <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	  SELECT MCD.COMPANY_CD
+		   , MCD.COMPANY_NM
+		   , MCD.DIVISION_CD
+		   , MCD.DIVISION_NM
+		   , MR.ROUTING_ID 
+		   , MR.ROUTING_NM 
+		   , MR.USE_YN
+		   , MR.DESCRIPTION
+		   , MR.CREATE_BY
+		   ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MR.COMPANY_CD, MR.DIVISION_CD, MR.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
+		   , TO_CHAR(MR.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+		   , MR.UPDATE_BY
+		   ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MR.COMPANY_CD, MR.DIVISION_CD, MR.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		   , TO_CHAR(MR.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+	  FROM   MOM_COM_DIV_V MCD
+		   , MOM_ROUTING MR
+      WHERE  MCD.COMPANY_CD  = MR.COMPANY_CD
+	  AND    MCD.DIVISION_CD = MR.DIVISION_CD   
+	  AND    MCD.COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}
+	  AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  		
+	  <if test="routingId!= null and routingId != ''">
+      AND (MR.ROUTING_ID  LIKE '%' || TRIM(UPPER(#{routingId, jdbcType=VARCHAR})) || '%' OR MR.ROUTING_NM LIKE '%' || TRIM(UPPER(#{routingId, jdbcType=VARCHAR})))
+	  </if>
+	  <if test="routingNm!= null and routingNm != ''">
+      AND (MR.ROUTING_NM LIKE '%' || TRIM(UPPER(#{routingNm, jdbcType=VARCHAR})))
+	  </if>
+	  <if test="useYn != null and useYn != ''">
+	  AND MR.USE_YN = #{useYn, jdbcType=VARCHAR}
+	  </if>
+      ORDER BY  MCD.COMPANY_NM, MCD.DIVISION_NM, MR.ROUTING_NM 			
+  </select>
+  <insert id="create_defaultInfo1" parameterType="java.util.List">
+      INSERT INTO MOM_ROUTING (
+                  COMPANY_CD
+                , DIVISION_CD
+                , ROUTING_ID
+                , ROUTING_NM
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.routingId, jdbcType=VARCHAR}
+                , #{item.routingNm, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+             </foreach>
+  </insert> 
+  <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_ROUTING
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , ROUTING_ID = #{item.routingId, jdbcType=VARCHAR}
+           , ROUTING_NM = #{item.routingNm, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    ROUTING_ID = #{item.routingId, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+      DELETE FROM MOM_ROUTING
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd
+           AND  DIVISION_CD = #{item.divisionCd
+           AND  ROUTING_ID = #{item.routingId
+        )
+       </foreach>
+      </where>
+  </delete>    
+  <select id="get_defaultInfo2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">  
+      SELECT MCD.COMPANY_CD
+		   , MCD.COMPANY_NM
+		   , MCD.DIVISION_CD
+		   , MCD.DIVISION_NM
+		   , MRP.ROUTING_ID 
+		   , MR.ROUTING_NM 
+		   , MRP.OPERATION_SEQ 
+		   , MRP.OPERATION_ID 
+		   , MRP.ROUTING_ID || _ || MRP.OPERATION_ID AS KEY_ID
+		   , MO.OPERATION_NM
+		   , MRP.FINAL_OPERATION_YN  
+		   , MRP.USE_YN
+		   , MRP.DESCRIPTION
+		   , MRP.CREATE_BY
+		   , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MRP.COMPANY_CD, MRP.DIVISION_CD, MRP.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
+		   , TO_CHAR(MRP.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+		   , MRP.UPDATE_BY
+		   , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MRP.COMPANY_CD, MRP.DIVISION_CD, MRP.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		   , TO_CHAR(MRP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+	   FROM  MOM_COM_DIV_V MCD
+		   , MOM_ROUTING_PATH MRP
+	       , MOM_ROUTING MR
+	       , MOM_OPERATION MO
+	   WHERE  MCD.COMPANY_CD    = MRP.COMPANY_CD
+	   AND    MCD.DIVISION_CD   = MRP.DIVISION_CD   
+	   AND    MCD.COMPANY_CD    = #{companyCd,  jdbcType=VARCHAR}
+	   AND    MCD.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR} 
+	   AND    MRP.COMPANY_CD    = MR.COMPANY_CD
+	   AND    MRP.DIVISION_CD   = MR.DIVISION_CD
+	   AND    MRP.ROUTING_ID    = MR.ROUTING_ID
+	   AND    MRP.COMPANY_CD    = MO.COMPANY_CD
+	   AND    MRP.DIVISION_CD   = MO.DIVISION_CD
+	   AND    MRP.OPERATION_ID  = MO.OPERATION_ID  	
+       ORDER BY  MCD.COMPANY_NM, MCD.DIVISION_NM, MR.ROUTING_NM, MRP.OPERATION_SEQ 
+  </select> 
+  <insert id="create_defaultInfo2" parameterType="java.util.List">
+      INSERT INTO MOM_ROUTING_PATH (
+                  COMPANY_CD
+                , DIVISION_CD
+                , ROUTING_ID
+                , OPERATION_ID
+                , OPERATION_SEQ
+                , FINAL_OPERATION_YN
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.routingId, jdbcType=VARCHAR}
+                , #{item.operationId, jdbcType=VARCHAR}
+                , #{item.operationSeq, jdbcType=NUMERIC}
+                , #{item.finalOperationYn, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+             </foreach>
+  </insert>
+  <update id="modify_defaultInfo2" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_ROUTING_PATH
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , ROUTING_ID = #{item.routingId, jdbcType=VARCHAR}
+           , OPERATION_ID = #{item.operationId, jdbcType=VARCHAR}
+           , OPERATION_SEQ = #{item.operationSeq, jdbcType=NUMERIC}
+           , FINAL_OPERATION_YN = #{item.finalOperationYn, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    ROUTING_ID = #{item.routingId, jdbcType=VARCHAR}
+      AND    OPERATION_ID = #{item.operationId, jdbcType=VARCHAR}
+    </foreach>
+  </update>    
+  <delete id="remove_defaultInfo2" parameterType="java.util.List">
+      DELETE FROM MOM_ROUTING_PATH
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd
+           AND  DIVISION_CD = #{item.divisionCd
+           AND  ROUTING_ID = #{item.routingId
+           AND  OPERATION_ID = #{item.operationId
+        )
+       </foreach>
+      </where>
+  </delete>  
+  
+  </mapper>
