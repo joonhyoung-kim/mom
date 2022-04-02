@@ -4545,7 +4545,7 @@ var momWidget = {
 
 		
 	},
-	// 윈도우 리사이즈
+	// 윈도우 리사이즈2
 	htmlResize: function(index,your) {	
 		var that = momWidget;
 		
