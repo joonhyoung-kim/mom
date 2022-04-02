@@ -1905,11 +1905,10 @@ var momWidget = {
 				that.splashShow();
 				
 			
-				var param = {};	
-				if (that.getCheckedRowItems(that.grid[index])=='FAIL'){
+				var param = that.getCheckedRowItems(that.grid[index]);
+				if (param.length == 0){
 					      return;	
 					}			
-					param = that.getCheckedRowItems(that.grid[index]);	
 					param[0].fileName  = that.pageProperty[index]['menuId']+'_'+(index+1);
 					param[0].fileType = 'xlsx';
 			   // param = that.checkSearchParam(index,param,your); 	   
@@ -2156,12 +2155,12 @@ var momWidget = {
 			
 			$(document).on('click', '#' + copyBtnId, function(e) {	
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
-				var param = [];
+				var param = that.getCheckedRowItems(that.grid[index]);
 				if(isCheckCol == true){
-					if (that.getCheckedRowItems(that.grid[index])=='FAIL'){
+					if (param.length == 0){
 					      return;	
-					}					
-						param = that.getCheckedRowItems(that.grid[index]);					
+					}			
+										
 				}
 				else{
 				      momWidget.messageBox({type:'danger', width:'400', height: '145', html: '체크박스 설정필요!'});
@@ -2190,12 +2189,12 @@ var momWidget = {
 			});	
 			$(document).on('click', '#' + saveBtnId, function(e) {
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn']
-				var param = [];
+				var param = that.getCheckedRowItems(that.grid[index]);
 				if(isCheckCol == true){
-					if (that.getCheckedRowItems(that.grid[index])=='FAIL'){
+					if (param.length == 0){
 					      return;	
-					}					
-						param = that.getCheckedRowItems(that.grid[index]);					
+					}				
+									
 				}
 				else{
 					
@@ -2293,12 +2292,12 @@ var momWidget = {
 			});
 			$(document).on('click', '#' + editBtnId, function(e) {	
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
-				var param = [];
+				var param = that.getCheckedRowItems(that.grid[index]);
 				if(isCheckCol == true){
-					if (that.getCheckedRowItems(that.grid[index])=='FAIL'){
+					if (param.length == 0){
 					      return;	
-					}					
-						param = that.getCheckedRowItems(that.grid[index]);					
+					}			
+										
 				}
 				else{
 				      momWidget.messageBox({type:'danger', width:'400', height: '145', html: '체크박스 설정필요!'});
@@ -2894,7 +2893,7 @@ var momWidget = {
             	if(checkedItems.length <= 0) {
             		momWidget.messageBox({type:'danger', width:'400', height: '145', html: '체크된 아이템 없음!'});
       			    momWidget.splashHide();
-            		return 'FAIL';
+            		return param;
             	}
             	for(var i=0;i<checkedItems.length;i++){
             		param.push(checkedItems[i]['item']);
@@ -4475,15 +4474,17 @@ var momWidget = {
 
 	// init 함수 처리
 	 checkActionCallInit: function(index, action, param, btnId, your) {
-		var result = 'SUCCESS';
+		var result = {result:'SUCCESS'};
 		if(your == undefined) {
 			return 'FAIL';
 		}		
 		if(action == 'C' && your.createCallInit != undefined) {
 			 your.createCallInit(index,your,action,btnId,param,result);	
+			 
 		}
 		else if(action == 'CP' && your.copyCallInit != undefined) {
 			 your.copyCallInit(index,your,action,btnId,param,result);	
+			 
 		}
 		else if(action == 'E' && your.excelCallInit != undefined) {
 			 your.excelCallInit(index,your,action,btnId,param,result);	
@@ -4503,13 +4504,14 @@ var momWidget = {
 		else if(action == 'U' && your.updateCallInit != undefined) {
 			 your.updateCallInit(index,your,action,btnId,param,result);	
 		}	
-			return {result:result,param:param};
 		
+
+			return {result:result.result,param:param};
 
 	},
 	// Callback 함수 처리
 	 checkActionCallBack: function(index, action, param, btnId, your,data) {
-		var result = 'SUCCESS';
+		var result = {result:'SUCCESS'};
 		if(your == undefined) {
 			return 'FAIL';
 		}		
@@ -4537,8 +4539,8 @@ var momWidget = {
 		else if(action == 'U' && your.updateCalBack != undefined) {
 			     your.updateCalBack(index,your,action,btnId,param,result);	
 		}
-		
-			return {result:result,param:param};
+	
+			return {result:result.result,param:param};
 		
 
 		

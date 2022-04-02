@@ -53,11 +53,11 @@ var XUSM3020= {
 		if(index ==1 && btnId =='findBtn2'){	
 			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0]);
 			if(checkedItem =='FAIL'){
-				result = 'FAIL';
+				result.result = 'FAIL';
 				return;
 			}
 			param.codeCategory = checkedItem[0].codeCategory;
-			result = 'SUCCESS';			
+					
 		}
 
 	}	

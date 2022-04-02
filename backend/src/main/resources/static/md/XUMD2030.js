@@ -17,7 +17,7 @@ var XUMD2030= {
 				
 			}
 			AUIGrid.setGridData(momWidget.grid[index], gridItem);
-			result = 'SUCCESS';			
+				
 		}
 
 	}		

@@ -30,13 +30,13 @@ var XUSM1030 = {
 		if(index==1){
 			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0]);
 			if(checkedItem =='FAIL'){
-        		result = 'FAIL';
+        		result.result = 'FAIL';
         		return;
 			}
 			for(var i=0,max=param.length; i<max;i++){
 				 param[i].authGroupCd = checkedItem[0]['authGroupCd'];
 			}	
-			result = 'SUCCESS';
+		
 		}
 	
 	}

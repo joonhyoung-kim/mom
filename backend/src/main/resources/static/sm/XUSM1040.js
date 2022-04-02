@@ -31,7 +31,7 @@ var XUSM1040 = {
 			for(var i=0,max=param.length; i<max;i++){
 				 param[i].pwEncode = 'Y';
 			}	
-			result = 'SUCCESS';
+		
 		}
 	
 	}

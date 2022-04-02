@@ -52,11 +52,11 @@ var XUSM2020 = {
 		if(index ==1 && btnId =='saveBtn2'){	
 			var gridItem = AUIGrid.getGridData(momWidget.grid[index])
 			if(gridItem =='FAIL'){
-				result = 'FAIL';
+				result.result = 'FAIL';
 				return;
 			}
 			param.menuId = gridItem[0].menuId;
-			result = 'SUCCESS';			
+					
 		}
 
 	}	

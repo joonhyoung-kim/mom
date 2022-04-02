@@ -18,7 +18,7 @@ var XUSM1020 = {
 	searchCallInit: function(index,your,action,btnId,param,result) {		
 		if(index==1 &&  btnId != 'CELLCLICK1'){
 			param.companyCode  = that.paramTmp.companyCode;
-			result = 'SUCCESS';
+	
 		}
 		
 	},	
@@ -26,7 +26,7 @@ var XUSM1020 = {
 		if(index==1 &&  btnId != 'CELLCLICK1'){
 			for(var i=0;i<param.length;i++){
 				param[i].companyCode  = that.paramTmp.companyCode;
-				result = 'SUCCESS';
+			
 			}
 			
 		}

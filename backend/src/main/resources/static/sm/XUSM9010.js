@@ -167,7 +167,7 @@ var XUSM9010 = {
 				
 			}
 			$('#xmlText').val(xmlHtml);
-			result = 'SUCCESS';			
+				
 		}
 
 	}		 		
