@@ -41,7 +41,7 @@
 									 , CREATE_DATE
 									 , UPDATE_BY
 									 , UPDATE_DATE
-					         )     
+					          )     
         VALUES
                 <foreach item="item" collection="list" index="i" separator=" " open="">
 				          (    TRIM(#{item.companyCd, jdbcType=VARCHAR})
