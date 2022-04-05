@@ -1741,7 +1741,30 @@ border-color: #d8dce3 !important;
     line-height: 1rem;
     float:left;
     border-radius: 0.5rem;
-    background-color: #fff !important;
+   /*  background-color: #fff !important; */
+    background-clip: padding-box !important;
+    /* color: #4d5875 !important; */
+  
+}
+.modal-content-change-pop {
+    top: 10%;
+    left: 23%;
+    width: 35%;
+    position: absolute;
+    opacity: 1 !important;
+    z-index: 2000 !important;
+}
+
+.passwordInputField {
+    display: inline-block;
+    width: 14rem;
+    height: 2.9rem;
+    font-family: "Malgun Gothic", sans-serif;
+    font-size: 1.3rem;
+    line-height: 1rem;
+    float:left;
+    border-radius: 0.5rem;
+   /*  background-color: #fff !important; */
     background-clip: padding-box !important;
     /* color: #4d5875 !important; */
   
@@ -2771,13 +2794,25 @@ border-color: #d8dce3 !important;
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 50rem !important;
-    margin-top: -60rem !important;
+    margin-left: 35% !important;
+    margin-top: -36% !important;
     background: white !important; 
     height: 19rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
    
+}
+.btn-change {
+    color: rgb(19, 19, 19);
+    background: rgb(233, 231, 231);
+    border-color: rgb(200, 200, 200);
+    float: left;
+    position: relative;
+    height: 2.9rem;
+    width: 2.7rem;
+    margin-left: 1rem;
+    /* position: relative !important; */
+    padding-left: 0.7rem !important;
 }
 .defaultPop-C3-R3 {
     z-index: 1050;
@@ -2787,8 +2822,8 @@ border-color: #d8dce3 !important;
     overflow: hidden !important;
     width: 56rem !important;
     position: relative !important;
-    margin-left: 50rem !important;
-    margin-top: -60rem !important;
+    margin-left: 30% !important;
+    margin-top: -37.5% !important;
     background: white !important;
     height: 25rem !important;
     border-radius: 0.5rem;

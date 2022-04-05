@@ -23,10 +23,10 @@
 	  AND    MCD.COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}
 	  AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  		
 	  <if test="routingId!= null and routingId != ''">
-      AND (MR.ROUTING_ID  LIKE '%' || TRIM(UPPER(#{routingId, jdbcType=VARCHAR})) || '%' OR MR.ROUTING_NM LIKE '%' || TRIM(UPPER(#{routingId, jdbcType=VARCHAR})))
+      AND (MR.ROUTING_ID  LIKE '%' || TRIM(#{routingId, jdbcType=VARCHAR}) || '%')
 	  </if>
 	  <if test="routingNm!= null and routingNm != ''">
-      AND (MR.ROUTING_NM LIKE '%' || TRIM(UPPER(#{routingNm, jdbcType=VARCHAR})))
+      AND (MR.ROUTING_NM LIKE '%' || TRIM(#{routingNm, jdbcType=VARCHAR}) || '%')
 	  </if>
 	  <if test="useYn != null and useYn != ''">
 	  AND MR.USE_YN = #{useYn, jdbcType=VARCHAR}
@@ -96,7 +96,7 @@
 		   , MR.ROUTING_NM 
 		   , MRP.OPERATION_SEQ 
 		   , MRP.OPERATION_ID 
-		   , MRP.ROUTING_ID || _ || MRP.OPERATION_ID AS KEY_ID
+		   , MRP.ROUTING_ID || '_'|| MRP.OPERATION_ID AS KEY_ID
 		   , MO.OPERATION_NM
 		   , MRP.FINAL_OPERATION_YN  
 		   , MRP.USE_YN
@@ -121,6 +121,7 @@
 	   AND    MRP.COMPANY_CD    = MO.COMPANY_CD
 	   AND    MRP.DIVISION_CD   = MO.DIVISION_CD
 	   AND    MRP.OPERATION_ID  = MO.OPERATION_ID  	
+	   AND    MRP.ROUTING_ID    = #{routingId, jdbcType=VARCHAR}
        ORDER BY  MCD.COMPANY_NM, MCD.DIVISION_NM, MR.ROUTING_NM, MRP.OPERATION_SEQ 
   </select> 
   <insert id="create_defaultInfo2" parameterType="java.util.List">

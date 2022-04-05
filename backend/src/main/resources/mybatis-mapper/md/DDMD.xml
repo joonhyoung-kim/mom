@@ -56,6 +56,12 @@
    FROM   MOM_WORK_STATION   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-   ORDER BY WORK_STATION_NM   ACS
-</select>          
+   ORDER BY WORK_STATION_NM   
+</select>      
+<select id="get_DDMD0008" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+    SELECT OPERATION_ID AS CODE 
+         , OPERATION_ID   ||'('|| OPERATION_NM     ||')' AS LABEL
+	FROM MOM_OPERATION
+	ORDER BY OPERATION_NM
+</select>        
 </mapper>

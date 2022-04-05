@@ -65,7 +65,7 @@
 						             , #{item.telNo,             jdbcType=VARCHAR}
 						             , #{item.faxNo,          	 jdbcType=VARCHAR}
 						             , #{item.deptNm,    		 jdbcType=VARCHAR}
-						             , #{item.authGroupNm, 	     jdbcType=VARCHAR}
+						             , #{item.authGroupCd, 	     jdbcType=VARCHAR}
 						             , #{item.vendorCd,          jdbcType=VARCHAR}
 						             , #{item.defaultLanguuage,  jdbcType=VARCHAR}
 						             , #{item.mapAddress,    	 jdbcType=VARCHAR}
@@ -85,7 +85,7 @@
            SET USER_NM                = #{item.userNm,              jdbcType=VARCHAR}
 		     , PASSWORD               = #{item.encodePw,            jdbcType=VARCHAR}
 			 , USER_NM_ENG            = #{item.userNmEng,           jdbcType=VARCHAR}
-			 , AUTH_GROUP_CD		  = #{item.authGroupNm,         jdbcType=VARCHAR}
+			 , AUTH_GROUP_CD		  = #{item.authGroupCd,         jdbcType=VARCHAR}
 			 , DEPT_CD  	          = #{item.deptNm,              jdbcType=VARCHAR}
 			 , POSITION               = #{item.position,            jdbcType=VARCHAR}			 
 			 , TEL_NO                 = #{item.telNo,               jdbcType=VARCHAR}
