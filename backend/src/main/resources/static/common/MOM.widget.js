@@ -232,7 +232,7 @@ var momWidget = {
 		    			  
 		    		  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='P'){
-		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
+		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
 		    			  
 		    		  }
 			    	  else {
@@ -899,18 +899,31 @@ var momWidget = {
 	},
 	createChangePop: {
 		password : function(index,title) {			
-			var html  = '<div id ="changePwPop'+(index+1)+'"  class="modal-content modal-content-change-pop"style="display: none;">'+
-						  '<div class="modal-header">'+
-						    '<h6 class="modal-title">Message Preview</h6>'+
+			var html  = '<div id ="changePwPop'+(index+1)+'"  class="modal modal-content modal-content-change-pop"style="display: none;height: 11rem;">'+
+						  '<div class="modal-header" style="padding-bottom: 0.7rem;height: 32%;">'+
+						    '<h6 class="modal-title" style="font-size: 1.5rem;">비밀번호변경</h6>'+
 							  '<button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">×</span></button>'+
 						  '</div>'+
-						  '<div class="modal-body">'+
-						    '<h6>Why We Use Electoral College, Not Popular Vote</h6>'+
-							'<p>'+
-							'</p>'+
-						  '</div>'+
-						  '<div class="modal-footer">'+
-						    '<button id ="saveBtnCp'+(index+1)+'" class="btn btn-primary">Save changes</button><button id ="closeBtnCp'+(index+1)+'" class="btn btn-light">Close</button>'+
+						  '<div class="modal-body" style="height: 51%;">'+
+							'<div class="w-col w-col-3" style="margin-top: -0.5rem;margin-left: -0.2rem;">'+
+								'<div class="labelbox">'+
+									'<div class="circle">'+
+									'</div>'+
+									'<div class="textblock">현재비밀번호'+										
+									'</div>'+
+								'</div>'+
+								'<input maxlength="256" id="nowPassword'+(index+1)+'" type="text" class="w-input searchInputField" date-format="date" style="background: rgb(255, 255, 255);width: 18.5rem;">'+
+							'</div>'+
+							'<div class="w-col w-col-3" style="margin-top: -0.5rem;margin-left: 3.5rem;margin-right: 3.6rem;">'+
+							'<div class="labelbox">'+
+								'<div class="circle">'+
+								'</div>'+
+								'<div class="textblock">변경할비밀번호'+									
+								'</div>'+
+							'</div>'+
+							'<input maxlength="256" id="changePassword'+(index+1)+'" type="text" class="w-input searchInputField" date-format="date" style="background: rgb(255, 255, 255);width: 18.5rem;">'+
+						 '</div>'+
+						 '<button id ="saveBtnCp'+(index+1)+'" class="btn btn-light" style="margin-top: 1.5rem;"><i class="mdi mdi-content-save-outline"></i>변경</button><button id ="closeBtnCp'+(index+1)+'" class="btn btn-light" style="margin-top: 1.5rem;margin-left: 0.5rem;"><i class="mdi mdi-window-close"></i>닫기</button>'+
 						  '</div>'+
 						'</div>';
 			return html;
@@ -1921,6 +1934,8 @@ var momWidget = {
 			var exUpCheckDownBtnId = 'exUpCheckDown'+(index + 1);
 			var reportBtnId        = 'reportBtn'+(index + 1);
 			var changePwBtnId      = 'changePwBtn'+(index + 1);
+			var changePwSaveBtn    = 'saveBtnCp'+(index + 1); 
+			var changePwCencelBtn  = 'closeBtnCp'+(index + 1);
 			var callInitResult     = undefined;
 			var callBackResult     = undefined;
 			
@@ -1930,9 +1945,51 @@ var momWidget = {
 			}*/
 			$(document).on('click','#'+changePwBtnId, function() {
 				//that.splashShow();
+               var modalDiv = $('#changePwPop'+(index+1));
+               modalDiv.momModal({ backdrop: false, show: true });
+               $('#changePwPop'+(index+1)).draggable({ handle: ".modal-header" });
 
-		       $('#changePwPop'+(index+1)).css("display","block");
-					// $('#changePwPop'+(index+1)).momModal('show');
+		      // $('#changePwPop'+(index+1)).css("display","block");
+					 $('#changePwPop'+(index+1)).momModal('show');
+				});
+				$(document).on('click','#'+changePwSaveBtn, function() {
+					momWidget.splashShow();
+					var param = {loginId:$('#userNoDP'+(index+1)).val(),nowPass:$('#nowPassword'+(index+1)).val()};
+					$.ajax({
+    				url:common.contextPath() + '/passwordChange',
+    				method: "get",
+    				contentType: 'application/json; charset=UTF-8',
+    				data :param,
+    				async		: true,
+		            timeout 	: 30000000,
+		            beforeSend: function (xhr) {
+	                  xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
+	               },
+    				success: function(data){	                
+	                    
+	                    if(data.result == 'Y'){
+		                    momWidget.messageBox({type:'success', width:'400', height: '145', html: '변경성공!'});
+						    momWidget.splashHide();
+						    $('#passwordDP'+(index+1)).val($('#changePassword'+(index+1)).val().trim());						    
+					        return;
+						}
+						else{
+							momWidget.messageBox({type:'danger', width:'400', height: '145', html: '현재비밀번호 불일치!'});
+						    momWidget.splashHide();
+					        return;
+						}
+           			
+    				
+    				},
+    				error: function(e) {    				
+    						  momWidget.splashHide();
+    						  return;
+    				}
+    			});	        
+				});
+				$(document).on('click','#'+changePwCencelBtn, function() {
+
+					 $('#changePwPop'+(index+1)).momModal('hide');
 				});
 			$(document).on('click','#'+reportBtnId, function() {
 				that.splashShow();
@@ -2164,7 +2221,10 @@ var momWidget = {
 				// e.preventDefault();
 			});
 			
-			$(document).on('click', '#' + createBtnId, function(e) {			
+			$(document).on('click', '#' + createBtnId, function(e) {		
+				if($('#changePwBtn'+(index+1)).length){
+					 $('#changePwBtn'+(index+1)).css('display','none');
+				}	
 				that.setPopup(index,'C');	
 				$('#defaultPop1').attr('actionType', 'C');
 				 callInitResult = that.checkActionCallInit(index, 'C', [], 'createBtn', your);
@@ -2191,6 +2251,8 @@ var momWidget = {
 			$(document).on('click', '#' + copyBtnId, function(e) {	
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				var param = that.getCheckedRowItems(that.grid[index]);
+			
+				
 				if(isCheckCol == true){
 					if (param.length == 0){
 					      return;	
@@ -2328,6 +2390,7 @@ var momWidget = {
 				
 			});
 			$(document).on('click', '#' + editBtnId, function(e) {	
+				
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				var param = that.getCheckedRowItems(that.grid[index]);
 				if(isCheckCol == true){
@@ -2340,6 +2403,9 @@ var momWidget = {
 				      momWidget.messageBox({type:'danger', width:'400', height: '145', html: '체크박스 설정필요!'});
 					  momWidget.splashHide();
 				      return;
+				}
+				if($('#changePwBtn'+(index+1)).length){
+					 $('#changePwBtn'+(index+1)).css('display','block');
 				}
 				that.setPopup(index,'U');	
 				$('#defaultPop1').attr('actionType', 'U');

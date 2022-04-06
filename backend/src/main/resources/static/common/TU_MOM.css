@@ -1752,12 +1752,14 @@ border-color: #d8dce3 !important;
     width: 35%;
     position: absolute;
     opacity: 1 !important;
-    z-index: 2000 !important;
+   /*  z-index: 2000 !important; */
+    margin-left: 6.5% !important;
+    margin-top: 2% !important;
 }
 
 .passwordInputField {
     display: inline-block;
-    width: 14rem;
+    width: 15rem;
     height: 2.9rem;
     font-family: "Malgun Gothic", sans-serif;
     font-size: 1.3rem;
@@ -2754,7 +2756,7 @@ border-color: #d8dce3 !important;
 	z-index: 2147483547;
 	display: none;
 	float: none;
-	background-color: rgba(0, 0, 0, 0.1);
+	/* background-color: rgba(0, 0, 0, 0.1); */
 	overflow-y: scroll;
 }
 .defaultPop {

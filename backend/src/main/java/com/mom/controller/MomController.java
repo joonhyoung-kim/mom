@@ -39,7 +39,21 @@ public class MomController {
 	private final MomService momService;
 	private final FrameworkUtil frameworkUtil;
 	private final ReportUtil reportUtil;
-	
+	@GetMapping(value = "/passwordChange")
+	public Map<String,Object> passwordChange(@RequestParam Map<String, Object> param) {		
+        System.out.println("리포트 컨트롤러 진입="+param);  
+        String loginId = param.get("loginId").toString();
+        String nowPass  = param.get("nowPass").toString();
+        Map<String,Object> returnMap = new HashMap<String, Object>();
+        if (frameworkUtil.comparePassword(loginId,nowPass)) {
+        	returnMap.put("result", "Y");
+        }
+        else {
+        	returnMap.put("result", "N");
+        }
+
+        return returnMap;
+	}
 	@GetMapping(value = "/createReport")
 	public Map<String,Object> createReport(@RequestParam Map<String, Object> param) {
 		

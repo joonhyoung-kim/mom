@@ -30,6 +30,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mom.jwt.JwtUserDetailsService;
 //import com.thirautech.framework.security.manager.AuthManager;
 import com.mom.service.MomService;
 
@@ -46,6 +48,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FrameworkUtil {
 	private final PasswordEncoder passwordEncoder;
+	private  final JwtUserDetailsService userDetailsService;
 	// private final Map<String, Object> multiLanguage;
 
 	/*
@@ -649,7 +652,21 @@ public class FrameworkUtil {
 
 		return password;
 	}
-
+	public boolean comparePassword(String loginId,String password) {
+		    boolean result = false;
+		try {
+			
+			UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
+			if(passwordEncoder.matches(password, userDetails.getPassword())) {
+				result = true;
+			}
+			else {
+				
+			}
+		} catch (Exception e) {
+		}		     
+			return result;       			        
+	}
 	/**
 	 * @메소드명 : GetAddress
 	 * @작성일 : 2020.06.16

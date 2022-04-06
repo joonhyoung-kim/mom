@@ -25,6 +25,11 @@ var XUSM1040 = {
 				isExpanded = false;
 			}
 		});
+	/*	$(".modal-content-change-pop").on("shown.bs.modal", function () {
+			 $("#changePassword1").focus(); 
+	    });*/
+
+
 	},
 	saveCallInit: function(index,your,action,btnId,param,result) {
 		if(index==0){		
