@@ -19,8 +19,8 @@
 	     , MAM.MENU_ID
 	     , NVL((SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE( MAM.COMPANY_CD
 	                                                       , MAM.DIVISION_CD
-	                                                       , 'MENU' 
-	                                                       , #{langCd, jdbcType=VARCHAR}                       
+	                                                       , #{langCd, jdbcType=VARCHAR}  
+	                                                       , 'MENU' 	                                                                           
 	                                                       , MAM.MENU_ID) 
 	        FROM  DUAL ),MAM.MENU_NM )AS MENU_NM                                           
 	    ,  MAM.PARENT_MENU_ID
@@ -36,5 +36,16 @@
 		   AND    MAM.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}
 		   AND    MAM.AUTH_GROUP_CD = #{authGroupCd, jdbcType=VARCHAR}
     </select>
-
+    <select id="get_multiLang" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   	
+		SELECT MSG_TYPE
+	       ,   MSG_CD
+	       ,   MSG_NM
+		FROM   MOM_MESSAGE
+		WHERE  COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}
+		AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+		AND    LANG_CD     = #{languageCd, jdbcType=VARCHAR}
+		AND    MSG_TYPE    = 'MESSAGE'  
+		AND    USE_YN      = 'Y'
+		ORDER BY MSG_TYPE, MSG_CD
+    </select>
 </mapper>

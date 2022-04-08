@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html project-id="P201804111903105551018ozUvjWVkVGo" data-site="TU_MOM" data-page="XUSM2010" page-id="PG201808231745309351000a6N9BAs3Yan" data-language="ko" contextPath="/TU_Platform" class=' w-mod-js w-mod-no-touch w-mod-video w-mod-no-ios'>
+<html>
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -10,7 +10,7 @@
    <!-- common css --> 
     <link rel='stylesheet' type='text/css' href='/mom/content/css/site.css' /> 
     <link rel='stylesheet' type='text/css' href='/mom/content/jqwidgets/styles/jqx.base.css' />
-    <link rel="stylesheet" type="text/css" href="/mom/common/TU_MOM.css"/>
+    <link rel="stylesheet" type="text/css" href="/mom/common/MOM.css"/>
     <link rel="shortcut icon" href="">
     
     <!-- bootstrap css -->
@@ -20,7 +20,7 @@
     <!-- jquery -->
     <script src='/webjars/jquery/3.6.0/dist/jquery.min.js'></script>   
     <script src='/webjars/jquery/3.6.0/dist/jquery.js'></script>  
-    <script src='/mom/content/js/jquery-ui.min.js'></script>
+    <script src='/mom/content/jquery-ui/jquery-ui.min.js'></script>
           
      <!-- jqwidget -->
     <script src='/mom/content/jqwidgets/jqxcore.js'></script>
@@ -49,14 +49,11 @@
 	<script src="/mom/content/PopUp/EChart/js/echarts/echarts.min.js"></script>
 	
 	<!-- common -->
-	<script src="/mom/content/resources/js/common.js"></script> 
-	<script src="/mom/content/js/regional.js"></script>  	
-	<script type="text/javascript" src="/mom/content/js/common.js"  ></script> 
-	<script type="text/javascript" src="/mom/common/common.js"></script> 
-    <script type="text/javascript" src="/mom/common/TU_MOM.lang.js"></script> 
+	<script type="text/javascript" src="/mom/common/MOM.COMMON.js"></script> 
+    <script type="text/javascript" src="/mom/common/MOM.LANG.js"></script> 
 	
     <!-- XMOM --> 
-    <script type="text/javascript" src="/mom/common/MOM.widget.js"></script>
+    <script type="text/javascript" src="/mom/common/MOM.WIDGET.js"></script>
 </head>
 <body style="overflow:auto;">
 	<div class="tabcontentarea">
@@ -141,7 +138,8 @@
 									<div class="circle"></div>
 									<div multi-lang="" style="" class="textblock">프로그램ID</div>
 								</div>
-								<input maxlength="256" id="programId-popUp" input-type="text" type="text" class="w-input fieldbox w250" date-format="date"></input>
+								<select id = "programId-popUp"></select>
+								<!-- <input maxlength="256" id="programId-popUp" input-type="text" type="text" class="w-input fieldbox w250" date-format="date"></input> -->
 						    </li>	
 						    <li class="li_openPop_01" >
 								<div class="labelbox w110" style="width: 25rem;">

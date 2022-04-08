@@ -3,7 +3,8 @@
 <mapper namespace="com.mom.DDSM">
   <select id="get_DDSM0001" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
 	SELECT  CODE
-         ,  CODE_NM AS LABEL
+         ,  NVL((SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR},#{langCd, jdbcType=VARCHAR},'CODE',#{groupCd, jdbcType=VARCHAR}|| '_' ||CODE)
+	             FROM   DUAL ),CODE_NM) AS LABEL
 	FROM    MOM_CODE
 	WHERE   DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
 	AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
@@ -30,6 +31,14 @@
     AND   MDDD.USE_YN     = 'Y'
     AND   MDD.DROPDWON_ID = #{groupCd, jdbcType=VARCHAR}
   </select> -->
+  <select id="get_DDSM0006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	  SELECT PROGRAM_ID AS CODE 
+		 ,   PROGRAM_ID ||'('|| PROGRAM_NM ||')' AS LABEL
+      FROM MOM_PROGRAM
+	  WHERE PROGRAM_TYPE = #{programType, jdbcType=VARCHAR} 
+	  AND   USE_YN = 'Y'
+	  ORDER BY PROGRAM_ID
+  </select>	
   <select id="get_DDSM0007" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	  SELECT TEMPLATE_ID AS CODE
            , TEMPLATE_ID ||'('|| TEMPLATE_NM ||')' AS LABEL
@@ -83,6 +92,14 @@
 	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
     ORDER BY SORT_NO, GROUP_CODE_NM
   </select>  
+  <select id="get_DDSM0016" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT UNIT     AS CODE 
+        , UNIT   ||'('|| UNIT_NM ||')' AS LABEL
+   FROM   MOM_UNIT   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY UNIT_NM
+   </select>
   <select id="get_DDSM0090" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
 	SELECT B.TABLE_NAME AS CODE
          , B.TABLE_NAME ||'('|| B.COMMENTS ||')' AS LABEL

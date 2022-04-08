@@ -103,6 +103,7 @@ var XUSM2010 = {
 							        AUIGrid.setCheckedRowsByIds('#grid1', clickedMenuId);
 							        $("#actType-popUp").jqxComboBox('selectIndex',0);
 							        $("#menuType-popUp").jqxComboBox('selectIndex',0);
+							        $("#programId-popUp").jqxComboBox('selectIndex',0);
 									momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
 									momWidget.splashHide();
 								    return;
@@ -174,7 +175,7 @@ var XUSM2010 = {
                 if($('#actType-popUp').val() == 'C'){		
                 	
 					$("#menuId-popUp").removeAttr("readonly");
-				
+				    $('#menuType-popUp').val('P');
 					$('#parentMenuId-popUp').val(checkedItem.id == undefined ? '' : checkedItem.id);
 					$('#menuId-popUp').val('');
 					$('#programId-popUp').val('');
@@ -189,7 +190,7 @@ var XUSM2010 = {
 			}
 			else{				  
 				    $('#menuId-popUp').attr("readonly",true);
-				
+				    $('#menuType-popUp').val('M');
 					$('#parentMenuId-popUp').val(checkedItem.parent == undefined ? '' : checkedItem.parent);
 					$('#menuId-popUp').val(checkedItem.id == undefined ? '' : checkedItem.id);
 					$('#programId-popUp').val(checkedItem.programId == undefined ? '' : checkedItem.programId);
@@ -370,12 +371,22 @@ var XUSM2010 = {
 		
 	}, 
 	setComboBox: function() {
-		var comboBoxOpt1  = {local: [{'value':'Y','label':'사용'},{'value':'N','label':'미사용'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
+		   mom_ajax('R', 'DDSM.DDSM0006', {programType:'UI'}, function(result3, data3) {
+						                 if(result3 != 'SUCCESS') {
+						    	            momWidget.splashHide();
+							                return;							     
+						                 }	
+						       		var comboBoxOpt1  = {local: [{'value':'Y','label':'사용'},{'value':'N','label':'미사용'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
 		var comboBoxOpt2  = {local: [{'value':'U','label':'수정'},{'value':'C','label':'신규등록'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
-		var comboBoxOpt3  = {local: [{'value':'M','label':'메뉴'},{'value':'P','label':'프로그램'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
+		var comboBoxOpt3  = {local: [{'value':'P','label':'프로그램'},{'value':'M','label':'메뉴'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
+		var comboBoxOpt4  = {local: data3,textName : "label", valueName : "code", readonly : false, selectedIndex : 0};
 		momWidget.setComboBox.set("#useYn-popUp"  , {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt1);
 		momWidget.setComboBox.set("#actType-popUp", {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt2);
-		momWidget.setComboBox.set("#menuType-popUp", {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt3);
+		momWidget.setComboBox.set("#menuType-popUp", {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt3);   
+		momWidget.setComboBox.set("#programId-popUp", {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt4);         
+										
+		}, undefined, undefined, this, false);
+
 		//var iconItem = [{title:'공장',url:},{},{}]
 /*		for(var i=0;i<3;i++){
 			
