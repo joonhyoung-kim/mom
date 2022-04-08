@@ -2326,8 +2326,9 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 						  }	*/		
+						 
 			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: popupTitle+multiLang.transText('MESSAGE','MSG0006')});
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
 		          }, undefined, undefined, this, false);
