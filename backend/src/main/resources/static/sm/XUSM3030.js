@@ -868,7 +868,7 @@ var XUSM3030 = {
 	}, 
 	popupGrid: function(queryId) {
 		var that = this;
-		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"},{"code":"P","value":"비밀번호"}];
+		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;

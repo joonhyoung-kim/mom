@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
 //            .antMatchers("/mom/main/**").authenticated()
             //.antMatchers("/mom/request/**").authenticated()
-         //   .antMatchers("/login/**","/mom/login.html","/mom/login.js","/mom/common/**","/mom/Images/**","/mom/Content/**","/webjars/**","/mom/initRequest/**").permitAll().
+         //   .antMatchers("/login/**","/mom/login.html","/mom/LOGIN.js","/mom/common/**","/mom/Images/**","/mom/Content/**","/webjars/**","/mom/initRequest/**").permitAll().
             .antMatchers("/**").permitAll().
             // all other requests need to be authenticated
                 anyRequest().authenticated().and().

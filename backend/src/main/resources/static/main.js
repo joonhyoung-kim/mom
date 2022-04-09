@@ -493,7 +493,7 @@ var index = {
 				error: function(data){
 					console.log(data);
 					alert("Session lost.");
-					top.location.href = common.contextPath() + '/login.html';
+					top.location.href = common.contextPath() + '/LOGIN.html';
 					return;
 				},
 				fail : function(data){

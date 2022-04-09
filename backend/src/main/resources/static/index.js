@@ -11,7 +11,7 @@ var index = {
 				if(isMobile) {
 					top.location.href = tuCommon.contextPath() + "/TabletMain.html";
 				} else {
-					top.location.href = tuCommon.contextPath() + "/main.html";
+					top.location.href = tuCommon.contextPath() + "/MAIN.html";
 				}
 			}
 		});

@@ -10,8 +10,8 @@
 	<!-- <groupId>kr.ac.korea.sans</groupId> <artifactId>jwtlogin</artifactId> 
 		<version>0.0.1-SNAPSHOT</version> <name>jwtlogin</name> -->
 	<groupId>com.mom</groupId>
-	<artifactId>jwtlogin</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>MOM</artifactId>
+	<version>1.0</version>
 	<packaging>war</packaging>
 	<name>jwtlogin</name>
 	<description>Jwt Login Restful Server</description>
