@@ -15,7 +15,7 @@ var index = {
 	init: function() {		
 		multiLang.transAll();
 		if(sessionStorage.length == 0){
-			top.location.href = common.contextPath() + "/login.html";
+			top.location.href = mCommon.contextPath() + "/login.html";
 		}
 		
 		 siteInfo =  JSON.parse(sessionStorage.getItem('siteInfo'));	
@@ -350,13 +350,13 @@ var index = {
 				
 		mom_ajax('R', 'XUSM1010.loginCheck', {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
 				if (!result) {
-					$.get(common.contextPath() + '/system/postLogout/' + companyCd + divisionCd + locale, function(result) {
+					$.get(mCommon.contextPath() + '/system/postLogout/' + companyCd + divisionCd + locale, function(result) {
 						sessionStorage.setItem("userId", '');
 						sessionStorage.setItem("divisionCd", '');
 						sessionStorage.setItem("companyCd", '');
 						sessionStorage.setItem("locale", '');						
 						alert("토큰만료.재로그인 필요!");
-//						micaCommon.messageBox({type:"danger", width:"400", height: "145", html: "Session lost."}); 
+//						micammCommon.messageBox({type:"danger", width:"400", height: "145", html: "Session lost."}); 
 						clearInterval(timerId);
 						this.logout();
 					});
@@ -378,7 +378,7 @@ var index = {
 		    sessionStorage.removeItem("siteInfo");
 		    sessionStorage.removeItem("userInfo");	
 		    sessionStorage.removeItem("loginMenuList");
-			location.href = common.contextPath() + "/login.html";
+			location.href = mCommon.contextPath() + "/login.html";
 	
 	},
 	passwordChange: function() {
@@ -398,7 +398,7 @@ var index = {
 		}
 		var param = {nowPassword : mCommon.sha256Set(nowPassword), newPassword : mCommon.sha256Set(newPassword), pwchgDt: get_current_date('yyyy-mm-dd hh24:mi:ss'), pwerrCn: 0}
 		$.ajax({
-			url : common.contextPath() + "/system/userPasswordChange",
+			url : mmCommon.contextPath() + "/system/userPasswordChange",
 			data : JSON.stringify(param),
 			contentType : "application/json; charset=UTF-8",
 			method: "put",
@@ -421,7 +421,7 @@ var index = {
 			 popFlag = 'Y';
 		}
 			$.ajax({
-				url : common.contextPath() + "/mom/request/com.thirautech.mom.admin.noticeBoard.dummy",
+				url : mmCommon.contextPath() + "/mom/request/com.thirautech.mom.admin.noticeBoard.dummy",
 				type : "GET",
 				data : {popFlag : popFlag},
 				async: false,
@@ -460,7 +460,7 @@ var index = {
 		 * 20200602 / pyj / 비밀번호 벨리데이션 옵션 체크 
 		 */
 		var that = this;
-			mom_ajax('R', 'common.comCode', {codeClassId: 'SITE_SETUP', codeId: 'PW_VAL_YN', attribute2: 'Y'}, function(result, data) {
+			mom_ajax('R', 'mmCommon.comCode', {codeClassId: 'SITE_SETUP', codeId: 'PW_VAL_YN', attribute2: 'Y'}, function(result, data) {
 				if(data.length > 0){
 //					if(data[0].value == 'Y') {
 						that.pwValFlag = 'Y';
@@ -473,7 +473,7 @@ var index = {
 			});
 			
 /*			$.ajax({
-				url : common.contextPath() + "/mom/request/com.thirautech.mom.admin.noticeBoard.dummy",
+				url : mmCommon.contextPath() + "/mom/request/com.thirautech.mom.admin.noticeBoard.dummy",
 				type : "GET",
 				data : {popFlag:'N'},
 				async: false,
@@ -493,7 +493,7 @@ var index = {
 				error: function(data){
 					console.log(data);
 					alert("Session lost.");
-					top.location.href = common.contextPath() + '/LOGIN.html';
+					top.location.href = mmCommon.contextPath() + '/LOGIN.html';
 					return;
 				},
 				fail : function(data){
@@ -512,9 +512,9 @@ var index = {
 	},
 	browserClose: function() {
 		window.onbeforeunload = function(e){
-//			$.get(common.contextPath() + "/system/logout", {}, 
+//			$.get(mmCommon.contextPath() + "/system/logout", {}, 
 //				function(data){
-//					location.href = common.contextPath() + "/login.html";
+//					location.href = mmCommon.contextPath() + "/login.html";
 //				}
 //			);
 		}

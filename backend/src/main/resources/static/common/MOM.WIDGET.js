@@ -115,15 +115,28 @@ var momWidget = {
 			  ----------------------------------------------------------------------------------------------------------------------------------     
 			  * 위젯세팅 정보 이용해 html 동적생성 
 			  ----------------------------------------------------------------------------------------------------------------------------------
-			  */  var gridExceptList = ['checkId','gridTitle','popupRowNum','popupTitle','headerColor','initSearch']; 	
-			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch'};
+			  */  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch']; 	
+			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch'};
+			      var searchBtn      =  '';
+			      var gridPopYn      ='';
 			      for(var i=0,max=gridExceptList.length; i<max;i++){
 			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[index][0][gridExceptList[i]];			    	  
 			    	   delete that.gridProperty[index][0][gridExceptList[i]];
 			      }
 			      that.gridExtraProperty[index] = gridExtraProp;
-			      
-			      var templateInfo = that.pageProperty[index]['templateId'].split('-');
+			      if(index>0&&that.popupProperty[index-1].length !=0){
+					 if(that.popupProperty[index-1][0]['popupType'] == 'G'){
+						var templateInfo = that.popupProperty[index-1][0]['defaultValue'].split('-');
+					}
+				
+				      
+			      }
+			      else{
+				        searchBtn = '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG0003')+'</button>';
+				      var templateInfo = that.pageProperty[index]['templateId'].split('-');
+			     }
+			
+			     // var popupTemplateInfo = ;
 			      var splitNum     = Number(templateInfo[1]);
 			      var splitType    = templateInfo[2];
 			      var splitRatio   = templateInfo[3];
@@ -188,7 +201,7 @@ var momWidget = {
 					    			     labelBoxClass:'labelbox-col3',
 					    			     index:index+1
 			             }
-			        var searchAreaHtml  = that.createSearchArea.h01(classItem,searchItem);	      
+			        var searchAreaHtml  = that.createSearchArea.h01(classItem,searchItem,searchBtn);	      
 			     }
 			     else if (searchRowcnt > 3 && searchRowcnt <=6){
 			    	 searchLineCnt = 2;
@@ -200,7 +213,7 @@ var momWidget = {
 			    		         index:index+1
 			    				
 			             }
-			    	var searchAreaHtml  = that.createSearchArea.h02(classItem,searchItem);	 
+			    	var searchAreaHtml  = that.createSearchArea.h02(classItem,searchItem,searchBtn);	 
 			     }
 			     else{
 			  	       classItem[0] = {
@@ -263,25 +276,65 @@ var momWidget = {
 			      var isCheckBox = 'N';
 			      var isDropDown ='N';
 			      var columnId = '';
+			      var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
 			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
-			    	 if(index == 0){
+			    	 if(index == 0 ){
+				    
 			    		 var createFrontArea ={};  
 			    			createFrontArea["tm1st"] = that.tm1st;
 			    			createFrontArea["tm2h"]  = that.tm2h;
 			    			createFrontArea["tm2v"]  = that.tm2v;  
 			    			createFrontArea["tm3vh"]  = that.tm3vh; 
 			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
-			    		    createFrontArea[templateName](splitRatio);
+			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',".front_main");
+			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
 			    	 }
 			    	 else{
+					 if(index>0&&that.popupProperty[index-1].length !=0){
+					 	if(that.popupProperty[index-1][0]['popupType'] == 'G'){
+						  var createFrontArea ={};  
+			    			createFrontArea["tm1st"] = that.tm1st;
+			    			createFrontArea["tm2h"]  = that.tm2h;
+			    			createFrontArea["tm2v"]  = that.tm2v;  
+			    			createFrontArea["tm3vh"]  = that.tm3vh; 
+			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
+			    		    createFrontArea[templateName](index+1,splitRatio,'popContentArea',".popup_main");
+			    		    $('#popContentArea'+(index+1)).append(searchAreaHtml); 	
+						  
+						}
+				
+				      
+			     	 }
 			    		  
+				          
+						  else{
+							$('#contentArea'+(index+1)).append(searchAreaHtml); 
+						}
+						  
 			    	 }				    				    	
-				      $('#contentArea'+(index+1)).append(searchAreaHtml); 	
+				     
 			    	 if(that.popupProperty[index].length > 0){
-			    		  var popupAreaHtml = that.createPopup.defaultPop(index+1,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle']);
-			    		   $('body').append(popupAreaHtml);
-			    	 }   			       
-			         $('#contentArea'+(index+1)).append(gridAreaHtml); 	
+						if(that.popupProperty[0][0]['popupType']=='G'){				
+							var popupAreaHtml =  that.createPopup.gridPop(index+1,popupColNum,popupRowNum,that.gridExtraProperty[index]['popupTitle']);
+						}
+						else{
+							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle']);
+						}
+			    		 
+			    		  $('body').append(popupAreaHtml);
+			    	 }   	
+			    	 if(index>0&&that.popupProperty[index-1].length !=0){
+					 if(that.popupProperty[index-1][0]['popupType'] == 'G'){
+						$('#popContentArea'+(index+1)).append(gridAreaHtml); 
+					}
+				
+				      
+			      }
+			    				           					         
+				         else{
+					         $('#contentArea'+(index+1)).append(gridAreaHtml); 
+				          }  
+			        // $('#contentArea'+(index+1)).append(gridAreaHtml); 	
 			         $('.gridTab'+(index+1)).append(gridTabLeftHtml);
 			         $('.gridTab'+(index+1)).append(gridTabRightHtml);
 			
@@ -418,6 +471,7 @@ var momWidget = {
 		
 					
 			      that.grid[index] = AUIGrid.create('#grid'+(index+1), columnProp, that.gridProperty[index][0]); 
+			      
 			      $('td').removeClass('aui-grid-default-column');
 			      that.startPage[index]    = 1;
 			      that.endPage[index]      = momWidget.gridProperty[0][0]['pageRowCount'] == undefined ? 20:momWidget.gridProperty[0][0]['pageRowCount'];
@@ -438,6 +492,7 @@ var momWidget = {
 		    if(that.gridExtraProperty[index]['initSearch']=='Y'){
 		    	 that.findBtnClicked(index, {}, true, 'INIT',menuId,your,[]);
 		    }
+		
 		   // multiLang.transLang();
 			//that.procProcessTran(index, your);					// 자리 이동
 			
@@ -698,7 +753,7 @@ var momWidget = {
 		}	
 	},
 	createSearchArea: {
-		h01 : function(classItem,searchItem) {
+		h01 : function(classItem,searchItem,searchBtn) {
 		var topHtml  = '';
 		var midHtml  = '';
 	    var botHtml = '';
@@ -714,8 +769,8 @@ var momWidget = {
 					       '</div>'+
 					        searchItem[i].labelField+		         
 		             '</li>'+
-		             '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+classItem[0].index+'>'+
-		             '<i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG0003')+'</button>';
+		             searchBtn;
+		            
 		             
 		       }
 		       else{
@@ -733,7 +788,7 @@ var momWidget = {
 	        	    + '</div>';
 			return topHtml + midHtml + botHtml;
 		},		
-		h02 : function(classItem,searchItem) {
+		h02 : function(classItem,searchItem,searchBtn) {
 		var topHtml  = '';
 		var midHtml  = '';
 	    var botHtml = '';
@@ -770,8 +825,8 @@ var momWidget = {
 					+'       </div>'
 					+        searchItem[j].labelField		        
 		            + '</li>'
-		            +  '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+classItem[0].index+'>'
-		            + '<i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG0003')+'</button>';
+		            + searchBtn;
+
 		           
 		           
 		       }
@@ -796,30 +851,30 @@ var momWidget = {
 		}
 	},
 
-		tm1st : function(splitRatio) {
-		var html ='<div id = "contentArea1" class = "tabcontentarea"></div>';  
-		$('.front_main').append(html); 		
+		tm1st : function(index,splitRatio,content,target) {
+		var html ='<div id ='+ content+index+' class = "tabcontentarea"></div>';  
+		$(target).append(html); 		
 		return html;
 		},
-		tm2h : function(splitRatio) {
+		tm2h : function(index,splitRatio,content,target) {
 	    var html     =	 '<div id = "split1" class="splitGrid">'
 		           +     '<div id = "contentArea1" class = "tabcontentarea"></div>'
 	               +     '<div id = "contentArea2" class = "tabcontentarea"></div>'	               
 	        	   +     '</div>';		
-		$('.front_main').append(html);   
+		$(target).append(html);   
 		 $('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'horizontal', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
 		return html;
 		},
-		tm2v : function(splitRatio) {
+		tm2v : function(splitRatio,splitRatio,content,target) {
 		    var html     =	 '<div id = "split1" class="splitGrid">'
 			           +     '<div id = "contentArea1" class = "tabcontentarea"></div>'
 		               +     '<div id = "contentArea2" class = "tabcontentarea"></div>'	               
 		        	   +     '</div>';	  
-			$('.front_main').append(html);  
+			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
 			return html;
 		},
-		tm3vh : function(splitRatio) {
+		tm3vh : function(index,splitRatio,content,target) {
 		    var html     = '<div id = "split1" class="splitGrid">'
                          +    '<div>'
                          +      '<div id = "split2" class="splitGrid">'
@@ -829,12 +884,12 @@ var momWidget = {
                          +    '</div>'
                          +    '<div id = "contentArea2" class = "tabcontentarea"></div>'
                          + '</div>';
-			$('.front_main').append(html);  
+			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
 			$('#split2').jqxSplitter({ width:'100%', height: '100%', orientation: 'horizontal', panels: [{ size:Number(splitRatio.substring(2, 3))*10 + '%'}, {size: Number(splitRatio.substring(3, 4))*10 + '%'}]});
 			return html;
 		},
-		tm4vvh : function(splitRatio) {
+		tm4vvh : function(index,splitRatio,content,target) {
 		    var html     = '<div id = "split1" class="splitGrid">'
                          +    '<div>'
                          +      '<div id = "split2" class="splitGrid">'
@@ -849,7 +904,7 @@ var momWidget = {
                          +      '</div>'
                          +    '</div>'
                          + '</div>';
-			$('.front_main').append(html);  
+			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
 			$('#split2').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(2, 3))*10 + '%'}, {size: Number(splitRatio.substring(3, 4))*10 + '%'}]});
 			$('#split3').jqxSplitter({ width:'100%', height: '100%', orientation: 'horizontal', panels: [{ size:Number(splitRatio.substring(4, 5))*10 + '%'}, {size: Number(splitRatio.substring(5, 6))*10 + '%'}]});
@@ -1157,10 +1212,31 @@ var momWidget = {
 	    	     +      '</div>'       
 	    	     +    '</div>';
 	    return topHtml + midHtml+botHtml;
-		}/*,		
-		excelPop : function() {
+		},	
+		
 			
-		}	*/
+		gridPop : function(index,colNum,rowNum,popupTitle) {
+			var topHtml =	'<div id="defaultPop'+index+'" class="modal gridPop-C'+colNum+'-R'+rowNum+'">'
+	        +    '<div class="panelheader-gridPop">' 
+	        +     '<div class="modal-header-title-gridPop">'
+	        +       '<div class ="fa fa-edit"></div>'
+	        +       '<div multi-lang="" id="popupTitle'+index+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
+	        +     '</div>'
+	        +     '<div class = "modal-header-xbtn">'
+	        +     '<a href="#" class="bntpopclose"></a>'
+	        +     '</div>'
+	        +    '</div>'
+	        +    '<div class = "searcharea-gridPop-C'+colNum+'-R'+rowNum+'">'
+			+     '<div class="popup_main"></div>';			
+			botHtml  =     '</div>'
+    	    +     '<div class="panelfooter">'
+    	   	+      '<div class="footer-pop-btn-area">'
+    	    +       '<button  id = "saveBtnDP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG0004')+'</button>'
+    	    +       '<button  id = "cancelBtnDP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG0005')+'</button>'
+    	    +      '</div>'       
+    	    +    '</div>';
+			   return topHtml+botHtml;
+		}	
 	},
 	design: function(index, idx, color, align) {
 	    $('head').append('<style>.aui-grid-user-custom-header{background-color: #ff8000 !important;font-weight: bold;background: -webkit-gradient(linear, left top, left bottom, from(#ff8000),to(#ff8000));background: -webkit-linear-gradient(top, #ff8000, #ff8000);background: -moz-linear-gradient(top, #ff8000, #ff8000);background: -ms-linear-gradient(top, #ff8000, #ff8000);background: -o-linear-gradient(top, #ff8000, #ff8000);background: linear-gradient(top,#ff8000, #ff8000);}</style>');
@@ -2221,7 +2297,8 @@ var momWidget = {
 				// e.preventDefault();
 			});
 			
-			$(document).on('click', '#' + createBtnId, function(e) {		
+			$(document).on('click', '#' + createBtnId, function(e) {
+				var callbackData = [];		
 				if($('#changePwBtn'+(index+1)).length){
 					 $('#changePwBtn'+(index+1)).css('display','none');
 				}	
@@ -2238,8 +2315,11 @@ var momWidget = {
 				$('#popupTitle'+(index+1)).text('');
 				$('#popupTitle'+(index+1)).append(popupTitle+multiLang.transText('MESSAGE','MSG0008'));	
 				$('#' +'defaultPop'+(index+1)).momModal('show');
+				    // AUIGrid.resize('#grid'+index+1);
+				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);			
-				 callBackResult = that.checkActionCallInit(index, 'C', [], 'createBtn', your);	
+				 callbackData   = AUIGrid.getGridData(that.grid[index]);
+				 callBackResult = that.checkActionCallBack(index, 'C', [], 'createBtn', your,callbackData);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
@@ -4578,7 +4658,7 @@ var momWidget = {
 
 	// init 함수 처리
 	 checkActionCallInit: function(index, action, param, btnId, your) {
-		var result = {result:'SUCCESS', msg:'CALL INIT ACTION FAIL'};
+		var result = {result:'SUCCESS', msg:'SUCCESS'};
 		if(your == undefined) {
 			return 'FAIL';
 		}		
@@ -4615,33 +4695,33 @@ var momWidget = {
 	},
 	// Callback 함수 처리
 	 checkActionCallBack: function(index, action, param, btnId, your,data) {
-		var result = {result:'SUCCESS', msg:'CALL INIT ACTION FAIL'};
+		var result = {result:'SUCCESS', msg:'SUCCESS'};
 		if(your == undefined) {
 			return 'FAIL';
 		}		
 		if(action == 'C' && your.createCallBack != undefined) {
-			your.createCallBack(index,your,action,btnId,param,result);	
+			your.createCallBack(index,your,action,btnId,param,result,data);	
 		}		
 		if(action == 'CP' && your.copyCallBack != undefined) {
-			your.copyCallBack(index,your,action,btnId,param,result);	
+			your.copyCallBack(index,your,action,btnId,param,result,data);	
 		}	
 		else if(action == 'E' && your.excelCallBack != undefined) {
-			your.excelCallBack(index,your,action,btnId,param,result,result);	
+			your.excelCallBack(index,your,action,btnId,param,result,data);	
 		}
 		else if(action == 'R' && your.searchCallBack != undefined) {
 			your.searchCallBack(index,your,action,btnId,param,result,data);	
 		}
 		else if(action == 'GS' && your.saveCallBack != undefined) {
-				your.saveCallBack(index,your,action,btnId,param,result);				
+				your.saveCallBack(index,your,action,btnId,param,result,data);				
 		} 
 		else if(action == 'PS' && your.saveCallBack != undefined) {
-			your.saveCallBack(index,your,action,btnId,param,result);		
+			your.saveCallBack(index,your,action,btnId,param,result,data);		
 	} 
 		else if(action == 'D'  && your.delCallBack != undefined) {		
-			     your.delCallBack(index,your,action,btnId,param,result);				
+			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
 		else if(action == 'U' && your.updateCalBack != undefined) {
-			     your.updateCalBack(index,your,action,btnId,param,result);	
+			     your.updateCalBack(index,your,action,btnId,param,result,data);	
 		}
 	
 			return {result:result.result,param:param,msg:result.msg};
@@ -4684,6 +4764,10 @@ var momWidget = {
 					AUIGrid.resize(that.grid[i]);
 				}, 100);
 			});	
+				for(var k = 0, max = that.grid.length; k < max; k++) {
+				AUIGrid.resize(that.grid[k]);
+			}
+				
 		}
 	},
 	
