@@ -111,5 +111,4 @@
 	AND    B.OWNER = 'MOM_MASTER'	
 	ORDER BY LABEL
   </select>  
-
 </mapper>

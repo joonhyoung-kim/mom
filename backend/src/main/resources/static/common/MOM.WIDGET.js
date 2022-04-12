@@ -1394,6 +1394,7 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 			 }
+			 param = callInitResult['param'];
         	/*  param.startPage = that.startPage[index]; 
               praram.endPage  = that.endPage[index];*/
               setTimeout(function() {
@@ -2292,7 +2293,7 @@ var momWidget = {
 			 
 			$(document).on('click', '#' + findBtnId, function(e) {
 				
-				that.findBtnClicked(index, {}, true, findBtnId,that.pageProperty[index]['programId'],your,that.searchProperty[index]);
+				that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['programId'],your,that.searchProperty[index]);
 				
 				// e.preventDefault();
 			});
@@ -2318,6 +2319,7 @@ var momWidget = {
 				    // AUIGrid.resize('#grid'+index+1);
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);			
+			
 				 callbackData   = AUIGrid.getGridData(that.grid[index]);
 				 callBackResult = that.checkActionCallBack(index, 'C', [], 'createBtn', your,callbackData);	
 				if(callBackResult['result']  != 'SUCCESS') {
@@ -2347,21 +2349,25 @@ var momWidget = {
 								
 				that.setPopup(index,'CP');	
 				$('#defaultPop1').attr('actionType', 'C');
-				if(that.checkActionCallInit(index, 'CP', param, 'createBtn', your)['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
+			    callInitResult = that.checkActionCallInit(index, 'CP', param, 'copyBtn', your);
+				if(callInitResult['result'] != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
 				      return;
 				}	
+	
 				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
 				$('#popupTitle'+(index+1)).text('');
 				$('#popupTitle'+(index+1)).append(popupTitle+multiLang.transText('MESSAGE','MSG0010'));	
 				$('#' +'defaultPop'+(index+1)).momModal('show');
+				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);				
-				if(that.checkActionCallBack(index, 'CP', param, 'createBtn'+index, your)['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
+				callBackResult = that.checkActionCallBack(index, 'CP', param, 'copyBtn', your,param);	
+				if(callBackResult['result']  != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
 				      return;
-				}				
+				}						
 				
 			});	
 			$(document).on('click', '#' + saveBtnId, function(e) {
@@ -2400,12 +2406,7 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 						}
-			        	  //param.length =0;
-			        	/*  if(that.checkActionCallInit(index, 'R',  param, 'createBtn'+index, your)['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
-							  momWidget.splashHide();
-						      return;
-						  }	*/		
+			
 						 
 			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
@@ -2419,7 +2420,7 @@ var momWidget = {
 			$(document).on('click', '#' + savePopBtnId, function(e) {	
 				var param = [];
 				param = that.getPopupParam(index,your);
-				 callInitResult = that.checkActionCallInit(index, 'PS', param, 'saveBtnDP', your);
+				callInitResult = that.checkActionCallInit(index, 'PS', param, 'saveBtnDP', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -2449,7 +2450,7 @@ var momWidget = {
 					
 				}
 				  var actionType = $('#defaultPop1').attr('actionType');				 
-				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),callInitResult['param'], function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
 							  momWidget.splashHide();
@@ -2490,21 +2491,27 @@ var momWidget = {
 				}
 				that.setPopup(index,'U');	
 				$('#defaultPop1').attr('actionType', 'U');
-				if(that.checkActionCallInit(index, 'U', param, 'createBtn'+(index+1), your)['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
-					  momWidget.splashHide();
-				      return;
-				}		
+		
+				callInitResult = that.checkActionCallInit(index, 'U', param, 'editBtn', your,param);
+				if(callInitResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    }
 				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
 				$('#popupTitle'+(index+1)).text('');
 				$('#popupTitle'+(index+1)).append(popupTitle+multiLang.transText('MESSAGE','MSG0009'));	
 				$('#' +'defaultPop'+(index+1)).momModal('show');
-				//that.popUpSizeSet(index);				
-				if(that.checkActionCallBack(index, 'U', param, 'createBtn'+index, your)['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
+				that.htmlResize(index,your);
+				//that.popUpSizeSet(index);		
+				callBackResult = that.checkActionCallBack(index, 'U', param, 'editBtn', your,param);
+				if(callBackResult['result']  != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
 				      return;
-				}
+				}					
+		
+					
 				
 			});
 			$(document).on('click', '#' + delBtnId, function(e) {	
@@ -4658,17 +4665,15 @@ var momWidget = {
 
 	// init 함수 처리
 	 checkActionCallInit: function(index, action, param, btnId, your) {
-		var result = {result:'SUCCESS', msg:'SUCCESS'};
+		var result = {result:'SUCCESS', msg:'SUCCESS',param:param};
 		if(your == undefined) {
 			return 'FAIL';
 		}		
 		if(action == 'C' && your.createCallInit != undefined) {
-			 your.createCallInit(index,your,action,btnId,param,result);	
-			 
+			 your.createCallInit(index,your,action,btnId,param,result);				 
 		}
 		else if(action == 'CP' && your.copyCallInit != undefined) {
-			 your.copyCallInit(index,your,action,btnId,param,result);	
-			 
+			 your.copyCallInit(index,your,action,btnId,param,result);				 
 		}
 		else if(action == 'E' && your.excelCallInit != undefined) {
 			 your.excelCallInit(index,your,action,btnId,param,result);	
@@ -4681,21 +4686,21 @@ var momWidget = {
 		} 
 		else if(action == 'PS' && your.saveCallInit != undefined) {
 			 your.saveCallInit(index,your,action,btnId,param,result);			
-	} 
+	    } 
 		else if(action == 'D'  && your.delCallInit != undefined) {		
 			 your.delCallInit(index,your,action,btnId,param,result);			
 		}
-		else if(action == 'U' && your.updateCallInit != undefined) {
-			 your.updateCallInit(index,your,action,btnId,param,result);	
+		else if(action == 'U' && your.editCallBack != undefined) {
+			 your.editCallBack(index,your,action,btnId,param,result);	
 		}	
 		
 
-			return {result:result.result,param:param,msg:result.msg};
+			return {result:result.result,param:result.param,msg:result.msg};
 
 	},
 	// Callback 함수 처리
 	 checkActionCallBack: function(index, action, param, btnId, your,data) {
-		var result = {result:'SUCCESS', msg:'SUCCESS'};
+		var result = {result:'SUCCESS', msg:'SUCCESS',param:param};
 		if(your == undefined) {
 			return 'FAIL';
 		}		
@@ -4720,11 +4725,11 @@ var momWidget = {
 		else if(action == 'D'  && your.delCallBack != undefined) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
-		else if(action == 'U' && your.updateCalBack != undefined) {
-			     your.updateCalBack(index,your,action,btnId,param,result,data);	
+		else if(action == 'U' && your.editCallBack != undefined) {
+			     your.editCallBack(index,your,action,btnId,param,result,data);	
 		}
 	
-			return {result:result.result,param:param,msg:result.msg};
+			return {result:result.result,param:result.param,msg:result.msg};
 		
 
 		

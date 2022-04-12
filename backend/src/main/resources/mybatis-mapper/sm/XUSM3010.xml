@@ -81,7 +81,7 @@
 					         , UPDATE_DATE
 					         )     
         VALUES
-                <foreach item="item" collection="list" index="i" separator=" " open="">
+                <foreach item="item" collection="list" index="i" separator=" , " open="">
 				          (    TRIM(#{item.programId, jdbcType=VARCHAR})
 				             , #{item.programNm, jdbcType=VARCHAR}
 				             , TRIM(#{item.programType, jdbcType=VARCHAR})

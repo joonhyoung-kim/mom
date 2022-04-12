@@ -1423,7 +1423,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			for(var i = 0;i<param.length;i++){
 				param[i].divisionCd  = siteInfo.divisionCd;
 				param[i].companyCd   = siteInfo.companyCd;
-				param[i].langCd      = siteInfo.langCd;
+				param[i].langCd      = siteInfo.languageCd;
 				param[i].userId      = userInfo.userNo;
 				param[i].commitYn    = commitYn == undefined ? 'Y':commitYn;
 				param[i].requestType = requestType;
@@ -1450,7 +1450,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			for(var i = 0;i<param.length;i++){
 				param[i].divisionCd = siteInfo.divisionCd;
 				param[i].companyCd  = siteInfo.companyCd;
-				param[i].langCd      = siteInfo.langCd;
+				param[i].langCd     = siteInfo.languageCd;
 				param[i].userId     = userInfo.userNo;
 				param[i].requestType   = requestType;
 				param[i].p_err_code  = '';
@@ -1474,7 +1474,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			for(var i = 0;i<param.length;i++){
 				param[i].divisionCd = siteInfo.divisionCd;
 				param[i].companyCd  = siteInfo.companyCd;
-				param[i].langCd      = siteInfo.langCd;
+				param[i].langCd     = siteInfo.languageCd;
 				param[i].userId     = userInfo.userNo;
 				param[i].requestType   = requestType;
 				param[i].p_err_code  = '';
