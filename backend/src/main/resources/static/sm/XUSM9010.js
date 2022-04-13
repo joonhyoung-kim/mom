@@ -16,7 +16,7 @@ var XUSM9010 = {
 		$('#eventType').jqxComboBox('addItem',{"code":"D","value":"DELETE"});	
 	},
 	searchCallBack: function(index,your,action,btnId,param,result,data) {
-		if(index ==0 && btnId =='findBtn1'){	
+		if(index ==0 && btnId =='findBtn'){	
 			//AUIGrid.clearGridData(momWidget.grid[index]);
 			var columnItem = data;
 			var xmlHtml   = '';
@@ -170,7 +170,8 @@ var XUSM9010 = {
 				
 		}
 
-	}		 		
+	}
+			 		
 };
 
 $(document).ready(function(event){	

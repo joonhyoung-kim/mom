@@ -119,6 +119,7 @@ var momWidget = {
 			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch'};
 			      var searchBtn      =  '';
 			      var gridPopYn      ='';
+			      var templateInfo   = '';
 			      for(var i=0,max=gridExceptList.length; i<max;i++){
 			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[index][0][gridExceptList[i]];			    	  
 			    	   delete that.gridProperty[index][0][gridExceptList[i]];
@@ -126,14 +127,15 @@ var momWidget = {
 			      that.gridExtraProperty[index] = gridExtraProp;
 			      if(index>0&&that.popupProperty[index-1].length !=0){
 					 if(that.popupProperty[index-1][0]['popupType'] == 'G'){
-						var templateInfo = that.popupProperty[index-1][0]['defaultValue'].split('-');
+						templateInfo = that.popupProperty[index-1][0]['defaultValue'].split('-');
 					}
 				
-				      
+				      searchBtn = '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG0003')+'</button>';
+				      templateInfo = that.pageProperty[0]['templateId'].split('-');
 			      }
 			      else{
 				        searchBtn = '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG0003')+'</button>';
-				      var templateInfo = that.pageProperty[index]['templateId'].split('-');
+				        templateInfo = that.pageProperty[0]['templateId'].split('-');
 			     }
 			
 			     // var popupTemplateInfo = ;
@@ -318,7 +320,7 @@ var momWidget = {
 							var popupAreaHtml =  that.createPopup.gridPop(index+1,popupColNum,popupRowNum,that.gridExtraProperty[index]['popupTitle']);
 						}
 						else{
-							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle']);
+							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle']);
 						}
 			    		 
 			    		  $('body').append(popupAreaHtml);
@@ -327,7 +329,7 @@ var momWidget = {
 					 if(that.popupProperty[index-1][0]['popupType'] == 'G'){
 						$('#popContentArea'+(index+1)).append(gridAreaHtml); 
 					}
-				
+				  $('#contentArea'+(index+1)).append(gridAreaHtml); 
 				      
 			      }
 			    				           					         
@@ -865,7 +867,7 @@ var momWidget = {
 		 $('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'horizontal', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
 		return html;
 		},
-		tm2v : function(splitRatio,splitRatio,content,target) {
+		tm2v : function(index,splitRatio,content,target) {
 		    var html     =	 '<div id = "split1" class="splitGrid">'
 			           +     '<div id = "contentArea1" class = "tabcontentarea"></div>'
 		               +     '<div id = "contentArea2" class = "tabcontentarea"></div>'	               
@@ -878,11 +880,11 @@ var momWidget = {
 		    var html     = '<div id = "split1" class="splitGrid">'
                          +    '<div>'
                          +      '<div id = "split2" class="splitGrid">'
-                         +       '<div id = "contentArea1" class = "tabcontentarea"></div>'
-                         +       '<div id = "contentArea3" class = "tabcontentarea"></div>'	
+                         +       '<div id = '+ content+index+' class = "tabcontentarea"></div>'
+                         +       '<div id = '+ content+(index+2)+' class = "tabcontentarea"></div>'	
                          +      '</div>'
                          +    '</div>'
-                         +    '<div id = "contentArea2" class = "tabcontentarea"></div>'
+                         +    '<div id = '+ content+(index+1)+' class = "tabcontentarea"></div>'
                          + '</div>';
 			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
@@ -1027,34 +1029,15 @@ var momWidget = {
 		}
 	},
 	createPopup: {
-		defaultPop : function(index,coulnmCnt,popupItem,popupTitle) {	//열3줄 coulnmCnt==3
+		defaultPop : function(index,colNum,rowNum,popupItem,popupTitle) {	//열3줄 colNum==3
 	    var midHtml = '';
 		var botHtml = '';
-		var rowCnt  = 1;
-		var forCnt  = coulnmCnt;
 		var tmpCnt  = 1;
-		var fieldCnt = popupItem.length%coulnmCnt;
-		if(popupItem.length%coulnmCnt>0){
-			rowCnt  = Math.floor((popupItem.length/coulnmCnt))+1;
-			forCnt	= Math.floor((popupItem.length/coulnmCnt))*coulnmCnt+1;
-		}
-		else{
-			rowCnt  =  Math.floor(popupItem.length/coulnmCnt);
-			forCnt  =  Math.floor((popupItem.length/coulnmCnt))*coulnmCnt;
-		}
+		var totalNum = popupItem.length;
+		var fieldCnt = popupItem.length%colNum;
 		
-	/*    var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-R'+rowCnt+'">'
-	    	        +    '<div class="panelheader">' 
-	    	        +     '<div class="modal-header-title">'
-	    	        +       '<div class ="fa fa-edit"></div>'
-	    	        +       '<div id="popupTitle'+index+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
-	    	        +     '</div>'
-	    	        +     '<div class = "modal-header-xbtn">'
-	    	        +     '<a href="#" class="bntpopclose"></a>'
-	    	        +     '</div>'
-	    	        +    '</div>'
-	    	        +    '<div class = "searcharea-pop-row'+rowCnt+'">';*/
-		    var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-C'+coulnmCnt+'-R'+rowCnt+'">'
+
+		    var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-C'+colNum+'-R'+rowNum+'">'
 	        +    '<div class="panelheader">' 
 	        +     '<div class="modal-header-title">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -1064,11 +1047,11 @@ var momWidget = {
 	        +     '<a href="#" class="bntpopclose"></a>'
 	        +     '</div>'
 	        +    '</div>'
-	        +    '<div class = "searcharea-pop-C'+coulnmCnt+'-R'+rowCnt+'">';
-	    for(var i=0;i<forCnt;i+=coulnmCnt){	
-	        if(tmpCnt == rowCnt && fieldCnt==1){
-		       	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
-	             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	        +    '<div class = "searcharea-pop R'+rowNum+'">';
+	    for(var i=0;i<totalNum;i+=colNum){	//전체 돌리는 개수 
+	        if(tmpCnt == rowNum && fieldCnt==1){ // 마지막 하나일떄 
+		       	 midHtml +=   '<div class ="modal-contents-row">'
+	             +           '<div class ="w-col w-col-'+colNum+'">'
 	             +            '<div class ="labelbox">'
 	             +              '<div class ='+popupItem[i].circleClass+'></div>'
 	             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
@@ -1076,20 +1059,20 @@ var momWidget = {
 	             +          popupItem[i].labelField
 	             +           '</div>'
 	             +          '</div>'; 
-		    	 if(rowCnt>tmpCnt){
+		    	 if(rowNum>tmpCnt){
 		    		 tmpCnt ++;
 		    	 }
 	        }
-	        else if(tmpCnt == rowCnt && fieldCnt==coulnmCnt-1){
-			       	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
-		             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	        else if(tmpCnt == rowNum && fieldCnt==2){ //마지막 2개일떄 
+			       	 midHtml +=   '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
 		             +            '<div class ="labelbox">'
 		             +              '<div class ='+popupItem[i].circleClass+'></div>'
 		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
 		             +            '</div>'
 		             +          popupItem[i].labelField
 		             +           '</div>'
-		             +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
 		             +            '<div class ="labelbox">'
 		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
 		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
@@ -1097,27 +1080,64 @@ var momWidget = {
 		             +          popupItem[i+1].labelField
 		             +           '</div>'
 		             +          '</div>'; 
-			    	 if(rowCnt>tmpCnt){
+			    	 if(rowNum>tmpCnt){
 			    		 tmpCnt ++;
 			    	 }
 	        }
-	        else if (coulnmCnt ==3){
-	        	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	         else if (colNum ==1){
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +          '</div>'; 
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	          else if (colNum ==2){
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+1].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +          '</div>'; 
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	        else if (colNum ==3){
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+1].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
@@ -1125,42 +1145,42 @@ var momWidget = {
 	               +          popupItem[i+2].labelField
 	               +           '</div>'
 	               +          '</div>'; 
-		    	 if(rowCnt>tmpCnt){
+		    	 if(rowNum>tmpCnt){
 		    		 tmpCnt ++;
 		    	 }
 	        	
 	        }
-	          else if (coulnmCnt ==5){
-	        	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	          else if (colNum ==5){
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+1].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+2].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+3].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+3].textClass+'>'+popupItem[i+3].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+3].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+4].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+4].textClass+'>'+popupItem[i+4].popupNm+'</div>'  
@@ -1168,28 +1188,28 @@ var momWidget = {
 	               +          popupItem[i+4].labelField
 	               +           '</div>'
 	               +          '</div>'; 
-		    	 if(rowCnt>tmpCnt){
+		    	 if(rowNum>tmpCnt){
 		    		 tmpCnt ++;
 		    	 }
 	        	
 	        }
 	          else{
-	        	 midHtml +=   '<div class ="modal-contents-C'+coulnmCnt+'-R'+tmpCnt+'">'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
 	               +            '</div>'
 	               +          popupItem[i+1].labelField
 	               +           '</div>'
-	               +           '<div class ="w-col w-col-'+coulnmCnt+'">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
 	               +            '<div class ="labelbox">'
 	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
 	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
@@ -1197,7 +1217,7 @@ var momWidget = {
 	               +          popupItem[i+2].labelField
 	               +           '</div>'
 	               +          '</div>'; 
-		    	 if(rowCnt>tmpCnt){
+		    	 if(rowNum>tmpCnt){
 		    		 tmpCnt ++;
 		    	 }
 	        	
@@ -2862,7 +2882,7 @@ var momWidget = {
 				
 				col3: function() {
 					var html =
-						 '<div class="w-col w-col-'+coulnmCnt+'">'
+						 '<div class="w-col w-col-'+colNum+'">'
 						+'    <div class="w-clearfix listitem">'
 						+'	    <div class="w-col w-col-6">'
 						+'   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'

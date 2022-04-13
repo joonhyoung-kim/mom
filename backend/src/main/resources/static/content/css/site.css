@@ -238,14 +238,14 @@ table tr td i.fa { font-size: 12px; }
 .w-row:before, .w-row:after { content: " "; display: table }
 .w-row:after { clear: both }
 .w-row .w-row { margin-left: 0px; margin-right: 0px }
-.w-col { position: relative; float: left; width: 100%; min-height: 1px; padding-left: 0px; padding-right: 0px;margin-left: 0.8rem;}
+.w-col { position: relative; float: left; width: 100%; min-height: 1px; padding-left: 0px; padding-right: 0px}
 .w-col .w-col { padding-left: 0; padding-right: 0 }
-.w-col-1 { width: 8.33333333% }
-.w-col-2 { width: 16.66666667% }
-.w-col-3 { width: 31% }
+.w-col-1 { width: 8.33333333% ;margin-left: 0.8rem}
+.w-col-2 { width: 41% ;margin-left: 1.8rem}
+.w-col-3 { width: 31% ;margin-left: 0.8rem}
 .w-col-4 { width: 31% }
 /* .w-col-5 { width: 41.66666667% } */
-.w-col-5 { width: 16%; margin-left: 3rem;}
+.w-col-5 { width: 16%; margin-left: 3rem}
 .w-col-6 { width: 50% }
 .w-col-7 { width: 58.33333333% }
 .w-col-8 { width: 66.66666667% }
