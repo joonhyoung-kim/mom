@@ -371,7 +371,7 @@ var XUSM2010 = {
 		
 	}, 
 	setComboBox: function() {
-		   mom_ajax('R', 'DDSM.DDSM0006', {programType:'UI'}, function(result3, data3) {
+		   mom_ajax('R', 'DD.DD00006', {programType:'UI'}, function(result3, data3) {
 						                 if(result3 != 'SUCCESS') {
 						    	            momWidget.splashHide();
 							                return;							     

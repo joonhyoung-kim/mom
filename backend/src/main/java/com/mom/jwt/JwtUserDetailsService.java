@@ -32,13 +32,13 @@ public class JwtUserDetailsService implements UserDetailsService {
 		//paramMap.put("companyCd","");
 		if(clientId.equals("master")) {
 			if(paramMap.get("comboType").equals("company")) {
-				JwtLoginInfo.resultMapList = momDao.getMapList("com.mom.DDSM.get_DDSM0012", paramMap); // 로그인 결과 담기
+				JwtLoginInfo.resultMapList = momDao.getMapList("com.mom.DD.get_DD00012", paramMap); // 로그인 결과 담기
 				//resultMap = momDao.getMapList("com.mom.XUSM1010.get_userInfo", paramMap).get(0); // 로그인 결과 담기
 				resultMap.put("password", JwtLoginInfo.password);
 				// System.out.println("컴퍼니리스트조회성공="+JwtLoginInfo.resultMapList);
 			}
 			else {
-				JwtLoginInfo.resultMapList = momDao.getMapList("com.mom.DDSM.get_DDSM0013", paramMap); // 로그인 결과 담기
+				JwtLoginInfo.resultMapList = momDao.getMapList("com.mom.DD.get_DD00013", paramMap); // 로그인 결과 담기
 				resultMap.put("password", JwtLoginInfo.password);
 				//resultMap = momDao.getMapList("com.mom.XUSM1010.get_userInfo", paramMap).get(0); // 로그인 결과 담기
 				// System.out.println("디비전리스트조회성공="+JwtLoginInfo.resultMapList);
