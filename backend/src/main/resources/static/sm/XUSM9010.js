@@ -44,10 +44,10 @@ var XUSM9010 = {
 			  }
 		    }
 		    else if(eventType == 'INSERT'){
-			  xmlHtml += '  <insert id="create_defaultInfo1" parameterType="java.util.List">\n      INSERT INTO '+$('#tableId').val()+' ('+'\n'+'                  ';
+			  xmlHtml += '  <insert id="create_defaultInfo1" parameterType="java.util.List">\n   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> \n     INTO '+$('#tableId').val()+' ('+'\n'+'                  ';
 			    for(var i=0;i<columnItem.length;i++){	
 				 if(i == columnItem.length-1){
-					xmlHtml += ''+columnItem[i]['columnName']+' )'+'\n'+'      VALUES <foreach item="item" collection="list" index="i" separator=" " open="">\n              (  ';
+					xmlHtml += ''+columnItem[i]['columnName']+' )'+'\n'+'      VALUES \n              (  ';
 					for(var j=0;j<columnItem.length;j++){
 						if(columnItem[j]['dataType'] == 'VARCHAR' || columnItem[j]['dataType'] == 'VARCHAR2'){
 							jdbcType = 'VARCHAR';
@@ -60,10 +60,10 @@ var XUSM9010 = {
 						}
 						if(j == columnItem.length-1){
 							if(columnItem[j]['dataType'] == 'DATE'){
-						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'              )\n             </foreach>\n  </insert>';
+						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})\n'+'              )\n   </foreach>\n  </insert>';
 					          }
 					        else{
-						      xmlHtml += ' #{item.'+columnItem[j]['columnName2']+', jdbcType='+jdbcType+'}\n                              )\n             </foreach>\n  </insert>';
+						      xmlHtml += ' #{item.'+columnItem[j]['columnName2']+', jdbcType='+jdbcType+'}\n                              )\n   </foreach>\n  </insert>';
 					        }
 					    
 				        }

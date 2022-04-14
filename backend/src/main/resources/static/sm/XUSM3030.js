@@ -868,7 +868,7 @@ var XUSM3030 = {
 	}, 
 	popupGrid: function(queryId) {
 		var that = this;
-		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"}];
+		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"},{"code":"DS","value":"비고"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
@@ -1247,7 +1247,7 @@ var XUSM3030 = {
 		AUIGrid.bind('#grid1', "cellEditEnd", function(e) {
 			if(e.dataField == 'dropdownDetail') {
 				var dropDownParam ='';
-				if(e.item['dropdownId']=='DDSM0001'){
+				if(e.item['dropdownId']=='DD00001'){
 					dropDownParam = 'groupCd='+	e.item['dropdownDetail'];			
 				}
 				else{
@@ -1257,7 +1257,7 @@ var XUSM3030 = {
 			}
 			else if (e.dataField == 'headerDropdownDetail'){
 				var dropDownParam ='';
-				if(e.item['headerDropdownId']=='DDSM0001'){
+				if(e.item['headerDropdownId']=='DD00001'){
 					dropDownParam = 'groupCd='+	e.item['headerDropdownDetail'];			
 				}
 				else{
@@ -1928,7 +1928,7 @@ var XUSM3030 = {
 	
 	},
 	setComboBox: function() {
-		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120});	
+		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'containsignorecase'});	
 		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 100, height: 20,dropDownHeight: 120});	
 		$('#programId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120});	
 		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {

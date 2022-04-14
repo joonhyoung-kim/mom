@@ -137,7 +137,7 @@ var Login = {
 						                sessionStorage.setItem("loginMenuList", JSON.stringify(data2));					    
 						                sessionStorage.setItem("multiLangList", JSON.stringify(data3));
 										momWidget.splashHide();
-										top.location.href = mCommon.contextPath() + "/MAIN.html";
+										top.location.href = mCommon.contextPath() + "/main.html";
 					}, undefined, undefined, this, false);
 					
 								        

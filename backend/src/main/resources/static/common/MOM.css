@@ -1122,8 +1122,30 @@ border-color: #d8dce3 !important;
 .searcharea-pop.R8 {
     height: 44rem;
 }
-
-
+.searcharea-pop.R1-remark {
+    height: 38rem;
+}
+.searcharea-pop.R2-remark {
+    height: 16.5rem;
+}
+.searcharea-pop.R3-remark {
+    height: 16.3rem;
+}
+.searcharea-pop.R4-remark {
+    height: 21.5rem;
+}
+.searcharea-pop.R5-remark {
+    height: 27.5rem;
+}
+.searcharea-pop.R6-remark {
+    height: 33.1rem;
+}
+.searcharea-pop.R7-remark {
+    height: 38rem;
+}
+.searcharea-pop.R8-remark {
+    height: 44rem;
+}
 .modal-contents-row{
     height: 5rem;
     margin-top: 0.4rem;
@@ -2636,6 +2658,22 @@ border-color: #d8dce3 !important;
     margin-top: -36% !important;
     background: white !important; 
     height: 19rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
+.defaultPop-C3-R2-remark {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 56rem !important;
+    position: relative !important;
+    margin-left: 35% !important;
+    margin-top: -36% !important;
+    background: white !important; 
+    height: 25rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
    

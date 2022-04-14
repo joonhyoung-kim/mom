@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUSM3050">
+  <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	  SELECT MCD.COMPANY_CD
+		   , MCD.COMPANY_NM
+		   , MCD.DIVISION_CD
+		   , MCD.DIVISION_NM
+		   , MU.UNIT_CATEGORY
+	       , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MU.COMPANY_CD,MU.DIVISION_CD, 'SM0016', MU.UNIT_CATEGORY, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS UNIT_CATEGORY_NM          
+           , MU.UNIT	
+           , MU.UNIT_NM
+		   , MU.USE_YN
+		   , MU.DESCRIPTION
+		   , MU.UPDATE_BY
+		   , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MU.COMPANY_CD, MU.DIVISION_CD, MU.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+		   , MU.UPDATE_DATE
+	FROM   MOM_COM_DIV_V MCD
+	     , MOM_UNIT MU
+	WHERE  MCD.COMPANY_CD  = MU.COMPANY_CD
+	AND    MCD.DIVISION_CD = MU.DIVISION_CD
+	AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	<if test="unitCategory != null and unitCategory != ''">
+    AND MU.UNIT_CATEGORY IN (${unitCategory})
+	</if>
+	<if test="unit != null and unit != ''">
+	AND MU.UNIT IN (${unit})
+	</if>
+	<if test="useYn != null and useYn != ''">
+	AND MU.USE_YN = #{useYn, jdbcType=VARCHAR}
+	</if>
+	ORDER BY MCD.COMPANY_NM , MCD.DIVISION_NM, MU.UNIT_NM	
+ </select>
+ <insert id="create_defaultInfo1" parameterType="java.util.List">
+      INSERT INTO MOM_UNIT (
+                  COMPANY_CD
+                , DIVISION_CD
+                , UNIT_CATEGORY
+                , UNIT
+                , UNIT_NM
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.unitCategory, jdbcType=VARCHAR}
+                , #{item.unit, jdbcType=VARCHAR}
+                , #{item.unitNm, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+             </foreach>
+  </insert>
+  <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_UNIT
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , UNIT_CATEGORY = #{item.unitCategory, jdbcType=VARCHAR}
+           , UNIT = #{item.unit, jdbcType=VARCHAR}
+           , UNIT_NM = #{item.unitNm, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    UNIT = #{item.unit, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+      DELETE FROM MOM_UNIT
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd
+           AND  DIVISION_CD = #{item.divisionCd
+           AND  UNIT_CATEGORY = #{item.unitCategory
+        )
+       </foreach>
+      </where>
+  </delete>    
+</mapper>

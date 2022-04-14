@@ -146,6 +146,7 @@ var momWidget = {
 			      var searchRowcnt = that.searchProperty[index].length;
 			      var searchLineCnt = 0;
 			      var searchStyle   = 'h00';
+			      var remarkYn      = 'N'
 			      
 			      
 			      for(var i=0,max=searchRowcnt; i<max;i++){	
@@ -250,6 +251,10 @@ var momWidget = {
 		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
 		    			  
 		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='DS'){
+		    			  labelField  = '<textarea cols="81" rows="5" maxlength="200" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  remarkYn    = 'Y';
+		    		  }
 			    	  else {
 			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
 			    	  }
@@ -320,7 +325,7 @@ var momWidget = {
 							var popupAreaHtml =  that.createPopup.gridPop(index+1,popupColNum,popupRowNum,that.gridExtraProperty[index]['popupTitle']);
 						}
 						else{
-							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle']);
+							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn);
 						}
 			    		 
 			    		  $('body').append(popupAreaHtml);
@@ -406,11 +411,11 @@ var momWidget = {
 			    	   if(isDropDown =='Y'){
 			    		   var dropDownQueryId = that.columnProperty[index][i]['dropdownId'];		    		   
 			    		   //var nameSpace = 'DD' + that.pageProperty[index]['programId'].substr(2,2);
-			    		   var nameSpace = 'DDSM';
+			    		   var nameSpace = 'DD';
 			    		   var param = {};
 			    		   var dropdownTmp = {};
-			    		   if(dropDownQueryId == 'DDSM0001'){
-			    			   dropDownQueryId = 'DDSM.DDSM0001';
+			    		   if(dropDownQueryId == 'DD00001'){
+			    			   dropDownQueryId = 'DD.DD00001';
 			    			   var dropdownParamArry = that.columnProperty[index][i]['dropdownParam'].split('=');
 			    			   param.groupCd = dropdownParamArry[1];
 			    		   }
@@ -591,7 +596,7 @@ var momWidget = {
 		    searchType       = that.searchProperty[index][i]['searchType']; 
 		    headerSearchType = that.searchProperty[index][i]['headerType']; 
 		    defaultValue     = that.searchProperty[index][i]['defaultValue'];
-		    nameSpace        = dropdownId.substr(0, 4);  
+		    nameSpace        = dropdownId.substr(0, 2);  
 		    queryId          = '';
 		    paramMap.length = 0;
 		   
@@ -1029,15 +1034,16 @@ var momWidget = {
 		}
 	},
 	createPopup: {
-		defaultPop : function(index,colNum,rowNum,popupItem,popupTitle) {	//열3줄 colNum==3
+		defaultPop : function(index,colNum,rowNum,popupItem,popupTitle,remarkYn) {	//열3줄 colNum==3
 	    var midHtml = '';
 		var botHtml = '';
 		var tmpCnt  = 1;
 		var totalNum = popupItem.length;
 		var fieldCnt = popupItem.length%colNum;
+		var defaultPopClass = remarkYn == 'Y' ? 'defaultPop-C'+colNum+'-R'+rowNum+'-remark' : 'defaultPop-C'+colNum+'-R'+rowNum;
+		var searchAreaClass = remarkYn == 'Y' ? 'R'+rowNum+'-remark' : 'R'+rowNum;
 		
-
-		    var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-C'+colNum+'-R'+rowNum+'">'
+		var topHtml =	'<div id="defaultPop'+index+'" class="modal '+defaultPopClass+'">'
 	        +    '<div class="panelheader">' 
 	        +     '<div class="modal-header-title">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -1047,7 +1053,7 @@ var momWidget = {
 	        +     '<a href="#" class="bntpopclose"></a>'
 	        +     '</div>'
 	        +    '</div>'
-	        +    '<div class = "searcharea-pop R'+rowNum+'">';
+	        +    '<div class = "searcharea-pop '+searchAreaClass+'">';
 	    for(var i=0;i<totalNum;i+=colNum){	//전체 돌리는 개수 
 	        if(tmpCnt == rowNum && fieldCnt==1){ // 마지막 하나일떄 
 		       	 midHtml +=   '<div class ="modal-contents-row">'
@@ -1084,6 +1090,69 @@ var momWidget = {
 			    		 tmpCnt ++;
 			    	 }
 	        }
+	                else if(tmpCnt == rowNum && fieldCnt==3){ //마지막 3개일떄 
+			       	 midHtml +=   '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+2].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+			    	 if(rowNum>tmpCnt){
+			    		 tmpCnt ++;
+			    	 }
+	        }
+	          else if(tmpCnt == rowNum && fieldCnt==4){ //마지막 4개일떄 
+			       	 midHtml +=   '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+2].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+3].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+3].textClass+'>'+popupItem[i+3].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+3].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+			    	 if(rowNum>tmpCnt){
+			    		 tmpCnt ++;
+			    	 }
+	         }
 	         else if (colNum ==1){
 	        	 midHtml +=   '<div class ="modal-contents-row">'
 	               +           '<div class ="w-col w-col-'+colNum+'">'
@@ -3127,7 +3196,7 @@ var momWidget = {
 				dropdownId       = this.popupProperty[index][i]['dropdownId'];
 				dropdownParam    = this.popupProperty[index][i]['dropdownParam'];
 			    popupType        = this.popupProperty[index][i]['popupType']; 
-			    nameSpace        = dropdownId.substr(0, 4);  
+			    nameSpace        = dropdownId.substr(0, 2);  
 			    queryId          = '';
 			    paramMap.length  = 0;
 			    
@@ -3151,7 +3220,7 @@ var momWidget = {
 						    	  momWidget.splashHide();
 							      return;							     
 						      }							    
-						        	 $('#'+popupId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false});
+						        	 $('#'+popupId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});
 						          // $('#'+popupId).prev().prev().attr('class','circle-dh')
 						        	 if(type == 'C' || type =='CP'){
 						        		 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
