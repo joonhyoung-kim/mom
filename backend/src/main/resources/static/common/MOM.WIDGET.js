@@ -147,7 +147,8 @@ var momWidget = {
 			      var searchLineCnt = 0;
 			      var searchStyle   = 'h00';
 			      var remarkYn      = 'N'
-			      
+			      var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
+			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
 			      
 			      for(var i=0,max=searchRowcnt; i<max;i++){	
 		    		  if(that.searchProperty[index][i]['headerType']=='S'){
@@ -252,7 +253,7 @@ var momWidget = {
 		    			  
 		    		  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='DS'){
-		    			  labelField  = '<textarea cols="81" rows="5" maxlength="200" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="200" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
 		    			  remarkYn    = 'Y';
 		    		  }
 			    	  else {
@@ -283,8 +284,7 @@ var momWidget = {
 			      var isCheckBox = 'N';
 			      var isDropDown ='N';
 			      var columnId = '';
-			      var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
-			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
+
 			    	 if(index == 0 ){
 				    
 			    		 var createFrontArea ={};  
@@ -309,7 +309,7 @@ var momWidget = {
 			    		    $('#popContentArea'+(index+1)).append(searchAreaHtml); 	
 						  
 						}
-				
+				       $('#contentArea'+(index+1)).append(searchAreaHtml); 	
 				      
 			     	 }
 			    		  
@@ -3227,6 +3227,9 @@ var momWidget = {
 						        	 }							        	 
 						        	 $('#'+popupId).jqxComboBox('focus');
 					}, undefined, undefined, this, false);
+					}
+					else if(popupType == 'C'){
+						
 					}
 					else{
 						

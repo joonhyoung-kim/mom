@@ -175,7 +175,7 @@
 	/* height: 63rem; */
 	/* height: 95.2%; */
     width:calc(100% - 0.3rem); 
-    height:calc(100% - 3.4rem); 
+    height:calc(100% - 3.2rem); 
 	/* position: absolute;  */
 	position:relative;
 	margin-top: 0.6rem;
@@ -296,13 +296,13 @@
 }
 .gridArea-tm4vvh-h01-01{
 	background: #f0f0f5;
-    height:calc(100% - 5.9rem); 
+    height:calc(100% - 4.8rem); 
     border: none;
 }
 .gridArea-tm4vvh-h01-02{
 	background: #f0f0f5;
     /* height: 92%; */
-    height:calc(100% - 5.9rem); 
+    height:calc(100% - 4.8rem); 
     border: none;
 }
 .gridArea-tm4vvh-h01-03{
@@ -1114,7 +1114,7 @@ border-color: #d8dce3 !important;
     height: 27.5rem;
 }
 .searcharea-pop.R6 {
-    height: 33.1rem;
+    height: 27.3rem;
 }
 .searcharea-pop.R7 {
     height: 38rem;
@@ -1135,7 +1135,7 @@ border-color: #d8dce3 !important;
     height: 21.5rem;
 }
 .searcharea-pop.R5-remark {
-    height: 27.5rem;
+    height: 33rem;
 }
 .searcharea-pop.R6-remark {
     height: 33.1rem;
@@ -2626,6 +2626,63 @@ border-color: #d8dce3 !important;
     margin-top: -36% !important;
     background: white !important; 
     height: 19rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
+.remark {
+	
+}
+.remark.C2 {
+	width:33rem !important;
+}
+.remark.C3 {
+	width:50rem !important;
+}
+.defaultPop-C2-R5 {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 40rem !important;
+    position: relative !important;
+    margin-left: 35% !important;
+    margin-top: -36% !important;
+    background: white !important; 
+    height: 36rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
+.defaultPop-C2-R5-remark {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 40rem !important;
+    position: relative !important;
+    margin-left: 35% !important;
+    margin-top: -36% !important;
+    background: white !important; 
+    height: 41.7rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
+.defaultPop-C2-R6 {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 40rem !important;
+    position: relative !important;
+    margin-left: 35% !important;
+    margin-top: -36% !important;
+    background: white !important; 
+    height: 36rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
    

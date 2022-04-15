@@ -23,24 +23,24 @@
 	</select>
 	<select id="get_dropDownList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 		SELECT  DROPDWON_ID AS CODE
-	         ,  DROPDWON_NM AS LABEL
+	         ,  DROPDWON_NM || '(' || DROPDWON_ID || ')'  AS LABEL
 		FROM    MOM_DROP_DOWN
 		WHERE   DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
 		AND     COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
 		AND     USE_YN         = 'Y'
-		ORDER BY CODE,LABEL
+		ORDER BY CODE
 	</select>
     <select id="get_dropDownDetailList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
     		    
-        SELECT  MD.DETAIL_ID AS CODE
-	         ,  MD.DETAIL_NM AS LABEL
-		FROM    MOM_DROP_DOWN_DETAIL MD
+        SELECT  DETAIL_ID AS CODE
+	        ,   DETAIL_NM || '(' || DETAIL_ID || ')'  AS LABEL
+		FROM    MOM_DROP_DOWN_DETAIL 
 		WHERE   1=1
-        AND     MD.DROPDWON_ID = #{dropdownId, jdbcType=VARCHAR}
-        AND     MD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
-		AND     MD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
-		AND     MD.USE_YN      = 'Y'
-		ORDER BY MD.DROPDWON_ID, MD.DETAIL_ID
+        AND     DROPDWON_ID = #{dropdownId, jdbcType=VARCHAR}
+        AND     DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+		AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+		AND     USE_YN      = 'Y'
+		ORDER BY DROPDWON_ID, DETAIL_ID
 	</select>
 	<select id="get_menuList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
         SELECT  MM.MENU_ID  AS CODE
