@@ -20,6 +20,7 @@ var momWidget = {
     endPage:                [],
     splitGridData:          [],
 	checkedRowItem:         [],
+	searchComboQueryId:     [],
 		
 	INFINITE: 			100000000,	
 	uploadFlag: 		0,
@@ -240,7 +241,7 @@ var momWidget = {
 			    		    textClass   = 'textblock';
 			    	  }
 			    	  
-		    		  if(that.popupProperty[index][i]['popupType']=='S' || that.popupProperty[index][i]['popupType'] == 'M'){
+		    		  if(that.popupProperty[index][i]['popupType']=='S' ||that.popupProperty[index][i]['popupType']=='S4'|| that.popupProperty[index][i]['popupType'] == 'M'){
 		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
 		    			  
 			    	  }
@@ -3191,6 +3192,7 @@ var momWidget = {
 			var paramMap   = [];
 			var splitArray1 = undefined;
 			var splitArray2 = undefined;
+			var searchComboItem = {};
 			for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {	
 				popupId          = this.popupProperty[index][i]['popupId']+ 'DP' + (index + 1);
 				dropdownId       = this.popupProperty[index][i]['dropdownId'];
@@ -3199,8 +3201,9 @@ var momWidget = {
 			    nameSpace        = dropdownId.substr(0, 2);  
 			    queryId          = '';
 			    paramMap.length  = 0;
-			    
-				if(popupType == 'S' || popupType == 'M'){
+			    searchType        = this.popupProperty[index][i]['popupType']; 
+                defaultValue      = this.popupProperty[index][i]['defaultValue'];
+				if(popupType == 'S'  || popupType == 'M'){
 						if(dropdownId != '' && dropdownId != undefined){
 							 queryId = dropdownId;
 							 splitArray1 = dropdownParam.split('&');					 
@@ -3228,16 +3231,140 @@ var momWidget = {
 						        	 $('#'+popupId).jqxComboBox('focus');
 					}, undefined, undefined, this, false);
 					}
-					else if(popupType == 'C'){
-						
+					else if(popupType == 'S4'){
+						if(dropdownId != '' && dropdownId != undefined){
+							 queryId = dropdownId;
+						searchComboItem[popupId] = nameSpace+'.'+queryId;
+							 
+							// paramMap[i] = splitArray[0]:; 
+						}
+						else{
+							    queryId = dropdownId;
+							 //   paramMap[i] = ; 
+						}
+										    
+						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: "enter 4 or more characters",minLength: 4,remoteAutoComplete: true, search: function (searchString) {
+							if(searchString!=""){
+								var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+								mom_ajax('R', momWidget.searchComboQueryId[index][popupId], {"searchKey":searchString.trim()}, function(result, data) {
+						      if(result != 'SUCCESS') {
+						    	  momWidget.splashHide();
+							      return;							     
+						      }	
+						      $('#'+popupId).jqxComboBox({source: data});
+						      		}, undefined, undefined, this, false);
+								
+							}
+							
+							}
+							
+							});
+						          // $('#'+popupId).prev().prev().attr('class','circle-dh')
+						        /*	 if(type == 'C' || type =='CP'){
+						        		 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
+						        	 }		*/					        	 
+						        	 /*$('#'+popupId).jqxComboBox('focus');*/
+					
 					}
-					else{
+				else if(popupType == 'C'){
+					var today = new Date();  
+					var year  = undefined; // 년도
+				    var month = undefined;;  // 월
+				    var date  = undefined;;  // 날짜
+				if(defaultValue == 'TODAY'){
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				    
+				}
+				else if(defaultValue == 'INIT'){
+					     today = new Date(today.getFullYear(), today.getMonth(), 1);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
+				else if(defaultValue == 'LAST'){
+					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
+				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
+				var dateNum  =	defaultValue.substring(5,7);
+				var dateType =	defaultValue.substring(7,8);
+				  if(dateType == 'M'){
+					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				  }
+				  else if (dateType == 'D'){
+					 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+					 year  = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date  = today.getDate();  // 날짜
+				  }
+				  else{
+					
+				  }
+				
+				}
+				else if(defaultValue.includes("INIT") && defaultValue.length>5){
+					var dateNum  =	defaultValue.substring(4,6);
+				    var dateType =	defaultValue.substring(6,7);
+				    today = new Date(today.getFullYear(), today.getMonth(), 1);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
 						
-					}
-			}
+					  }
+				}
+					else if(defaultValue.includes("LAST") && defaultValue.length>5){
+					var dateNum  =	defaultValue.substring(4,6);
+				    var dateType =	defaultValue.substring(6,7);
+				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
+						
+					  }
+				}
+				else{
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				}
+						
+				 var calendar = new Date();
+                 calendar.setFullYear(year, month, date);
+				$('#'+popupId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+popupId).jqxDateTimeInput('setDate', calendar);
+				}
+				}
+					this.searchComboQueryId[index] = searchComboItem;
+			
 			if(type == 'C') {
-				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {	
-					$('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']=='' ? '':this.popupProperty[index][i]['defaultValue']);
+				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {					
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
 						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스
 							
@@ -3250,6 +3377,7 @@ var momWidget = {
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
 						}
 						else{ // 텍스트
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']=='' ? '':this.popupProperty[index][i]['defaultValue']);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
 						}
@@ -3266,6 +3394,7 @@ var momWidget = {
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
 						}
 						else{ // 텍스트
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']=='' ? '':this.popupProperty[index][i]['defaultValue']);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
 						}

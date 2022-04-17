@@ -154,10 +154,10 @@ var XUSM9010 = {
 			  xmlHtml += '  <delete id="remove_defaultInfo1" parameterType="java.util.List">\n      DELETE FROM '+$('#tableId').val()+'\n'+'      <where>\n       <foreach collection="list" item="item" open="" close="" separator="OR">\n        (       ';
 			  for(var i=0;i<pkItem.length;i++){								
 					if(i == pkItem.length-1){
-						xmlHtml += columnItem[i]['columnName']+' = #{item.'+columnItem[i]['columnName2']+'\n        )\n       </foreach>\n      </where>\n  </delete>';
+						xmlHtml += columnItem[i]['columnName']+' = #{item.'+columnItem[i]['columnName2']+', jdbcType=VARCHAR}'+'\n        )\n       </foreach>\n      </where>\n  </delete>';
 				     }											
 					else{
-						xmlHtml += columnItem[i]['columnName']+' = #{item.'+columnItem[i]['columnName2'] +'\n           AND  ';
+						xmlHtml += columnItem[i]['columnName']+' = #{item.'+columnItem[i]['columnName2'] +', jdbcType=VARCHAR}'+'\n           AND  ';
 					}
 					 
 				}

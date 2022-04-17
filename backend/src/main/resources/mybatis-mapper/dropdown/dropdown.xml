@@ -131,6 +131,9 @@
    FROM   MOM_ITEM   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   <if test="searchKey != null and searchKey != ''">
+   AND ( ITEM_ID LIKE '%' || TRIM(#{searchKey, jdbcType=VARCHAR}) || '%' )
+   </if>
    ORDER BY ITEM_NM    
 </select>
 <select id="get_DD00021" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   

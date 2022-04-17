@@ -1132,7 +1132,7 @@ border-color: #d8dce3 !important;
     height: 16.3rem;
 }
 .searcharea-pop.R4-remark {
-    height: 21.5rem;
+    height: 28.5rem;
 }
 .searcharea-pop.R5-remark {
     height: 33rem;
@@ -1145,6 +1145,9 @@ border-color: #d8dce3 !important;
 }
 .searcharea-pop.R8-remark {
     height: 44rem;
+}
+.searcharea-pop.R9-remark {
+    height: 54.5rem;
 }
 .modal-contents-row{
     height: 5rem;
@@ -2639,6 +2642,9 @@ border-color: #d8dce3 !important;
 .remark.C3 {
 	width:50rem !important;
 }
+.remark.C5 {
+	width:82.8rem !important;
+}
 .defaultPop-C2-R5 {
     z-index: 1050;
 /* 	display: none ; */
@@ -2778,6 +2784,22 @@ border-color: #d8dce3 !important;
     border: 1px solid #4d4d4e !important;
    
 }
+.defaultPop-C3-R4-remark {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 56rem !important;
+    position: relative !important;
+    margin-left: 45rem !important;
+    margin-top: -64rem !important;
+    background: white !important; 
+    height: 37rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
 .gridPop-C6-R4 {
     z-index: 1050;
 /* 	display: none ; */
@@ -2873,6 +2895,21 @@ border-color: #d8dce3 !important;
     margin-top: -100rem !important;
     background: white !important;
     height: 52.6rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+}
+.defaultPop-C5-R9-remark {
+	   z-index: 1050;
+    /* display: none; */
+    float: none !important;
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    /* overflow-y: auto !important; */
+    width: 90rem !important;
+    position: relative !important;
+    margin-left: 58rem !important;
+    margin-top: -100rem !important;
+    background: white !important;
+    height: 63.5rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
 }

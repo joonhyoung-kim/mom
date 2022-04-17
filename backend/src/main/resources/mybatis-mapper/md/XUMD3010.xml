@@ -2,116 +2,180 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD3010">
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-       SELECT MCD.COMPANY_CD
-		    , MCD.COMPANY_NM
-		    , MCIM.CUSTOMER_CD ||'_'|| MCIM.CUSTOMER_ITEM_ID || '_' || MCIM.ITEM_ID AS KEY_ID
-		    , MCD.DIVISION_CD
-		    , MCD.DIVISION_NM
-		    , MCIM.CUSTOMER_CD
-		    , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MCIM.COMPANY_CD, MCIM.DIVISION_CD, MCIM.CUSTOMER_CD) FROM DUAL ) AS CUSTOMER_NM
-		    , MCIM.CUSTOMER_ITEM_ID 
-		    , MCIM.ITEM_ID
-		    , MCIM.REQ_QTY
-		    , MI.ITEM_NM
-		    , MI.UNIT
-		    , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.UNIT, 'KR') FROM DUAL) AS UNIT_NM          
-		    , MI.ITEM_TYPE
-		    , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL) AS ITEM_TYPE_NM     
-		    , MI.ITEM_SPEC
-		    , MCIM.USE_YN
-		    , MCIM.DESCRIPTION
-		    , MCIM.UPDATE_BY
-		    , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
-		    , MCIM.UPDATE_DATE
-	   FROM   MOM_COM_DIV_V MCD
-            , MOM_CUSTOMER_ITEM_MAPPING MCIM
-    	    , MOM_ITEM MI
-	   WHERE  MCD.COMPANY_CD    = MCIM.COMPANY_CD
-	   AND    MCD.DIVISION_CD   = MCIM.DIVISION_CD
-	   AND    MCIM.COMPANY_CD   = MI.COMPANY_CD
-	   AND    MCIM.DIVISION_CD  = MI.DIVISION_CD
-	   AND    MCIM.ITEM_ID      = MI.ITEM_ID
-	   AND    MCIM.COMPANY_CD   = #{companyCd,  jdbcType=VARCHAR}
-	   AND    MCIM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}  	
-	   <if test="customerCd != null and customerCd != ''">
-	   AND MCIM.CUSTOMER_CD IN (${customerCd})
+           SELECT A.COMPANY_CD
+     , A.COMPANY_NM
+     , PRICE_CATEGORY ||'_'|| PARTNER_CD || '_' || ITEM_ID || '_' || CURRENCY_CD AS KEY_ID
+     , A.DIVISION_CD
+     , A.DIVISION_NM
+     , A.PRICE_CATEGORY
+     , A.PRICE_CATEGORY_NM     
+     , A.PARTNER_CD
+     , A.PARTNER_NM
+     , A.PARTNER_CD   AS VENDOR_CD     -- 공급처
+     , A.PARTNER_NM   AS VENDOR_NM     -- 공급처명
+     , A.PARTNER_CD   AS CUSTOMER_CD   -- 고객
+     , A.PARTNER_NM   AS CUSTOMER_NM   -- 고객명
+     , A.ITEM_ID
+     , A.ITEM_NM
+     , A.ITEM_SPEC
+     , A.PURCHASE_UNIT 
+     , A.PURCHASE_UNIT_NM   
+     , A.UNIT
+     , A.UNIT_NM  
+     , A.CURRENCY_CD
+     , A.CURRENCY_NM  
+     , A.PREV_UNIT_PRICE
+     , A.UNIT_PRICE
+     , A.START_DATE
+     , A.END_DATE
+     , A.PRICE_TYPE
+     , A.PRICE_TYPE_NM     
+     , A.MAIN_PARTER_YN
+     , A.USE_YN
+     , A.DESCRIPTION
+     , A.UPDATE_BY
+     , A.UPDATEBYNM
+     , A.UPDATE_DATE
+FROM   (SELECT MCD.COMPANY_CD
+             , MCD.COMPANY_NM
+             , MCD.DIVISION_CD
+             , MCD.DIVISION_NM
+             , MUP.PRICE_CATEGORY
+             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0011', MUP.PRICE_CATEGORY, 'KR') FROM DUAL) AS PRICE_CATEGORY_NM     
+             , MUP.PARTNER_CD
+             , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.PARTNER_CD) FROM DUAL ) AS PARTNER_NM
+             , MUP.ITEM_ID
+             , MI.ITEM_NM
+             , MI.ITEM_SPEC
+             , MI.PURCHASE_UNIT 
+             , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.PURCHASE_UNIT) FROM DUAL) AS PURCHASE_UNIT_NM     
+             , MI.UNIT 
+              , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.UNIT) FROM DUAL) AS UNIT_NM     
+             , MUP.CURRENCY_CD
+             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'SM0017', MUP.CURRENCY_CD, 'KR') FROM DUAL) AS CURRENCY_NM   
+             , MUP.PREV_UNIT_PRICE
+             , MUP.UNIT_PRICE
+             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD HH24:MI:SS') AS START_DATE 
+             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS END_DATE
+             , MUP.PRICE_TYPE
+             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
+             , MUP.MAIN_PARTER_YN
+             , MUP.USE_YN
+             , MUP.DESCRIPTION
+             , MUP.UPDATE_BY
+             , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+             , TO_CHAR(MUP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+        FROM   MOM_COM_DIV_V MCD
+             , MOM_UNIT_PRICE MUP
+             , MOM_ITEM MI
+        WHERE  MCD.COMPANY_CD  = MUP.COMPANY_CD
+        AND    MCD.DIVISION_CD = MUP.DIVISION_CD
+        AND    MUP.COMPANY_CD  = MI.COMPANY_CD
+        AND    MUP.DIVISION_CD = MI.DIVISION_CD
+        AND    MUP.ITEM_ID     = MI.ITEM_ID       
+        AND    MUP.PRICE_CATEGORY = 'P'    
+       <if test="customerCd != null and customerCd != ''">
+	   AND MUP.CUSTOMER_CD IN (${customerCd})
 	   </if>
 	   <if test="customerItemId != null and customerItemId != ''">
-	   AND (MCIM.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
+	   AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
 	   </if>
 	   <if test="itemId != null and itemId != ''">
-	   AND (MCIM.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	   AND (MUP.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
 	   </if>
 	   <if test="useYn != null and useYn != ''">
-	   AND MCIM.USE_YN = #{useYn, jdbcType=VARCHAR}
-	   </if>
-	   ORDER BY  MI.ITEM_NM
+	   AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
+	   </if>                       
+       ) A
+	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID 
 	</select>
-    <insert id="create_defaultInfo1" parameterType="java.util.List">
-         INSERT INTO MOM_CUSTOMER_ITEM_MAPPING (
-                     COMPANY_CD
-                  ,  DIVISION_CD
-                  ,  CUSTOMER_CD
-                  ,  CUSTOMER_ITEM_ID
-                  ,  ITEM_ID
-                  ,  REQ_QTY
-                  ,  USE_YN
-                  ,  DESCRIPTION
-                  ,  CREATE_BY
-                  ,  CREATE_DATE
-                  ,  UPDATE_BY
-                  ,  UPDATE_DATE )
-         VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
-                  (   #{item.companyCd, jdbcType=VARCHAR}
-                  ,   #{item.divisionCd, jdbcType=VARCHAR}
-                  ,   #{item.customerCd, jdbcType=VARCHAR}
-                  ,   #{item.customerItemId, jdbcType=VARCHAR}
-                  ,   #{item.itemId, jdbcType=VARCHAR}
-                  ,   #{item.reqQty, jdbcType=NUMERIC}
-                  ,   #{item.useYn, jdbcType=VARCHAR}
-                  ,   #{item.description, jdbcType=VARCHAR}
-                  ,   #{item.userId, jdbcType=VARCHAR}
-                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                  ,   #{item.userId, jdbcType=VARCHAR}
-                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                  )
-                </foreach>
-  </insert>	
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
+   <insert id="create_defaultInfo1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_UNIT_PRICE (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PRICE_CATEGORY
+                , PARTNER_CD
+                , ITEM_ID
+                , CURRENCY_CD
+                , PREV_UNIT_PRICE
+                , UNIT_PRICE
+                , START_DATE
+                , END_DATE
+                , PRICE_TYPE
+                , MAIN_PARTER_YN
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.priceType, jdbcType=VARCHAR}
+                , #{item.venderCd, jdbcType=VARCHAR}
+                , #{item.itemId, jdbcType=VARCHAR}
+                , #{item.currencyCd, jdbcType=VARCHAR}
+                , #{item.prevUnitPrice, jdbcType=NUMERIC}
+                , #{item.unitPrice, jdbcType=NUMERIC}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.priceType, jdbcType=VARCHAR}
+                , #{item.mainParterYn, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+ <update id="modify_defaultInfo1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-      UPDATE MOM_CUSTOMER_ITEM_MAPPING
+      UPDATE MOM_UNIT_PRICE
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
-          ,  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-          ,  CUSTOMER_CD = #{item.customerCd, jdbcType=VARCHAR}
-          ,  CUSTOMER_ITEM_ID = #{item.customerItemId, jdbcType=VARCHAR}
-          ,  ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
-          ,  REQ_QTY = #{item.reqQty, jdbcType=NUMERIC}
-          ,  USE_YN = #{item.useYn, jdbcType=VARCHAR}
-          ,  DESCRIPTION = #{item.description, jdbcType=VARCHAR}
-          ,  UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
-          ,  UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-      WHERE 1=1
-      AND   COMPANY_CD        = TRIM(#{item.companyCd,      jdbcType=VARCHAR})
-      AND   DIVISION_CD       = TRIM(#{item.divisionCd,     jdbcType=VARCHAR}) 
-      AND   CUSTOMER_CD       = TRIM(#{item.customerCd,     jdbcType=VARCHAR})      
-      AND   CUSTOMER_ITEM_ID  = TRIM(#{item.customerItemId, jdbcType=VARCHAR})   
-      AND   ITEM_ID           = TRIM(#{item.itemId,         jdbcType=VARCHAR})   
-
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , PRICE_CATEGORY = #{item.priceType, jdbcType=VARCHAR}
+           , PARTNER_CD = #{item.venderCd, jdbcType=VARCHAR}
+           , ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+           , CURRENCY_CD = #{item.currencyCd, jdbcType=VARCHAR}
+           , PREV_UNIT_PRICE = #{item.prevUnitPrice, jdbcType=NUMERIC}
+           , UNIT_PRICE = #{item.unitPrice, jdbcType=NUMERIC}
+           , START_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+           , END_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+           , PRICE_TYPE = #{item.priceType, jdbcType=VARCHAR}
+           , MAIN_PARTER_YN = #{item.mainParterYn, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    PRICE_CATEGORY = #{item.priceCategory, jdbcType=VARCHAR}
+      AND    PARTNER_CD = #{item.partnerCd, jdbcType=VARCHAR}
+      AND    ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+      AND    CURRENCY_CD = #{item.currencyCd, jdbcType=VARCHAR}
+      AND    START_DATE = #{item.startDate, jdbcType=VARCHAR}
+      AND    END_DATE = #{item.endDate, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
-	   DELETE
-	   FROM    MOM_CUSTOMER_ITEM_MAPPING
-       <where> 
-        <foreach collection="list" item="item" open="" close="" separator="OR"> 
-          (   
-	            COMPANY_CD        = TRIM(#{item.companyCd,      jdbcType=VARCHAR})
-	      AND   DIVISION_CD       = TRIM(#{item.divisionCd,     jdbcType=VARCHAR}) 
-	      AND   CUSTOMER_CD       = TRIM(#{item.customerCd,     jdbcType=VARCHAR})      
-	      AND   CUSTOMER_ITEM_ID  = TRIM(#{item.customerItemId, jdbcType=VARCHAR})   
-	      AND   ITEM_ID           = TRIM(#{item.itemId,         jdbcType=VARCHAR})   
-          )
-        </foreach>
-       </where>
-   </delete>
+  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+      DELETE FROM MOM_UNIT_PRICE
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd
+           AND  DIVISION_CD = #{item.divisionCd
+           AND  PRICE_CATEGORY = #{item.priceCategory
+           AND  PARTNER_CD = #{item.partnerCd
+           AND  ITEM_ID = #{item.itemId
+           AND  CURRENCY_CD = #{item.currencyCd
+           AND  PREV_UNIT_PRICE = #{item.prevUnitPrice
+           AND  UNIT_PRICE = #{item.unitPrice
+        )
+       </foreach>
+      </where>
+  </delete>
 </mapper>

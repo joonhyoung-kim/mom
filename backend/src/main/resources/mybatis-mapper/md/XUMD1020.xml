@@ -53,76 +53,73 @@
 			</if>
 		    ORDER BY ML.LOCATION_NM							
 	    </select>
-    <insert id="create_defaultInfo1" parameterType="java.util.List">  
-        INSERT INTO MOM_LOCATION(
-					              COMPANY_CD
-								, DIVISION_CD
-								, PLANT_CD
-								, LOCATION_CD
-								, LOCATION_NM
-								, LOCATION_GROUP_CD
-								, LOCATION_TYPE
-								, PARTNER_CD								
-								, USE_YN
-								, DESCRIPTION
-								, CREATE_BY
-								, CREATE_DATE
-								, UPDATE_BY
-								, UPDATE_DATE
-					         )     
-        VALUES
-                <foreach item="item" collection="list" index="i" separator=" " open="">
-				          (    TRIM(#{item.companyCd,  jdbcType=VARCHAR})
-				             , TRIM(#{item.divisionCd, jdbcType=VARCHAR})
-				             , TRIM(#{item.plantCd,    jdbcType=VARCHAR})
-				             , TRIM(#{item.locationCd, jdbcType=VARCHAR})
-				             , #{item.locationNm,      jdbcType=VARCHAR}
-				             , TRIM(#{item.locationGroupCd, jdbcType=VARCHAR})
-				             , #{item.locationType,    jdbcType=VARCHAR}
-				             , TRIM(#{item.parentCd,   jdbcType=VARCHAR})
-				             , #{item.sortNo,          jdbcType=INTEGER}
-				             , TRIM(#{item.useYn,      jdbcType=VARCHAR})
-				             , #{item.description,     jdbcType=VARCHAR}    
-				             , TRIM(#{item.userId,     jdbcType=VARCHAR})
-				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-				             , TRIM(#{item.userId,     jdbcType=VARCHAR})
-				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})  
-				          )		             
-	           </foreach>			               
-   </insert>   
-   <update id="modify_defaultInfo1" parameterType="java.util.List">     
-      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-        UPDATE MOM_LOCATION
-        SET    LOCATION_NM       = #{item.locationNm,       jdbcType=VARCHAR}
-			 , LOCATION_GROUP_CD = #{item.locationGroupCd,  jdbcType=VARCHAR}
-			 , LOCATION_TYPE     = #{item.locationType,     jdbcType=VARCHAR}
-			 , PARTNER_CD        = #{item.partnerCd,        jdbcType=VARCHAR}
-		     , USE_YN 		     = #{item.useYn,            jdbcType=VARCHAR}
- 		     , DESCRIPTION       = #{item.description,      jdbcType=VARCHAR}
-		     , UPDATE_BY         = #{item.userId,           jdbcType=VARCHAR}
-		     , UPDATE_DATE       = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR}, #{item.divisionCd, jdbcType=VARCHAR})
-         <where>
-               COMPANY_CD        = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
-         AND   DIVISION_CD       = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
-         AND   PLANT_CD          = TRIM(#{item.plantCd,    jdbcType=VARCHAR}) 
-         AND   LOCATION_CD       = TRIM(#{item.locationCd, jdbcType=VARCHAR})
-         </where>
-      </foreach>
-   </update> 
-   <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
-	   DELETE
-	   FROM     MOM_LOCATION
-       <where> 
-        <foreach collection="list" item="item" open="" close="" separator="OR"> 
-          (   
-	               COMPANY_CD     = TRIM(#{item.companyCd,  jdbcType=VARCHAR})
-	         AND   DIVISION_CD    = TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 
-	         AND   PLANT_CD       = TRIM(#{item.plantCd,    jdbcType=VARCHAR}) 
-	         AND   LOCATION_CD    = TRIM(#{item.locationCd, jdbcType=VARCHAR})
-          )
-        </foreach>
-       </where>
-   </delete>
+   <insert id="create_defaultInfo1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_LOCATION (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PLANT_CD
+                , LOCATION_CD
+                , LOCATION_NM
+                , LOCATION_GROUP_CD
+                , LOCATION_TYPE
+                , PARTNER_CD
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.plantCd, jdbcType=VARCHAR}
+                , #{item.locationCd, jdbcType=VARCHAR}
+                , #{item.locationNm, jdbcType=VARCHAR}
+                , #{item.locationGroupCd, jdbcType=VARCHAR}
+                , #{item.locationType, jdbcType=VARCHAR}
+                , #{item.partnerCd, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+  <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_LOCATION
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , PLANT_CD = #{item.plantCd, jdbcType=VARCHAR}
+           , LOCATION_CD = #{item.locationCd, jdbcType=VARCHAR}
+           , LOCATION_NM = #{item.locationNm, jdbcType=VARCHAR}
+           , LOCATION_GROUP_CD = #{item.locationGroupCd, jdbcType=VARCHAR}
+           , LOCATION_TYPE = #{item.locationType, jdbcType=VARCHAR}
+           , PARTNER_CD = #{item.partnerCd, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    LOCATION_CD = #{item.locationCd, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+      DELETE FROM MOM_ITEM
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+  </delete>
    <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
 	    MERGE INTO MOM_PROGRAM MP
 	    USING (
