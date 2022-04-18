@@ -30,7 +30,7 @@
      , A.END_DATE
      , A.PRICE_TYPE
      , A.PRICE_TYPE_NM     
-     , A.MAIN_PARTER_YN
+     , A.MAIN_PARTNER_YN
      , A.USE_YN
      , A.DESCRIPTION
      , A.UPDATE_BY
@@ -59,7 +59,7 @@ FROM   (SELECT MCD.COMPANY_CD
              , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS END_DATE
              , MUP.PRICE_TYPE
              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
-             , MUP.MAIN_PARTER_YN
+             , MUP.MAIN_PARTNER_YN
              , MUP.USE_YN
              , MUP.DESCRIPTION
              , MUP.UPDATE_BY
@@ -103,7 +103,7 @@ FROM   (SELECT MCD.COMPANY_CD
                 , START_DATE
                 , END_DATE
                 , PRICE_TYPE
-                , MAIN_PARTER_YN
+                , MAIN_PARTNER_YN
                 , USE_YN
                 , DESCRIPTION
                 , CREATE_BY
@@ -146,7 +146,7 @@ FROM   (SELECT MCD.COMPANY_CD
            , START_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
            , END_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
            , PRICE_TYPE = #{item.priceType, jdbcType=VARCHAR}
-           , MAIN_PARTER_YN = #{item.mainParterYn, jdbcType=VARCHAR}
+           , MAIN_PARTNER_YN = #{item.mainParterYn, jdbcType=VARCHAR}
            , USE_YN = #{item.useYn, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}

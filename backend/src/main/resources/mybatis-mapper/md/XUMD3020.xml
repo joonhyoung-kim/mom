@@ -30,7 +30,7 @@
      , A.END_DATE
      , A.PRICE_TYPE
      , A.PRICE_TYPE_NM     
-     , A.MAIN_PARTER_YN
+     , A.MAIN_PARTNER_YN
      , A.USE_YN
      , A.DESCRIPTION
      , A.UPDATE_BY
@@ -59,7 +59,7 @@ FROM   (SELECT MCD.COMPANY_CD
              , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS END_DATE
              , MUP.PRICE_TYPE
              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
-             , MUP.MAIN_PARTER_YN
+             , MUP.MAIN_PARTNER_YN
              , MUP.USE_YN
              , MUP.DESCRIPTION
              , MUP.UPDATE_BY
@@ -87,6 +87,7 @@ FROM   (SELECT MCD.COMPANY_CD
 	
 	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID    
 	</select>
+
   <insert id="create_defaultInfo1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_UNIT_PRICE (
@@ -101,7 +102,7 @@ FROM   (SELECT MCD.COMPANY_CD
                 , START_DATE
                 , END_DATE
                 , PRICE_TYPE
-                , MAIN_PARTER_YN
+                , MAIN_PARTNER_YN
                 , USE_YN
                 , DESCRIPTION
                 , CREATE_BY
@@ -109,21 +110,21 @@ FROM   (SELECT MCD.COMPANY_CD
                 , UPDATE_BY
                 , UPDATE_DATE )
       VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.priceType, jdbcType=VARCHAR}
-                , #{item.venderCd, jdbcType=VARCHAR}
-                , #{item.itemId, jdbcType=VARCHAR}
-                , #{item.currencyCd, jdbcType=VARCHAR}
+              (   #{item.companyCd,     jdbcType=VARCHAR}
+                , #{item.divisionCd,    jdbcType=VARCHAR}
+                , #{item.priceType,     jdbcType=VARCHAR}
+                , #{item.venderCd,      jdbcType=VARCHAR}
+                , #{item.itemId,        jdbcType=VARCHAR}
+                , #{item.currencyCd,    jdbcType=VARCHAR}
                 , #{item.prevUnitPrice, jdbcType=NUMERIC}
-                , #{item.unitPrice, jdbcType=NUMERIC}
+                , #{item.unitPrice,     jdbcType=NUMERIC}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , #{item.priceType, jdbcType=VARCHAR}
-                , #{item.mainParterYn, jdbcType=VARCHAR}
-                , #{item.useYn, jdbcType=VARCHAR}
-                , #{item.description, jdbcType=VARCHAR}
-                , #{item.userId, jdbcType=VARCHAR}
+                , #{item.priceType,     jdbcType=VARCHAR}
+                , #{item.mainPartnerYn, jdbcType=VARCHAR}
+                , #{item.useYn,         jdbcType=VARCHAR}
+                , #{item.description,   jdbcType=VARCHAR}
+                , #{item.userId,        jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
                 , #{item.userId, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
@@ -144,7 +145,7 @@ FROM   (SELECT MCD.COMPANY_CD
            , START_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
            , END_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
            , PRICE_TYPE = #{item.priceType, jdbcType=VARCHAR}
-           , MAIN_PARTER_YN = #{item.mainParterYn, jdbcType=VARCHAR}
+           , MAIN_PARTBER_YN = #{item.mainPartnerYn, jdbcType=VARCHAR}
            , USE_YN = #{item.useYn, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
@@ -176,4 +177,5 @@ FROM   (SELECT MCD.COMPANY_CD
        </foreach>
       </where>
   </delete>
+  
 </mapper>
