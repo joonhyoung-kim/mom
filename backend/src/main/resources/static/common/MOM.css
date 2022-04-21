@@ -1609,6 +1609,12 @@ border-color: #d8dce3 !important;
      margin-top: -0.1rem; 
     border: 1px solid darkgrey;
 }
+.searchSelectField-search-combo {
+    display: inline-block;
+   /*  float:left; */
+     margin-top: -0.1rem; 
+    border: 1px solid darkgrey;
+}
 .fieldbox {
 	display: inline-block;
 	width: 150px;

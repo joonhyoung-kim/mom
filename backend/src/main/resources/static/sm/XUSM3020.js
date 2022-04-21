@@ -71,13 +71,25 @@ var VIEW= {
 
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==1 && btnId =='findBtn2'){	
+		if(index == 1 && btnId =='findBtn'){	
 			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0]);
 			if(checkedItem =='FAIL'){
 				result.result = 'FAIL';
 				return;
 			}
 			param.codeCategory = checkedItem[0].codeCategory;
+					
+		}
+		else if(index == 3 && btnId =='saveBtn'){	
+			checkedItem = widget.getCheckedRowItems(widget.grid[2]);
+            if(checkedItem.length == 0){
+	        result.result = 'FAIL';
+	        return;
+            }		
+					         param['msgType']     = 'CODE';		
+					         param['code']        = checkedItem[0]['code'];
+					         param['langGroupCd'] = checkedItem[0]['groupCd'] +'_'+  checkedItem[0]['code'];			         					        			
+			  result.param = param;
 					
 		}
 

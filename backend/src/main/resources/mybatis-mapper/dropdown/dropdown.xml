@@ -166,12 +166,44 @@
 	FROM MOM_OPERATION
 	ORDER BY OPERATION_NM
 </select>    
-<select id="DD00025" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+<select id="get_DD00025" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT ROUTING_ID      AS CODE 
         , ROUTING_ID    ||'('|| ROUTING_NM      ||')' AS LABEL
    FROM   MOM_ROUTING   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    ORDER BY ROUTING_NM  
+</select>
+<select id="get_DD00026" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT IL_TYPE      AS CODE 
+        , IL_TYPE    ||'('|| IL_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_IL_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY IL_TYPE_NM
+</select>
+<select id="get_DD00027" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT IO_TYPE       AS CODE 
+        , IO_TYPE    ||'('|| IO_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_IO_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY IO_TYPE_NM
+</select>   
+<select id="get_DD00028" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT PO_TYPE       AS CODE 
+        , PO_TYPE    ||'('|| PO_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_PO_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY PO_TYPE_NM
+</select>
+<select id="get_DD00029" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT SO_TYPE       AS CODE 
+        , SO_TYPE    ||'('|| SO_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_SO_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY SO_TYPE_NM
 </select>
 </mapper>

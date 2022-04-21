@@ -116,8 +116,8 @@ var momWidget = {
 			  ----------------------------------------------------------------------------------------------------------------------------------     
 			  * 위젯세팅 정보 이용해 html 동적생성 
 			  ----------------------------------------------------------------------------------------------------------------------------------
-			  */  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch']; 	
-			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch'};
+			  */  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
 			      var searchBtn      =  '';
 			      var gridPopYn      ='';
 			      var templateInfo   = '';
@@ -241,9 +241,13 @@ var momWidget = {
 			    		    textClass   = 'textblock';
 			    	  }
 			    	  
-		    		  if(that.popupProperty[index][i]['popupType']=='S' ||that.popupProperty[index][i]['popupType']=='SS'|| that.popupProperty[index][i]['popupType'] == 'M'){
+		    		  if(that.popupProperty[index][i]['popupType']=='S' || that.popupProperty[index][i]['popupType'] == 'M'){
 		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
 		    			  
+			    	  }
+			    	  else if(that.popupProperty[index][i]['popupType']=='SS'){
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField-search-combo"></select>';
+		    			   
 			    	  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='C'){
 		    			  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input searchInputField" date-format="date"></input>';
@@ -257,6 +261,9 @@ var momWidget = {
 		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="200" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
 		    			  remarkYn    = 'Y';
 		    		  }
+		    		  else if(that.popupProperty[index][i]['popupType']=='GP'){
+			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'GP'+(index+1)+' type="text" type="text" class="grid-pop w-input searchInputField" date-format="date"></input>';
+			    	  }
 			    	  else {
 			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
 			    	  }
@@ -2027,7 +2034,33 @@ var momWidget = {
 			} 
 
 		});
-	
+		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
+			if(e.keyCode == 13){ //엔터
+			var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
+			var minLength = that.searchComboMinLength[index][popupId] ;
+			var queryId = that.searchComboQueryId[index][popupId];
+			if(searchString.length < minLength)	{
+						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+						return;
+			}
+			else{
+				mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
+						      if(result != 'SUCCESS') {
+						    	  momWidget.splashHide();
+							      return;							     
+						      }	
+						      $('#'+popupId).jqxComboBox({source: data});
+						   		setTimeout(function() {
+	                				$('#'+popupId).jqxComboBox('open' ); 
+    							},500);
+						      		}, undefined, undefined, that, false);
+			}
+				
+
+			} 
+
+		});
 
 	},
 	// AUIGrid 셀 클릭시 선택여부 설정
@@ -2137,6 +2170,7 @@ var momWidget = {
 			var excelUpCancelBtnId = 'cancelBtnExUp'+(index + 1);
 			var saveBtnId        = 'saveBtn'+(index + 1);
 			var savePopBtnId     = 'saveBtn'+'DP'+(index + 1);
+			var gridPopBtnId     = 'saveBtn'+'GP'+(index + 1);
 			var delBtnId         = 'delBtn'+(index + 1);
 			var addBtnId         = 'addBtn'+(index + 1);
 			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
@@ -2156,6 +2190,9 @@ var momWidget = {
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
+				$(document).on('click','.grid-pop', function() {
+			var splitArray = document.activeElement.id.split('DP');
+			});
 			$(document).on('click','#'+changePwBtnId, function() {
 				//that.splashShow();
                var modalDiv = $('#changePwPop'+(index+1));
@@ -2541,7 +2578,7 @@ var momWidget = {
 							  momWidget.splashHide();
 				              return;
 			            }    				                         							  						
-			        	callInitResult = that.checkActionCallBack(index, 'GS', param, 'saveBtn', your);
+			        	callBackResult = that.checkActionCallBack(index, 'GS', param, 'saveBtn', your);
 						if(callBackResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -2549,7 +2586,7 @@ var momWidget = {
 			    		}
 			
 						 
-			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);
+			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['menuId'],your,[]);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
@@ -3302,27 +3339,11 @@ var momWidget = {
 							 //   paramMap[i] = ; 
 						}
 							 		    
-						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+minLength +' or more characters',minLength: minLength,remoteAutoComplete: true, search: function (searchString) {
+						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+minLength +' or more characters',minLength: minLength,remoteAutoComplete: false});
 							
-							if(searchString!=""){
-								
-								var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-								mom_ajax('R', momWidget.searchComboQueryId[index][popupId], {"searchKey":searchString.trim()}, function(result, data) {
-						      if(result != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-						      }	
-						      $('#'+popupId).jqxComboBox({source: data});
-						      		}, undefined, undefined, that, false);
-								
-							}
-							else{
-								var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-								that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
-							}
-							}
+					
 							
-							});
+						
 						          // $('#'+popupId).prev().prev().attr('class','circle-dh')
 						        /*	 if(type == 'C' || type =='CP'){
 						        		 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
@@ -3429,7 +3450,8 @@ var momWidget = {
 					that.searchComboMinLength[index] = searchComboMinLength;
 			
 			if(type == 'C') {
-				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {					
+				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {
+					$('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val('');					
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
 						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스
 						
@@ -3472,10 +3494,12 @@ var momWidget = {
 					
 				}
 			}
-			else if(type == 'U'){				
+			else if(type == 'U'){	
+								
 				var checkedItems = this.getCheckedRowItems(this.grid[index]);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
 					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
+								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');		
 						 if(this.popupProperty[index][j]['popupId'] == undefined || this.popupProperty[index][j]['popupId'] == ''){	
 							 continue;
 						 }
@@ -3485,7 +3509,8 @@ var momWidget = {
 						
 					}				
 				}
-				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {						
+				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {		
+							
 					if(this.popupProperty[index][i]['updateEditFlag'] == 'N') { // 읽기전용
 						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
@@ -3524,6 +3549,7 @@ var momWidget = {
 				var checkedItems = this.getCheckedRowItems(this.grid[index]);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
 					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
+						 $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');	
 						 if(this.popupProperty[index][j]['popupId'] == undefined || this.popupProperty[index][j]['popupId'] == ''){	
 							 continue;
 						 }

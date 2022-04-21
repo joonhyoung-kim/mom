@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUMD2040">
+   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+      SELECT A.COMPANY_CD
+     , A.COMPANY_NM
+     , A.DIVISION_CD
+     , A.DIVISION_NM
+     , A.ITEM_ID
+     , A.ITEM_NM
+     , A.UNIT_CATEGORY
+     , A.UNIT_CATEGORY_NM     
+     , A.UNIT
+     , A.UNIT_NM
+     , A.CONVERSION_UNIT
+     , A.CONVERSION_UNIT_NM
+     , A.UNIT_QTY
+     , A.CONVERSION_UNIT_QTY
+     , A.USE_YN
+     , A.DESCRIPTION
+     , A.UPDATE_BY
+     , A.UPDATEBYNM
+     , A.UPDATE_DATE
+FROM  ( SELECT MCD.COMPANY_CD
+             , MCD.COMPANY_NM
+             , MCD.DIVISION_CD
+             , MCD.DIVISION_NM
+             , MIUR.ITEM_ID
+             , MI.ITEM_NM
+             , MUP.UNIT_CATEGORY
+             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MIUR.COMPANY_CD,MIUR.DIVISION_CD, 'SM0016', MUP.UNIT_CATEGORY, 'KR') FROM DUAL) AS UNIT_CATEGORY_NM 
+             , MIUR.UNIT
+             , MUP.UNIT_NM
+             , MIUR.CONVERSION_UNIT
+             , MUC.UNIT_NM          AS CONVERSION_UNIT_NM
+             , MIUR.UNIT_QTY
+             , MIUR.CONVERSION_UNIT_QTY
+             , MIUR.USE_YN
+             , MIUR.DESCRIPTION
+             , MIUR.UPDATE_BY
+             , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MIUR.COMPANY_CD, MIUR.DIVISION_CD, MIUR.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+             , MIUR.UPDATE_DATE
+        FROM   MOM_COM_DIV_V MCD
+             , MOM_ITEM_UNIT_REL MIUR
+             , MOM_ITEM MI
+             , MOM_UNIT MUP
+             , MOM_UNIT MUC
+        WHERE  MCD.COMPANY_CD      = MIUR.COMPANY_CD
+        AND    MCD.DIVISION_CD     = MIUR.DIVISION_CD
+        AND    MIUR.COMPANY_CD     = MI.COMPANY_CD
+        AND    MIUR.DIVISION_CD    = MI.DIVISION_CD
+        AND    MIUR.ITEM_ID        = MI.ITEM_ID
+        AND    MIUR.COMPANY_CD     = MUP.COMPANY_CD
+        AND    MIUR.DIVISION_CD    = MUP.DIVISION_CD
+        AND    MIUR.UNIT           = MUP.UNIT
+        AND    MIUR.COMPANY_CD     = MUC.COMPANY_CD
+        AND    MIUR.DIVISION_CD    = MUC.DIVISION_CD
+        AND    MIUR.CONVERSION_UNIT  = MUC.UNIT 
+       <if test="itemId != null and itemId != ''">
+	   AND (MI.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	   </if>
+	   <if test="itemNm != null and itemNm != ''">
+	   AND (MI.ITEM_NM LIKE '%' || TRIM(UPPER(#{itemNm, jdbcType=VARCHAR})) || '%' )
+	   </if>
+	   <if test="unitCategory != null and unitCategory != ''">
+	   AND  MUP.UNIT_CATEGORY = #{unitCategory, jdbcType=VARCHAR}
+	   </if>
+	   <if test="unit != null and unit != ''">
+	   AND  MIUR.UNIT IN (${unit})
+	   </if>
+	   <if test="conversionUnit != null and conversionUnit != ''">
+	   AND  MIUR.CONVERSION_UNIT IN (${conversionUnit})
+	   </if>
+           ) A 
+		ORDER BY A.COMPANY_NM
+		       , A.DIVISION_NM
+		       , A.ITEM_ID
+		       , A.UNIT_CATEGORY_NM
+		       , A.UNIT_NM
+		       , A.CONVERSION_UNIT_NM
+	</select>
+    <insert id="create_defaultInfo1" parameterType="java.util.List">
+         INSERT INTO MOM_CUSTOMER_ITEM_MAPPING (
+                     COMPANY_CD
+                  ,  DIVISION_CD
+                  ,  CUSTOMER_CD
+                  ,  CUSTOMER_ITEM_ID
+                  ,  ITEM_ID
+                  ,  REQ_QTY
+                  ,  USE_YN
+                  ,  DESCRIPTION
+                  ,  CREATE_BY
+                  ,  CREATE_DATE
+                  ,  UPDATE_BY
+                  ,  UPDATE_DATE )
+         VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+                  (   #{item.companyCd, jdbcType=VARCHAR}
+                  ,   #{item.divisionCd, jdbcType=VARCHAR}
+                  ,   #{item.customerCd, jdbcType=VARCHAR}
+                  ,   #{item.customerItemId, jdbcType=VARCHAR}
+                  ,   #{item.itemId, jdbcType=VARCHAR}
+                  ,   #{item.reqQty, jdbcType=NUMERIC}
+                  ,   #{item.useYn, jdbcType=VARCHAR}
+                  ,   #{item.description, jdbcType=VARCHAR}
+                  ,   #{item.userId, jdbcType=VARCHAR}
+                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                  ,   #{item.userId, jdbcType=VARCHAR}
+                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                  )
+                </foreach>
+  </insert>	
+  <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_CUSTOMER_ITEM_MAPPING
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+          ,  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+          ,  CUSTOMER_CD = #{item.customerCd, jdbcType=VARCHAR}
+          ,  CUSTOMER_ITEM_ID = #{item.customerItemId, jdbcType=VARCHAR}
+          ,  ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+          ,  REQ_QTY = #{item.reqQty, jdbcType=NUMERIC}
+          ,  USE_YN = #{item.useYn, jdbcType=VARCHAR}
+          ,  DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+          ,  UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+          ,  UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE 1=1
+      AND   COMPANY_CD        = TRIM(#{item.companyCd,      jdbcType=VARCHAR})
+      AND   DIVISION_CD       = TRIM(#{item.divisionCd,     jdbcType=VARCHAR}) 
+      AND   CUSTOMER_CD       = TRIM(#{item.customerCd,     jdbcType=VARCHAR})      
+      AND   CUSTOMER_ITEM_ID  = TRIM(#{item.customerItemId, jdbcType=VARCHAR})   
+      AND   ITEM_ID           = TRIM(#{item.itemId,         jdbcType=VARCHAR})   
+
+    </foreach>
+  </update>
+  <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
+	   DELETE
+	   FROM    MOM_CUSTOMER_ITEM_MAPPING
+       <where> 
+        <foreach collection="list" item="item" open="" close="" separator="OR"> 
+          (   
+	            COMPANY_CD        = TRIM(#{item.companyCd,      jdbcType=VARCHAR})
+	      AND   DIVISION_CD       = TRIM(#{item.divisionCd,     jdbcType=VARCHAR}) 
+	      AND   CUSTOMER_CD       = TRIM(#{item.customerCd,     jdbcType=VARCHAR})      
+	      AND   CUSTOMER_ITEM_ID  = TRIM(#{item.customerItemId, jdbcType=VARCHAR})   
+	      AND   ITEM_ID           = TRIM(#{item.itemId,         jdbcType=VARCHAR})   
+          )
+        </foreach>
+       </where>
+   </delete>
+</mapper>
