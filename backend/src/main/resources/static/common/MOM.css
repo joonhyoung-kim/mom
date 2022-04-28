@@ -81,7 +81,7 @@
 .excel-grid-box{
     height: 88%;
     width: 100%;
-    width: 1;
+    width: 100%;
     /* border: 1px solid #cfcbcb; */
 }
 .excel-input-text {
@@ -292,6 +292,27 @@
 .gridArea-tm3vh-h00-03{
 	background: #f0f0f5;
     height:calc(100% - 1.6rem);
+    border: none;
+}
+.gridArea-tm3hv-h00-01{
+	background: #f0f0f5;
+    height:calc(100% - 0.22rem);
+    border: none;
+}
+.gridArea-tm3hv-h00-02{
+	background: #f0f0f5;
+     height:calc(100% + 0.3rem); 
+  /*   height:100%; */
+    border: none;
+}
+.gridArea-tm3hv-h00-03{
+	background: #f0f0f5;
+    height:calc(100% - 0.7rem);
+    border: none;
+}
+.gridArea-tm3hv-h01-01{
+	background: #f0f0f5;
+    height:calc(100% - 4.7rem);
     border: none;
 }
 .gridArea-tm4vvh-h01-01{
@@ -2794,6 +2815,21 @@ border-color: #d8dce3 !important;
     /* position: relative !important; */
     padding-left: 0.7rem !important;
 }
+.gridPop-C3-R3{
+	z-index: 1050;
+    /* display: none; */
+    float: none !important;
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    overflow: hidden !important;
+    width: 55rem !important;
+    position: relative !important;
+    margin-left: 30% !important;
+    margin-top: -37.5% !important;
+    background: white !important;
+    height: 25rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+}
 .defaultPop-C3-R3 {
     z-index: 1050;
     /* display: none; */
@@ -2842,6 +2878,22 @@ border-color: #d8dce3 !important;
    
 }
 .gridPop-C6-R4 {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 110rem !important;
+    position: relative !important;
+    margin-left: 20rem !important;
+    margin-top: -72rem !important;
+    background: white !important; 
+    height: 32rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
+.defaultPop-C6-R4 {
     z-index: 1050;
 /* 	display: none ; */
 	float: none !important;
@@ -2968,6 +3020,16 @@ border-color: #d8dce3 !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
 }
+.searchSelectField-search-main{
+	 display: inline-block;
+     margin-top: -0.1rem; 
+     border: 1px solid darkgrey;
+     position:relative;
+     top:0.5rem;
+}
+input:focus{
+	outline:none;
+}
 .defaultPop-C5-R4 {
     z-index: 1050;
     /* display: none; */
@@ -2982,6 +3044,18 @@ border-color: #d8dce3 !important;
     height: 30rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
+}
+.gridPop-C5-R5 {
+    z-index: 1050;
+    border-radius: 0.5rem;
+    float: none !important;
+    width: 45rem !important;
+    position: relative !important;
+    margin-left: 40rem !important;
+    margin-top: -21rem !important;
+    background: white !important;
+    height: 15.5rem !important;
+    border: 1px solid rgb(77, 77, 78) !important;
 }
 .side-menu__item {
     position: relative;
@@ -6666,6 +6740,8 @@ border-color: #d8dce3 !important;
 	position:relative;
 	display:inline-block;
 	margin-left: 0.5rem;
+	top: -0.7rem;
+	
 }
 .form-control.main-search{
 	position:relative;

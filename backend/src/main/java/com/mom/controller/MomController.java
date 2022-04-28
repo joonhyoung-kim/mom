@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +29,7 @@ import com.mom.util.FrameworkUtil;
 import com.mom.util.PrintUtil;
 import com.mom.util.ProgressInfo;
 import com.mom.util.ReportUtil;
+import com.mom.util.exception.CustomDataAccessException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -94,11 +96,19 @@ public class MomController {
 	public List<Map<String,Object>> createMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
-		
+		List<Map<String,Object>> result =  new ArrayList<>();
 		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-		
-		return momService.createMapList(query, param);
+		try {
+			result = momService.createMapList(query, param);
+		}
+		catch (CustomDataAccessException e) {
+			System.out.println(e.getMsg());
+			result = FrameworkUtil.createResponseMap(false,e.getMsg());
+			System.out.println(result);
+			
+		}
+		return result ;
 	}
 	
 

@@ -99,6 +99,23 @@
 	AND    B.OWNER = 'MOM_MASTER'	
 	ORDER BY LABEL
   </select>  
+  <select id="get_DD10001" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
+  	   SELECT MAM.MENU_ID AS CODE
+	        , NVL((SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE( MAM.COMPANY_CD
+	                                                       , MAM.DIVISION_CD
+	                                                       , #{langCd, jdbcType=VARCHAR} 
+	                                                       , 'MENU' 	                                                                           
+	                                                       , MAM.MENU_ID) 
+	          FROM  DUAL ),MAM.MENU_NM )AS LABEL                                       
+      
+		   FROM   MOM_AUTH_MENU_V MAM
+		   WHERE  MAM.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
+		   AND    MAM.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR} 
+		   AND    MAM.AUTH_GROUP_CD = #{authGroupCd, jdbcType=VARCHAR}
+           AND    MAM.MENU_TYPE = 'P'
+           AND  (UPPER(MAM.MENU_NM) LIKE '%' || TRIM(UPPER(#{searchText, jdbcType=VARCHAR})) || '%' ) 
+           ORDER BY LABEL
+ </select>
   <!-- D-->
  <select id="get_DD00017" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT PLANT_CD  AS CODE 
@@ -132,7 +149,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    <if test="searchKey != null and searchKey != ''">
-   AND ( ITEM_ID LIKE '%' || TRIM(#{searchKey, jdbcType=VARCHAR}) || '%' )
+   AND ( UPPER(ITEM_ID) LIKE '%' || UPPER(TRIM(#{searchKey, jdbcType=VARCHAR}) || '%' ))
    </if>
    ORDER BY ITEM_NM    
 </select>
@@ -206,4 +223,20 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    ORDER BY SO_TYPE_NM
 </select>
+<select id="DD00030" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT REST_TIME_CD       AS CODE 
+        , REST_TIME_CD    ||'('|| REST_TIME_NM       ||')' AS LABEL
+   FROM   MOM_SHIFT_REST_TIME   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY REST_TIME_NM
+</select>
+<select id="DD00031" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT SHIFT_CD        AS CODE 
+        , SHIFT_CD     ||'('|| SHIFT_NM        ||')' AS LABEL
+   FROM   MOM_SHIFT
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   ORDER BY SHIFT_NM
+ </select> 
 </mapper>

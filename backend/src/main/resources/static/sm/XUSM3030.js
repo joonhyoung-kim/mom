@@ -868,7 +868,7 @@ var XUSM3030 = {
 	}, 
 	popupGrid: function(queryId) {
 		var that = this;
-		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"C","value":"캘린더"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"},{"code":"GP","value":"그리드-팝업"},{"code":"DS","value":"비고"}];
+		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"C","value":"캘린더"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"},{"code":"DG","value":"드롭다운그리드"},{"code":"DS","value":"비고"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
@@ -1050,7 +1050,12 @@ var XUSM3030 = {
 				, headerText 	: '드롭다운파람'
 				, style			: 'my-column-style-edit2'	
 			},
-		
+		    {
+				  dataField 	: 'dropdownGridList' 
+				, headerText 	: '드롭다운그리드ID'
+				, width			:  150
+				, style			: 'my-column-style-edit2'	
+			}
 			];
 
 			var gridProperty = {

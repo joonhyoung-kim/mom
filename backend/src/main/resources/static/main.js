@@ -49,7 +49,10 @@ var index = {
 		 // '<script type="text/javascript"></script>'
 		$( 'a[name=MAIN]' ).attr( 'id', 'menuBtn' );
 //		this.noticeStart();
-		$('#searchMenu').focus();
+
+     
+        $('#main-search').jqxComboBox({autoComplete : true, displayMember: "label", valueMember: "code", width: 250, height: 30,dropDownHeight: 120,searchMode: 'containsignorecase'});
+		//$('#main-search').focus();
 		
 	},
 
@@ -74,7 +77,20 @@ var index = {
 				$(".active").removeClass("active");
 				$(this).find(".fa-angle-up").removeClass("fa-angle-up").addClass("fa-angle-down");			
 		});
-		
+		$(document).on("click", "#main-search-btn", function() {
+		  var seachText = $('#main-search').val();
+		  mom_ajax('R', 'DD.DD10001', {authGroupCd:JSON.parse(sessionStorage.getItem("userInfo"))[0].authGroupCd,searchText:seachText}, function(result1, data1) {
+			 if(result1 != 'SUCCESS') {
+				return;
+			 }
+			   		$('#' + 'main-search').jqxComboBox({source: data1});
+			        setTimeout(function() {
+	                				$('#' + 'main-search').jqxComboBox('open' ); 
+    							},500);
+	}, undefined, undefined, this, false);		
+
+           
+		});
 		$(document).on("click", ".menu-sam-width.userdd", function() {
 			 if($(".userdropdownlist").is(".is-show") === true) {
 				 $(".userdropdownlist").removeClass("is-show");				 

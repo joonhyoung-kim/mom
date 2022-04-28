@@ -21,6 +21,7 @@
      , A.UPDATE_BY
      , A.UPDATEBYNM
      , A.UPDATE_DATE
+     , A.ITEM_ID|| '_'|| A.UNIT_CATEGORY || '_'|| A.UNIT || '_' || A.CONVERSION_UNIT AS KEY_ID  
 FROM  ( SELECT MCD.COMPANY_CD
              , MCD.COMPANY_NM
              , MCD.DIVISION_CD
@@ -79,71 +80,105 @@ FROM  ( SELECT MCD.COMPANY_CD
 		       , A.UNIT_NM
 		       , A.CONVERSION_UNIT_NM
 	</select>
-    <insert id="create_defaultInfo1" parameterType="java.util.List">
-         INSERT INTO MOM_CUSTOMER_ITEM_MAPPING (
-                     COMPANY_CD
-                  ,  DIVISION_CD
-                  ,  CUSTOMER_CD
-                  ,  CUSTOMER_ITEM_ID
-                  ,  ITEM_ID
-                  ,  REQ_QTY
-                  ,  USE_YN
-                  ,  DESCRIPTION
-                  ,  CREATE_BY
-                  ,  CREATE_DATE
-                  ,  UPDATE_BY
-                  ,  UPDATE_DATE )
-         VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
-                  (   #{item.companyCd, jdbcType=VARCHAR}
-                  ,   #{item.divisionCd, jdbcType=VARCHAR}
-                  ,   #{item.customerCd, jdbcType=VARCHAR}
-                  ,   #{item.customerItemId, jdbcType=VARCHAR}
-                  ,   #{item.itemId, jdbcType=VARCHAR}
-                  ,   #{item.reqQty, jdbcType=NUMERIC}
-                  ,   #{item.useYn, jdbcType=VARCHAR}
-                  ,   #{item.description, jdbcType=VARCHAR}
-                  ,   #{item.userId, jdbcType=VARCHAR}
-                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                  ,   #{item.userId, jdbcType=VARCHAR}
-                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                  )
-                </foreach>
-  </insert>	
+	<select id="get_defaultInfo2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT A.UNIT_CATEGORY_NM          -- 단위유형명    
+     , A.UNIT_NM                                      -- 기준단위명                                        
+     , A.CONVERSION_UNIT_NM            -- 변환단위명
+     , A.UNIT_QTY                                      -- 기준계수
+     , A.CONVERSION_UNIT_QTY           -- 변환계수
+     , A.UNIT_CATEGORY                          -- 단위유형 
+     , A.UNIT                                                -- 기준단위
+     , A.CONVERSION_UNIT                     -- 변환단위
+     , A.KEY_ID 
+FROM   (SELECT (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MC.COMPANY_CD,MC.DIVISION_CD, 'SM0016', MUP.UNIT_CATEGORY, 'KR') FROM DUAL) AS UNIT_CATEGORY_NM 
+             , MUP.UNIT_NM         
+             , MUC.UNIT_NM             AS CONVERSION_UNIT_NM  
+             , MC.UNIT_QTY                               
+             , MC.CONVERSION_UNIT_QTY                    
+             , MUP.UNIT_CATEGORY                         
+             , MC.UNIT                                   
+             , MC.CONVERSION_UNIT         
+             , MUP.UNIT_CATEGORY || '_'|| MC.UNIT || '_' || MC.CONVERSION_UNIT AS KEY_ID                
+        FROM   MOM_UNIT_CONVERSION MC
+             , MOM_UNIT MUP
+             , MOM_UNIT MUC
+        WHERE  MC.COMPANY_CD       = MUP.COMPANY_CD
+        AND    MC.DIVISION_CD      = MUP.DIVISION_CD
+        AND    MC.UNIT             = MUP.UNIT
+        AND    MC.COMPANY_CD       = MUC.COMPANY_CD
+        AND    MC.DIVISION_CD      = MUC.DIVISION_CD
+        AND    MC.CONVERSION_UNIT  = MUC.UNIT  ) A
+ORDER BY A.UNIT_CATEGORY_NM        
+       , A.UNIT_NM
+       , A.CONVERSION_UNIT_NM
+
+</select>
+  <insert id="create_defaultInfo1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_ITEM_UNIT_REL (
+                  COMPANY_CD
+                , DIVISION_CD
+                , ITEM_ID
+                , UNIT
+                , CONVERSION_UNIT
+                , UNIT_QTY
+                , CONVERSION_UNIT_QTY
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.itemId, jdbcType=VARCHAR}
+                , #{item.unit, jdbcType=VARCHAR}
+                , #{item.conversionUnit, jdbcType=VARCHAR}
+                , #{item.unitQty, jdbcType=NUMERIC}
+                , #{item.conversionUnitQty, jdbcType=NUMERIC}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
   <update id="modify_defaultInfo1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-      UPDATE MOM_CUSTOMER_ITEM_MAPPING
+      UPDATE MOM_ITEM_UNIT_REL
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
-          ,  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-          ,  CUSTOMER_CD = #{item.customerCd, jdbcType=VARCHAR}
-          ,  CUSTOMER_ITEM_ID = #{item.customerItemId, jdbcType=VARCHAR}
-          ,  ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
-          ,  REQ_QTY = #{item.reqQty, jdbcType=NUMERIC}
-          ,  USE_YN = #{item.useYn, jdbcType=VARCHAR}
-          ,  DESCRIPTION = #{item.description, jdbcType=VARCHAR}
-          ,  UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
-          ,  UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-      WHERE 1=1
-      AND   COMPANY_CD        = TRIM(#{item.companyCd,      jdbcType=VARCHAR})
-      AND   DIVISION_CD       = TRIM(#{item.divisionCd,     jdbcType=VARCHAR}) 
-      AND   CUSTOMER_CD       = TRIM(#{item.customerCd,     jdbcType=VARCHAR})      
-      AND   CUSTOMER_ITEM_ID  = TRIM(#{item.customerItemId, jdbcType=VARCHAR})   
-      AND   ITEM_ID           = TRIM(#{item.itemId,         jdbcType=VARCHAR})   
-
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+           , UNIT = #{item.unit, jdbcType=VARCHAR}
+           , CONVERSION_UNIT = #{item.conversionUnit, jdbcType=VARCHAR}
+           , UNIT_QTY = #{item.unitQty, jdbcType=NUMERIC}
+           , CONVERSION_UNIT_QTY = #{item.conversionUnitQty, jdbcType=NUMERIC}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+      AND    UNIT = #{item.unit, jdbcType=VARCHAR}
+      AND    CONVERSION_UNIT = #{item.conversionUnit, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
-	   DELETE
-	   FROM    MOM_CUSTOMER_ITEM_MAPPING
-       <where> 
-        <foreach collection="list" item="item" open="" close="" separator="OR"> 
-          (   
-	            COMPANY_CD        = TRIM(#{item.companyCd,      jdbcType=VARCHAR})
-	      AND   DIVISION_CD       = TRIM(#{item.divisionCd,     jdbcType=VARCHAR}) 
-	      AND   CUSTOMER_CD       = TRIM(#{item.customerCd,     jdbcType=VARCHAR})      
-	      AND   CUSTOMER_ITEM_ID  = TRIM(#{item.customerItemId, jdbcType=VARCHAR})   
-	      AND   ITEM_ID           = TRIM(#{item.itemId,         jdbcType=VARCHAR})   
-          )
-        </foreach>
-       </where>
-   </delete>
-</mapper>
+  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+      DELETE FROM MOM_ITEM_UNIT_REL
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+           AND  UNIT = #{item.unit, jdbcType=VARCHAR}
+           AND  CONVERSION_UNIT = #{item.conversionUnit, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+  </delete>
+  </mapper>    

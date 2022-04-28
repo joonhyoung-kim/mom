@@ -43,6 +43,7 @@ var momWidget = {
 			  $('body').append(fileUpPop);
 			  $('body').append(fileUpProgressBar);
 			  $('body').append(changePwPop);
+			 
 			  //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');			  
 		  }
 		  
@@ -261,8 +262,8 @@ var momWidget = {
 		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="200" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
 		    			  remarkYn    = 'Y';
 		    		  }
-		    		  else if(that.popupProperty[index][i]['popupType']=='GP'){
-			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'GP'+(index+1)+' type="text" type="text" class="grid-pop w-input searchInputField" date-format="date"></input>';
+		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){
+			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="grid-pop w-input searchInputField" date-format="date" placeholder="클릭하여 선택"></input>';
 			    	  }
 			    	  else {
 			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
@@ -279,6 +280,7 @@ var momWidget = {
 				    	  circleClass:      circleClass,
 				          textClass:        textClass
 		              };
+		              
 			      }
 			     // searchAreaHtml = searchAreaHtml.replace(/#{searchAreaClass}/gi, classItem[0].searchAreaClass).replace(/#{searchItemClass}/gi, classItem[0].searchItemClass).replace(/#{labelBoxClass}/gi, classItem[0].labelBoxClass).replace(/#{circelClass}/gi, classItem[0].circelClass).replace(/#{labelTextClass}/gi, classItem[0].labelTextClass)replace(/#{searchNm}/gi, classItem[0].searchNm).replace(/#{labelField}/gi, classItem[0].labelField);
 			   		     
@@ -292,6 +294,7 @@ var momWidget = {
 			      var isCheckBox = 'N';
 			      var isDropDown ='N';
 			      var columnId = '';
+		
 
 			    	 if(index == 0 ){
 				    
@@ -300,6 +303,7 @@ var momWidget = {
 			    			createFrontArea["tm2h"]  = that.tm2h;
 			    			createFrontArea["tm2v"]  = that.tm2v;  
 			    			createFrontArea["tm3vh"]  = that.tm3vh; 
+			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
 			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
 			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',".front_main");
 			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
@@ -312,6 +316,7 @@ var momWidget = {
 			    			createFrontArea["tm2h"]  = that.tm2h;
 			    			createFrontArea["tm2v"]  = that.tm2v;  
 			    			createFrontArea["tm3vh"]  = that.tm3vh; 
+			    			createFrontArea["tm3hv"]  = that.tm3hv; 
 			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
 			    		    createFrontArea[templateName](index+1,splitRatio,'popContentArea',".popup_main");
 			    		    $('#popContentArea'+(index+1)).append(searchAreaHtml); 	
@@ -330,8 +335,9 @@ var momWidget = {
 				     
 			    	 if(that.popupProperty[index].length > 0){
 						if(that.popupProperty[0][0]['popupType']=='G'){				
-							var popupAreaHtml =  that.createPopup.gridPop(index+1,popupColNum,popupRowNum,that.gridExtraProperty[index]['popupTitle']);
+							 var popupAreaHtml =  that.createPopup.gridPop(index+1,popupColNum,popupRowNum,that.gridExtraProperty[index]['popupTitle']);
 						}
+				  
 						else{
 							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn);
 						}
@@ -691,8 +697,8 @@ var momWidget = {
 					     date  = today.getDate();  // 날짜
 				}
 				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
-				var dateNum  =	defaultValue.substring(5,7);
-				var dateType =	defaultValue.substring(7,8);
+				var dateNum  =	defaultValue.substring(5,defaultValue.length-1);
+				var dateType =	defaultValue.substring(defaultValue.length,defaultValue.length-1);
 				  if(dateType == 'M'){
 					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
 					 year = today.getFullYear(); // 년도
@@ -902,6 +908,21 @@ var momWidget = {
 			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
 			$('#split2').jqxSplitter({ width:'100%', height: '100%', orientation: 'horizontal', panels: [{ size:Number(splitRatio.substring(2, 3))*10 + '%'}, {size: Number(splitRatio.substring(3, 4))*10 + '%'}]});
+			return html;
+		},
+		tm3hv : function(index,splitRatio,content,target) {
+		      var html     = '<div id = "split1" class="splitGrid">'
+		                 +    '<div id = '+ content+index+' class = "tabcontentarea"></div>'
+                         +    '<div>'
+                         +      '<div id = "split2" class="splitGrid">'
+                         +       '<div id = '+ content+(index+1)+' class = "tabcontentarea"></div>'
+                         +       '<div id = '+ content+(index+2)+' class = "tabcontentarea"></div>'	
+                         +      '</div>'
+                         +    '</div>'
+                         + '</div>';
+			$(target).append(html);  
+			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'horizontal', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
+			$('#split2').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(2, 3))*10 + '%'}, {size: Number(splitRatio.substring(3, 4))*10 + '%'}]});
 			return html;
 		},
 		tm4vvh : function(index,splitRatio,content,target) {
@@ -1359,7 +1380,7 @@ var momWidget = {
 		
 			
 		gridPop : function(index,colNum,rowNum,popupTitle) {
-			var topHtml =	'<div id="defaultPop'+index+'" class="modal gridPop-C'+colNum+'-R'+rowNum+'">'
+			var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-C'+colNum+'-R'+rowNum+'">'
 	        +    '<div class="panelheader-gridPop">' 
 	        +     '<div class="modal-header-title-gridPop">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -1379,7 +1400,17 @@ var momWidget = {
     	    +      '</div>'       
     	    +    '</div>';
 			   return topHtml+botHtml;
-		}	
+		},
+			dropDownGridPop : function(index,colNum,rowNum,popupTitle,target){
+			var topHtml =	'<div target="'+target+'" id="dropDownGridPop'+index+'" class="modal gridPop-C'+colNum+'-R'+rowNum+'">'
+	        +    '<div class = "searcharea-gridPop-C'+colNum+'-R'+rowNum+'">'
+			+     '<div class="popup_main">'
+			+      '<div class = "grid" id="grid'+index+'">'
+			+     '</div>';
+			botHtml  =     '</div>';
+			   return topHtml+botHtml;
+		},
+
 	},
 	design: function(index, idx, color, align) {
 	    $('head').append('<style>.aui-grid-user-custom-header{background-color: #ff8000 !important;font-weight: bold;background: -webkit-gradient(linear, left top, left bottom, from(#ff8000),to(#ff8000));background: -webkit-linear-gradient(top, #ff8000, #ff8000);background: -moz-linear-gradient(top, #ff8000, #ff8000);background: -ms-linear-gradient(top, #ff8000, #ff8000);background: -o-linear-gradient(top, #ff8000, #ff8000);background: linear-gradient(top,#ff8000, #ff8000);}</style>');
@@ -1612,7 +1643,8 @@ var momWidget = {
 			            param.push(itemBox);
 			  return 	param;      
 		}
-		for(var i = 0, max = that.searchProperty[index].length; i< max; i++){
+		if(that.searchProperty[index]!=undefined){
+				for(var i = 0, max = that.searchProperty[index].length; i< max; i++){
 			 searchId         = that.searchProperty[index][i]['searchId'];
 			 dropdownId       = that.searchProperty[index][i]['dropdownId'];
 			 headerDropdownId = that.searchProperty[index][i]['headerDropdownId'];
@@ -1641,15 +1673,17 @@ var momWidget = {
 			 }
 			
 		}
+		}
+	
 			return param;		  
 	},
 	// 검색조건 유효성체크
 	checkSearchProperty: function(index, param, your) { //인덱스  파라미터 
 		var that = momWidget;
 		//param = (param == undefined || jQuery.isEmptyObject(param) || param == '' || param == null) == true ?   that.getSearchParam(index, '#searchArea'+(index+1),searchParam) : param;
-        if(momWidget.searchProperty != undefined && jQuery.isEmptyObject(momWidget.searchProperty)==false){ 
+        if(that.searchProperty[index] != undefined && jQuery.isEmptyObject(momWidget.searchProperty)==false){ 
             for(var i = 0, max = momWidget.searchProperty[index].length; i< max; i++){
-  		      if(momWidget.searchProperty[index][i]['columnRequire'] == 'Y' && param[momWidget.searchProperty[index][i]['searchId']] != undefined && param[momWidget.searchProperty[index][i]['searchId']] ==''){
+  		      if(that.searchProperty[index][i]['columnRequire'] == 'Y' && param[momWidget.searchProperty[index][i]['searchId']] != undefined && param[momWidget.searchProperty[index][i]['searchId']] ==''){
   			      that.messageBox({type: 'warning', width: '400', height: '145', html: momWidget.searchProperty[index][i]['searchNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
   			      return false;
   		      }										
@@ -2164,13 +2198,14 @@ var momWidget = {
 			var copyBtnId        = 'copyBtn'+(index + 1);
 			var editBtnId        = 'editBtn'+(index + 1);	
 			var cancelBtnId      = 'cancelBtn'+'DP'+(index + 1);	
+			var gridPopCancelBtnId  = 'cancelBtn'+'DG'+(index + 1);	
 			var excelDownBtnId   = 'excelDownBtn'+(index + 1);
 			var excelTmpBtnId    = 'excelTmpBtn'+(index + 1);
 			var excelUpBtnId     = 'excelUpBtn'+(index + 1);
 			var excelUpCancelBtnId = 'cancelBtnExUp'+(index + 1);
 			var saveBtnId        = 'saveBtn'+(index + 1);
 			var savePopBtnId     = 'saveBtn'+'DP'+(index + 1);
-			var gridPopBtnId     = 'saveBtn'+'GP'+(index + 1);
+			var dropdownGridId     = 'saveBtn'+'DG'+(index + 1);
 			var delBtnId         = 'delBtn'+(index + 1);
 			var addBtnId         = 'addBtn'+(index + 1);
 			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
@@ -2191,7 +2226,112 @@ var momWidget = {
 				return;excelUpCancelBtnId
 			}*/
 				$(document).on('click','.grid-pop', function() {
-			var splitArray = document.activeElement.id.split('DP');
+				
+				var columnProp = [];	
+				var activeId = document.activeElement.id.split('DP');
+				var clickedElment = document.activeElement.id;
+				var activeTop = $('#'+clickedElment).offset().top;
+				var activeLeft = $('#'+clickedElment).offset().left;
+				
+				var targetId = 	activeId[0];
+				var dropdownGridId = Number(that.popupProperty[index][1]['dropdownGridList'])-1;
+			
+				  
+			
+			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:dropdownGridId+1}, function(result1, data1) { 
+		         if(result1 != 'SUCCESS' || data1.length == 0) {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }			  
+		      var gridString   = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
+		      var columnString = data1[0]['columnProperty'] == undefined ? '[]':data1[0]['columnProperty'];
+		          gridString   = gridString.substr(1,  gridString.length-2);  
+			      columnString = columnString.substr(1,  columnString.length-2);
+			      that.gridProperty[dropdownGridId]     = JSON.parse(gridString);
+			      that.columnProperty[dropdownGridId]   = JSON.parse(columnString);
+			      				var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+				var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};			
+			      for(var i=0,max=gridExceptList.length; i<max;i++){
+			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[dropdownGridId][0][gridExceptList[i]];			    	  
+			    	   delete that.gridProperty[dropdownGridId][0][gridExceptList[i]];
+			      }
+			      that.gridExtraProperty[dropdownGridId] = gridExtraProp;
+			     var popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
+			    var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
+			    var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId);
+                var menuId = that.pageProperty[index]['menuId'];
+                    var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
+                    if(isShow == 'block'){
+	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
+	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
+					 return;
+				}	
+			    $('#dropDownGridPop'+(dropdownGridId+1)).remove();   
+			    $('body').append(popupHtml);
+			
+                
+			       for(var i=0,max=that.columnProperty[dropdownGridId].length;i<max;i++){	
+			    	   columnType = that.columnProperty[dropdownGridId][i]['columnEditable'] == 'N' ? 'default':'edit';	
+			    	   widthUse = that.columnProperty[dropdownGridId][i]['columnWidth']  == 0 ? 'N': 'Y';
+			    	   excelShow = that.columnProperty[dropdownGridId][i]['excelShow']  == 'Y' ? 'Y': 'N';
+			    	   excelTemplateShow = that.columnProperty[dropdownGridId][i]['excelTemplateShow']  == 'Y' ? 'Y': 'N';
+			    	   gridShow = that.columnProperty[dropdownGridId][i]['columnShow']  == 'Y' ? true: false;
+			    	   excelDownShow   = that.columnProperty[dropdownGridId][i]['excelShow'] == 'Y' ? true: false;
+			    	   excelUploadShow = that.columnProperty[dropdownGridId][i]['excelTemplateShow'] == 'Y' ? true: false;
+			    	   isCheckBox = momWidget.columnProperty[dropdownGridId][i]['columnType'] == 'CK' ? 'Y': 'N';
+			    	   isDropDown = momWidget.columnProperty[dropdownGridId][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
+			    	   columnId = that.columnProperty[dropdownGridId][i]['columnId'];
+
+			    	   columnProp[i] =  {
+					    	      dataField 	: columnId 
+					  			, headerText 	: that.columnProperty[dropdownGridId][i]['columnNm'] 
+						   		, dataType      : that.columnProperty[dropdownGridId][i]['dataType'] 
+								, formatString  : that.columnProperty[dropdownGridId][i]['dataFormat']
+	    	                    , editable      : that.columnProperty[dropdownGridId][i]['columnEditable']  == 'Y' ? true : false
+					  			, style			: that.columnProperty[dropdownGridId][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
+					  			, visible       : gridShow  
+					  		
+	                    };
+
+			    	   if(widthUse == 'Y'){
+			    		   columnProp[i].width      = that.columnProperty[dropdownGridId][i]['columnWidth'];
+
+			    	   }
+			    	   if(isCheckBox =='Y'){
+			    		   columnProp[i].renderer = {
+									          type: 'CheckBoxEditRenderer'
+											, editable: true
+											,checkValue : 'Y' 
+											,unCheckValue : 'N'
+										};
+			    		   
+			    		   columnProp[i].headerRenderer = { 
+			    				type : "CheckBoxHeaderRenderer",
+			    				position : "right",
+			    				dependentMode : true
+			    				//onClick : myHeaderCheckClick 
+			    			};
+			    	   }
+			 
+			    	   	
+			      } 	
+			        AUIGrid.destroy('#grid'+(dropdownGridId+1));
+				    that.grid[dropdownGridId] = AUIGrid.create('#grid'+(dropdownGridId+1), columnProp, that.gridProperty[dropdownGridId][0]); 
+			      
+
+				     //$('#dropDownGridPop'+(dropdownGridId+1)).momModal('show');
+				     
+				     $('#dropDownGridPop'+(dropdownGridId+1)).css('display','block');
+				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+29, left : activeLeft});
+				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
+				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)			 
+		    	 that.findBtnClicked(dropdownGridId, {}, true, 'INIT',menuId,your,[]);
+		       
+				}, undefined, undefined, this, false);
+			      
+
+			 
+			
 			});
 			$(document).on('click','#'+changePwBtnId, function() {
 				//that.splashShow();
@@ -2437,12 +2577,12 @@ var momWidget = {
 					
 						groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."*/
 					};
-				that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid1', that.excelUploadProperty[index], gridPros);	
+				that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
 				$('#' +'excelUpPop'+(index+1)).momModal('show');
-				AUIGrid.resize('#excelUpGrid1');
+				AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
 			$(document).on('click', '#' + addBtnId, function() {	
-				var totalItem = momWidget.columnProperty[1];
+				var columnLayout = AUIGrid.getColumnLayout(that.grid[index])
 				var item = {};
 				 for(var i=0,max1=totalItem.length; i<max1;i++){
 					 if(totalItem[i]['columnShow'] =='Y'){
@@ -2550,6 +2690,7 @@ var momWidget = {
 				if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[index]);
 					if (param.length == 0){
+						  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0012')});
 					      return;	
 					}				
 									
@@ -2561,20 +2702,24 @@ var momWidget = {
 						param.push(checkedItems[i]); 														
 				    }
 				}
-			/*	if(your != undefined && your.saveCallInit != undefined) {
-				     your.saveCallInit(index,e);
-				}*/
+		
 				callInitResult = that.checkActionCallInit(index, 'GS', param, 'saveBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
 						      return;
 			    }
+			     var actionType = 'CU';		
 				 param = callInitResult['param'];
-				  var actionType = 'CU';				 
+				 for(var i=0;i<that.buttonProperty[index].length;i++){
+					if(that.buttonProperty[index][i]['buttonId'] == 'saveBtn'){
+						actionType = that.buttonProperty[index][i]['eventType'];
+					}					
+				 }
+						 
 				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
 				              return;
 			            }    				                         							  						
@@ -2604,7 +2749,7 @@ var momWidget = {
 					  momWidget.splashHide();
 				      return;
 				}			
-				$('#' +'defaultPop'+(index+1)).momModal('hide');
+				
 				//that.popUpSizeSet(index);		
 				var popupCount = that.popupProperty[index].length;
 				var popupItem  = that.popupProperty[index];
@@ -2630,7 +2775,7 @@ var momWidget = {
 				  var actionType = $('#defaultPop1').attr('actionType');				 
 				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),callInitResult['param'], function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
 				              return;
 			            } 
@@ -2641,6 +2786,7 @@ var momWidget = {
 						      return;
 						}
 			        	  momWidget.findBtnClicked(index, {}, true, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);
+			        	  $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
@@ -2695,8 +2841,9 @@ var momWidget = {
 			$(document).on('click', '#' + delBtnId, function(e) {	
 				var param = [];
 				param = that.getCheckedRowItems(that.grid[index]);
-				if (param =='FAIL'){
-				      return;	
+				if(param.length < 1) {
+					that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES10491']});					
+					return;
 				}
 				if(that.checkActionCallInit(index, 'D', param, 'delBtn'+(index+1), your)['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
@@ -2709,23 +2856,29 @@ var momWidget = {
 							  momWidget.splashHide();
 				              return;
 			            }    				                         							  						
-			        	if(that.checkActionCallBack(index, 'D', param, 'delBtn', your)['result']  != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
+			  
+						callBackResult = that.checkActionCallBack(index, 'D', param, 'delBtn', your,param);
+				        if(callBackResult['result']  != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 							  momWidget.splashHide();
 						      return;
-						}
+						}	
+								
 			        	  momWidget.findBtnClicked(index, {}, true, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
-		          }, undefined, undefined, this, false);
+		          }, undefined, undefined, this, false) ;
 				  	
 			});
 			$(document).on('click', '.bntpopclose, '+'#'+cancelBtnId, function() {
 				$('#defaultPop'+(index+1)).momModal('hide');
 				
 			});
-		
+			$(document).on('click', '.bntpopclose, '+'#'+gridPopCancelBtnId, function() {
+				$('#dropDownGridPop'+(index+1)).momModal('hide');
+				
+			});
 			$(document).on('click', '#' + excelDownBtnId, function(e) {	        				
 					if(your != undefined && your['excelDownCallInit'] != undefined) {
 						your.excelDownCallInit(index, your);
@@ -3285,6 +3438,7 @@ var momWidget = {
 			var searchComboItem = {};
 			for(var i = 0, max = that.popupProperty[index].length; i< max; i++) {	
 				popupId          = that.popupProperty[index][i]['popupId']+ 'DP' + (index + 1);
+				dropdownGridId   = that.popupProperty[index][i]['popupId']+ 'DG' + (index + 1);;
 				dropdownId       = that.popupProperty[index][i]['dropdownId'];
 				dropdownParam    = that.popupProperty[index][i]['dropdownParam'];
 			    popupType        = that.popupProperty[index][i]['popupType']; 
@@ -3350,6 +3504,61 @@ var momWidget = {
 						        	 }		*/					        	 
 						        	 /*$('#'+popupId).jqxComboBox('focus');*/
 					
+					}
+					else if(popupType == 'DG'){
+			/*	      if(dropdownId != '' && dropdownId != undefined){
+							 queryId = dropdownId;
+							 splitArray1 = dropdownParam.split('&');					 
+							 for(var j=0,max2=splitArray1.length;j<max2;j++){
+								  splitArray2 = splitArray1[j].split('=');
+								  paramMap.push(JSON.parse('{"'+splitArray2[0] +'"'+':'+'"'+splitArray2[1]+'"}'));
+							 }
+							 
+							// paramMap[i] = splitArray[0]:; 
+						}
+						else{
+							    queryId = dropdownId;
+							 //   paramMap[i] = ; 
+						}
+						  mom_ajax('R', nameSpace+'.'+queryId, paramMap[0] == undefined ? {}:paramMap[0], function(result, data) {
+						      if(result != 'SUCCESS') {
+						    	  momWidget.splashHide();
+							      return;							     
+						      }	
+						      var dropdownGridParam = that.popupProperty[index][i]['dropdownGridList'].split('/');
+						      var dataField = JSON.parse(dropdownGridParam[0]);
+						      var gridColumnLayout = JSON.parse(dropdownGridParam[1]);
+						      var source = {
+							                 localdata: data,
+							                 datafields: dataField,
+							                 datatype: "array",
+							                 updaterow: function (rowid, rowdata) {
+                  								  // synchronize with the server - send update command   
+                							 }
+            				  };
+            				  var dataAdapter = new $.jqx.dataAdapter(source);
+            				         $("#"+dropdownGridId).jqxGrid(
+						             {
+						                 width: 550,
+						                 source: dataAdapter,
+						                 pageable: true,
+						                 autoheight: true,
+						                 columnsresize: true,
+						                 columns: gridColumnLayout
+						             });
+            // initialize jqxGrid
+            $("#jqxdropdownbutton").jqxDropDownButton({
+                width: 150, height: 30
+            });
+						          
+						        	 if(type == 'C' || type =='CP'){
+							           $('#'+popupId).jqxGrid('selectrow', 0);						        	
+						        	 }							        	 
+						      
+					}, undefined, undefined, that, false);
+					
+					*/
+ 
 					}
 				else if(popupType == 'C'){
 					var today = new Date();  

@@ -16,6 +16,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionDefinition;
@@ -26,6 +27,7 @@ import com.mom.util.FrameworkUtil;
 import com.mom.util.Monitor;
 import com.mom.util.PrintUtil;
 import com.mom.util.TestInnerResultHandler;
+import com.mom.util.exception.CustomDataAccessException;
 
 import lombok.RequiredArgsConstructor;
 import com.mom.util.ProgressInfo;
@@ -104,7 +106,7 @@ public class MomDao {
 		return result;
 	}
 		
-	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param) {
+	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param)  {
 		ProgressInfo.successCount = 0;
 		PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
 		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
@@ -149,11 +151,21 @@ public class MomDao {
 	                    	   sqlSession1.close();  
 	        				   return FrameworkUtil.createResponseMap(false,"DB수정 실패");      		 
 	            		}            		       				        			       			
-            } catch(Exception e) { 
-            	dataSourceTransactionManager.rollback(transactionStatus);
-            } finally {			
+            }	
+
+        	catch(Exception e) {
+        		dataSourceTransactionManager.rollback(transactionStatus);
+        		CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
+        		throw cdae;
+            	//System.out.println("에러?"+e);
+            	
+            } 
+        
+        	
+        	finally {			
             	//sqlSession1.flushStatements();          	
             	//sqlSession1.close();  
+        		System.out.println("파이널리실행");
             	long endTime = System.currentTimeMillis();
                 long resutTime = endTime - startTime;            
                 PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUMD4010">
+   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   SELECT MCD. COMPANY_CD
+		     , MCD.COMPANY_NM
+		     , MCD.DIVISION_CD
+		     , MCD.DIVISION_NM
+		     , TO_CHAR(MC.DATE_ID,'YYYY-MM-DD') AS DATE_ID
+		     , MC.YEAR
+		     , MC.QUARTER
+		     , MC.MONTH
+		     , SUBSTR(MC.WEEK,5) AS WEEK
+		     , MC.WEEK_DAY
+		     , TO_CHAR(MC.WEEK_START_DATE,'YYYY-MM-DD') AS WEEK_START_DATE 
+             , TO_CHAR(MC.WEEK_END_DATE,'YYYY-MM-DD') AS WEEK_END_DATE 
+		     , MC.DAY_OFF_YN
+		     , MC.DESCRIPTION
+		     , MC.UPDATE_BY
+		     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MC.COMPANY_CD, MC.DIVISION_CD, MC.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		     , TO_CHAR(MC.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		     , TO_CHAR(MC.DATE_ID,'YYYY-MM-DD') AS KEY_ID 
+	FROM   MOM_COM_DIV_V MCD
+		 , MOM_CALENDAR MC
+	WHERE  MCD.COMPANY_CD   = MC.COMPANY_CD
+    AND    MCD.DIVISION_CD  = MC.DIVISION_CD   
+    AND    MC.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
+	AND    MC.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}  	
+	AND    MC.WEEK_START_DATE <![CDATA[>]]> TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')
+	AND    MC.WEEK_END_DATE <![CDATA[<]]> TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
+    ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MC.DATE_ID   
+   </select>
+   <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_CALENDAR
+      SET     DAY_OFF_YN = #{item.dayOffYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    DATE_ID     = TO_DATE(#{item.dateId, jdbcType=VARCHAR},'YYYY-MM-DD')
+    </foreach>
+  </update>  
+</mapper>

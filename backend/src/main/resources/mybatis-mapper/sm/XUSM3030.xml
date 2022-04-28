@@ -171,6 +171,7 @@
 			   , COLUMN_REQUIRE
 			   , DROPDOWN_ID
 			   , DROPDOWN_PARAM
+			   , DROPDOWN_GRID_LIST
 	   FROM     MOM_POPUP_PROPERTY		   	  
 	   WHERE    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	   AND      DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
@@ -562,7 +563,8 @@
 							 ,COLUMN_REQUIRE
 							 ,DROPDOWN_ID
 							 ,DROPDOWN_PARAM 
-							 , CREATE_BY
+							 ,DROPDOWN_GRID_LIST
+							 ,CREATE_BY
 						) VALUES(
                                #{item.companyCd,          jdbcType=VARCHAR}
 				             , #{item.divisionCd,         jdbcType=VARCHAR}
@@ -610,6 +612,7 @@
 					            , NVL(#{item.columnRequire,  jdbcType=VARCHAR},'N')
 					            , #{item.dropdownId,         jdbcType=VARCHAR} 
 					            , #{item.dropdownParam,      jdbcType=VARCHAR}
+					            , #{item.dropdownGridList,   jdbcType=VARCHAR}
 					            , #{item.userId,             jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               

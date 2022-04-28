@@ -219,7 +219,7 @@ public class FrameworkUtil {
 	 * return map.get(key1) == null ? null : map.get(key1).toString(); }
 	 */
 
-	public static String removeDummy(String query, String crud) {
+	public  String removeDummy(String query, String crud) {
 		if (query == null || query.equals("")) {
 			return "";
 		}
