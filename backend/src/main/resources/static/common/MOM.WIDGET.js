@@ -149,9 +149,14 @@ var momWidget = {
 			      var searchLineCnt = 0;
 			      var searchStyle   = 'h00';
 			      var remarkYn      = 'N'
+			      var remarkInline  = 'Y';
+			      var popupTotalNum      = that.popupProperty[index].length;
 			      var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
 			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
-			      
+			     if(popupTotalNum != Number(popupColNum) * Number(popupRowNum)){
+				     remarkInline  = 'N';
+			     }
+
 			      for(var i=0,max=searchRowcnt; i<max;i++){	
 		    		  if(that.searchProperty[index][i]['headerType']=='S'){
 			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+ ' class="searchSelectField"></select>';
@@ -172,6 +177,7 @@ var momWidget = {
 			    	   else if (that.searchProperty[index][i]['searchType']=='C'){
 			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></div>';
 			    	  }
+			    	
 			    	  else{
 			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId'] +' input-type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
 			    	  }
@@ -254,6 +260,10 @@ var momWidget = {
 		    			  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input searchInputField" date-format="date"></input>';
 		    			  
 		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='C-HM'){
+		    			  labelField  = '<input  id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input searchInputField"></input>';
+		    			  
+		    		  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='P'){
 		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
 		    			  
@@ -262,8 +272,8 @@ var momWidget = {
 		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="200" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
 		    			  remarkYn    = 'Y';
 		    		  }
-		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){
-			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="grid-pop w-input searchInputField" date-format="date" placeholder="클릭하여 선택"></input>';
+		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){			  
+			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-pop searchSelectField"></select>';
 			    	  }
 			    	  else {
 			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
@@ -276,12 +286,14 @@ var momWidget = {
 				      	  popupSeq:         that.popupProperty[index][i]['popupSeq'],
 				    	  defaultVlue:      that.popupProperty[index][i]['defaultValue'],
 				    	  columnRequire:    that.popupProperty[index][i]['columnRequire'],
+				    	  popupType:        that.popupProperty[index][i]['popupType'],
 				    	  labelField:       labelField,
 				    	  circleClass:      circleClass,
 				          textClass:        textClass
 		              };
 		              
 			      }
+			      
 			     // searchAreaHtml = searchAreaHtml.replace(/#{searchAreaClass}/gi, classItem[0].searchAreaClass).replace(/#{searchItemClass}/gi, classItem[0].searchItemClass).replace(/#{labelBoxClass}/gi, classItem[0].labelBoxClass).replace(/#{circelClass}/gi, classItem[0].circelClass).replace(/#{labelTextClass}/gi, classItem[0].labelTextClass)replace(/#{searchNm}/gi, classItem[0].searchNm).replace(/#{labelField}/gi, classItem[0].labelField);
 			   		     
 			      var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
@@ -339,7 +351,7 @@ var momWidget = {
 						}
 				  
 						else{
-							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn);
+							 var popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn,remarkInline);
 						}
 			    		 
 			    		  $('body').append(popupAreaHtml);
@@ -1063,14 +1075,16 @@ var momWidget = {
 		}
 	},
 	createPopup: {
-		defaultPop : function(index,colNum,rowNum,popupItem,popupTitle,remarkYn) {	//열3줄 colNum==3
+		defaultPop : function(index,colNum,rowNum,popupItem,popupTitle,remarkYn,remarkInline) {	//열3줄 colNum==3
 	    var midHtml = '';
 		var botHtml = '';
 		var tmpCnt  = 1;
 		var totalNum = popupItem.length;
-		var fieldCnt = popupItem.length%colNum;
-		var defaultPopClass = remarkYn == 'Y' ? 'defaultPop-C'+colNum+'-R'+rowNum+'-remark' : 'defaultPop-C'+colNum+'-R'+rowNum;
-		var searchAreaClass = remarkYn == 'Y' ? 'R'+rowNum+'-remark' : 'R'+rowNum;
+		var fieldCnt = remarkInline == 'N' ? 1: popupItem.length%colNum;
+		var remarkInlineClass = remarkInline == 'Y' ? 'in' : 'out';
+		var defaultPopClass = remarkYn == 'Y' ? 'defaultPop-C'+colNum+'-R'+rowNum+'-remark-'+remarkInlineClass : 'defaultPop-C'+colNum+'-R'+rowNum;
+		var searchAreaClass = remarkYn == 'Y' ? 'R'+rowNum+'-remark-'+remarkInlineClass : 'R'+rowNum;
+		
 		
 		var topHtml =	'<div id="defaultPop'+index+'" class="modal '+defaultPopClass+'">'
 	        +    '<div class="panelheader">' 
@@ -1266,7 +1280,7 @@ var momWidget = {
 	               +            '</div>'
 	               +          popupItem[i+1].labelField
 	               +           '</div>';
-	            if(tmpCnt == rowNum && remarkYn =='Y'){
+	            if(tmpCnt == rowNum && remarkYn =='Y'&&remarkInline=='Y'){
 						 midHtml += '</div>'
 					 +    '<div class ="modal-contents-row">'
 		             +           '<div class ="w-col w-col-'+colNum+'">'
@@ -2225,11 +2239,12 @@ var momWidget = {
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
-				$(document).on('click','.grid-pop', function() {
+			$(document).on('change','.grid-pop', function(e) {
+			
 				
 				var columnProp = [];	
-				var activeId = document.activeElement.id.split('DP');
-				var clickedElment = document.activeElement.id;
+				var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
+				var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
 				var activeTop = $('#'+clickedElment).offset().top;
 				var activeLeft = $('#'+clickedElment).offset().left;
 				
@@ -2320,19 +2335,19 @@ var momWidget = {
 			      
 
 				     //$('#dropDownGridPop'+(dropdownGridId+1)).momModal('show');
-				     
+				     $('#dropDownGridPop'+(dropdownGridId+1)).css('z-index','9999');
 				     $('#dropDownGridPop'+(dropdownGridId+1)).css('display','block');
+				     
 				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+29, left : activeLeft});
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)			 
 		    	 that.findBtnClicked(dropdownGridId, {}, true, 'INIT',menuId,your,[]);
 		       
 				}, undefined, undefined, this, false);
-			      
-
-			 
-			
 			});
+			
+
+			
 			$(document).on('click','#'+changePwBtnId, function() {
 				//that.splashShow();
                var modalDiv = $('#changePwPop'+(index+1));
@@ -2377,6 +2392,7 @@ var momWidget = {
     				}
     			});	        
 				});
+				
 				$(document).on('click','#'+changePwCencelBtn, function() {
 
 					 $('#changePwPop'+(index+1)).momModal('hide');
@@ -2629,6 +2645,7 @@ var momWidget = {
 				$('#popupTitle'+(index+1)).text('');
 				$('#popupTitle'+(index+1)).append(popupTitle+multiLang.transText('MESSAGE','MSG0008'));	
 				$('#' +'defaultPop'+(index+1)).momModal('show');
+					
 				    // AUIGrid.resize('#grid'+index+1);
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);			
@@ -3449,7 +3466,7 @@ var momWidget = {
 			    searchType        = that.popupProperty[index][i]['popupType']; 
                 defaultValue      = that.popupProperty[index][i]['defaultValue'];
                
-				if(popupType == 'S'  || popupType == 'M'){
+				if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG'){
 						if(dropdownId != '' && dropdownId != undefined){
 							 queryId = dropdownId;
 							 splitArray1 = dropdownParam.split('&');					 
@@ -3654,6 +3671,12 @@ var momWidget = {
 				$('#'+popupId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
 				$('#'+popupId).jqxDateTimeInput('setDate', calendar);
 				}
+				else if (popupType == 'C-HM'){
+					//$('#'+popupId).attr('value', '13:30');
+					//$('#'+popupId).val('13:30');
+					//$('#'+popupId).jqxDateTimeInput({ dropDownVerticalAlignment: "bottom", width: '150px', height: '25px',theme:'material',animationType: 'fade',enableBrowserBoundsDetection: true,popupZIndex: 999999});
+				}
+				
 				}
 					that.searchComboQueryId[index] = searchComboItem;
 					that.searchComboMinLength[index] = searchComboMinLength;
