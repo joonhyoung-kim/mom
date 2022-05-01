@@ -15,8 +15,9 @@
      , MS.USE_YN
      , MS.DESCRIPTION
      , MS.UPDATE_BY
-     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MS.COMPANY_CD, MS.DIVISION_CD, MS.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MS.COMPANY_CD, MS.DIVISION_CD, MS.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
      , TO_CHAR(MS.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+     , MS.SHIFT_CD AS KEY_ID
 	  FROM   MOM_COM_DIV_V MCD
 		   , MOM_SHIFT  MS
 	  WHERE  MCD.COMPANY_CD    = MS.COMPANY_CD
@@ -46,8 +47,9 @@
 	       , MSD.USE_YN
 	       , MSD.DESCRIPTION
 	       , MSD.UPDATE_BY
-	       ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSD.COMPANY_CD, MSD.DIVISION_CD, MSD.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+	       ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSD.COMPANY_CD, MSD.DIVISION_CD, MSD.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
 	       , TO_CHAR(MSD.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+	       , MSD.SHIFT_CD || '_' || MSD.SHIFT_DETAIL_CD AS KEY_ID
 		FROM   MOM_COM_DIV_V MCD
 		     , MOM_SHIFT_DETAIL  MSD
 		WHERE  MCD.COMPANY_CD     = MSD.COMPANY_CD
@@ -72,8 +74,9 @@
 		     , MM.USE_YN
 		     , MM.DESCRIPTION
 		     , MM.UPDATE_BY
-		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MM.COMPANY_CD, MM.DIVISION_CD, MM.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MM.COMPANY_CD, MM.DIVISION_CD, MM.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
 		     , TO_CHAR(MM.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		     , MM.SHIFT_CD || '_' || MM.REST_TIME_CD  AS KEY_ID
 		FROM   MOM_COM_DIV_V MCD
 		     , MOM_SHIFT_REST_TIME_MAP MM
 		     , MOM_SHIFT_REST_TIME MT
@@ -88,4 +91,159 @@
         ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM , MT.REST_TIME_NM
 
   </select>
+  <insert id="create_defaultInfo1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_SHIFT (
+                  COMPANY_CD
+                , DIVISION_CD
+                , SHIFT_CD
+                , SHIFT_NM
+                , START_TIME
+                , END_TIME
+                , WORK_TIME
+                , MAIN_SHIFT_YN
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.shiftCd, jdbcType=VARCHAR}
+                , #{item.shiftNm, jdbcType=VARCHAR}
+                , #{item.startTime, jdbcType=VARCHAR}
+                , #{item.endTime, jdbcType=VARCHAR}
+                , #{item.workTime, jdbcType=NUMERIC}
+                , #{item.mainShiftYn, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>  
+  <update id="modify_defaultInfo1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_SHIFT
+      SET    SHIFT_NM = #{item.shiftNm, jdbcType=VARCHAR}
+           , START_TIME = #{item.startTime, jdbcType=VARCHAR}
+           , END_TIME = #{item.endTime, jdbcType=VARCHAR}
+           , WORK_TIME = #{item.workTime, jdbcType=NUMERIC}
+           , MAIN_SHIFT_YN = #{item.mainShiftYn, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
+    </foreach>
+  </update>  
+  <insert id="create_defaultInfo2" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_SHIFT_DETAIL (
+                  COMPANY_CD
+                , DIVISION_CD
+                , SHIFT_CD
+                , SHIFT_DETAIL_CD
+                , SHIFT_DETAIL_NM
+                , START_TIME
+                , END_TIME
+                , WORK_TIME
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.shiftCd, jdbcType=VARCHAR}
+                , #{item.shiftDetailCd, jdbcType=VARCHAR}
+                , #{item.shiftDetailNm, jdbcType=VARCHAR}
+                , #{item.startTime, jdbcType=VARCHAR}
+                , #{item.endTime, jdbcType=VARCHAR}
+                , #{item.workTime, jdbcType=NUMERIC}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+  <update id="modify_defaultInfo2" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_SHIFT_DETAIL
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
+           , SHIFT_DETAIL_CD = #{item.shiftDetailCd, jdbcType=VARCHAR}
+           , SHIFT_DETAIL_NM = #{item.shiftDetailNm, jdbcType=VARCHAR}
+           , START_TIME = #{item.startTime, jdbcType=VARCHAR}
+           , END_TIME = #{item.endTime, jdbcType=VARCHAR}
+           , WORK_TIME = #{item.workTime, jdbcType=NUMERIC}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
+      AND    SHIFT_DETAIL_CD = #{item.shiftDetailCd, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <insert id="create_defaultInfo3" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_SHIFT_REST_TIME_MAP (
+                  COMPANY_CD
+                , DIVISION_CD
+                , SHIFT_CD
+                , REST_TIME_CD
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.shiftCd, jdbcType=VARCHAR}
+                , #{item.restTimeCd, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+  <update id="modify_defaultInfo3" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_SHIFT_REST_TIME_MAP
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
+           , REST_TIME_CD = #{item.restTimeCd, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
+      AND    REST_TIME_CD = #{item.restTimeCd, jdbcType=VARCHAR}
+    </foreach>
+  </update>        
 </mapper>

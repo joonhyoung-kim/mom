@@ -2693,7 +2693,7 @@ border-color: #d8dce3 !important;
    
 }
 .remark {
-	
+	border: 1px solid darkgrey;
 }
 .remark.C2 {
 	width:33rem !important;
@@ -6929,12 +6929,17 @@ input:focus{
 	overflow-y: hidden;
 	table-layout: fixed;
 }
-.btn.main-search{
-	position:relative;
-	display:inline-block;
-	margin-left: 0.5rem;
-	top: -0.7rem;
-	
+.btn.main-search {
+    position: relative;
+    display: inline-block;
+    margin-left: 0.5rem;
+    /* top: -0.7rem; */
+    /* height: 5rem; */
+    margin-top: rem;
+    height: 2rem;
+    padding-top: -rem;
+    font-size: 0.9rem;
+    /* top: 1rem; */
 }
 .form-control.main-search{
 	position:relative;

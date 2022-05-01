@@ -223,7 +223,7 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    ORDER BY SO_TYPE_NM
 </select>
-<select id="DD00030" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+<select id="get_DD00030" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT REST_TIME_CD       AS CODE 
         , REST_TIME_CD    ||'('|| REST_TIME_NM       ||')' AS LABEL
    FROM   MOM_SHIFT_REST_TIME   
@@ -231,7 +231,7 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    ORDER BY REST_TIME_NM
 </select>
-<select id="DD00031" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+<select id="get_DD00031" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT SHIFT_CD        AS CODE 
         , SHIFT_CD     ||'('|| SHIFT_NM        ||')' AS LABEL
    FROM   MOM_SHIFT

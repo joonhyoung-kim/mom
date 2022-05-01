@@ -57,6 +57,8 @@ FROM  ( SELECT MCD.COMPANY_CD
         AND    MIUR.COMPANY_CD     = MUC.COMPANY_CD
         AND    MIUR.DIVISION_CD    = MUC.DIVISION_CD
         AND    MIUR.CONVERSION_UNIT  = MUC.UNIT 
+        AND    MCD.COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}
+	    AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
        <if test="itemId != null and itemId != ''">
 	   AND (MI.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
 	   </if>
@@ -107,6 +109,11 @@ FROM   (SELECT (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MC.COMPANY_CD,MC.DIVISION
         AND    MC.UNIT             = MUP.UNIT
         AND    MC.COMPANY_CD       = MUC.COMPANY_CD
         AND    MC.DIVISION_CD      = MUC.DIVISION_CD
+        AND    MC.COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}
+	    AND    MC.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
+        <if test="keyId1 != null and keyId1 != ''">
+	    AND    MUP.UNIT_CATEGORY = #{keyId1, jdbcType=VARCHAR}
+	    </if>
         AND    MC.CONVERSION_UNIT  = MUC.UNIT  ) A
 ORDER BY A.UNIT_CATEGORY_NM        
        , A.UNIT_NM

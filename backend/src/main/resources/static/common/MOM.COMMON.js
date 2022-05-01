@@ -159,7 +159,7 @@ leftMenuAuth: function(el,params) {
 						    }
 						    else{
 							      leftMenuTopLv1 += '<li>'+
-				                                      '<a id='+item['menuId']+' href=#'+item['menuId']+' name='+item['menuNm']+' data-path='+item['url']+' class="slide-item">'+item['menuNm']+'</a>'+
+				                                      '<a id='+item['menuId']+' href=#'+item['menuId']+' name="'+item['menuNm']+'" data-path='+item['url']+' class="slide-item">'+item['menuNm']+'</a>'+
 				 					                '</li>';	
 						}						
 										 					  					    
@@ -749,12 +749,12 @@ leftMenuAuth: function(el,params) {
 				else{
 					  targetTab = $("#mainPageTabContent").children()[1].id.replace('tabID_',"");
 				}
-				 
-				if(75<=((totalTabWidth+$("[id='tabID_" + targetTab + "']").width())/$("#tabgroup").width())*100){	
+				
+			/*	if(75<=((totalTabWidth+$("[id='tabID_" + targetTab + "']").width())/$("#tabgroup").width())*100){	
 					totalTabWidth = totalTabWidth - $("[id='tabID_" + targetTab + "']").width();
 					$("[id='tabID_" + targetTab + "'], [id='tabContentID_" + targetTab + "']").remove();				
 
-				}
+				}*/
 				$('.main-tab').removeClass('active');
 				$("#mainPageTabContent").append(tabHead.replace(/#{id}/gi, id).replace(/#{name}/gi, name).replace(/#{data-path}/gi, href).replace(/#{data-param}/gi, dataParam));
 				totalTabWidth = totalTabWidth+$("[id='tabID_" + id + "']").width();
@@ -769,6 +769,9 @@ leftMenuAuth: function(el,params) {
 				
 		
 					$("#mainPageContent").append(tabContent.replace(/#{id}/gi, id).replace(/#{url}/gi, href+".html "));
+					 if(($('#mainPageTab').width() - $('#mainPageTabContent').width())<20){
+						$('#mainPageTabContent').children().last().prev().remove();
+					}
 					$("[id='tabContentID_" + id + "'] iframe").on("load", function(){
 						$($("[id='tabContentID_" + id + "'] iframe")[0].contentDocument).find("body").css("background", "inherit");
 						

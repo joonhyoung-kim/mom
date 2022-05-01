@@ -153,7 +153,7 @@ var momWidget = {
 			      var popupTotalNum      = that.popupProperty[index].length;
 			      var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
 			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
-			     if(popupTotalNum != Number(popupColNum) * Number(popupRowNum)){
+			     if(popupTotalNum % popupColNum == 1 ){
 				     remarkInline  = 'N';
 			     }
 
@@ -523,7 +523,7 @@ var momWidget = {
 		    that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
 		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
 		    if(that.gridExtraProperty[index]['initSearch']=='Y'){
-		    	 that.findBtnClicked(index, {}, true, 'INIT',menuId,your,[]);
+		    	 that.findBtnClicked(index, {}, true, 'INIT',menuId,your);
 		    }
 		
 		   // multiLang.transLang();
@@ -1559,7 +1559,7 @@ var momWidget = {
 	},
 	
 	// 검색버튼을 누른 효과
-	findBtnClicked: function(index, param, splash, btnId, programId, your, CallBackFunc) { 	//momWidget.findBtnClicked(1, [], true, 'findBtn1', 'PGIDXX002', MOMXX000, function(result, data)
+	findBtnClicked: function(index, param, splash, btnId, programId, your, callBackFunc) { 	//momWidget.findBtnClicked(1, [], true, 'findBtn1', 'PGIDXX002', MOMXX000, function(result, data)
 	    
 	    var callInitResult = undefined;
 	    var callBackResult = undefined; 
@@ -1595,7 +1595,9 @@ var momWidget = {
     				          
     				        	     AUIGrid.setGridData(that.grid[index], data);    
     				           
-                                  							  						
+                                  	if(callBackFunc != undefined) {	
+									  callBackFunc('SUCCESS', data);
+								    }						  						
     					           /*if(your.retrieveCallBack != undefined) {
     					        	   your.retrieveCallBack('SUCCESS', data, param, undefined, indexInfo, your);
     					           }*/
@@ -2241,13 +2243,24 @@ var momWidget = {
 			}*/
 			$(document).on('change','.grid-pop', function(e) {
 			
-				
+				if(document.activeElement.id.indexOf('defaultPop') != -1){
+					return;
+				}
 				var columnProp = [];	
 				var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
+				
 				var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+					
+				if(clickedElment =='' || clickedElment.indexOf('DP') == -1){
+					return;
+				}
+				if(fieldValue==''){
+					return;
+				}
+				var fieldValue = $('#'+clickedElment).val();
 				var activeTop = $('#'+clickedElment).offset().top;
 				var activeLeft = $('#'+clickedElment).offset().left;
-				
+			
 				var targetId = 	activeId[0];
 				var dropdownGridId = Number(that.popupProperty[index][1]['dropdownGridList'])-1;
 			
@@ -2281,7 +2294,7 @@ var momWidget = {
 	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
 					 return;
 				}	
-			    $('#dropDownGridPop'+(dropdownGridId+1)).remove();   
+			    //$('#dropDownGridPop'+(dropdownGridId+1)).remove();   
 			    $('body').append(popupHtml);
 			
                 
@@ -2340,14 +2353,41 @@ var momWidget = {
 				     
 				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+29, left : activeLeft});
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
-				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)			 
-		    	 that.findBtnClicked(dropdownGridId, {}, true, 'INIT',menuId,your,[]);
+				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
+				  			 
+		    	 that.findBtnClicked(dropdownGridId, {keyId1:fieldValue}, true, 'INIT',menuId,your,function(callBackResult, callBackData) {
+						                 if(callBackResult != 'SUCCESS' || callBackData.length==0) {
+						    	            momWidget.splashHide();
+						    	            momWidget.messageBox({type:'warning', width:'400', height: '145', html: '조회된 데이터없음!'});
+						    	            $('#dropDownGridPop'+(dropdownGridId+1)).remove();
+							                return;							     
+						                 }	
+						               
+					});
 		       
 				}, undefined, undefined, this, false);
 			});
 			
-
-			
+	     $(document).on('click','.grid-pop', function(e) {
+		    if(document.activeElement.id.indexOf('defaultPop') != -1 || document.activeElement.id==''){
+					return;
+				}
+				
+				var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
+				var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+				var fieldValue = $('#'+clickedElment).val();
+				if(fieldValue==''){
+					return;
+				}
+				var targetId = 	activeId[0];
+				var dropdownGridId = Number(that.popupProperty[index][1]['dropdownGridList'])-1;
+		      var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
+                    if(isShow == 'block'){
+	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
+	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
+					 return;
+				}	
+		});	
 			$(document).on('click','#'+changePwBtnId, function() {
 				//that.splashShow();
                var modalDiv = $('#changePwPop'+(index+1));
@@ -2622,7 +2662,7 @@ var momWidget = {
 			 
 			$(document).on('click', '#' + findBtnId, function(e) {
 				
-				that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['programId'],your,that.searchProperty[index]);
+				that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['programId'],your);
 				
 				// e.preventDefault();
 			});
@@ -2727,7 +2767,9 @@ var momWidget = {
 						      return;
 			    }
 			     var actionType = 'CU';		
+			     
 				 param = callInitResult['param'];
+				
 				 for(var i=0;i<that.buttonProperty[index].length;i++){
 					if(that.buttonProperty[index][i]['buttonId'] == 'saveBtn'){
 						actionType = that.buttonProperty[index][i]['eventType'];
@@ -2748,7 +2790,7 @@ var momWidget = {
 			    		}
 			
 						 
-			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['menuId'],your,[]);
+			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['menuId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
@@ -2759,13 +2801,16 @@ var momWidget = {
 			});
 			$(document).on('click', '#' + savePopBtnId, function(e) {	
 				var param = [];
+				var initParam ={};
 				param = that.getPopupParam(index,your);
 				callInitResult = that.checkActionCallInit(index, 'PS', param, 'saveBtnDP', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
 				      return;
-				}			
+				}	
+				 param = callInitResult['param'];	
+				 //your  = callInitResult['your'];
 				
 				//that.popUpSizeSet(index);		
 				var popupCount = that.popupProperty[index].length;
@@ -2790,7 +2835,7 @@ var momWidget = {
 					
 				}
 				  var actionType = $('#defaultPop1').attr('actionType');				 
-				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),callInitResult['param'], function(result, data) {
+				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
@@ -2802,7 +2847,10 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 						}
-			        	  momWidget.findBtnClicked(index, {}, true, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);
+						 if(your.initParam != undefined && your.initParam != ''){
+				              initParam = your.initParam;
+			              }
+			        	  momWidget.findBtnClicked(index, initParam, true, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
 			        	  $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
@@ -3488,11 +3536,17 @@ var momWidget = {
 						      }							    
 						        	 $('#'+popupId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});
 						          // $('#'+popupId).prev().prev().attr('class','circle-dh')
-						        	 if(type == 'C' || type =='CP'){
-							
-						        		 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
+						        	 if(popupType == 'S' || popupType =='M'){
+							          if(defaultValue=='NULL'){
+								           defaultValue='';
+								           that.popupProperty[index][i]['defaultValue'] = '';
+							          }
+							          else{
+											 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
+							         }
+						        		
 						        	 }							        	 
-						        	 $('#'+popupId).jqxComboBox('focus');
+						        	// $('#'+popupId).jqxComboBox('focus');
 					}, undefined, undefined, that, false);
 					}
 					else if(popupType == 'SS'){
@@ -3701,6 +3755,7 @@ var momWidget = {
 						
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','#817b7b');
 						}
 					} 
 					else  { // 수정가능
@@ -3718,6 +3773,7 @@ var momWidget = {
 
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','black');
 						}
 					}
 					if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined && this.popupProperty[index][i]['popupType'] != 'C'&& this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
@@ -3756,6 +3812,7 @@ var momWidget = {
 						else{ // 텍스트
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','#817b7b');
 						}
 					} 
 					else{ // 수정가능
@@ -3771,6 +3828,7 @@ var momWidget = {
 						else{ // 텍스트
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','black');
 						}
 					}
 					

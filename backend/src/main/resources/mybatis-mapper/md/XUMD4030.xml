@@ -16,6 +16,7 @@
 		     , MSRT.UPDATE_BY
 		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSRT.COMPANY_CD, MSRT.DIVISION_CD, MSRT.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
 		     , TO_CHAR(MSRT.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		     , MSRT.REST_TIME_CD AS KEY_ID
 		FROM   MOM_COM_DIV_V MCD
 		     , MOM_SHIFT_REST_TIME MSRT
 		WHERE  MCD.COMPANY_CD     = MSRT.COMPANY_CD
@@ -24,6 +25,9 @@
 		AND    MCD.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}	
         <if test="restTimeCd != null and restTimeCd != ''">
 	    AND MSRT.REST_TIME_CD IN (${restTimeCd})
+	    </if>
+	    <if test="restTimeCd2 != null and restTimeCd2 != ''">
+	    AND MSRT.REST_TIME_CD = #{restTimeCd2, jdbcType=VARCHAR}
 	    </if>
 		<if test="useYn != null and useYn != ''">
 	    AND MSRT.USE_YN = #{useYn, jdbcType=VARCHAR}
