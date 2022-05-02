@@ -29,8 +29,8 @@ var XUSM2030 = {
 	cellClickCallBack: function(index,e) {
 		if(index==0){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
-			momWidget.findBtnClicked(2, e.item, true, 'CELLCLICK',menuId,XUSM2030,[]);
-			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,XUSM2030,[]);
+			momWidget.findBtnClicked(2, e.item, true, 'CELLCLICK',menuId,XUSM2030);
+			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,XUSM2030);
 			that.paramTmp = e.item;
 		}
 	

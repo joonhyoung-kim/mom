@@ -19,14 +19,35 @@
     ORDER BY DEPT_NM
   </select> 
 
-  <select id="get_DD00006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+<!--   <select id="get_DD00006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	  SELECT PROGRAM_ID AS CODE 
 		 ,   PROGRAM_ID ||'('|| PROGRAM_NM ||')' AS LABEL
       FROM MOM_PROGRAM
 	  WHERE PROGRAM_TYPE = #{programType, jdbcType=VARCHAR} 
 	  AND   USE_YN = 'Y'
 	  ORDER BY PROGRAM_ID
-  </select>	
+  </select>	 -->
+  <select id="get_DD00005" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
+        SELECT  MM.MENU_ID  AS CODE
+             ,  MM.MENU_ID ||'('|| MM.MENU_NM ||')'  AS LABEL
+		FROM    MOM_DIVISION_MENU MDM
+		     ,  MOM_MENU   MM 
+		WHERE   MDM.MENU_ID      = MM.MENU_ID
+		AND     MDM.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
+	    AND     MDM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}  
+        AND     MDM.MENU_ID  <![CDATA[ <> 'root' ]]>
+        AND     MM.MENU_TYPE = 'P'       
+        ORDER BY MM.SORT_NO 
+  </select>
+  <select id="get_DD00006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT GRID_ID        AS CODE 
+        , GRID_ID     ||'('|| GRID_NM      ||')' AS LABEL
+   FROM   MOM_GRID   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    MENU_ID     = #{menuId, jdbcType=VARCHAR} 
+   ORDER BY GRID_ID
+   </select>
   <select id="get_DD00007" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	  SELECT TEMPLATE_ID AS CODE
            , TEMPLATE_ID ||'('|| TEMPLATE_NM ||')' AS LABEL

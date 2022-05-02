@@ -34,7 +34,7 @@ var XUSM2020 = {
 			rowId = item[rowIdField];
 
 			AUIGrid.setCheckedRowsByIds(e.pid, rowId);*/
-			momWidget.findBtnClicked(1, {menuId:item.menuId,menuNm:item.menuNm}, true, 'INIT',menuId,XUSM2020,[]);
+			momWidget.findBtnClicked(1, {menuId:item.menuId,menuNm:item.menuNm}, true, 'INIT',menuId,XUSM2020);
 		}
 	
 	},
@@ -42,6 +42,9 @@ var XUSM2020 = {
 		if(index == 1){
 			for(var i=0;i<param.length;i++){
 				param[i].msgType = 'MENU';
+				if(param[1].menuNm == undefined || param[1].menuNm ==''){
+					param[1].menuNm = param[0].menuNm;
+				}
 				//param[i].menuId   = AUIGrid.getGridData(momWidget.grid[index])[0]['menuId'];
 			}
 		}

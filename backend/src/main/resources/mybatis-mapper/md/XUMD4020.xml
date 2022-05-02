@@ -27,6 +27,9 @@
     <if test="shiftCd != null and shiftCd != ''">
 	  AND MS.SHIFT_CD  IN (${shiftCd})
 	</if>
+	<if test="shiftCd2 != null and shiftCd2 != ''">
+	  AND MS.SHIFT_CD = #{shiftCd2, jdbcType=VARCHAR}
+	</if>
 	<if test="useYn != null and useYn != ''">
 	  AND MS.USE_YN = #{useYn, jdbcType=VARCHAR}
 	</if>   

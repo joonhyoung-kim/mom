@@ -22,14 +22,14 @@ var momWidget = {
 	checkedRowItem:         [],
 	searchComboQueryId:     [],
 	searchComboMinLength:   [],	
-	INFINITE: 			100000000,	
-	uploadFlag: 		0,
-	downSequence:		100,	
-	isInitSearch:		false,
-	firstPageFlag:      true,
-	excelUpCheckYn:     undefined , // 엑셀 업로드 검증 사용여부(Y/N)
-	dateCheckParam :    '-1', // 엑셀 업로드시 추가적인 벨리데이션(yyyymm형태)을 위한 변수
-	upsertFlag:         'Y',
+	INFINITE: 			    100000000,	
+	uploadFlag: 		    0,
+	downSequence:		    100,	
+	isInitSearch:		    false,
+	firstPageFlag:          true,
+	excelUpCheckYn:         undefined , // 엑셀 업로드 검증 사용여부(Y/N)
+	dateCheckParam :        '-1', // 엑셀 업로드시 추가적인 벨리데이션(yyyymm형태)을 위한 변수
+	upsertFlag:             'Y',
 	//background: #6c5ffc !important;
 	init: function(index, menuId, your, customFlag) {		  
 		  var that = this;	 
@@ -1416,7 +1416,7 @@ var momWidget = {
 			   return topHtml+botHtml;
 		},
 			dropDownGridPop : function(index,colNum,rowNum,popupTitle,target){
-			var topHtml =	'<div target="'+target+'" id="dropDownGridPop'+index+'" class="modal gridPop-C'+colNum+'-R'+rowNum+'">'
+			var topHtml =	'<div target="'+target+'" id="dropDownGridPop'+index+'" class="dropDownGrid modal gridPop-C'+colNum+'-R'+rowNum+'">'
 	        +    '<div class = "searcharea-gridPop-C'+colNum+'-R'+rowNum+'">'
 			+     '<div class="popup_main">'
 			+      '<div class = "grid" id="grid'+index+'">'
@@ -2225,10 +2225,10 @@ var momWidget = {
 			var delBtnId         = 'delBtn'+(index + 1);
 			var addBtnId         = 'addBtn'+(index + 1);
 			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
-			var excelFile        = 'excelFile'+(index + 1);  
-			var isExpanded       = true;
-			var saveBtnExUpBtnId = 'saveBtnExUp'+(index + 1);
-			var exUpCheckBtnId   = 'exUpCheck'+(index + 1);
+			var excelFile          = 'excelFile'+(index + 1);  
+			var isExpanded         = true;
+			var saveBtnExUpBtnId   = 'saveBtnExUp'+(index + 1);
+			var exUpCheckBtnId     = 'exUpCheck'+(index + 1);
 			var exUpCheckDownBtnId = 'exUpCheckDown'+(index + 1);
 			var reportBtnId        = 'reportBtn'+(index + 1);
 			var changePwBtnId      = 'changePwBtn'+(index + 1);
@@ -2241,8 +2241,9 @@ var momWidget = {
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
-			$(document).on('change','.grid-pop', function(e) {
-			
+		  
+			$(document).on('keydown','.grid-pop', function(e) {
+			if(e.keyCode == 13) {
 				if(document.activeElement.id.indexOf('defaultPop') != -1){
 					return;
 				}
@@ -2260,12 +2261,14 @@ var momWidget = {
 				var fieldValue = $('#'+clickedElment).val();
 				var activeTop = $('#'+clickedElment).offset().top;
 				var activeLeft = $('#'+clickedElment).offset().left;
-			
+			    var dropdownGridId =1;
 				var targetId = 	activeId[0];
-				var dropdownGridId = Number(that.popupProperty[index][1]['dropdownGridList'])-1;
-			
-				  
-			
+				  for(var i=0,max=that.popupProperty[index].length; i<max;i++){
+					if(that.popupProperty[index][i]['popupId'] == 'targetId'){
+						 dropdownGridId = i;
+					}
+				}
+	
 			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:dropdownGridId+1}, function(result1, data1) { 
 		         if(result1 != 'SUCCESS' || data1.length == 0) {
 		    	  momWidget.splashHide();
@@ -2366,27 +2369,36 @@ var momWidget = {
 					});
 		       
 				}, undefined, undefined, this, false);
+				}
+				e.stopImmediatePropagation();
 			});
 			
-	     $(document).on('click','.grid-pop', function(e) {
-		    if(document.activeElement.id.indexOf('defaultPop') != -1 || document.activeElement.id==''){
+	     $(document).on('click','html', function(e) {
+		/*    if(document.activeElement.id.indexOf('defaultPop') != -1 || document.activeElement.id==''){
 					return;
-				}
+				}*/
 				
-				var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
+             if($('.dropDownGrid').length>0){
+	  			var dropdownGridId = $('.dropDownGrid')[0]['id'].split('dropDownGridPop');	  			 
+			        dropdownGridId = Number(dropdownGridId[1]);
+				 var isShow = $('#dropDownGridPop'+(dropdownGridId)).css('display');
+				      if(isShow == 'block'){
+	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
+	                 $('#dropDownGridPop'+(dropdownGridId)).remove();
+					 return;
+				     }
+            }
+			
+			/*	var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
 				var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
 				var fieldValue = $('#'+clickedElment).val();
 				if(fieldValue==''){
 					return;
 				}
-				var targetId = 	activeId[0];
-				var dropdownGridId = Number(that.popupProperty[index][1]['dropdownGridList'])-1;
-		      var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
-                    if(isShow == 'block'){
-	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
-	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
-					 return;
-				}	
+				var targetId = 	activeId[0];*/
+				
+		   
+                 
 		});	
 			$(document).on('click','#'+changePwBtnId, function() {
 				//that.splashShow();
@@ -2685,7 +2697,7 @@ var momWidget = {
 				$('#popupTitle'+(index+1)).text('');
 				$('#popupTitle'+(index+1)).append(popupTitle+multiLang.transText('MESSAGE','MSG0008'));	
 				$('#' +'defaultPop'+(index+1)).momModal('show');
-					
+				
 				    // AUIGrid.resize('#grid'+index+1);
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);			
@@ -2847,9 +2859,9 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 						}
-						 if(your.initParam != undefined && your.initParam != ''){
+						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
-			              }
+			             }
 			        	  momWidget.findBtnClicked(index, initParam, true, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
 			        	  $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
@@ -3655,8 +3667,8 @@ var momWidget = {
 					     date  = today.getDate();  // 날짜
 				}
 				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
-				var dateNum  =	defaultValue.substring(5,7);
-				var dateType =	defaultValue.substring(7,8);
+		        var dateNum  =	defaultValue.substring(5,defaultValue.length-1);
+				var dateType =	defaultValue.substring(defaultValue.length,defaultValue.length-1);
 				  if(dateType == 'M'){
 					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
 					 year = today.getFullYear(); // 년도
@@ -3737,7 +3749,7 @@ var momWidget = {
 			
 			if(type == 'C') {
 				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {
-					$('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val('');					
+								
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
 						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스
 						
@@ -3777,6 +3789,7 @@ var momWidget = {
 						}
 					}
 					if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined && this.popupProperty[index][i]['popupType'] != 'C'&& this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
+						     $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val('');		
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
 					}
 					

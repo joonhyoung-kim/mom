@@ -1,10 +1,24 @@
 var menuId = 'XUMD2040';
+var widget = momWidget;
+var that = undefined;
 var view= {
 	initParam		:  undefined,
 	columnProperty1	: undefined,
 	createdFlag		: undefined,
+	
 	init: function() {
-	var that = this;		
+		that = this;	
+		that.event();		
+	},
+	event: function(e) {
+		$(document).on('change','#unitCategoryDP1', function(e) {
+		
+		     $('#unitDP1').val('');
+		     $('#conversionUnitDP1').val('');
+		     $('#unitQtyDP1').val('');
+		     $('#conversionUnitQtyDP1').val('');
+
+		});
 	},
      cellClickCallBack: function(index,e) {
 		if(index == 1){
@@ -20,6 +34,7 @@ var view= {
 		}
 	
 	},	
+	
 };
 
 $(document).ready(function(event){	

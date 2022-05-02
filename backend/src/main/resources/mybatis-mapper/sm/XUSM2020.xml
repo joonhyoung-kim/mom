@@ -62,7 +62,7 @@
 	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
 	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
 	                              TRIM(#{item.menuId, jdbcType=VARCHAR}) 																	   as menuId,           														   
-					              #{item.menuNm, jdbcType=VARCHAR} 																			   as menuNm,             															   
+					              NVL(#{item.menuNm, jdbcType=VARCHAR},'') 																	   as menuNm,             															   
 					              TRIM(#{item.parentMenuId, jdbcType=VARCHAR}) 																   as parentMenuId, 													           
 					              #{i}  												                                                       as sortNo, 
 					              TRIM(#{item.useYnFlag, jdbcType=VARCHAR})																	   as useYn,

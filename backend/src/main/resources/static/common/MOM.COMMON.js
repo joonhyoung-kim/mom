@@ -770,7 +770,7 @@ leftMenuAuth: function(el,params) {
 		
 					$("#mainPageContent").append(tabContent.replace(/#{id}/gi, id).replace(/#{url}/gi, href+".html "));
 					 if(($('#mainPageTab').width() - $('#mainPageTabContent').width())<20){
-						$('#mainPageTabContent').children().last().prev().remove();
+						$('#mainPageTabContent').children().first().remove();
 					}
 					$("[id='tabContentID_" + id + "'] iframe").on("load", function(){
 						$($("[id='tabContentID_" + id + "'] iframe")[0].contentDocument).find("body").css("background", "inherit");
