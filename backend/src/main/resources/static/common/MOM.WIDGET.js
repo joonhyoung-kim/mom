@@ -82,18 +82,36 @@ var momWidget = {
 		      var buttonString = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
 		      var popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
 		      
-		
-		          gridString   = gridString.substr(1,  gridString.length-2);  
-			      columnString = columnString.substr(1,  columnString.length-2);
-			      if(searchString.length >3){
-			    	  searchString = searchString.substr(1,  searchString.length-2);
-			      }
-			      if(buttonString.length >3){
-			    	  buttonString = buttonString.substr(1,  buttonString.length-2);  
-			      }
-			      if(popupString.length >3){
-			    	  popupString = popupString.substr(1,  popupString.length-2); 
-			      }
+		      if(gridString=='[]'){
+			  
+			  }
+			  else{
+				   gridString   = gridString.substr(1,  gridString.length-2);  
+			  }
+			  if(columnString=='[]'){
+			  
+			  }
+			  else{
+				    columnString = columnString.substr(1,  columnString.length-2); 
+			  }
+		       if(searchString=='[]'){
+			  
+			  }
+			  else{
+				    searchString = searchString.substr(1,  searchString.length-2); 
+			  } 
+			  if(buttonString=='[]'){
+			  
+			  }
+			  else{
+				    buttonString = buttonString.substr(1,  buttonString.length-2);  
+			  }   
+			  if(popupString=='[]'){
+			  
+			  }
+			  else{
+				     popupString = popupString.substr(1,  popupString.length-2);  
+			  }   					 
 			       
 		    	  that.pageProperty[index]     = {programId:data1[0].programId,menuId:data1[0].menuId,templateId:data1[0].templateId};
 			      that.gridProperty[index]     = JSON.parse(gridString);
@@ -116,8 +134,11 @@ var momWidget = {
 			  /*
 			  ----------------------------------------------------------------------------------------------------------------------------------     
 			  * 위젯세팅 정보 이용해 html 동적생성 
-			  ----------------------------------------------------------------------------------------------------------------------------------
-			  */  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+			  ----------------------------------------------------------------------------------------------------------------------------------			  
+			  */ 
+			  
+			  if(Array.isArray(that.gridProperty[index]) == true && that.gridProperty[index].length !=0){
+				   var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
 			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
 			      var searchBtn      =  '';
 			      var gridPopYn      ='';
@@ -143,8 +164,12 @@ var momWidget = {
 			     // var popupTemplateInfo = ;
 			      var splitNum     = Number(templateInfo[1]);
 			      var splitType    = templateInfo[2];
-			      var splitRatio   = templateInfo[3];
+			      var splitRatio   = templateInfo[3];			      			      
 	              var templateName = 'tm'+splitNum+splitType;   
+			  }
+			
+	              
+	              
 			      var searchRowcnt = that.searchProperty[index].length;
 			      var searchLineCnt = 0;
 			      var searchStyle   = 'h00';
@@ -497,13 +522,16 @@ var momWidget = {
 					that.excelTmpGrid[index]     = AUIGrid.create('#excelTmpGrid' + (index + 1), that.excelUploadProperty[index], that.gridProperty[index]);	
 			  	    var isExist = document.getElementById('grid' + (index + 1));
 				    if(isExist == undefined) {
-					 that.messageBox({type:'danger', width:'400', height: '145', html: 'grid' + (index + 1) + '가 존재하지 않습니다.'});
-					 return;
+					/* that.messageBox({type:'danger', width:'400', height: '145', html: 'grid' + (index + 1) + '가 존재하지 않습니다.'});
+					 return;*/
+					 
 				    }
-
+                    else{
+							 that.grid[index] = AUIGrid.create('#grid'+(index+1), columnProp, that.gridProperty[index][0]); 
+					}
 		
 					
-			      that.grid[index] = AUIGrid.create('#grid'+(index+1), columnProp, that.gridProperty[index][0]); 
+			     
 			      
 			      $('td').removeClass('aui-grid-default-column');
 			      that.startPage[index]    = 1;
@@ -517,11 +545,13 @@ var momWidget = {
 		  */																							
 			
 			//that.setAddBtnEvent(index, your);				    // 행추가버튼 이벤트 핸들러 등록
+			that.setComboBoxSet(index,your);                  // 콤보박스 공통 이벤트 처리
 		    that.setSearchSet(index, your);                     // 검색조건 세팅
 		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
 		    that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
 		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
+		 
 		    if(that.gridExtraProperty[index]['initSearch']=='Y'){
 		    	 that.findBtnClicked(index, {}, true, 'INIT',menuId,your);
 		    }
@@ -610,6 +640,7 @@ var momWidget = {
 		var splitArray2 = undefined;
 		var defaultValue = undefined;
 		
+		
 		if(that.searchProperty[index] == undefined || that.searchProperty[index] == ''){
 			return;
 		}
@@ -655,23 +686,23 @@ var momWidget = {
 					 //   paramMap[i] = ; 
 				}
 				  mom_ajax('R', nameSpace+'.'+queryId, paramMap[0] == undefined ? {}:paramMap[0], function(result, data) {
-				      if(result != 'SUCCESS') {
+				      if(result != 'SUCCESS' || data.length==0) {
 				    	  momWidget.splashHide();
 					      return;							     
 				      }		
 				      
 				        if(headerDropdownId != '' && headerDropdownId != undefined){
-				        	 $('#'+searchId+'Header').jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false});
+				        	 $('#'+searchId+'Header').jqxComboBox({source: data});
 				        	 $('#'+searchId+'Header').prev().prev().attr('class','circle-dh')
 				        	 $('#'+searchId+'Header').jqxComboBox({selectedIndex: 0 });
 				        }
 				        else{
 				        	if(searchType == 'M'){
-				        		$('#'+searchId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,dropDownWidth: 220,disabled: false,checkboxes: true});
+				        		$('#'+searchId).jqxComboBox({source: data});
 				        		$('#'+searchId).val(defaultValue); 
 				        	}
 				        	else{
-				        		$('#'+searchId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,dropDownWidth: 220,disabled: false}); 
+				        		$('#'+searchId).jqxComboBox({source: data}); 
 				        		$('#'+searchId).val(defaultValue); 
 				        	}
 				        	  
@@ -982,7 +1013,13 @@ var momWidget = {
                +     '<div class ="w-icon '+btnItem[i].buttonIcon+'"></div>'
                +     '<div multi-lang="" class="textblock gridRightTab">'+btnItem[i].buttonNm+'</div>'
         	   +     '</a>';		*/
-        	   midHtml += '<button type="button" class="btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+        	   if(btnItem[i]['popupGridId']!='' && btnItem[i]['popupGridId']!=undefined){
+	                midHtml += '<button type="button" class="custom-btn btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+               }
+               else{
+	                   midHtml += '<button type="button" class="btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+               }
+        	  
 	    }
 	    botHtml  = '</div>';
 	    return topHtml + midHtml+botHtml;
@@ -2113,6 +2150,127 @@ var momWidget = {
 		});
 
 	},
+		setComboBoxSet: function(index, your) {
+		var that =  momWidget;	
+
+		  for(var i=0,max=that.searchProperty[index].length; i<max;i++){
+			var searchType = that.searchProperty[index][i]['searchType'];
+			var searchId = that.searchProperty[index][i]['searchId'];
+			var headerDropdownId  = that.searchProperty[index][i]['headerDropdownId'];
+			var headerSearchType  = that.searchProperty[index][i]['headerType'];
+			
+			 
+			if(searchType == 'S' || searchType == 'M' || headerSearchType == 'S'||headerSearchType == 'M'){	      
+				        if(headerDropdownId != '' && headerDropdownId != undefined){
+				        	 $('#'+searchId+'Header').jqxComboBox({ displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false});
+				        	 $('#'+searchId+'Header').prev().prev().attr('class','circle-dh')
+				        	 $('#'+searchId+'Header').jqxComboBox({selectedIndex: 0 });
+				        }
+				        else{
+				        	if(searchType == 'M'){
+				        		$('#'+searchId).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
+				        		$('#'+searchId).on('bindingComplete', function (e) {
+				  
+				  var maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
+				  var maxItemWidthArry = maxItemWidth.split('px');
+				  var maxItemWidthNum = Number(maxItemWidthArry[0]);
+				  if(maxItemWidthNum<160){
+					 maxItemWidth = '160px';
+				 }
+				 else{
+					maxItemWidth = maxItemWidthNum+50+'px'
+				 }
+				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });
+				        		
+				 }
+				else{
+				      $('#'+searchId).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'}); 
+				      $('#'+searchId).on('bindingComplete', function (e) {				  
+				  var maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+				  var maxItemWidthArry = maxItemWidth.split('px');
+				  var maxItemWidthNum = Number(maxItemWidthArry[0]);
+				  if(maxItemWidthNum<160){
+					 maxItemWidth = '160px';
+				 }
+				 else{
+					maxItemWidth = maxItemWidthNum+30+'px'
+				 }
+				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });
+				        	}
+				        	  
+				        }
+
+					
+		
+			}
+		
+			}
+
+			var dropdownId = undefined;
+			var headerDropdownId = undefined;
+			var queryId = undefined;
+			var nameSpace  = undefined;
+			var paramMap   = [];
+			var searchComboMinLength={};
+			var searchComboItem = {};
+			var popupType ='';
+			var popupId ='';
+		  for(var j=0,max2=that.popupProperty[index].length; j<max2;j++){
+			
+				dropdownId       = that.popupProperty[index][j]['dropdownId'];
+				dropdownParam    = that.popupProperty[index][j]['dropdownParam'];
+			    popupType        = that.popupProperty[index][j]['popupType']; 
+			    nameSpace        = dropdownId.substr(0, 2);  
+			    queryId          = '';
+			    paramMap.length  = 0;
+			    minLength        = 1;
+			    popupId = that.popupProperty[index][j]['popupId'] + 'DP' +(index+1);
+					if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG' ){    
+						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});       		
+					 
+				}
+				else if(popupType == 'SS'){
+						minLength  = Number(that.popupProperty[index][j]['defaultValue'].trim());
+						searchComboMinLength[popupId] = minLength;
+						if(dropdownId != '' && dropdownId != undefined){
+						 queryId = dropdownId;
+						searchComboItem[popupId] = nameSpace+'.'+queryId;
+							 
+							// paramMap[i] = splitArray[0]:; 
+						}
+						else{
+							    queryId = dropdownId;
+							 //   paramMap[i] = ; 
+						}
+					that.searchComboQueryId[index] = searchComboItem;
+					that.searchComboMinLength[index] = searchComboMinLength; 		    
+						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+minLength +' or more characters',minLength: minLength,remoteAutoComplete: false});
+	
+				}
+				   	 $('#'+popupId).on('bindingComplete', function (e) {
+							  var maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  var maxItemWidthArry = maxItemWidth.split('px');
+							  var maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px'
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });		
+					  	 	
+						    			        	 
+						        
+		}
+			
+			
+	
+	
+
+	},
 	// AUIGrid 셀 클릭시 선택여부 설정
 /*	procCellClick: function(index, your) {
 		var that =  this;		
@@ -2211,6 +2369,12 @@ var momWidget = {
 			var that = momWidget;
 			var findBtnId        = 'findBtn'+(index + 1);			
 			var createBtnId      = 'createBtn'+(index + 1);	
+            var customBtnId1     = 'customBtnA'+(index + 1);	
+            var customBtnId2     = 'customBtnB'+(index + 1);	
+            var customBtnId3     = 'customBtnC'+(index + 1);
+            var customBtnId4     = 'customBtnD'+(index + 1);
+            var customBtnId5     = 'customBtnE'+(index + 1);
+            var customBtnId6     = 'customBtnF'+(index + 1);
 			var copyBtnId        = 'copyBtn'+(index + 1);
 			var editBtnId        = 'editBtn'+(index + 1);	
 			var cancelBtnId      = 'cancelBtn'+'DP'+(index + 1);	
@@ -2712,6 +2876,22 @@ var momWidget = {
 				
 			});	
 			
+			 $(document).on('click', '#' + customBtnId1, function(e) {
+					that.setCustomBtn(index,e.target.id,your);
+				
+			});	
+				 $(document).on('click', '#' + customBtnId2, function(e) {
+					that.setCustomBtn(index,e.target.id,your);
+				
+			});
+				 $(document).on('click', '#' + customBtnId3, function(e) {
+					that.setCustomBtn(index,e.target.id,your);
+				
+			});
+				 $(document).on('click', '#' + customBtnId4, function(e) {
+					that.setCustomBtn(index,e.target.id,your);
+				
+			});
 			$(document).on('click', '#' + copyBtnId, function(e) {	
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				var param = that.getCheckedRowItems(that.grid[index]);
@@ -3453,6 +3633,46 @@ var momWidget = {
 				
 			
 			},
+			setCustomBtn: function(index,btnId,your) {
+				var that = momWidget;
+				var callbackData = [];	
+				var actionType   = '';	
+				var customIndex = 0;
+				for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['buttonId']+(index+1)== btnId){
+						actionType  = that.buttonProperty[index][i]['eventType'] == 'P' ? 'C':that.buttonProperty[index][i]['eventType'];
+						customIndex = Number(that.buttonProperty[index][i]['popupGridId'])-1;
+						break;
+					}
+				}	
+				
+				
+				that.setPopup(customIndex,actionType);	
+				$('#defaultPop1').attr('actionType', actionType);
+				 callInitResult = that.checkActionCallInit(customIndex, actionType, [], 'createBtn', your);
+				if(callInitResult['result'] != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+					  momWidget.splashHide();
+				      return;
+				}		
+				//$('#popupTitle'+(index+1)).text('등록');	
+				var popupTitle = that.gridExtraProperty[customIndex]['popupTitle'];
+				//$('#popupTitle'+(customIndex+1)).text('');
+				//$('#popupTitle'+(customIndex+1)).append(popupTitle+multiLang.transText('MESSAGE','MSG0008'));	
+				$('#' +'defaultPop'+(customIndex+1)).momModal('show');
+				
+				    // AUIGrid.resize('#grid'+index+1);
+				 that.htmlResize(index,your);
+				 //that.popUpSizeSet(index);			
+			
+				 callbackData   = AUIGrid.getGridData(that.grid[index]);
+				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
+				if(callBackResult['result']  != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+					  momWidget.splashHide();
+				      return;
+				}	
+			},
 			/*	if(customFlag != undefined && customFlag =='excelUpload') {
 			this.excelUpCheckYn = 'Y';
 			this.createExcelPopUp(99, your);
@@ -3526,7 +3746,8 @@ var momWidget = {
 			    searchType        = that.popupProperty[index][i]['popupType']; 
                 defaultValue      = that.popupProperty[index][i]['defaultValue'];
                
-				if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG'){
+
+					if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG'){
 						if(dropdownId != '' && dropdownId != undefined){
 							 queryId = dropdownId;
 							 splitArray1 = dropdownParam.split('&');					 
@@ -3546,7 +3767,7 @@ var momWidget = {
 						    	  momWidget.splashHide();
 							      return;							     
 						      }							    
-						        	 $('#'+popupId).jqxComboBox({source: data, displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});
+						        	 $('#'+popupId).jqxComboBox({source: data});
 						          // $('#'+popupId).prev().prev().attr('class','circle-dh')
 						        	 if(popupType == 'S' || popupType =='M'){
 							          if(defaultValue=='NULL'){
@@ -3561,88 +3782,8 @@ var momWidget = {
 						        	// $('#'+popupId).jqxComboBox('focus');
 					}, undefined, undefined, that, false);
 					}
-					else if(popupType == 'SS'){
-						
-						minLength  = Number(that.popupProperty[index][i]['defaultValue'].trim());
-						searchComboMinLength[popupId] = minLength;
-						if(dropdownId != '' && dropdownId != undefined){
-						 queryId = dropdownId;
-						searchComboItem[popupId] = nameSpace+'.'+queryId;
-							 
-							// paramMap[i] = splitArray[0]:; 
-						}
-						else{
-							    queryId = dropdownId;
-							 //   paramMap[i] = ; 
-						}
-							 		    
-						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+minLength +' or more characters',minLength: minLength,remoteAutoComplete: false});
-							
-					
-							
-						
-						          // $('#'+popupId).prev().prev().attr('class','circle-dh')
-						        /*	 if(type == 'C' || type =='CP'){
-						        		 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
-						        	 }		*/					        	 
-						        	 /*$('#'+popupId).jqxComboBox('focus');*/
-					
-					}
-					else if(popupType == 'DG'){
-			/*	      if(dropdownId != '' && dropdownId != undefined){
-							 queryId = dropdownId;
-							 splitArray1 = dropdownParam.split('&');					 
-							 for(var j=0,max2=splitArray1.length;j<max2;j++){
-								  splitArray2 = splitArray1[j].split('=');
-								  paramMap.push(JSON.parse('{"'+splitArray2[0] +'"'+':'+'"'+splitArray2[1]+'"}'));
-							 }
-							 
-							// paramMap[i] = splitArray[0]:; 
-						}
-						else{
-							    queryId = dropdownId;
-							 //   paramMap[i] = ; 
-						}
-						  mom_ajax('R', nameSpace+'.'+queryId, paramMap[0] == undefined ? {}:paramMap[0], function(result, data) {
-						      if(result != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-						      }	
-						      var dropdownGridParam = that.popupProperty[index][i]['dropdownGridList'].split('/');
-						      var dataField = JSON.parse(dropdownGridParam[0]);
-						      var gridColumnLayout = JSON.parse(dropdownGridParam[1]);
-						      var source = {
-							                 localdata: data,
-							                 datafields: dataField,
-							                 datatype: "array",
-							                 updaterow: function (rowid, rowdata) {
-                  								  // synchronize with the server - send update command   
-                							 }
-            				  };
-            				  var dataAdapter = new $.jqx.dataAdapter(source);
-            				         $("#"+dropdownGridId).jqxGrid(
-						             {
-						                 width: 550,
-						                 source: dataAdapter,
-						                 pageable: true,
-						                 autoheight: true,
-						                 columnsresize: true,
-						                 columns: gridColumnLayout
-						             });
-            // initialize jqxGrid
-            $("#jqxdropdownbutton").jqxDropDownButton({
-                width: 150, height: 30
-            });
-						          
-						        	 if(type == 'C' || type =='CP'){
-							           $('#'+popupId).jqxGrid('selectrow', 0);						        	
-						        	 }							        	 
-						      
-					}, undefined, undefined, that, false);
-					
-					*/
- 
-					}
+
+
 				else if(popupType == 'C'){
 					var today = new Date();  
 					var year  = undefined; // 년도
@@ -3744,8 +3885,7 @@ var momWidget = {
 				}
 				
 				}
-					that.searchComboQueryId[index] = searchComboItem;
-					that.searchComboMinLength[index] = searchComboMinLength;
+					
 			
 			if(type == 'C') {
 				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {

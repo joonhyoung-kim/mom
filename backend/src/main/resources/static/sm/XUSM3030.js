@@ -659,6 +659,23 @@ var XUSM3030 = {
 					}
 			}, 
 			{
+				  dataField 	: 'columnRequire' 
+				, headerText 	: '필수여부'
+				, width			:  150
+				, style			: 'my-column-style-edit3'	
+				, renderer 		: {
+						  type 		: 'CheckBoxEditRenderer'
+						, editable	: true
+						,checkValue : 'Y' 
+						,unCheckValue : 'N'
+					}
+			},
+				{
+				  dataField 	: 'defaultValue' 
+				, headerText 	: '초기값'	
+				, style			: 'my-column-style-edit3'
+			},		
+			{
 				  dataField 	: 'dropdownId' 
 				, headerText 	: '드롭다운 Lv1'
 				, width			: 200
@@ -813,24 +830,7 @@ var XUSM3030 = {
 				, headerText 	: '헤더드롭다운파람'
 				, width			:  150
 				, style			: 'my-column-style-edit2'	
-			},
-			{
-				  dataField 	: 'defaultValue' 
-				, headerText 	: '초기값'	
-				, style			: 'my-column-style-edit3'
-			},
-			{
-				  dataField 	: 'columnRequire' 
-				, headerText 	: '필수여부'
-				, width			:  150
-				, style			: 'my-column-style-edit3'	
-				, renderer 		: {
-						  type 		: 'CheckBoxEditRenderer'
-						, editable	: true
-						,checkValue : 'Y' 
-						,unCheckValue : 'N'
-					}
-			}
+			}		
 			];
 
 			var gridProperty = {
@@ -934,7 +934,7 @@ var XUSM3030 = {
 				{
 				  dataField 	: 'defaultValue' 
 				, headerText 	: '기본값'
-				, width			:  60
+				, width			:  120
 				, style			: 'my-column-style-edit2'	
 			},
 			{
@@ -1093,7 +1093,7 @@ var XUSM3030 = {
 	}, 
 	buttonGrid: function(queryId) {
 		var that = this;
-		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"등록&수정"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"NONE","value":"없음"}];
+		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"등록&수정"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
@@ -1144,6 +1144,12 @@ var XUSM3030 = {
 						valueField: 'value'
 					}
 			}, 
+			{
+				  dataField 	: 'popupGridId' 
+				, headerText 	: '그리드ID(팝업)'
+				, width			:  150
+				, style			: 'my-column-style-edit2'	
+			},
 		    {
 				  dataField 	: 'buttonParameter' 
 				, headerText 	: '파라미터'
@@ -1330,7 +1336,7 @@ var XUSM3030 = {
 							}
 
 					  	 // AUIGrid.clearGridData('#grid1');
-						  mom_ajax('R', 'XUSM3030.gridList', {menuId:$("#menuId").val()}, function(result5, data5) {
+						  mom_ajax('R', 'DD.DD00006', {menuId:$("#menuId").val()}, function(result5, data5) {
 						      if(result5 != 'SUCCESS') {
 						    	  momWidget.splashHide();
 							      return;							     
@@ -1934,7 +1940,7 @@ var XUSM3030 = {
 	},
 	setComboBox: function() {
 		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'containsignorecase'});	
-		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 100, height: 20,dropDownHeight: 120});	
+		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
 		$('#programId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120});	
 		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {
 		      if(result != 'SUCCESS') {

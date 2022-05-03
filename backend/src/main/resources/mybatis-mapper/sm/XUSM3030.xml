@@ -184,6 +184,7 @@
 			  , BUTTON_NM
 			  ,	BUTTON_SEQ
 			  ,	EVENT_TYPE
+			  , POPUP_GRID_ID
 			  ,	BUTTON_PARAMETER
 			  ,	BUTTON_ICON 
 			  , REFIND_FLAG
@@ -633,6 +634,7 @@
 							   , BUTTON_ICON 
 							   , REFIND_FLAG
 							   , CHECK_TYPE
+							   , POPUP_GRID_ID
 							   , CREATE_BY
 						) VALUES(
                                #{item.companyCd,         jdbcType=VARCHAR}
@@ -648,6 +650,7 @@
 				             , #{item.buttonIcon,        jdbcType=VARCHAR}
 				             , NVL(#{item.refindFlag,    jdbcType=VARCHAR},'N')
 				             , #{item.checkType,         jdbcType=VARCHAR}
+				             , #{item.popupGridId,       jdbcType=VARCHAR}
 				             , #{item.userId,            jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               

@@ -2,43 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM3110">
   <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-	  SELECT   MCD.COMPANY_CD
+	 SELECT    MCD.COMPANY_CD
 		     , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
 		     , MCD.DIVISION_NM
-		     , MSC.SO_TYPE  
-		     , MSC.SO_TYPE_NM
-		     , MSC.IO_TYPE
-		     , (SELECT MOM_COMMON_PKG.FN_GET_IO_TYPE_NAME(MSC.COMPANY_CD,MSC.DIVISION_CD, MSC.IO_TYPE) FROM DUAL) AS IO_TYPE_NM        
-		     , MSC.USE_YN
-		     , MSC.DESCRIPTION
-		     , MSC.UPDATE_BY
-		     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSC.COMPANY_CD, MSC.DIVISION_CD, MSC.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
-		     , TO_CHAR(MSC.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-		     , MSC.SO_TYPE  || '_' || MSC.IO_TYPE AS KEY_ID
-      FROM     MOM_COM_DIV_V MCD
-             , MOM_SO_CATEGORY MSC
-      WHERE    MCD.COMPANY_CD   = MSC.COMPANY_CD
-      AND      MCD.DIVISION_CD = MSC.DIVISION_CD
-      <if test="soType != null and soType != ''">
-	  AND      MSC.SO_TYPE  IN (${soType})
+		     , MG.MENU_ID
+		     , (SELECT MOM_COMMON_PKG.FN_GET_DIVISION_MENU_NAME(MG.COMPANY_CD,MG.DIVISION_CD, MG.MENU_ID) FROM DUAL) AS MENU_NM  
+		     , MG.GRID_ID
+		     , MG.GRID_NM
+		     , MG.USE_YN
+		     , MG.DESCRIPTION
+		     , MG.UPDATE_BY
+		     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MG.COMPANY_CD, MG.DIVISION_CD, MG.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+		     , TO_CHAR(MG.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		     , MG.MENU_ID ||'_'|| MG.GRID_ID AS KEY_ID
+	 FROM   MOM_COM_DIV_V MCD
+	      , MOM_GRID  MG
+	 WHERE  MCD.COMPANY_CD   = MG.COMPANY_CD
+	 AND    MCD.DIVISION_CD  = MG.DIVISION_CD
+	 AND    MCD.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
+     AND    MCD.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	  <if test="menuId != null and menuId != ''">
+	  AND      MG.MENU_ID = #{menuId, jdbcType=VARCHAR}
 	  </if>
-	  <if test="ioType != null and ioType!= ''">
-	  AND      MSC.IO_TYPE  IN (${ioType})
+	  <if test="gridId != null and gridId != ''">
+	  AND      MG.GRID_ID = #{gridId, jdbcType=VARCHAR}
 	  </if>
 	  <if test="useYn != null and useYn != ''">
-	  AND      MSC.USE_YN = #{useYn, jdbcType=VARCHAR}
+	  AND      MG.USE_YN = #{useYn, jdbcType=VARCHAR}
 	  </if>
-      ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MSC.SO_TYPE_NM 
+	 ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MG.MENU_ID, MG.GRID_ID    
   </select>
-  <insert id="create_defaultInfo1" parameterType="java.util.List">
+    <insert id="create_defaultInfo1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_SO_CATEGORY (
+     INTO MOM_GRID (
                   COMPANY_CD
                 , DIVISION_CD
-                , SO_TYPE
-                , SO_TYPE_NM
-                , IO_TYPE
+                , MENU_ID
+                , GRID_ID
+                , GRID_NM
                 , USE_YN
                 , DESCRIPTION
                 , CREATE_BY
@@ -48,9 +50,9 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.soType, jdbcType=VARCHAR}
-                , #{item.soTypeNm, jdbcType=VARCHAR}
-                , #{item.ioType, jdbcType=VARCHAR}
+                , #{item.menuId, jdbcType=VARCHAR}
+                , #{item.gridId, jdbcType=VARCHAR}
+                , #{item.gridNm, jdbcType=VARCHAR}
                 , #{item.useYn, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.userId, jdbcType=VARCHAR}
@@ -62,12 +64,8 @@
   </insert>
   <update id="modify_defaultInfo1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-      UPDATE MOM_SO_CATEGORY
-      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
-           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           , SO_TYPE = #{item.soType, jdbcType=VARCHAR}
-           , SO_TYPE_NM = #{item.soTypeNm, jdbcType=VARCHAR}
-           , IO_TYPE = #{item.ioType, jdbcType=VARCHAR}
+      UPDATE MOM_GRID
+      SET    GRID_NM = #{item.gridNm, jdbcType=VARCHAR}
            , USE_YN = #{item.useYn, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
@@ -75,18 +73,20 @@
       WHERE  1=1
       AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
       AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-      AND    SO_TYPE = #{item.soType, jdbcType=VARCHAR}
+      AND    MENU_ID = #{item.menuId, jdbcType=VARCHAR}
+      AND    GRID_ID = #{item.gridId, jdbcType=VARCHAR}
     </foreach>
-  </update>
+  </update>  
   <delete id="remove_defaultInfo1" parameterType="java.util.List">
-      DELETE FROM MOM_SO_CATEGORY
+      DELETE FROM MOM_GRID
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
         (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
            AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           AND  SO_TYPE = #{item.soType, jdbcType=VARCHAR}
+           AND  MENU_ID = #{item.menuId, jdbcType=VARCHAR}
+           AND  GRID_ID = #{item.gridId, jdbcType=VARCHAR}
         )
        </foreach>
       </where>
-  </delete> 
+  </delete>  
 </mapper>

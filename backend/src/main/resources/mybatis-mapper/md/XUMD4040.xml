@@ -2,78 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD4040">
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-       SELECT A.COMPANY_CD
-     , A.COMPANY_NM
-     , A.DIVISION_CD
-     , PRICE_CATEGORY ||'_'|| PARTNER_CD || '_' || ITEM_ID || '_' || CURRENCY_CD AS KEY_ID
-     , A.DIVISION_NM
-     , A.PRICE_CATEGORY
-     , A.PRICE_CATEGORY_NM     
-     , A.PARTNER_CD
-     , A.PARTNER_NM
-     , A.PARTNER_CD   AS VENDOR_CD     -- 공급처
-     , A.PARTNER_NM   AS VENDOR_NM     -- 공급처명
-     , A.PARTNER_CD   AS CUSTOMER_CD   -- 고객
-     , A.PARTNER_NM   AS CUSTOMER_NM   -- 고객명
-     , A.ITEM_ID
-     , A.ITEM_NM
-     , A.ITEM_SPEC
-     , A.PURCHASE_UNIT 
-     , A.PURCHASE_UNIT_NM   
-     , A.UNIT
-     , A.UNIT_NM  
-     , A.CURRENCY_CD
-     , A.CURRENCY_NM  
-     , A.PREV_UNIT_PRICE
-     , A.UNIT_PRICE
-     , A.START_DATE
-     , A.END_DATE
-     , A.PRICE_TYPE
-     , A.PRICE_TYPE_NM     
-     , A.MAIN_PARTNER_YN
-     , A.USE_YN
-     , A.DESCRIPTION
-     , A.UPDATE_BY
-     , A.UPDATEBYNM
-     , A.UPDATE_DATE
-FROM   (SELECT MCD.COMPANY_CD
-             , MCD.COMPANY_NM
-             , MCD.DIVISION_CD
-             , MCD.DIVISION_NM
-             , MUP.PRICE_CATEGORY
-             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0011', MUP.PRICE_CATEGORY, 'KR') FROM DUAL) AS PRICE_CATEGORY_NM     
-             , MUP.PARTNER_CD
-             , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.PARTNER_CD) FROM DUAL ) AS PARTNER_NM
-             , MUP.ITEM_ID
-             , MI.ITEM_NM
-             , MI.ITEM_SPEC
-             , MI.PURCHASE_UNIT 
-             , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.PURCHASE_UNIT) FROM DUAL) AS PURCHASE_UNIT_NM     
-             , MI.UNIT 
-              , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.UNIT) FROM DUAL) AS UNIT_NM     
-             , MUP.CURRENCY_CD
-             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'SM0017', MUP.CURRENCY_CD, 'KR') FROM DUAL) AS CURRENCY_NM   
-             , MUP.PREV_UNIT_PRICE
-             , MUP.UNIT_PRICE
-             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD HH24:MI:SS') AS START_DATE 
-             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS END_DATE
-             , MUP.PRICE_TYPE
-             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
-             , MUP.MAIN_PARTNER_YN
-             , MUP.USE_YN
-             , MUP.DESCRIPTION
-             , MUP.UPDATE_BY
-             , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
-             , TO_CHAR(MUP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-        FROM   MOM_COM_DIV_V MCD
-             , MOM_UNIT_PRICE MUP
-             , MOM_ITEM MI
-        WHERE  MCD.COMPANY_CD  = MUP.COMPANY_CD
-        AND    MCD.DIVISION_CD = MUP.DIVISION_CD
-        AND    MUP.COMPANY_CD  = MI.COMPANY_CD
-        AND    MUP.DIVISION_CD = MI.DIVISION_CD
-        AND    MUP.ITEM_ID     = MI.ITEM_ID
-        AND    MUP.PRICE_CATEGORY = 'S'                  
+      SELECT MCD.COMPANY_CD
+     , MCD.COMPANY_NM
+     , MCD.DIVISION_CD
+     , MCD.DIVISION_NM
+     , MSS.WORK_CENTER_CD
+     , ( SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.WORK_CENTER_CD )  FROM DUAL) AS WORK_CENTER_NM
+     , MSS.APPLY_DATE
+     , (SELECT MC.WEEK_DAY
+        FROM   MOM_CALENDAR MC
+        WHERE  MC.COMPANY_CD   = MSS.COMPANY_CD
+        AND    MC.DIVISION_CD  = MSS.DIVISION_CD
+        AND    MC.DATE_ID      = MSS.APPLY_DATE ) AS WEEK_DAY_NM
+     , MSS.SHIFT_CD
+     , MS.SHIFT_NM
+     , MS.START_TIME
+     , MS.END_TIME
+    ,  MS.DAY_OFF_YN
+     , MS.WORK_TIME
+     , MT.REST_TIME
+     , (MS.WORK_TIME - MT.REST_TIME)  AS REAL_WORK_TIME
+     , MSS.UPDATE_BY
+     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+     , TO_CHAR(MSS.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+FROM   MOM_COM_DIV_V       MCD
+     , MOM_SHIFT_SCHEDULE  MSS
+     , MOM_SHIFT           MS
+     , MOM_SHIFT_REST_TIME_V MT
+WHERE  MCD.COMPANY_CD   = MSS.COMPANY_CD
+AND    MCD.DIVISION_CD  = MSS.DIVISION_CD   
+AND    MSS.COMPANY_CD   = MS.COMPANY_CD
+AND    MSS.DIVISION_CD  = MS.DIVISION_CD    
+AND    MSS.SHIFT_CD     = MS.SHIFT_CD 
+AND    MS.COMPANY_CD    = MT.COMPANY_CD
+AND    MS.DIVISION_CD   = MT.DIVISION_CD    
+AND    MS.SHIFT_CD      = MT.SHIFT_CD 
         <if test="customerCd != null and customerCd != ''">
 	    AND MUP.CUSTOMER_CD IN (${customerCd})
 	    </if>
@@ -82,10 +45,9 @@ FROM   (SELECT MCD.COMPANY_CD
 	    </if>
         <if test="customerItemId != null and customerItemId != ''">
 	    AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
-	    </if>         
-       ) A    
-	
-	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID    
+	    </if>       
+ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MSS.WORK_CENTER_CD, MSS.APPLY_DATE, MS.SHIFT_NM         
+    
 	</select>
 
   <insert id="create_defaultInfo1" parameterType="java.util.List">
