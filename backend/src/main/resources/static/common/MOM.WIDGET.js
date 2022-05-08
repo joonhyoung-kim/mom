@@ -2844,13 +2844,22 @@ var momWidget = {
 			});
 			
 			$(document).on('click', '#' + createBtnId, function(e) {
-				var callbackData = [];		
+				var callbackData = [];	
+				var targetArray = e.target.id.split('DP');
+				var buttonId = targetArray[0];
+				var actionType = 'C';
+		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
+					if(that.buttonProperty[index][k]['buttonId'] == buttonId){
+						actionType = that.buttonProperty[index][k]['eventType'];
+						
+					}
+				}	
 				if($('#changePwBtn'+(index+1)).length){
 					 $('#changePwBtn'+(index+1)).css('display','none');
 				}	
-				that.setPopup(index,'C');	
-				$('#defaultPop1').attr('actionType', 'C');
-				 callInitResult = that.checkActionCallInit(index, 'C', [], 'createBtn', your);
+				that.setPopup(index,actionType);	
+				$('#defaultPop'+(index+1)).attr('actionType', actionType);
+				 callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -2867,7 +2876,7 @@ var momWidget = {
 				//that.popUpSizeSet(index);			
 			
 				 callbackData   = AUIGrid.getGridData(that.grid[index]);
-				 callBackResult = that.checkActionCallBack(index, 'C', [], 'createBtn', your,callbackData);	
+				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
@@ -2910,7 +2919,7 @@ var momWidget = {
 				}
 								
 				that.setPopup(index,'CP');	
-				$('#defaultPop1').attr('actionType', 'C');
+				$('#defaultPop'+(index+1)).attr('actionType', 'C');
 			    callInitResult = that.checkActionCallInit(index, 'CP', param, 'copyBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
@@ -2994,27 +3003,47 @@ var momWidget = {
 			$(document).on('click', '#' + savePopBtnId, function(e) {	
 				var param = [];
 				var initParam ={};
+		
+				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
+				var queryId = that.pageProperty[index]['menuId']+'.defaultInfo'+(index+1);
+				
+			
+				if(actionType == 'P'){
+					queryId = that.pageProperty[index]['menuId']+'.'+buttonId+(index+1)+'_proc';
+				}
 				param = that.getPopupParam(index,your);
-				callInitResult = that.checkActionCallInit(index, 'PS', param, 'saveBtnDP', your);
+				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
 				      return;
 				}	
-				 param = callInitResult['param'];	
+				  param = callInitResult['param'];	
 				 //your  = callInitResult['your'];
 				
 				//that.popUpSizeSet(index);		
 				var popupCount = that.popupProperty[index].length;
 				var popupItem  = that.popupProperty[index];
 				for(var i=0 ;i<popupCount;i++){
-					if(that.popupProperty[index][i]['columnRequire']=='Y'){
+					if(actionType == 'C' && that.popupProperty[index][i]['insertEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){
+					
 						if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() ==''){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
 				             return;
 						} 
 					}
+					else if (actionType == 'U' && that.popupProperty[index][i]['updateEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){
+						    if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() ==''){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+					}
+					else{
+						
+					}
+					
 				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'){
 					 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() !=''){
 						  if(isNaN(Number($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim()))==true){
@@ -3026,14 +3055,14 @@ var momWidget = {
 				    }
 					
 				}
-				  var actionType = $('#defaultPop1').attr('actionType');				 
+				  //var actionType = $('#defaultPop1').attr('actionType');				 
 				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
 				              return;
 			            } 
-			               callBackResult = that.checkActionCallBack(index, 'PS', param, 'createBtn'+index, your);   				                         							  						
+			               callBackResult = that.checkActionCallBack(index, actionType, param, 'createBtn'+index, your);   				                         							  						
 			        	if(callBackResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 							  momWidget.splashHide();
@@ -3056,6 +3085,16 @@ var momWidget = {
 				
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				var param = that.getCheckedRowItems(that.grid[index]);
+				var targetArray = e.target.id.split('DP');
+				var buttonId = targetArray[0];
+				var actionType = 'U';
+		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
+					if(that.buttonProperty[index][k]['buttonId'] == buttonId){
+						actionType = that.buttonProperty[index][k]['eventType'];
+						
+					}
+				}	
+				
 				if(isCheckCol == true){
 					if (param.length == 0){
 					      return;	
@@ -3070,10 +3109,10 @@ var momWidget = {
 				if($('#changePwBtn'+(index+1)).length){
 					 $('#changePwBtn'+(index+1)).css('display','block');
 				}
-				that.setPopup(index,'U');	
-				$('#defaultPop1').attr('actionType', 'U');
+				that.setPopup(index,actionType);	
+				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 		
-				callInitResult = that.checkActionCallInit(index, 'U', param, 'editBtn', your,param);
+				callInitResult = that.checkActionCallInit(index, actionType, param, 'editBtn', your,param);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -3085,7 +3124,7 @@ var momWidget = {
 				$('#' +'defaultPop'+(index+1)).momModal('show');
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);		
-				callBackResult = that.checkActionCallBack(index, 'U', param, 'editBtn', your,param);
+				callBackResult = that.checkActionCallBack(index, actionType, param, 'editBtn', your,param);
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
@@ -3640,15 +3679,15 @@ var momWidget = {
 				var customIndex = 0;
 				for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']+(index+1)== btnId){
-						actionType  = that.buttonProperty[index][i]['eventType'] == 'P' ? 'C':that.buttonProperty[index][i]['eventType'];
+						actionType  = that.buttonProperty[index][i]['eventType'] == 'P' ? 'P':that.buttonProperty[index][i]['eventType'];
 						customIndex = Number(that.buttonProperty[index][i]['popupGridId'])-1;
 						break;
 					}
 				}	
 				
-				
+			
 				that.setPopup(customIndex,actionType);	
-				$('#defaultPop1').attr('actionType', actionType);
+				$('#defaultPop'+(customIndex+1)).attr('actionType', actionType);
 				 callInitResult = that.checkActionCallInit(customIndex, actionType, [], 'createBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
@@ -3733,6 +3772,10 @@ var momWidget = {
 			var splitArray2 = undefined;
 			var searchComboMinLength={};
 			var searchComboItem = {};
+			for(var k = 0, max = that.popupProperty[index].length; k< max; k++) {	
+				 $('#' + this.popupProperty[index][k]['popupId'] + 'DP' + (index + 1)).val('');	
+			}
+							
 			for(var i = 0, max = that.popupProperty[index].length; i< max; i++) {	
 				popupId          = that.popupProperty[index][i]['popupId']+ 'DP' + (index + 1);
 				dropdownGridId   = that.popupProperty[index][i]['popupId']+ 'DG' + (index + 1);;
@@ -3746,7 +3789,7 @@ var momWidget = {
 			    searchType        = that.popupProperty[index][i]['popupType']; 
                 defaultValue      = that.popupProperty[index][i]['defaultValue'];
                
-
+	
 					if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG'){
 						if(dropdownId != '' && dropdownId != undefined){
 							 queryId = dropdownId;
@@ -3902,6 +3945,8 @@ var momWidget = {
 						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
 						}
 						else{ // 텍스트
 						
@@ -3920,6 +3965,8 @@ var momWidget = {
 						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
 						}
 						else{ // 텍스트
 
@@ -3928,10 +3975,13 @@ var momWidget = {
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','black');
 						}
 					}
+				
 					if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined && this.popupProperty[index][i]['popupType'] != 'C'&& this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
-						     $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val('');		
+						     	
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
 					}
+					
+				
 					
 				}
 			}
@@ -3950,8 +4000,7 @@ var momWidget = {
 						
 					}				
 				}
-				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {		
-							
+				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {									
 					if(this.popupProperty[index][i]['updateEditFlag'] == 'N') { // 읽기전용
 						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
@@ -3961,6 +4010,8 @@ var momWidget = {
 						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
 						}
 						else{ // 텍스트
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
@@ -3977,6 +4028,8 @@ var momWidget = {
 						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
 						}
 						else{ // 텍스트
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
@@ -5445,7 +5498,7 @@ var momWidget = {
 		else if(action == 'GS' && your.saveCallInit != undefined) {
 				your.saveCallInit(index,your,action,btnId,param,result);			
 		} 
-		else if(action == 'PS' && your.saveCallInit != undefined) {
+		else if((action == 'C' || action == 'U') && your.saveCallInit != undefined) {
 			 your.saveCallInit(index,your,action,btnId,param,result);			
 	    } 
 		else if(action == 'D'  && your.delCallInit != undefined) {		
@@ -5480,7 +5533,7 @@ var momWidget = {
 		else if(action == 'GS' && your.saveCallBack != undefined) {
 				your.saveCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if(action == 'PS' && your.saveCallBack != undefined) {
+		else if((action == 'C' || action == 'U') && your.saveCallBack != undefined) {
 			your.saveCallBack(index,your,action,btnId,param,result,data);		
 	} 
 		else if(action == 'D'  && your.delCallBack != undefined) {		

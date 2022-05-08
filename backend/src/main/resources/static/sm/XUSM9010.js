@@ -8,12 +8,10 @@ var XUSM9010 = {
 		var that = this;	
 		$('#grid1').remove();
 		var textareaHtml = '<textarea id = "xmlText" name="opinion" cols="264" rows="42"></textarea>';
+		var comboData = [{"code":"R","label":"SELECT"},{"code":"C","label":"INSERT"},{"code":"U","label":"UPDATE"},{"code":"D","label":"DELETE"}];
 		$('.grid-box1').prepend(textareaHtml);
 		$('#eventType').jqxComboBox("clear");	
-		$('#eventType').jqxComboBox('addItem',{"code":"R","value":"SELECT"});	
-		$('#eventType').jqxComboBox('addItem',{"code":"C","value":"INSERT"});	
-		$('#eventType').jqxComboBox('addItem',{"code":"U","value":"UPDATE"});	
-		$('#eventType').jqxComboBox('addItem',{"code":"D","value":"DELETE"});	
+		$('#eventType').jqxComboBox('source',comboData);	
 	},
 	searchCallBack: function(index,your,action,btnId,param,result,data) {
 		if(index ==0 && btnId =='findBtn'){	
@@ -23,7 +21,7 @@ var XUSM9010 = {
 			var eventType = $('#eventType').val();
 			var jdbcType  = 'VARCHAR';
 			var userId    = 'userId';
-			if(eventType == 'SELECT'){
+			if(eventType == 'R'){
 				xmlHtml += '  <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">\n      SELECT  ';
 			  for(var i=0;i<columnItem.length;i++){	
 				 if(i == columnItem.length-1){
@@ -43,7 +41,7 @@ var XUSM9010 = {
 				
 			  }
 		    }
-		    else if(eventType == 'INSERT'){
+		    else if(eventType == 'C'){
 			  xmlHtml += '  <insert id="create_defaultInfo1" parameterType="java.util.List">\n   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> \n     INTO '+$('#tableId').val()+' ('+'\n'+'                  ';
 			    for(var i=0;i<columnItem.length;i++){	
 				 if(i == columnItem.length-1){
@@ -92,7 +90,7 @@ var XUSM9010 = {
 			  }
 			
 		    }
-			else if(eventType == 'UPDATE'){
+			else if(eventType == 'U'){
 			  xmlHtml += '  <update id="modify_defaultInfo1" parameterType="java.util.List">\n    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">\n      UPDATE '+$('#tableId').val()+'\n'+'      SET    ';
 			    for(var i=0;i<columnItem.length;i++){	
 				     if(columnItem[i]['columnName']=='CREATE_BY' || columnItem[i]['columnName']=='CREATE_DATE'){
@@ -144,7 +142,7 @@ var XUSM9010 = {
 			  }
 			
 		    }
-		    else if(eventType == 'DELETE'){
+		    else if(eventType == 'D'){
 			  var pkItem = [];
 			  for(var i=0;i<columnItem.length;i++){			
 				  if(columnItem[i]['isPk']=='Y'){

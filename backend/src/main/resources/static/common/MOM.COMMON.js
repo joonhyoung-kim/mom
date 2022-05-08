@@ -1412,6 +1412,37 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		}
 
 	}
+	else if(type =='P'){
+		type ='R';
+	    url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
+		if(sessionStorage.getItem('userInfo') != undefined && sessionStorage.getItem('userInfo') != null){
+			userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
+		}
+		else{
+			userInfo = {userNo:'super'}; 
+		}
+		type = 'GET';
+		if(jsonString.indexOf('[')>=0){
+				param[0].divisionCd = siteInfo.divisionCd;
+				param[0].companyCd  = siteInfo.companyCd;
+				param[0].langCd     = siteInfo.languageCd;
+				param[0].p_err_code  = '';
+				param[0].p_err_msg   = '';
+				param[0].requestType   = requestType;
+				param  = param[0];
+			
+			
+		}
+		else{
+			param.divisionCd  = siteInfo.divisionCd;
+			param.companyCd   = siteInfo.companyCd;
+			param.langCd      = siteInfo.languageCd;
+			param.userId      = param.userId == undefined ? userInfo.userNo: param.userId;
+			param.requestType = requestType;
+			param.p_err_code  = '';
+			param.p_err_msg   = '';
+		}
+	}
 	else if (type == 'C' || type == 'CU'){
 		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
