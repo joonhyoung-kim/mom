@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Service 
 public interface MomService {
 	public List<Map<String,Object>> getMapList(String query, Map<String,Object> param);
+	public List<Map<String,Object>> procMapList(String query, List<Map<String,Object>> param);
 	public List<Map<String,Object>> createMapList(String query, List<Map<String,Object>> param);
 	public List<Map<String,Object>> modifyMapList(String query, List<Map<String,Object>> param);
 	public List<Map<String,Object>> removeMapList(String query, List<Map<String,Object>> param);

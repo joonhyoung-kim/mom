@@ -2227,9 +2227,12 @@ var momWidget = {
 			    paramMap.length  = 0;
 			    minLength        = 1;
 			    popupId = that.popupProperty[index][j]['popupId'] + 'DP' +(index+1);
-					if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG' ){    
+					if(popupType == 'S'  ||  popupType == 'DG' ){    
 						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});       		
 					 
+				}
+				else if (popupType == 'M'){
+					$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
 				}
 				else if(popupType == 'SS'){
 						minLength  = Number(that.popupProperty[index][j]['defaultValue'].trim());
@@ -2859,6 +2862,7 @@ var momWidget = {
 				}	
 				that.setPopup(index,actionType);	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
+				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
 				 callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
@@ -3005,11 +3009,12 @@ var momWidget = {
 				var initParam ={};
 		
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
+				var buttonId   = $('#defaultPop'+(index+1)).attr('btnId');
 				var queryId = that.pageProperty[index]['menuId']+'.defaultInfo'+(index+1);
 				
 			
 				if(actionType == 'P'){
-					queryId = that.pageProperty[index]['menuId']+'.'+buttonId+(index+1)+'_proc';
+					queryId = that.pageProperty[index]['menuId']+'.'+buttonId+(index+1);
 				}
 				param = that.getPopupParam(index,your);
 				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your);
@@ -3056,7 +3061,7 @@ var momWidget = {
 					
 				}
 				  //var actionType = $('#defaultPop1').attr('actionType');				 
-				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+				  mom_ajax(actionType, queryId,param, function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
@@ -3111,6 +3116,7 @@ var momWidget = {
 				}
 				that.setPopup(index,actionType);	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
+				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
 		
 				callInitResult = that.checkActionCallInit(index, actionType, param, 'editBtn', your,param);
 				if(callInitResult['result'] != 'SUCCESS') {
@@ -3236,12 +3242,29 @@ var momWidget = {
 		  var param = {};
 		  var popupId =  '';
 		  var searchId = '';
+		  var checkedItem = [];
+		  var listItem = [];
+		  var mapItem = {};
 		  //param = that.getCheckedRowItems(index) == 'FAIL'? []:that.getCheckedRowItems(index);
 		  for(var i=0;i<that.popupProperty[index].length;i++){
-			  popupId = that.popupProperty[index][i]['popupId'];
-			  searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
+			    popupId = that.popupProperty[index][i]['popupId'];
+				searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
+			if(that.popupProperty[index][i]['popupType'] =='M'){
+				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
+				for(var j=0;j<checkedItem.length;j++){
+					 mapItem[popupId] = checkedItem[j]['value'];
+					listItem[j] = JSON.parse(JSON.stringify(mapItem));
+			
+				}
+			
+				param[popupId]= listItem;
+			}
+			else{
 			
 				param[popupId]=$('#'+searchId).val(); 
+				
+			}
+			 
 			  
 			  
 		  }
@@ -3681,6 +3704,7 @@ var momWidget = {
 					if(that.buttonProperty[index][i]['buttonId']+(index+1)== btnId){
 						actionType  = that.buttonProperty[index][i]['eventType'] == 'P' ? 'P':that.buttonProperty[index][i]['eventType'];
 						customIndex = Number(that.buttonProperty[index][i]['popupGridId'])-1;
+						$('#defaultPop'+(customIndex+1)).attr('btnId', that.buttonProperty[index][i]['buttonId']);
 						break;
 					}
 				}	
@@ -3688,6 +3712,7 @@ var momWidget = {
 			
 				that.setPopup(customIndex,actionType);	
 				$('#defaultPop'+(customIndex+1)).attr('actionType', actionType);
+			
 				 callInitResult = that.checkActionCallInit(customIndex, actionType, [], 'createBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
@@ -5498,7 +5523,7 @@ var momWidget = {
 		else if(action == 'GS' && your.saveCallInit != undefined) {
 				your.saveCallInit(index,your,action,btnId,param,result);			
 		} 
-		else if((action == 'C' || action == 'U') && your.saveCallInit != undefined) {
+		else if((action == 'C' || action == 'U' || action == 'P') && your.saveCallInit != undefined) {
 			 your.saveCallInit(index,your,action,btnId,param,result);			
 	    } 
 		else if(action == 'D'  && your.delCallInit != undefined) {		
@@ -5533,7 +5558,7 @@ var momWidget = {
 		else if(action == 'GS' && your.saveCallBack != undefined) {
 				your.saveCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if((action == 'C' || action == 'U') && your.saveCallBack != undefined) {
+		else if((action == 'C' || action == 'U' || action == 'P') && your.saveCallBack != undefined) {
 			your.saveCallBack(index,your,action,btnId,param,result,data);		
 	} 
 		else if(action == 'D'  && your.delCallBack != undefined) {		

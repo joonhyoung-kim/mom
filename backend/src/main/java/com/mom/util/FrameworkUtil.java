@@ -235,7 +235,10 @@ public class FrameworkUtil {
 			query = query.substring(0, pos) + "modify_" + query.substring(pos);
 		} else if (crud.equals("D")) {
 			query = query.substring(0, pos) + "remove_" + query.substring(pos);
-		} else {
+		} else if (crud.equals("P")) {
+			query = query.substring(0, pos) + "proc_" + query.substring(pos);
+		}
+		else {
 			query = query.substring(0, pos) + "get_" + query.substring(pos);
 		}
 

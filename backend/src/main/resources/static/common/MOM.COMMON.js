@@ -1413,35 +1413,33 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 
 	}
 	else if(type =='P'){
-		type ='R';
 	    url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
-		if(sessionStorage.getItem('userInfo') != undefined && sessionStorage.getItem('userInfo') != null){
-			userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
+		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
+		type = 'POST';	
+		excelUpYn = param[0].excelUpYn == undefined ? 'N':param[0].excelUpYn;
+		sessionId = param[0].sessionId == undefined ? '':param[0].sessionId;
+		if(param.length==0){
+				param.push({divisionCd:siteInfo.divisionCd,companyCd:siteInfo.companyCd,langCd:siteInfo.languageCd,userId:userInfo.userNo,commitYn:commitYn,p_err_code:'',p_err_msg:'',requestType:requestType});
+			    param = JSON.stringify(param);
 		}
 		else{
-			userInfo = {userNo:'super'}; 
+			for(var i = 0;i<param.length;i++){
+				param[i].divisionCd  = siteInfo.divisionCd;
+				param[i].companyCd   = siteInfo.companyCd;
+				param[i].langCd      = siteInfo.languageCd;
+				param[i].userId      = userInfo.userNo;
+				param[i].commitYn    = commitYn == undefined ? 'Y':commitYn;
+				param[i].requestType = requestType;
+				param[i].p_err_code  = '';
+				param[i].p_err_msg   = '';
+				
+			}
+			    param = JSON.stringify(param);
 		}
-		type = 'GET';
-		if(jsonString.indexOf('[')>=0){
-				param[0].divisionCd = siteInfo.divisionCd;
-				param[0].companyCd  = siteInfo.companyCd;
-				param[0].langCd     = siteInfo.languageCd;
-				param[0].p_err_code  = '';
-				param[0].p_err_msg   = '';
-				param[0].requestType   = requestType;
-				param  = param[0];
 			
-			
-		}
-		else{
-			param.divisionCd  = siteInfo.divisionCd;
-			param.companyCd   = siteInfo.companyCd;
-			param.langCd      = siteInfo.languageCd;
-			param.userId      = param.userId == undefined ? userInfo.userNo: param.userId;
-			param.requestType = requestType;
-			param.p_err_code  = '';
-			param.p_err_msg   = '';
-		}
+		/*if(param.userId == '' || param.userId == undefined){
+			param.userId = siteInfo.userId;
+		}*/
 	}
 	else if (type == 'C' || type == 'CU'){
 		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;

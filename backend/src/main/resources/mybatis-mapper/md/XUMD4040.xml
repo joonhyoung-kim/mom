@@ -51,16 +51,16 @@
         ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MSS.WORK_CENTER_CD, MSS.APPLY_DATE, MS.SHIFT_NM            
 	</select>
 	
-	 <select id="get_customBtnA1_proc" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL mom_master_info_pkg.xumd4040_wg_copy_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
-				                                         , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
-				                                         , #{companyCd,  jdbcType=VARCHAR , mode=IN}
-				                                         , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-				                                         , #{startDate,  jdbcType=VARCHAR, mode=IN}
-				                                         , #{endDate,    jdbcType=VARCHAR, mode=IN}
-				                                         , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
-				                                         , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WC_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
-				                                         , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
+	 <select id="proc_customBtnA2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL xumd4040_wg_copy_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{toWorkGroupCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
       </select>  
   <insert id="create_defaultInfo1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 

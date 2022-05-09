@@ -33,6 +33,14 @@ public class MomServiceImpl implements MomService {
 		return FrameworkUtil.getMapList(result, query);
 	}
 
+	public List<Map<String, Object>> procMapList(String query, List<Map<String,Object>> param) {
+		PrintUtil.print("MomService", "createMapList", "#", "$", "query", query, true, false, false, false);
+		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		       
+       	 List<Map<String,Object>> result = momDao.procMapList(query, param);
+        	   return result;	
+
+	}
 
 	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param) {
 		PrintUtil.print("MomService", "createMapList", "#", "$", "query", query, true, false, false, false);

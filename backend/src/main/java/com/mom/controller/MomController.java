@@ -100,7 +100,13 @@ public class MomController {
 		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		try {
-			result = momService.createMapList(query, param);
+			if(action.equals("P")) {
+				result = momService.procMapList(query, param);
+			}
+			else {
+				result = momService.createMapList(query, param);
+			}
+			
 		}
 		catch (CustomDataAccessException e) {
 			System.out.println(e.getMsg());

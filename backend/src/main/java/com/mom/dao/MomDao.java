@@ -105,7 +105,64 @@ public class MomDao {
 		//PrintUtil.print(null, null, null, "$", PrintUtil.queryString(query, "R", result == null ? 0 : result.size()), null, false, true, true, debugOn);
 		return result;
 	}
+	public List<Map<String,Object>> procMapList(String query, List<Map<String,Object>> param) {
+		PrintUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
+		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		
+		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
+			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+			return FrameworkUtil.createResponseListEmpty();
+		}
+		List<Map<String,Object>> result =  new ArrayList<>();
+	//	Map<String,Object> paramMap = param.get(0);
+		long start = System.currentTimeMillis();
+		try {	
+			
+			//TestInnerResultHandler(result)
+			//result = sqlSession.selectList(query.trim(), param);	
+			//new TestInnerResultHandler(result)
+     
+			// sqlSession.select(query.trim(), paramMap.get(paramMap), new TestInnerResultHandler(result));
+			sqlSession.select(query.trim(), param.get(0), new TestInnerResultHandler(result));
+			//sqlSession.select(query.trim(), param, testInnerResultHandler);
+			 
+			
+			 //result = testInnerResultHandler.returnList;
+			// System.out.println("컴퍼니체크"+result.get(0).toString());
+			 //System.out.println("컴퍼니체크"+result.get(1).get("companyCd"));
+			/*
+			 * for(Map<String,Object> mapList :result) { mapList.put("p_err_code",
+			 * param.get("p_err_code")); mapList.put("p_err_msg", param.get("p_err_msg"));
+			 * System.out.println("맵리스트="+mapList); //result.add(mapList); }
+			 */
+		  	
+				result = param;
+			  
+		   
+			//System.out.println("조회결과="+result);		
+			System.out.println("조회파람="+param);
+			long diff = System.currentTimeMillis() - start;
+			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//System.out.println("#### " + simpleDateFormat.format(today) + " Select " + param.get("companyCd") + ", " + query.substring(query.indexOf("get_")) + " = " + DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			PrintUtil.print(null, null, null, "$", "getMapList : " + PrintUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
+			long diff = System.currentTimeMillis() - start;
+			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//System.out.println("#### FAIL : " + simpleDateFormat.format(today) + " Select " + param.get("companyCd") + ", " + query.substring(query.indexOf("get_")) + " = " + DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
+			
+			return FrameworkUtil.createResponseListEmpty();
+		}
+		finally {			     
+					//sqlSession1.flushStatements();          			        
+		}
+		 
+		//PrintUtil.print(null, null, null, "$", PrintUtil.queryString(query, "R", result == null ? 0 : result.size()), null, false, true, true, debugOn);
+		return result;
+	}	
 	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param)  {
 		ProgressInfo.successCount = 0;
 		PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);

@@ -63,8 +63,7 @@ var VIEW= {
                        
 	    }
 	    else if (index == 1 && btnId =='saveBtnDP'){
-		                var items = param;	
-		                items[0]['arrayParam1']	= [{toWorkCenterCd:items[0]['toWorkGroupCd']}];				
+		                var items = param;				
 					   /* for(var i=0;i<=items.length;i++){
 						
 						   
