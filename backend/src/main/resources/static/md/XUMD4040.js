@@ -59,14 +59,14 @@ var VIEW= {
         		return;
 			}				           				        
 			    items[0]['applyDate'] =  checkedItem[0]['applyDate'];
-			   result.param = items;  
+			    result.param = items;  
                        
 	    }
 	    else if (index == 1 && btnId =='saveBtnDP'){
 		                var items = param;				
-					   /* for(var i=0;i<=items.length;i++){
-						
-						   
+					 /*   for(var i=0;i<=items.length;i++){						
+						    items[0]['toWorkGroupCd'][i]['typeMap']  = items[0]['typeMap'];
+						    items[0]['toWorkGroupCd'][i]['typeList'] =  items[0]['typeList'];
 						     
 					    }*/
 			            result.param = items;

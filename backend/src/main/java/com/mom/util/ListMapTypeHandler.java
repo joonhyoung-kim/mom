@@ -1,5 +1,6 @@
 package com.mom.util;
 import java.sql.Array;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +17,9 @@ import org.apache.ibatis.type.TypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import oracle.jdbc.OracleConnection;
+@Slf4j
 public class ListMapTypeHandler implements TypeHandler<Object> {
 
 	//private static final Logger log = LoggerFactory.getLogger(ListMapTypeHandler.class);
@@ -28,37 +31,48 @@ public class ListMapTypeHandler implements TypeHandler<Object> {
 		   System.out.println("진입1");
 			List<Map> objects = (List<Map>) parameter;
 			Struct [] structs = new Struct[objects.size()];
-		
-			//log.debug("List Size --------> {}",objects.size());
+		    String mapName = "";
+		    String listName = "";
+		    int    exceptNum = 2;
+		   // String mapName = "WG_COPY_PROC_MAP";
+		   // String listName = "WG_COPY_PROC_LIST";
+			log.info("List Size --------> {}",objects.size());
 
 			for (int index = 0; index < objects.size(); index++) {
 				  System.out.println("진입2");
 				Map map = objects.get(index);
 
-				Object[] params = new Object[map.keySet().size()];
+				Object[] params = new Object[map.keySet().size()-exceptNum];
 				Iterator<String> iterator = map.keySet().iterator();
 				int keyIndex = 0;
 				while (iterator.hasNext()) {
 					String key = (String)iterator.next();
-					params[keyIndex] = map.get(key);
-					//log.debug("{}:{}:{} -----> {}",index,keyIndex,key,map.get(key));
+					if(key.equals("typeMap")) {
+						mapName =  map.get(key).toString().trim();
+						
+					}
+					else if(key.equals("typeList")) {
+						listName = 	map.get(key).toString().trim();
+					}
+					else {
+						params[keyIndex] = map.get(key);
+					}
+					
+					log.info("{}:{}:{} -----> {}",index,keyIndex,key,map.get(key));
 					keyIndex++;
 				}
 
-				//log.debug("params -----> {}, length -----> {}",params,params.length);
+				log.info("params -----> {}, length -----> {}",params,params.length);
 
-				structs[index]  = 	ps.getConnection().createStruct("WG_COPY_PROC_MAP",params);
+				structs[index]  = 	ps.getConnection().createStruct(mapName,params);
 			
 			}
-			 System.out.println("진입3");
-			//ArrayDescriptor desc = ArrayDescriptor.createDescriptor("WC_COPY_PROC_LIST",ps.getConnection());
-			//Array array = new ARRAY(desc, ps.getConnection(),structs);
+	
+			Array array = ps.getConnection().unwrap(OracleConnection.class).createOracleArray(listName, structs);
+			
 		
-			Array array = ps.getConnection().unwrap(OracleConnection.class).createOracleArray("WG_COPY_PROC_LIST", structs);
-			System.out.println("진입4");
-			System.out.println("최종파람="+array);
 			ps.setArray(i, array);
-			System.out.println("진입5");
+	
 			}
 
 	@Override

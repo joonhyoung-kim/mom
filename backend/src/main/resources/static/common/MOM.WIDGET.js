@@ -3010,13 +3010,50 @@ var momWidget = {
 		
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
 				var buttonId   = $('#defaultPop'+(index+1)).attr('btnId');
+				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnIndex');;
 				var queryId = that.pageProperty[index]['menuId']+'.defaultInfo'+(index+1);
-				
+				var buttonParam = [];
+				var extraParam = {};
 			
 				if(actionType == 'P'){
 					queryId = that.pageProperty[index]['menuId']+'.'+buttonId+(index+1);
 				}
-				param = that.getPopupParam(index,your);
+				
+					
+				if(btnIndex != undefined && btnIndex != ''){
+					for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
+					if(that.buttonProperty[btnIndex][i]['buttonId']==buttonId){
+						buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
+						break;
+					}
+				}
+				for(var j=0,max2=buttonParam.length;j<max2;j++){
+						if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
+					
+						extraParam['typeMap'] = buttonParam[j]['typeMap'];
+						extraParam['typeList'] = buttonParam[j]['typeList'];
+					}
+						
+					
+					
+				}
+					param = buttonParam.map(function(item1){
+			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
+		        return item2;
+		    })
+		    $.extend(item1, obj);               
+			    return item1;
+			});
+				
+				}
+				else{
+					param = that.getPopupParam(index,your,extraParam);
+				}
+			
+		    
+		    
+		    
+		
 				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
@@ -3043,6 +3080,23 @@ var momWidget = {
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
 				             return;
+						} 
+					}
+					else if (actionType == 'P'  && that.popupProperty[index][i]['columnRequire']=='Y'){
+						    if(that.popupProperty[index][i]['popupType'] =='M'){
+							  if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						} else{
+							
+						
+						      if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() ==''){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						}
 						} 
 					}
 					else{
@@ -3237,7 +3291,7 @@ var momWidget = {
 		});
 	},
 	// 팝업 파라미터 가져오기
-	getPopupParam: function(index, your) {
+	getPopupParam: function(index, your,extraParam) {
 		  var that = this;
 		  var param = {};
 		  var popupId =  '';
@@ -3253,7 +3307,9 @@ var momWidget = {
 				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
 				for(var j=0;j<checkedItem.length;j++){
 					 mapItem[popupId] = checkedItem[j]['value'];
-					listItem[j] = JSON.parse(JSON.stringify(mapItem));
+					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
+					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
+					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
 			
 				}
 			
@@ -3700,11 +3756,15 @@ var momWidget = {
 				var callbackData = [];	
 				var actionType   = '';	
 				var customIndex = 0;
+				var buttonParam = [];
+				
 				for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']+(index+1)== btnId){
 						actionType  = that.buttonProperty[index][i]['eventType'] == 'P' ? 'P':that.buttonProperty[index][i]['eventType'];
 						customIndex = Number(that.buttonProperty[index][i]['popupGridId'])-1;
+						buttonParam = JSON.parse(that.buttonProperty[index][i]['buttonParameter'].replace(/\'/gi, '"'));
 						$('#defaultPop'+(customIndex+1)).attr('btnId', that.buttonProperty[index][i]['buttonId']);
+						$('#defaultPop'+(customIndex+1)).attr('btnIndex', index);
 						break;
 					}
 				}	
@@ -3713,7 +3773,7 @@ var momWidget = {
 				that.setPopup(customIndex,actionType);	
 				$('#defaultPop'+(customIndex+1)).attr('actionType', actionType);
 			
-				 callInitResult = that.checkActionCallInit(customIndex, actionType, [], 'createBtn', your);
+				 callInitResult = that.checkActionCallInit(customIndex, actionType, buttonParam, 'createBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -3730,7 +3790,7 @@ var momWidget = {
 				 //that.popUpSizeSet(index);			
 			
 				 callbackData   = AUIGrid.getGridData(that.grid[index]);
-				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
+				 callBackResult = that.checkActionCallBack(index, actionType, buttonParam, 'createBtn', your,callbackData);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
