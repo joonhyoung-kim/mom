@@ -674,6 +674,10 @@ var XUSM3030 = {
 				  dataField 	: 'defaultValue' 
 				, headerText 	: '초기값'	
 				, style			: 'my-column-style-edit3'
+			    , headerTooltip : { 
+				  show : true,
+				  tooltipHtml : '<div style="width:300px;"><p>초기값 지정(디폴트는 입력값)</p><p>CHECK_ALL : 콤보박스-멀티 인경우에 전체체크</P><P>INDEX+N: 싱글/멀티 콤보박스에서 지정 인덱스 선택</p></div>'
+		        }
 			},		
 			{
 				  dataField 	: 'dropdownId' 
@@ -1149,11 +1153,19 @@ var XUSM3030 = {
 				, headerText 	: '그리드ID(팝업)'
 				, width			:  150
 				, style			: 'my-column-style-edit2'	
+				, headerTooltip : { 
+				  show : true,
+				  tooltipHtml : '<div style="width:250px;"><p>커스텀팝업 연결시에 사용(연결할 팝업 그리드ID 입력)</p></div>'
+		        }
 			},
 		    {
 				  dataField 	: 'buttonParameter' 
 				, headerText 	: '파라미터'
 				, style			: 'my-column-style-edit'	
+				, headerTooltip : { 
+				  show : true,
+				  tooltipHtml : "<div style='width:300px;'><p>버튼 이벤트시 별도로 담고싶은 파라미터 세팅</p><p>예시: [{'key1':'value1','key2':'value2'}]</P></div>"
+		        }
 			},
 		
 			{
@@ -1170,6 +1182,10 @@ var XUSM3030 = {
 				  dataField 	: 'checkType' 
 				, headerText 	: '파라미터대상'
 				, style			: 'my-column-style-edit'	
+				, headerTooltip : { 
+				  show : true,
+				  tooltipHtml : '<div style="width:300px;"><p>버튼 이벤트시 자동으로 세팅할 파라미터</p><p>GRID_CHECK : 그리드에서 체크된 레코드</P><P>GRID_SELECT: 그리드에서 선택된 레코드</p><P>GRID_ALL: 그리드 전체</p></div>'
+		        }
 			}];
 
 			var gridProperty = {

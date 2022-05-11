@@ -87,33 +87,27 @@
         </foreach>
        </where>
    </delete>
-   <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
-	    MERGE INTO MOM_PROGRAM MP
+    <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
+	    MERGE INTO MOM_PLANT MP
 	    USING (
 	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
-	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
-	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
-	                              TRIM(#{item.programId, jdbcType=VARCHAR})                                                                    as programId,
-					              #{item.programNm, jdbcType=VARCHAR}           															   as programNm,
-					              TRIM(#{item.programType, jdbcType=VARCHAR})    															   as programType,
-					              TRIM(#{item.templateId, jdbcType=INTEGER})     															   as templateId,
-					              TRIM(#{item.logYn, jdbcType=VARCHAR})          															   as logYn,
-					              TRIM(#{item.useYn, jdbcType=VARCHAR})         															   as useYn,
-					              TRIM(#{item.description, jdbcType=VARCHAR})    															   as description,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as createBy,
+	             SELECT           #{item.companyCd, jdbcType=VARCHAR}                              									           as companyCd,                                              					  
+	                              #{item.divisionCd, jdbcType=VARCHAR}															               as divisionCd,                                 						       
+	                              #{item.plantCd, jdbcType=VARCHAR}                                                                            as plantCd,
+					              #{item.plantNm, jdbcType=VARCHAR}           															       as plantNm,
+					              #{item.useYn, jdbcType=VARCHAR}         															           as useYn,
+					              #{item.description, jdbcType=VARCHAR}    															           as description,
+					              #{item.userId, jdbcType=VARCHAR}         														           	   as createBy,
 					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
 					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as updateBy,
 					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
 	             FROM DUAL
 	        </foreach>
 	    ) PARAM 
-	    ON (  PROGRAM_ID    = PARAM.programId  )
+	    ON (      PLANT_CD       = PARAM.plantCd  )
 	    WHEN MATCHED THEN
 	    UPDATE
-	    SET		  PROGRAM_NM     = PARAM.programNm
-                , PROGRAM_TYPE   = PARAM.programType
-                , TEMPLATE_ID    = PARAM.templateId
-                , LOG_YN         = PARAM.logYn
+	    SET		  PLANT_NM       = PARAM.plantNm
 		        , USE_YN 		 = PARAM.useYn
  		        , DESCRIPTION    = PARAM.description
 		        , UPDATE_BY      = PARAM.updateBy
@@ -121,24 +115,22 @@
 			    	       
 	    WHEN NOT MATCHED THEN
 		INSERT ( 
-			      PROGRAM_ID
-		        , PROGRAM_NM
-		        , PROGRAM_TYPE
-		        , TEMPLATE_ID
-		        , LOG_YN
-		        , USE_YN
-		        , DESCRIPTION
-		        , CREATE_BY
-		        , CREATE_DATE
-		        , UPDATE_BY
-		        , UPDATE_DATE
+			      COMPANY_CD
+				, DIVISION_CD
+				, PLANT_CD
+				, PLANT_NM
+				, USE_YN
+				, DESCRIPTION
+				, CREATE_BY
+				, CREATE_DATE
+				, UPDATE_BY
+				, UPDATE_DATE
 	    )   
 	    VALUES (
-                 PARAM.programId
-			   , PARAM.programNm
-			   , PARAM.programType
-	           , PARAM.templateId
-	           , PARAM.logYn
+                 PARAM.companyCd
+			   , PARAM.divisionCd
+			   , PARAM.plantCd
+	           , PARAM.plantNm
 	           , PARAM.useYn
 	           , PARAM.description
 			   , PARAM.createBy

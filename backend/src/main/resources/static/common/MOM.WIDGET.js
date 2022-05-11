@@ -698,8 +698,16 @@ var momWidget = {
 				        }
 				        else{
 				        	if(searchType == 'M'){
-				        		$('#'+searchId).jqxComboBox({source: data});
-				        		$('#'+searchId).val(defaultValue); 
+				        		$('#'+searchId).jqxComboBox({source: data});	
+				        	if(defaultValue == 'CHECK_ALL'){
+								$('#'+searchId).jqxComboBox('checkAll'); 
+							}
+							else{
+								$('#'+searchId).jqxComboBox('checkIndex', 0); 
+							}				        
+								
+							          
+				        		//$('#'+searchId).val(defaultValue); 
 				        	}
 				        	else{
 				        		$('#'+searchId).jqxComboBox({source: data}); 
@@ -2680,14 +2688,13 @@ var momWidget = {
 				$('#excelUpGrid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
 				});
 				
-				$(document).on('click','#'+exUpCheckBtnId, function() {
-					
+				$(document).on('click','#'+exUpCheckBtnId, function() {					
 					if(your != undefined && your['exUpCheckCallInit'] != undefined) {
 						your.exUpCheckCallInit(index, your);
 					}	
 				 var excelUpGridCount = AUIGrid.getColumnLayout('#excelUpGrid1').length;
-	 for(var i=0;i<excelUpGridCount;i++){
-		 AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 		    	
+				 for(var i=0;i<excelUpGridCount;i++){
+				 AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 		    	
 						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if(dataField =='programId' && (value=='T2' || value=='T141' )){
 								//AUIGrid.showToastMessage(that.excelUpGrid[index], rowIndex, columnIndex, "Y/N만 입력가능!");
@@ -3010,7 +3017,8 @@ var momWidget = {
 		
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
 				var buttonId   = $('#defaultPop'+(index+1)).attr('btnId');
-				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnIndex');;
+				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
+				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
 				var queryId = that.pageProperty[index]['menuId']+'.defaultInfo'+(index+1);
 				var buttonParam = [];
 				var extraParam = {};
@@ -3020,7 +3028,7 @@ var momWidget = {
 				}
 				
 					
-				if(btnIndex != undefined && btnIndex != ''){
+				if(btnIndex != undefined && btnPopYn == 'Y'){
 					for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
 					if(that.buttonProperty[btnIndex][i]['buttonId']==buttonId){
 						buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
@@ -3130,7 +3138,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(index, initParam, true, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
+			        	  momWidget.findBtnClicked(btnIndex, initParam, true, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
 			        	  $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
@@ -3757,12 +3765,17 @@ var momWidget = {
 				var actionType   = '';	
 				var customIndex = 0;
 				var buttonParam = [];
-				
+				var param = [];
+
 				for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']+(index+1)== btnId){
 						actionType  = that.buttonProperty[index][i]['eventType'] == 'P' ? 'P':that.buttonProperty[index][i]['eventType'];
 						customIndex = Number(that.buttonProperty[index][i]['popupGridId'])-1;
-						buttonParam = JSON.parse(that.buttonProperty[index][i]['buttonParameter'].replace(/\'/gi, '"'));
+						if(that.buttonProperty[index][i]['buttonParameter'] != undefined && that.buttonProperty[index][i]['buttonParameter'] != ''){
+							buttonParam = JSON.parse(that.buttonProperty[index][i]['buttonParameter'].replace(/\'/gi, '"'));
+						    param = buttonParam;
+						}
+						
 						$('#defaultPop'+(customIndex+1)).attr('btnId', that.buttonProperty[index][i]['buttonId']);
 						$('#defaultPop'+(customIndex+1)).attr('btnIndex', index);
 						break;
@@ -3770,10 +3783,10 @@ var momWidget = {
 				}	
 				
 			
-				that.setPopup(customIndex,actionType);	
-				$('#defaultPop'+(customIndex+1)).attr('actionType', actionType);
-			
-				 callInitResult = that.checkActionCallInit(customIndex, actionType, buttonParam, 'createBtn', your);
+				 that.setPopup(customIndex,actionType);	
+				 $('#defaultPop'+(customIndex+1)).attr('actionType', actionType);
+			 
+				 callInitResult = that.checkActionCallInit(customIndex, actionType, param, 'createBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -3901,6 +3914,9 @@ var momWidget = {
 							          if(defaultValue=='NULL'){
 								           defaultValue='';
 								           that.popupProperty[index][i]['defaultValue'] = '';
+							          }
+							          if(popupType =='M'){
+								             $('#'+popupId).jqxComboBox('checkIndex', 0); 
 							          }
 							          else{
 											 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
@@ -4150,6 +4166,8 @@ var momWidget = {
 						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
 						}
 						else{ // 텍스트
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
@@ -4165,6 +4183,8 @@ var momWidget = {
 						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
 						}
 						else{ // 텍스트
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
