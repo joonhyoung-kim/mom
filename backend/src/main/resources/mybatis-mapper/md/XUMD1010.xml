@@ -87,11 +87,10 @@
         </foreach>
        </where>
    </delete>
-    <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
-	    MERGE INTO MOM_PLANT MP
-	    USING (
-	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
-	             SELECT           #{item.companyCd, jdbcType=VARCHAR}                              									           as companyCd,                                              					  
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
+	  MERGE INTO MOM_PLANT MP
+	        USING ( <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
+	                   SELECT     #{item.companyCd, jdbcType=VARCHAR}                              									           as companyCd,                                              					  
 	                              #{item.divisionCd, jdbcType=VARCHAR}															               as divisionCd,                                 						       
 	                              #{item.plantCd, jdbcType=VARCHAR}                                                                            as plantCd,
 					              #{item.plantNm, jdbcType=VARCHAR}           															       as plantNm,
@@ -101,42 +100,39 @@
 					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
 					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as updateBy,
 					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
-	             FROM DUAL
-	        </foreach>
-	    ) PARAM 
-	    ON (      PLANT_CD       = PARAM.plantCd  )
-	    WHEN MATCHED THEN
-	    UPDATE
-	    SET		  PLANT_NM       = PARAM.plantNm
-		        , USE_YN 		 = PARAM.useYn
- 		        , DESCRIPTION    = PARAM.description
-		        , UPDATE_BY      = PARAM.updateBy
-		        , UPDATE_DATE    = PARAM.updateDate
+	                   FROM DUAL
+	                </foreach>
+	              ) PARAM 
+	        ON ( COMPANY_CD = PARAM.companyCd AND 
+	             DIVISION_CD = PARAM.divisionCd AND
+	             PLANT_CD = PARAM.plantCd )
+	        WHEN MATCHED THEN
+	             UPDATE SET PLANT_NM       = PARAM.plantNm
+				          , USE_YN 	       = PARAM.useYn
+		 		          , DESCRIPTION    = PARAM.description
+				          , UPDATE_BY      = PARAM.updateBy
+				          , UPDATE_DATE    = PARAM.updateDate
 			    	       
-	    WHEN NOT MATCHED THEN
-		INSERT ( 
-			      COMPANY_CD
-				, DIVISION_CD
-				, PLANT_CD
-				, PLANT_NM
-				, USE_YN
-				, DESCRIPTION
-				, CREATE_BY
-				, CREATE_DATE
-				, UPDATE_BY
-				, UPDATE_DATE
-	    )   
-	    VALUES (
-                 PARAM.companyCd
-			   , PARAM.divisionCd
-			   , PARAM.plantCd
-	           , PARAM.plantNm
-	           , PARAM.useYn
-	           , PARAM.description
-			   , PARAM.createBy
-			   , PARAM.createDate
-			   , PARAM.updateBy
-			   , PARAM.updateDate
-	    )	 
-	</insert>
+	        WHEN NOT MATCHED THEN
+		         INSERT ( COMPANY_CD
+						, DIVISION_CD
+						, PLANT_CD
+						, PLANT_NM
+						, USE_YN
+						, DESCRIPTION
+						, CREATE_BY
+						, CREATE_DATE
+						, UPDATE_BY
+						, UPDATE_DATE )   
+	             VALUES ( PARAM.companyCd
+						, PARAM.divisionCd
+						, PARAM.plantCd
+				        , PARAM.plantNm
+				        , PARAM.useYn
+				        , PARAM.description
+				      	, PARAM.createBy
+				   		, PARAM.createDate
+						, PARAM.updateBy
+						, PARAM.updateDate )	 
+  </insert>
 </mapper>

@@ -3202,6 +3202,7 @@ border-color: #d8dce3 !important;
      border: 1px solid darkgrey;
      position:relative;
      top:0.5rem;
+     
 }
 input:focus{
 	outline:none;
@@ -3592,6 +3593,32 @@ input:focus{
 	background-color: #f8f9fa;
 	font-family: "Malgun Gothic", sans-serif;
 	height: 52%;
+}
+
+.btn-info-main:active {
+    color: #fff;
+    background: #1170e4;
+    border-color: #3988e8;
+    color: #272b2c !important;
+    border-color: #85858a !important;
+    position:relative !important;
+    background: #d5d5d5 !important;
+}
+.searchInputField-main {
+    display: inline-block;
+    width: 16rem;
+    height: 2.9rem;
+    font-family: "Malgun Gothic", sans-serif;
+    font-size: 1.3rem;
+    line-height: 1rem;
+    float: left;
+    border-radius: 0.5rem;
+    /* background-color: #fff !important; */
+    font-size: 1.14rem !important;
+    background-clip: padding-box !important;
+    /* color: #4d5875 !important; */
+    border: 1px solid #c7c7c7 !important;
+    padding-left: 0.5rem !important;
 }
 .btn-cancel.danger{
     background-color: #e62a45;
@@ -6143,6 +6170,35 @@ input:focus{
     color: black;
     border: 1px solid #7f8185;
     padding-top: 0.4rem ;
+}
+.btn-main {
+    position: relative;
+    margin-left: 0.4rem;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 1.12rem;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    /* border: 1px solid transparent; */
+    border-radius: 4px;
+    background: #d8dce3;
+    color: black;
+    border: 1px solid #a1a1a3;
+    width: 2.8rem;
+    /* padding-top: 6rem; */
+    padding-left: 0.75rem;
+    /* margin-top: 1rem; */
+    /* top: -1rem; */
 }
 .btn:visited {
 	background:red !important;

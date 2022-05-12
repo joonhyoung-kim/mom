@@ -238,7 +238,8 @@ var Login = {
 	},
 	showVaildationMessage: function(typeCode,message) {
 		if(typeCode == 'D'){
-			  momWidget.messageBox({type:'danger', width:'400', height: '145', html: message});
+			  momWidget.messageBox({type:'danger', width:'400', height: '240', html: message});
+			  
 			  momWidget.splashHide();
 		      return;
 		}

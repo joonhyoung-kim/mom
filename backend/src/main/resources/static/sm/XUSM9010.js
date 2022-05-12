@@ -8,7 +8,7 @@ var XUSM9010 = {
 		var that = this;	
 		$('#grid1').remove();
 		var textareaHtml = '<textarea id = "xmlText" name="opinion" cols="264" rows="42"></textarea>';
-		var comboData = [{"code":"R","label":"SELECT"},{"code":"C","label":"INSERT"},{"code":"U","label":"UPDATE"},{"code":"D","label":"DELETE"}];
+		var comboData = [{"code":"R","label":"SELECT"},{"code":"C","label":"INSERT"},{"code":"CU","label":"UPSERT"},{"code":"U","label":"UPDATE"},{"code":"D","label":"DELETE"}];
 		$('.grid-box1').prepend(textareaHtml);
 		$('#eventType').jqxComboBox("clear");	
 		$('#eventType').jqxComboBox('source',comboData);	
@@ -90,10 +90,85 @@ var XUSM9010 = {
 			  }
 			
 		    }
+		     else if(eventType == 'CU'){
+			  var pkItem = [];
+			  for(var j=0;j<columnItem.length;j++){			
+				  if(columnItem[j]['isPk']=='Y'){
+					  pkItem.push(columnItem[j]);
+				  }
+			  }
+			  xmlHtml += '  <insert id="upsert_defaultInfo1" parameterType="java.util.List">\n      MERGE INTO '+$('#tableId').val()+' \n            USING('+' <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">\n                     SELECT' ;
+			    for(var i=0;i<columnItem.length;i++){	
+					if(columnItem[i]['dataType'] == 'VARCHAR' || columnItem[i]['dataType'] == 'VARCHAR2'){
+							jdbcType = 'VARCHAR';
+						}
+						else if(columnItem[i]['dataType'] == 'NUMBER'){
+							jdbcType = 'NUMERIC';
+						}
+						else{
+							jdbcType = 'VARCHAR';
+						}
+						 if(columnItem[i]['dataType'] == 'DATE'){
+						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as '+columnItem[i]['columnName2']+'\n' +'                           ';
+					     }
+					     else{
+						        if(columnItem[i]['columnName2']=='createBy' || columnItem[i]['columnName2']=='updateBy'){
+							             xmlHtml += ' #{item.'+userId+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+'\n' +'                           ';
+						            }
+						            else{
+							               xmlHtml += ' #{item.'+columnItem[i]['columnName2']+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+'\n' +'                           ';
+						            }
+						           
+					     }
+					     if(i == columnItem.length-1){
+						   xmlHtml += '\n' + '                     FROM DUAL'+'\n'+'                   </foreach>'+' ) PARAM'+'\n';
+					}
+						
+			  }
+			  xmlHtml +=  '            ON ( ';
+			    for(var k=0;k<pkItem.length;k++){								
+					if(k == pkItem.length-1){
+						xmlHtml += pkItem[k]['columnName']+' = #{item.'+pkItem[k]['columnName2']+', jdbcType=VARCHAR}'+' )\n            WHEN MATCHED THEN '+'\n';
+				     }											
+					else{
+						xmlHtml += pkItem[k]['columnName']+' = #{item.'+pkItem[k]['columnName2'] +', jdbcType=VARCHAR} AND'+'\n                 ';
+					}
+					 
+				}
+				xmlHtml += '                 UPDATE SET ';
+				for(var g=0;g<columnItem.length;g++){
+					if(columnItem[g]['isPk']=='N'){
+						if(g == columnItem.length-1){
+							xmlHtml += columnItem[g]['columnName'] + ' = PARAM.'+columnItem[g]['columnName2'] +'\n'+'            WHEN NOT MATCHED THEN'+'\n';
+						}
+					    else{  
+								xmlHtml += columnItem[g]['columnName'] + ' = PARAM.'+columnItem[g]['columnName2'] +'\n'+'                          , ';
+					    }
+					}
+				
+						
+						
+					
+					}
+					
+				xmlHtml += '                     INSERT ( ';
+				for(var h=0;h<columnItem.length;h++){
+					if(h == columnItem.length-1){
+						  xmlHtml += columnItem[h]['columnName']+' )'+'\n' +'  </insert>';
+					}
+					else{
+						  xmlHtml += columnItem[h]['columnName']+'\n'+'                          , ';
+					}
+					
+					
+				}
+				
+			
+		    }
 			else if(eventType == 'U'){
 			  xmlHtml += '  <update id="modify_defaultInfo1" parameterType="java.util.List">\n    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">\n      UPDATE '+$('#tableId').val()+'\n'+'      SET    ';
 			    for(var i=0;i<columnItem.length;i++){	
-				     if(columnItem[i]['columnName']=='CREATE_BY' || columnItem[i]['columnName']=='CREATE_DATE'){
+				     if(columnItem[i]['columnName']=='CREATE_BY' || columnItem[i]['columnName']=='CREATE_DATE' || columnItem[i]['isPk']=='Y'){
 					         continue;
  				      }
 					if(columnItem[i]['dataType'] == 'VARCHAR' || columnItem[i]['dataType'] == 'VARCHAR2'){

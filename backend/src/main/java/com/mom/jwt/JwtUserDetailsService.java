@@ -46,7 +46,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 			
 		}
 		else {
-			   resultMap = momDao.getMapList("com.mom.XUSM1010.get_userInfo", paramMap).get(0); // 로그인 결과 담기
+			
+			if(momDao.getMapList("com.mom.XUSM1010.get_userInfo", paramMap).size()== 0) {
+				throw new UsernameNotFoundException("User not found with username: " + clientId);	
+			}
+			else {
+				 resultMap = momDao.getMapList("com.mom.XUSM1010.get_userInfo", paramMap).get(0); // 로그인 결과 담기
+			}
+			 
+			  
 		}
 			System.out.println("pw결과=" + resultMap.get("password"));
 			if (resultMap.get("password") != null) {

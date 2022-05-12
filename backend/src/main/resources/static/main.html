@@ -61,6 +61,7 @@
 <script src='/mom/content/jqwidgets/jqxtree.js'></script>
 <script src='/mom/content/jqwidgets/jqxpanel.js'></script>
 <script src="/mom/content/jqwidgets/jqxnotification.js"></script>
+<link rel='stylesheet' type='text/css'href='/mom/content/jqwidgets/styles/jqx.base.css' />
 <!--  sash -->
 <script src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/js/custom.js"></script>
 <script src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/js/sticky.js"></script>
@@ -93,6 +94,8 @@
 <script src="/mom/content/js/regional.js"></script>
 <script type="text/javascript" src="/mom/common/MOM.COMMON.js"></script>
 <script type="text/javascript" src="/mom/common/MOM.LANG.js"></script>
+
+
 
 <!-- XMOM -->
 <script type="text/javascript" src="/mom/common/MOM.WIDGET.js"></script>
@@ -1254,12 +1257,19 @@ to {
 								class="header-brand-img light-logo1" alt="logo">
 							</a>
 							<!-- LOGO -->
-						 <div class="main-header-center ms-3 d-none d-lg-block main-search-field">
+						<!--  <div class="main-header-center ms-3 d-none d-lg-block main-search-field">
 						  <input id = "main-search" class="form-control main-search" placeholder="" type="text"></input>
 						   <button id = "main-search-btn" class="btn main-search btn-primary px-0 pt-2">
 						    <i class="fe fe-search" aria-hidden="true">
 							</i>
 						   </button> 
+						 </div> -->
+						 
+						  <div class="main-header-center ms-3 d-none d-lg-block main-search-field">
+						   <input maxlength="256"  id = "main-search"  type="text" type="text" class="w-input searchInputField-main" date-format="date"></input>
+						<!--   <select id = "main-search" class="searchSelectField"></select> -->
+						
+					     <button type="button" style="margin-right: 1rem;" class="btn-main search " id="main-search-btn"><i class="fe fe-search me-2"></i></button>
 						 </div>
 							<div class="d-flex order-lg-2 ms-auto header-right-icons" style="margin-top: 0.8rem !important;">
 						<!-- 	<div class="dropdown">

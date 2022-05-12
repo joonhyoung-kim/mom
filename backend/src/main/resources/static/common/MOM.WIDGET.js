@@ -703,7 +703,7 @@ var momWidget = {
 								$('#'+searchId).jqxComboBox('checkAll'); 
 							}
 							else{
-								$('#'+searchId).jqxComboBox('checkIndex', 0); 
+								//$('#'+searchId).jqxComboBox('checkIndex', 0); 
 							}				        
 								
 							          
@@ -2941,6 +2941,9 @@ var momWidget = {
 				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
 				$('#popupTitle'+(index+1)).text('');
 				$('#popupTitle'+(index+1)).append(popupTitle+multiLang.transText('MESSAGE','MSG0010'));	
+				if($('#changePwBtn'+(index+1)).length){
+					 $('#changePwBtn'+(index+1)).css('display','none');
+				}	
 				$('#' +'defaultPop'+(index+1)).momModal('show');
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);				

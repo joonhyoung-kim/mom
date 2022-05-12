@@ -120,64 +120,43 @@
        </foreach>
       </where>
   </delete>
-   <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
-	    MERGE INTO MOM_PROGRAM MP
-	    USING (
-	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
-	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
-	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
-	                              TRIM(#{item.programId, jdbcType=VARCHAR})                                                                    as programId,
-					              #{item.programNm, jdbcType=VARCHAR}           															   as programNm,
-					              TRIM(#{item.programType, jdbcType=VARCHAR})    															   as programType,
-					              TRIM(#{item.templateId, jdbcType=INTEGER})     															   as templateId,
-					              TRIM(#{item.logYn, jdbcType=VARCHAR})          															   as logYn,
-					              TRIM(#{item.useYn, jdbcType=VARCHAR})         															   as useYn,
-					              TRIM(#{item.description, jdbcType=VARCHAR})    															   as description,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as createBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as updateBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
-	             FROM DUAL
-	        </foreach>
-	    ) PARAM 
-	    ON (  PROGRAM_ID    = PARAM.programId  )
-	    WHEN MATCHED THEN
-	    UPDATE
-	    SET		  PROGRAM_NM     = PARAM.programNm
-                , PROGRAM_TYPE   = PARAM.programType
-                , TEMPLATE_ID    = PARAM.templateId
-                , LOG_YN         = PARAM.logYn
-		        , USE_YN 		 = PARAM.useYn
- 		        , DESCRIPTION    = PARAM.description
-		        , UPDATE_BY      = PARAM.updateBy
-		        , UPDATE_DATE    = PARAM.updateDate
-			    	       
-	    WHEN NOT MATCHED THEN
-		INSERT ( 
-			      PROGRAM_ID
-		        , PROGRAM_NM
-		        , PROGRAM_TYPE
-		        , TEMPLATE_ID
-		        , LOG_YN
-		        , USE_YN
-		        , DESCRIPTION
-		        , CREATE_BY
-		        , CREATE_DATE
-		        , UPDATE_BY
-		        , UPDATE_DATE
-	    )   
-	    VALUES (
-                 PARAM.programId
-			   , PARAM.programNm
-			   , PARAM.programType
-	           , PARAM.templateId
-	           , PARAM.logYn
-	           , PARAM.useYn
-	           , PARAM.description
-			   , PARAM.createBy
-			   , PARAM.createDate
-			   , PARAM.updateBy
-			   , PARAM.updateDate
-	    )	 
-	</insert>
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_PLANT 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd
+                            #{item.plantCd, jdbcType=VARCHAR} as plantCd
+                            #{item.plantNm, jdbcType=VARCHAR} as plantNm
+                            #{item.useYn, jdbcType=VARCHAR} as useYn
+                            #{item.description, jdbcType=VARCHAR} as description
+                            #{item.userId, jdbcType=VARCHAR} as createBy
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate
+                            #{item.userId, jdbcType=VARCHAR} as updateBy
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                           
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR} AND
+                 DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR} AND
+                 PLANT_CD = #{item.plantCd, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN 
+                 UPDATE SET PLANT_NM = PARAM.plantNm
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                                   , CREATE_BY = PARAM.createBy
+                                   , CREATE_DATE = PARAM.createDate
+                                   , UPDATE_BY = PARAM.updateBy
+                                   , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                                                        , PLANT_CD
+                                                        , PLANT_NM
+                                                        , USE_YN
+                                                        , DESCRIPTION
+                                                        , CREATE_BY
+                                                        , CREATE_DATE
+                                                        , UPDATE_BY
+                                                        , UPDATE_DATE )
+  </insert>
 </mapper>

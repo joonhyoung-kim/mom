@@ -126,9 +126,8 @@
 	                                                       , MAM.DIVISION_CD
 	                                                       , #{langCd, jdbcType=VARCHAR} 
 	                                                       , 'MENU' 	                                                                           
-	                                                       , MAM.MENU_ID) 
-	          FROM  DUAL ),MAM.MENU_NM )AS LABEL                                       
-      
+	                                                       , MAM.PARENT_MENU_ID)
+           FROM  DUAL ),MAM.MENU_NM ) || '-' || MENU_NM AS LABEL                                             
 		   FROM   MOM_AUTH_MENU_V MAM
 		   WHERE  MAM.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
 		   AND    MAM.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR} 
