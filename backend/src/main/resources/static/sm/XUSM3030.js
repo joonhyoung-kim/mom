@@ -592,7 +592,7 @@ var XUSM3030 = {
 			, 'enableDragByCellDrag' : true
 			// 드랍 가능 여부 (기본값 : true)
 			, 'enableDrop' : true
-			/*, fixedColumnCount : 2*/
+			, fixedColumnCount : 2
 		};
 		 columnProp = data;
 		 AUIGrid.destroy('#grid1', columnProperty, gridProperty);

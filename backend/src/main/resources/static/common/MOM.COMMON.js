@@ -139,6 +139,7 @@ leftMenuAuth: function(el,params) {
 			    '</a>'+
 			   '</li>';
 		
+		
 			   for(var i=0;i<dataset.length;i++){
 				    if(dataset[i]['child'] != undefined){
 					 leftMenuTopLv1 += '<li class="slide">'+
@@ -1763,7 +1764,7 @@ function excelUploadGrid(file, grid) {
         for(var i = 0; i < grid_column_origin.length; i++) {
     		var key = grid_column_origin[i].headerText;
         	var value = grid_column_origin[i].dataField;
-        	var format = grid_column_origin[i].formatString == undefined ? "VARCHAR" : grid_column_origin[i].formatString;
+        	var format = grid_column_origin[i].dataType == undefined ? "string" : grid_column_origin[i].dataType;
         	headerInfo[key] = value;
             columnInfo[key] = format;
 
@@ -1772,8 +1773,14 @@ function excelUploadGrid(file, grid) {
         for(var i = 0; i < excelData.length; i++) {
         	for(var key in excelData[i]) {
         		if(headerInfo[key] != undefined) {
-        			if(columnInfo[key] != "VARCHAR"){
-        				excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
+        			if(columnInfo[key] == "string"){
+	                    if(isNaN(excelData[i][key])==false){
+		                        excelData[i][key] = excelData[i][key]+''.replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
+	                   }
+	                   else{
+								excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
+	                   }
+        				
         			}
         			excelData[i][headerInfo[key]] = excelData[i][key];
         			excelData[i]['NEW'] = 'Y';			

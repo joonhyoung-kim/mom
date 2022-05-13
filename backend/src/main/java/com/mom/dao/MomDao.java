@@ -63,7 +63,8 @@ public class MomDao {
 			//result = sqlSession.selectList(query.trim(), param);	
 			//new TestInnerResultHandler(result)
 
-			 sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
+			 //sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
+			 result = sqlSession.selectList(query.trim(), param);
 			//sqlSession.select(query.trim(), param, testInnerResultHandler);
 			 
 			

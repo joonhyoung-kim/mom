@@ -108,30 +108,49 @@ var XUSM9010 = {
 						else{
 							jdbcType = 'VARCHAR';
 						}
-						 if(columnItem[i]['dataType'] == 'DATE'){
-						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as '+columnItem[i]['columnName2']+'\n' +'                           ';
+						 if(i == columnItem.length-1){
+						  if(columnItem[i]['dataType'] == 'DATE'){
+						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as '+columnItem[i]['columnName2']+'\n' +'                     ';
+						         xmlHtml += 'FROM DUAL'+'\n'+'                   </foreach>'+' ) PARAM'+'\n';
 					     }
 					     else{
 						        if(columnItem[i]['columnName2']=='createBy' || columnItem[i]['columnName2']=='updateBy'){
-							             xmlHtml += ' #{item.'+userId+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+'\n' +'                           ';
+							             xmlHtml += ' #{item.'+userId+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+'\n' +'                     ';
+							             xmlHtml += 'FROM DUAL'+'\n'+'                   </foreach>'+' ) PARAM'+'\n';
 						            }
 						            else{
-							               xmlHtml += ' #{item.'+columnItem[i]['columnName2']+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+'\n' +'                           ';
+							               xmlHtml += ' #{item.'+columnItem[i]['columnName2']+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+'\n' +'                     ';
+							               xmlHtml += 'FROM DUAL'+'\n'+'                   </foreach>'+' ) PARAM'+'\n';
 						            }
 						           
 					     }
-					     if(i == columnItem.length-1){
-						   xmlHtml += '\n' + '                     FROM DUAL'+'\n'+'                   </foreach>'+' ) PARAM'+'\n';
+					   }
+					   else{
+						 if(columnItem[i]['dataType'] == 'DATE'){
+						         xmlHtml += ' MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as '+columnItem[i]['columnName2']+','+'\n' +'                           ';
+					     }
+					     else{
+						        if(columnItem[i]['columnName2']=='createBy' || columnItem[i]['columnName2']=='updateBy'){
+							             xmlHtml += ' #{item.'+userId+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+','+'\n' +'                           ';
+						            }
+						            else{
+							               xmlHtml += ' #{item.'+columnItem[i]['columnName2']+', jdbcType='+jdbcType+'} as '+columnItem[i]['columnName2']+','+'\n' +'                           ';
+						            }
+						           
+					     }
 					}
+						
+					   
+					
 						
 			  }
 			  xmlHtml +=  '            ON ( ';
 			    for(var k=0;k<pkItem.length;k++){								
 					if(k == pkItem.length-1){
-						xmlHtml += pkItem[k]['columnName']+' = #{item.'+pkItem[k]['columnName2']+', jdbcType=VARCHAR}'+' )\n            WHEN MATCHED THEN '+'\n';
+						xmlHtml += pkItem[k]['columnName']+' = PARAM.'+pkItem[k]['columnName2']+' )\n            WHEN MATCHED THEN '+'\n';
 				     }											
 					else{
-						xmlHtml += pkItem[k]['columnName']+' = #{item.'+pkItem[k]['columnName2'] +', jdbcType=VARCHAR} AND'+'\n                 ';
+						xmlHtml += pkItem[k]['columnName']+' = PARAM.'+pkItem[k]['columnName2'] +' AND'+'\n                 ';
 					}
 					 
 				}
@@ -154,15 +173,31 @@ var XUSM9010 = {
 				xmlHtml += '                     INSERT ( ';
 				for(var h=0;h<columnItem.length;h++){
 					if(h == columnItem.length-1){
-						  xmlHtml += columnItem[h]['columnName']+' )'+'\n' +'  </insert>';
+						  xmlHtml += columnItem[h]['columnName']+' )'+'\n';
+					}
+					else if(h==0){
+						 xmlHtml += columnItem[h]['columnName']+'\n'+'                            , ';
 					}
 					else{
-						  xmlHtml += columnItem[h]['columnName']+'\n'+'                          , ';
+						  xmlHtml += columnItem[h]['columnName']+'\n'+'                            , ';
 					}
 					
 					
 				}
-				
+				xmlHtml += '                     VALUES ( ';
+				for(var n=0;n<columnItem.length;n++){
+					if(n == columnItem.length-1){
+						  xmlHtml += 'PARAM.'+columnItem[n]['columnName2']+' )'+'\n' +'  </insert>';
+					}
+					else if(n==0){
+						 xmlHtml += 'PARAM.'+columnItem[n]['columnName2']+'\n'+'                            , ';
+					}
+					else{
+						  xmlHtml += 'PARAM.'+columnItem[n]['columnName2']+'\n'+'                            , ';
+					}
+					
+					
+				}
 			
 		    }
 			else if(eventType == 'U'){

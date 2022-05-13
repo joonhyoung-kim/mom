@@ -16,17 +16,17 @@ var VIEW= {
 	cellClickCallBack: function(index,e) {
 		if(index==0){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
-			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,VIEW,[]);
+			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,VIEW);
 			that.paramTmp = e.item;
 		}
 		else if(index==1){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
-			momWidget.findBtnClicked(2, e.item, true, 'CELLCLICK',menuId,VIEW,[]);
+			momWidget.findBtnClicked(2, e.item, true, 'CELLCLICK',menuId,VIEW);
 			that.paramTmp = e.item;
 		}
 		else if(index==2){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
-			momWidget.findBtnClicked(3, e.item, true, 'CELLCLICK',menuId,VIEW,[]);
+			momWidget.findBtnClicked(3, e.item, true, 'CELLCLICK',menuId,VIEW);
 			that.paramTmp = e.item;
 		}
 	
