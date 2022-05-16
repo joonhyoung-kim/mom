@@ -1678,8 +1678,11 @@ var momWidget = {
 							  }
 							  else if(btnId=='INIT_PAGING' ){
 								var entireItem = [];
+								var tmpItem = data[0];
 								for(var i = 0, max = that.totalRowCount[index]-data.length; i< max; i++){
-									entireItem.push({});
+									tmpItem.keyId = new Date().getTime() + Math.random();
+									entireItem.push(JSON.parse(JSON.stringify(tmpItem)));
+									
 								}
 								
 								    AUIGrid.setGridData(that.grid[index], entireItem);  
@@ -2338,24 +2341,35 @@ var momWidget = {
 	},
 		controlPaging : function(result,data,index,event) {
 			var that = momWidget;
-			var nowPagingNum = Number(event.target.innerHTML); 
-			var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-			var totalCount = that.totalRowCount[index];
-			var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
-			var nowEndPage = nowPagingNum*maxPagingNum;	  
-			var startItem = [];
-			var endItem = [];
-			
-			  for(var i=1,max=nowStartPage; i<max;i++){ 
-					startItem.push({});
+				
+				var nowPagingBtn = event.target.pageNum; 
+				if(nowPagingBtn != undefined && nowPagingBtn =='next') {
+						var nowPagingNum =Number(event.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
+				}
+				else if(nowPagingBtn != undefined && nowPagingBtn =='prev') {
+						var nowPagingNum =Number(event.target.nextSibling.innerHTML);
+				}	
+				else if(nowPagingBtn != undefined && nowPagingBtn =='first') {
+						var nowPagingNum = 1;
+				}				
+				else{
+					var nowPagingNum = Number(event.target.innerHTML); 
+								
+				}
+				var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
+				var totalCount = that.totalRowCount[index];
+				var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
+				var nowEndPage = nowPagingNum*maxPagingNum;	  
+				var startItem = [];
+				var endItem = [];
+				var rowIndexes =[];
+			for(var i=nowStartPage-1,max=nowEndPage; i<max;i++){ 
+					rowIndexes.push(i);
 			  }
-			  for(var j=nowEndPage+1,max2=totalCount; j<max2;j++){
-					endItem.push({});
-			 }
-				AUIGrid.setGridData(that.grid[index], data);  
-				AUIGrid.addRow(that.grid[index], startItem, "first"); 	  
-				AUIGrid.addRow(that.grid[index], endItem, "last"); 	
-				AUIGrid.movePageTo(that.grid[index], nowPagingNum);
+
+				AUIGrid.updateRows(that.grid[index], data,rowIndexes,false); 
+			
+
 			},
 	// 등록버튼 이벤트 핸들러
 	setBtnEvent: function(index, your) {
@@ -2394,13 +2408,85 @@ var momWidget = {
 			var callInitResult     = undefined;
 			var callBackResult     = undefined;
 			var pagingNumBtnClass  ='aui-grid-paging-number';
+			var paginFirstBtnClass = 'aui-grid-paging-first';
+			var paginLastBtnClass  = 'aui-grid-paging-last';
+			var paginPrevBtnClass  = 'aui-grid-paging-prev';
+			var paginNextBtnClass  = 'aui-grid-paging-next';
 			
 		/*	var isExist = document.getElementById(findBtnId);
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
+			 $(document).on('click', '.' + paginFirstBtnClass, function(e) {
+				
+				   var nowPagingBtn = e.target.pageNum; 
+					
+					if(nowPagingBtn == undefined) {
+						return;
+					}
+					else if(nowPagingBtn == 'first') {
+					var nowPagingNum =1
+					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
+					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
+					var nowEndPage = nowPagingNum*maxPagingNum;	  
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+					}
+				
+		
+		    });
+		     $(document).on('click', '.' + paginLastBtnClass, function(e) {
+				var nowPagingNum =Number(e.target.nextSibling.innerHTML);
+				var nowPagingBtn = e.target.pageNum; 
+					
+					if(nowPagingBtn == undefined) {
+						return;
+					}
+					else if(nowPagingBtn == 'prev') {
+					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
+					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
+					var nowEndPage = nowPagingNum*maxPagingNum;	  
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+					}
+				
+		
+		    });
+			 $(document).on('click', '.' + paginPrevBtnClass, function(e) {
+				var nowPagingNum =Number(e.target.nextSibling.innerHTML);
+				var nowPagingBtn = e.target.pageNum; 
+					
+					if(nowPagingBtn == undefined) {
+						return;
+					}
+					else if(nowPagingBtn == 'prev') {
+					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
+					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
+					var nowEndPage = nowPagingNum*maxPagingNum;	  
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+					}
+				
+		
+		    });
+			 $(document).on('click', '.' + paginNextBtnClass, function(e) {
+				var nowPagingNum =Number(e.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
+				var nowPagingBtn = e.target.pageNum; 
+					
+					if(nowPagingBtn == undefined) {
+						return;
+					}
+					else if(nowPagingBtn == 'next') {
+					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
+					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
+					var nowEndPage = nowPagingNum*maxPagingNum;	  
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+					}
+				
+		
+		    });
 			 $(document).on('click', '.' + pagingNumBtnClass, function(e) {
 					var nowPagingNum = Number(e.target.innerHTML); 
+					if(isNaN(nowPagingNum) == true){
+						return;
+					}
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
 					var nowEndPage = nowPagingNum*maxPagingNum;	  

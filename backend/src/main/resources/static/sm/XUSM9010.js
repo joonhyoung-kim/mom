@@ -74,6 +74,7 @@ var XUSM9010 = {
 							             xmlHtml += ' #{item.'+userId+', jdbcType='+jdbcType+'}\n'+'                ,';
 						            }
 						            else{
+							
 							               xmlHtml += ' #{item.'+columnItem[j]['columnName2']+', jdbcType='+jdbcType+'}\n'+'                ,';
 						            }
 						           
