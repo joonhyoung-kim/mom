@@ -63,8 +63,8 @@ public class MomDao {
 			//result = sqlSession.selectList(query.trim(), param);	
 			//new TestInnerResultHandler(result)
 
-			 //sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
-			 result = sqlSession.selectList(query.trim(), param);
+			//sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
+			// result = sqlSession.selectList(query.trim(), param);
 			//sqlSession.select(query.trim(), param, testInnerResultHandler);
 			 
 			
@@ -104,7 +104,8 @@ public class MomDao {
 		}
 		 
 		//PrintUtil.print(null, null, null, "$", PrintUtil.queryString(query, "R", result == null ? 0 : result.size()), null, false, true, true, debugOn);
-		return result;
+		return sqlSession.selectList(query.trim(), param);
+		
 	}
 	public List<Map<String,Object>> procMapList(String query, List<Map<String,Object>> param) {
 		PrintUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);

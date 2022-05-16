@@ -7,7 +7,7 @@
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   fetchSize="1"resultType="com.mom.dto.LowerHashMap"
     </parameterMap> -->
-    	<select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+    	<select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="10000">
 		    SELECT ML.COMPANY_CD 
 			     , MCD.COMPANY_NM
 			     , ML.DIVISION_CD

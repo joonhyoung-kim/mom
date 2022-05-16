@@ -27,7 +27,7 @@ public class TestInnerResultHandler implements ResultHandler<Map<String,Object>>
     public void handleResult(ResultContext context) {
         Object object = context.getResultObject();
         
-        System.out.println("핸들러데이터실행="+object.toString());
+       // System.out.println("핸들러데이터실행="+object.toString());
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = objectMapper.convertValue(object, Map.class);
         returnList.add(map);

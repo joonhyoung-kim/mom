@@ -3590,7 +3590,8 @@ input:focus{
 }
 .panel-body {
 /* 	display: inline; */
-	background-color: #f8f9fa;
+	/* background-color: #f8f9fa; */
+	background-color: #ffffff;
 	font-family: "Malgun Gothic", sans-serif;
 	height: 52%;
 }
