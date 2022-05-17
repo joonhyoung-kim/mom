@@ -352,6 +352,18 @@ var XUSM3030 = {
 					}
 				},
 				{
+			  dataField 	: 'columnRequire' 
+			, headerText 	: '컬럼필수'
+			, style			: 'my-column-style-edit'
+			, width			: 80
+			, renderer 		: {
+				  type 		: 'CheckBoxEditRenderer'
+				, editable	: true
+				,checkValue : 'Y' 
+				,unCheckValue : 'N'
+			}
+		},
+				{
 			  dataField 	: 'dataFormat' 
 			, headerText 	: '데이터서식'
 			, width			: 150

@@ -42,8 +42,9 @@ var momWidget = {
 		  var changePwPop = that.createChangePop.password(index,'비밀번호변경');
 		  
 		  if(index == 0){
-			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#eeb55e;font-weight:bold:color:#22741C;}</style>');
 			  $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
+			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
+
 			  $('body').append(fileUpPop);
 			  $('body').append(fileUpProgressBar);
 			  $('body').append(changePwPop);
@@ -335,6 +336,7 @@ var momWidget = {
 			      var isCheckBox = 'N';
 			      var isDropDown ='N';
 			      var columnId = '';
+			      var isRequire = 'N';
 		
 
 			    	 if(index == 0 ){
@@ -409,9 +411,10 @@ var momWidget = {
 			    	   gridShow = that.columnProperty[index][i]['columnShow']  == 'Y' ? true: false;
 			    	   excelDownShow   = that.columnProperty[index][i]['excelShow'] == 'Y' ? true: false;
 			    	   excelUploadShow = that.columnProperty[index][i]['excelTemplateShow'] == 'Y' ? true: false;
-			    	   isCheckBox = momWidget.columnProperty[index][i]['columnType'] == 'CK' ? 'Y': 'N';
-			    	   isDropDown = momWidget.columnProperty[index][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
+			    	   isCheckBox = that.columnProperty[index][i]['columnType'] == 'CK' ? 'Y': 'N';
+			    	   isDropDown = that.columnProperty[index][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
 			    	   columnId = that.columnProperty[index][i]['columnId'];
+			    	   isRequire = that.columnProperty[index][i]['columnRequire'] == 'Y' ? 'Y': 'N';
 			    	 //that.columnProperty[index].splice(i,1);
 			    	   columnProp[i] =  {
 					    	      dataField 	: columnId 
@@ -429,7 +432,7 @@ var momWidget = {
 						   		, dataType      : that.columnProperty[index][i]['dataType'] 
 								, formatString  : that.columnProperty[index][i]['dataFormat']
 	    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false  
-	    	                    , headerStyle   : "aui-grid-default-header"
+	    	                    , headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
 					  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
 					  			, visible       : excelDownShow
 					  		 	
@@ -437,6 +440,7 @@ var momWidget = {
 			    	    excelUploadProp[i] =  {
 					    	      dataField 	: columnId 
 					  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
+					  			, headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
 						   		, dataType      : that.columnProperty[index][i]['dataType'] 
 								, formatString  : that.columnProperty[index][i]['dataFormat']
 	    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
@@ -534,7 +538,7 @@ var momWidget = {
 							 that.grid[index] = AUIGrid.create('#grid'+(index+1), columnProp, that.gridProperty[index][0]); 
 					}
 		
-					
+	           
 			     
 			      
 			      $('td').removeClass('aui-grid-default-column');
@@ -557,10 +561,10 @@ var momWidget = {
 		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
 		    if(that.gridProperty[index][0]['usePaging'] ==true){ //페이징사용
 				if(that.gridExtraProperty[index]['initSearch']=='Y'){
-				  that.backWork[index] = 'Y';		
+				 // that.backWork[index] = 'Y';		
 				  that.findBtnClicked(index, {}, true, 'TOTAL',menuId,your);	
 		    	  that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',menuId,your);
-		    	  that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
+		    	//  that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
 		    	}
 		    	else{
 			      that.backWork[index] = 'Y';
@@ -1103,7 +1107,7 @@ var momWidget = {
 			var html  = '<div class="modal" id="excelUpPop'+(index+1)+'" style="display: none;" aria-hidden="true">'+
 			    '<div class="modal-dialog" role="document">'+
 			        '<div class="modal-content excelUploadPop">'+
-			            '<div class="modal-header">'+
+			            '<div class="modal-header-excelUp">'+
 			                '<h6 class="modal-title">엑셀 업로드</h6> <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>'+
 			            '</div>'+
 			            '<div class="modal-body">'+
@@ -2351,7 +2355,10 @@ var momWidget = {
 				}	
 				else if(nowPagingBtn != undefined && nowPagingBtn =='first') {
 						var nowPagingNum = 1;
-				}				
+				}	
+				else if(nowPagingBtn != undefined && nowPagingBtn =='last') {
+						var nowPagingNum = Math.ceil(that.totalRowCount[index]/that.gridProperty[index][0]['pageRowCount']);
+				}					
 				else{
 					var nowPagingNum = Number(event.target.innerHTML); 
 								
@@ -2359,7 +2366,7 @@ var momWidget = {
 				var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 				var totalCount = that.totalRowCount[index];
 				var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
-				var nowEndPage = nowPagingNum*maxPagingNum;	  
+				var nowEndPage = nowPagingNum*maxPagingNum > totalCount ? totalCount:nowPagingNum*maxPagingNum;	  
 				var startItem = [];
 				var endItem = [];
 				var rowIndexes =[];
@@ -2417,6 +2424,7 @@ var momWidget = {
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
+
 			 $(document).on('click', '.' + paginFirstBtnClass, function(e) {
 				
 				   var nowPagingBtn = e.target.pageNum; 
@@ -2435,14 +2443,14 @@ var momWidget = {
 		
 		    });
 		     $(document).on('click', '.' + paginLastBtnClass, function(e) {
-				var nowPagingNum =Number(e.target.nextSibling.innerHTML);
 				var nowPagingBtn = e.target.pageNum; 
 					
 					if(nowPagingBtn == undefined) {
 						return;
 					}
-					else if(nowPagingBtn == 'prev') {
-					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
+					else if(nowPagingBtn == 'last') {
+					var maxPagingNum = that.gridProperty[index][0]['pageRowCount'];
+					var nowPagingNum = Math.ceil(that.totalRowCount[index]/maxPagingNum);
 					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
 					var nowEndPage = nowPagingNum*maxPagingNum;	  
   				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
@@ -2759,7 +2767,7 @@ var momWidget = {
 						    		    footers: undefined,
 						    		    exportWithStyle: true
 				    		            };
-				    
+				   
 				    excelDownOpt.afterRequestCallback = function() { // 엑셀 만들고 호출되는 콜백함수
 					$('.aui-grid-export-progress-modal').remove();
 					// AUIGrid.GridData(that.excelGrid[index]);
@@ -2776,27 +2784,50 @@ var momWidget = {
 				$('#excelUpGrid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
 				});
 				
-				$(document).on('click','#'+exUpCheckBtnId, function() {					
+				$(document).on('click','#'+exUpCheckBtnId, function() {	
+					 var requireColumns = {};				
 					if(your != undefined && your['exUpCheckCallInit'] != undefined) {
 						your.exUpCheckCallInit(index, your);
 					}	
-				 var excelUpGridCount = AUIGrid.getColumnLayout('#excelUpGrid1').length;
-				 for(var i=0;i<excelUpGridCount;i++){
+				 var excelUpGridCount = AUIGrid.getColumnLayout('#excelUpGrid'+(index+1)).length;
+				 for(var j=0,max2=that.columnProperty[index].length;j<max2;j++){
+					if(that.columnProperty[index][j]['columnRequire'] == 'Y'){
+						requireColumns[that.columnProperty[index][j]['columnId']] = 'Y';
+					}
+					
+				 }
+				 for(var i=0,max=excelUpGridCount;i<max;i++){
 				 AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 		    	
 						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
-							if(dataField =='programId' && (value=='T2' || value=='T141' )){
+						
+								if(requireColumns[dataField] == 'Y'){
+									if(!value){
 								//AUIGrid.showToastMessage(that.excelUpGrid[index], rowIndex, columnIndex, "Y/N만 입력가능!");
-								return 'excel-upload-danger';
-							}
-							else{
-								return '';
-							}
+								//-- dataField 로 변경하기
+	
+								        return 'excel-upload-danger';
+							        }
+							        else{
+									return '';
+									}
+								}
+								else{
+									
+									return '';
+								}
+								
 							
+	
 						}
 					 });
-	}
+							}
 	 
-				
+			AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], dataField, {
+		headerText : headerText + '(CHECK)',
+	//	width : 180,
+	//	style : "my-strong-column",
+	//	headerStyle : "my-strong-header"
+	 });	
 			});
 			$(document).on('click','#'+saveBtnExUpBtnId, function(e) {
 				//that.splashShow();
@@ -2858,7 +2889,7 @@ var momWidget = {
 				setTimeout(function() {
 						excelUploadGrid(e.target, that.excelUpGrid[index]);
 
-
+				$('#'+excelFile).val('');
 				//AUIGrid.update(that.excelUpGrid[index]);
 						that.splashHide();
 							}, 500);
@@ -3334,6 +3365,8 @@ var momWidget = {
 						your.excelDownCallInit(index, your);
 					}					
 					if(that.gridProperty[index][0]['usePaging']== true){
+						that.backWork[index] = 'Y';		    
+						that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
 						if(that.backWork[index] =='N'){
 							var excelData = that.excelDownGridData[index];
 						}

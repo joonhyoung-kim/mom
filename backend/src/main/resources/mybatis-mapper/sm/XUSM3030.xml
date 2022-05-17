@@ -152,6 +152,7 @@
 			  , COLUMN_TYPE
 			  ,	DROPDOWN_ID
 			  ,	DROPDOWN_PARAM
+			  , COLUMN_REQUIRE
 			FROM   MOM_COLUMN_PROPERTY		   	  
 		    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 			AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
@@ -473,6 +474,7 @@
 							 ,COLUMN_TYPE
 							 ,DROPDOWN_ID
                              ,DROPDOWN_PARAM 
+                             ,COLUMN_REQUIRE 
 							 , CREATE_BY
 						) VALUES(
                                #{item.companyCd,         jdbcType=VARCHAR}
@@ -499,7 +501,8 @@
 				             , #{item.cellColor,             jdbcType=VARCHAR}
 				             , NVL(#{item.columnType,        jdbcType=VARCHAR},'T')
 				             , #{item.dropdownId,            jdbcType=VARCHAR}
-				             , #{item.dropdownParam,         jdbcType=VARCHAR}				             
+				             , #{item.dropdownParam,         jdbcType=VARCHAR}	
+				             , NVL(#{item.columnRequire,     jdbcType=VARCHAR},'N')			             
 				             , #{item.userId,                jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               
