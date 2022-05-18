@@ -1,6 +1,7 @@
 var momWidget = {
 	your:				    [],
 	grid: 				    [],
+	excelUpGridProperty:    [],
 	backWork:               [],
 	excelDownGrid:          [],
 	excelDownGridData:      [],
@@ -2785,35 +2786,77 @@ var momWidget = {
 				});
 				
 				$(document).on('click','#'+exUpCheckBtnId, function() {	
-					 var requireColumns = {};				
+					 var requireColumns  = {};	
+					 var dataTypeColumns = {};		
+					 var dataTypePass    = {};	
 					if(your != undefined && your['exUpCheckCallInit'] != undefined) {
 						your.exUpCheckCallInit(index, your);
 					}	
 				 var excelUpGridCount = AUIGrid.getColumnLayout('#excelUpGrid'+(index+1)).length;
+				 var isPass = {};
 				 for(var j=0,max2=that.columnProperty[index].length;j<max2;j++){
 					if(that.columnProperty[index][j]['columnRequire'] == 'Y'){
 						requireColumns[that.columnProperty[index][j]['columnId']] = 'Y';
-					}
-					
+						
+					}			
+						dataTypeColumns[that.columnProperty[index][j]['columnId']] = that.columnProperty[index][j]['dataType'];
+							
 				 }
 				 for(var i=0,max=excelUpGridCount;i<max;i++){
-				 AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 		    	
+				 AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 
+
+						//headerText :  isPass[AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField]=='Y' ? AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].headerText+'(O)':AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].headerText+'(X)',
 						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						
-								if(requireColumns[dataField] == 'Y'){
-									if(!value){
+							 if(value == undefined){
+								value = '';
+							 }
+						     if(dataTypeColumns[dataField]=='string'){
+							      if(isFinite(value)==false || value ==''){     
+								   		dataTypePass[dataField] = 'Y';
+							       }
+							       else{
+										dataTypePass[dataField] = 'N';	
+								   }
+							 }
+							 else if(dataTypeColumns[dataField]=='numeric'){
+								   if(isNaN(value)==true && value  ){     
+								   		dataTypePass[dataField] = 'N';
+							       }
+							       else{
+										dataTypePass[dataField]    = 'Y';	
+								   }
+							}
+							else{
+								
+							}
+								if(requireColumns[dataField] == 'Y' ){
+									if(!value || dataTypePass[dataField] =='N'){
 								//AUIGrid.showToastMessage(that.excelUpGrid[index], rowIndex, columnIndex, "Y/N만 입력가능!");
 								//-- dataField 로 변경하기
-	
+					
+	                                    isPass[dataField] = 'N' ; 
+	                                
 								        return 'excel-upload-danger';
 							        }
 							        else{
+											if (isPass[dataField] != 'N'){
+												isPass[dataField] = 'Y' ; 
+											}
+								      
 									return '';
 									}
 								}
 								else{
-									
+									if(dataTypePass[dataField] =='N'){
+										 return 'excel-upload-danger';
+									}	
+									else{
+										   if (isPass[dataField] != 'N'){
+												isPass[dataField] = 'Y' ; 
+											}
 									return '';
+									}
+									   
 								}
 								
 							
@@ -2821,13 +2864,22 @@ var momWidget = {
 						}
 					 });
 							}
-	 
-			AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], dataField, {
-		headerText : headerText + '(CHECK)',
-	//	width : 180,
-	//	style : "my-strong-column",
-	//	headerStyle : "my-strong-header"
-	 });	
+						
+						var checkedGridProp = that.excelUpGridProperty[index];
+						var checkedColumnLayout	= AUIGrid.getColumnLayout(that.excelUpGrid[index]);
+						var checkedGridData = AUIGrid.getGridData(that.excelUpGrid[index]);
+						for(var k=0,max4=checkedColumnLayout.length;k<max4;k++){
+							if(isPass[checkedColumnLayout[k]['dataField']] == 'N' ){
+								checkedColumnLayout[k]['headerText'] = checkedColumnLayout[k]['headerText']+'(X)';
+							}
+							else{
+								checkedColumnLayout[k]['headerText'] = checkedColumnLayout[k]['headerText']+'(O)';
+							}
+							
+						}
+						AUIGrid.destroy(that.excelUpGrid[index]);
+	 				 	AUIGrid.create(that.excelUpGrid[index],checkedColumnLayout,checkedGridProp);
+	 				 	AUIGrid.setGridData(that.excelUpGrid[index],checkedGridData);
 			});
 			$(document).on('click','#'+saveBtnExUpBtnId, function(e) {
 				//that.splashShow();
@@ -2898,7 +2950,8 @@ var momWidget = {
 			});
 			$(document).on('click','#'+excelUpCancelBtnId, function() {
 				$('#excelFile1').val('')
-				AUIGrid.clearGridData(that.excelUpGrid[index]);
+				 AUIGrid.destroy(that.excelUpGrid[index]);
+				//AUIGrid.clearGridData(that.excelUpGrid[index]);
 				$('#excelUpPop'+(index+1)).momModal('hide');
 				
 			});
@@ -2938,9 +2991,10 @@ var momWidget = {
 					
 						groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."*/
 					};
-				that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-				$('#' +'excelUpPop'+(index+1)).momModal('show');
-				AUIGrid.resize('#excelUpGrid'+(index+1));
+					that.excelUpGridProperty[index] = gridPros;
+					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
+					$('#' +'excelUpPop'+(index+1)).momModal('show');
+					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
 			$(document).on('click', '#' + addBtnId, function() {	
 				var columnLayout = AUIGrid.getColumnLayout(that.grid[index])
@@ -3061,6 +3115,7 @@ var momWidget = {
 				$('#' +'defaultPop'+(index+1)).momModal('show');
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);				
+				s
 				callBackResult = that.checkActionCallBack(index, 'CP', param, 'copyBtn', your,param);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});

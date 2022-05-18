@@ -357,6 +357,8 @@ public class MomDao {
 	            		}            		       				        			       			
             } catch(Exception e) { 
             	dataSourceTransactionManager.rollback(transactionStatus);
+            	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
+        		throw cdae;
             } finally {			
             	//sqlSession1.flushStatements();          	
             	//sqlSession1.close();  
