@@ -1127,7 +1127,7 @@ var momWidget = {
 		},
 		progressBar: function(index,title){
 			var html = '<div class="modal fade" id="pleaseWaitDialog" aria-hidden="true" >'+
-			             '<div class="modal-dialog">'+
+			             '<div class="modal-dialog modal-process">'+
 			             	'<div class="modal-content">'+
 			                  '<div class="modal-header">'+
 			                  '<h3>Upload processing...</h3>'+
@@ -1564,8 +1564,8 @@ var momWidget = {
   },
 	setSearchBtnEvent: function(index, your) {
 		var that =  this;
-		var findBtnId = 'findBtn' + (index + 1);
-		var isExist = document.getElementById(findBtnId);
+		var findBtnId = 'findBtn';
+		var isExist = document.getElementById(findBtnId + (index + 1));
 		if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 			return;
 		}
@@ -1683,8 +1683,15 @@ var momWidget = {
 							  }
 							  else if(btnId=='INIT_PAGING' ){
 								var entireItem = [];
-								var tmpItem = data[0];
-								for(var i = 0, max = that.totalRowCount[index]-data.length; i< max; i++){
+								var tmpItem = {};
+								for(var l = 0, max = that.columnProperty[index].length; l< max; l++){
+									//if(that.columnProperty[index][l]['columnShow']=='Y'){
+										tmpItem[that.columnProperty[index][l]['columnId']] = '';
+									//}
+								}
+								
+								
+								for(var i = 0, max2 = that.totalRowCount[index]-data.length; i< max2; i++){
 									tmpItem.keyId = new Date().getTime() + Math.random();
 									entireItem.push(JSON.parse(JSON.stringify(tmpItem)));
 									
@@ -2509,7 +2516,7 @@ var momWidget = {
 		    }	
 		    else{
 			  //momWidget.findBtnClicked(1, {}, true, 'CELLCLICK',menuId,VIEW);
-			  that.findBtnClicked(index, {}, true, findBtnId,that.pageProperty[index]['menuId'],your);
+			  that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
 		    }	    	
 			
 			// e.preventDefault();
@@ -2811,7 +2818,7 @@ var momWidget = {
 								value = '';
 							 }
 						     if(dataTypeColumns[dataField]=='string'){
-							      if(isFinite(value)==false || value ==''){     
+							      if(value != undefined){     
 								   		dataTypePass[dataField] = 'Y';
 							       }
 							       else{
@@ -2870,10 +2877,10 @@ var momWidget = {
 						var checkedGridData = AUIGrid.getGridData(that.excelUpGrid[index]);
 						for(var k=0,max4=checkedColumnLayout.length;k<max4;k++){
 							if(isPass[checkedColumnLayout[k]['dataField']] == 'N' ){
-								checkedColumnLayout[k]['headerText'] = checkedColumnLayout[k]['headerText']+'(X)';
+								checkedColumnLayout[k]['headerText'] = checkedColumnLayout[k]['headerText']+'';
 							}
 							else{
-								checkedColumnLayout[k]['headerText'] = checkedColumnLayout[k]['headerText']+'(O)';
+								checkedColumnLayout[k]['headerText'] = checkedColumnLayout[k]['headerText']+'';
 							}
 							
 						}

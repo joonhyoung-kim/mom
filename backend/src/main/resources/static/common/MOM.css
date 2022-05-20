@@ -107,10 +107,14 @@
     font-size: 1.4rem !important;
     border: 1px solid #b2aeae !important;
 }
+.modal-process {
+   margin-top: 12rem !important;
+}
 .excelUploadPop {
     width: 120rem;
     height: 70rem;
     margin-left: -40rem;
+    margin-top: -2.2rem;
 }
 .searchItem-h01{
     width: 30%; 
@@ -1179,7 +1183,7 @@ border-color: #d8dce3 !important;
         height: calc(100% - 8.6rem);
 }
 .searcharea-pop.R5-remark-in {
-    height: 33rem;
+    height: 38rem;
 }
 .searcharea-pop.R5-remark-out {
     height: 33rem;
@@ -2739,7 +2743,7 @@ border-color: #d8dce3 !important;
     margin-left: 35% !important;
     margin-top: -36% !important;
     background: white !important; 
-    height: 36rem !important;
+    height: 42rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
    
@@ -3135,7 +3139,7 @@ border-color: #d8dce3 !important;
     margin-left: 45rem !important;
     margin-top: -64rem !important;
     background: white !important; 
-    height: 36rem !important;
+    height: 31rem !important;
     width: 40rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
@@ -3157,7 +3161,38 @@ border-color: #d8dce3 !important;
     border: 1px solid #4d4d4e !important;
    
 }
-
+.defaultPop-C3-R5-remark-out {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 56rem !important;
+    position: relative !important;
+    margin-left: 45rem !important;
+    margin-top: -64rem !important;
+    background: white !important; 
+    height: 36rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
+.defaultPop-C3-R5-remark-in {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 56rem !important;
+    position: relative !important;
+    margin-left: 45rem !important;
+    margin-top: -64rem !important;
+    background: white !important; 
+    height: 46.7rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
 .defaultPop-C5-R8 {
     z-index: 1050;
     /* display: none; */

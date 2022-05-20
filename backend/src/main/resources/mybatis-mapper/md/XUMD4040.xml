@@ -60,7 +60,7 @@
     ORDER BY COMPANY_NM, DIVISION_NM, WORK_CENTER_CD, APPLY_DATE, SHIFT_NM            
 	</select>
   <select id="proc_customBtnA2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL xumd4040_wg_copy_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
+          { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_copy_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}

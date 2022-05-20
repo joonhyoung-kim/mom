@@ -73,11 +73,22 @@ var VIEW= {
 	searchCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 1 && btnId =='findBtn'){	
 			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0]);
-			if(checkedItem =='FAIL'){
+			if(checkedItem.length ==0){
 				result.result = 'FAIL';
 				return;
 			}
 			param.codeCategory = checkedItem[0].codeCategory;
+					
+		}
+		else if(index == 2 && btnId =='findBtn'){	
+			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[1]);
+			var item = param;
+			if(checkedItem.length ==0){
+				result.result = 'FAIL';
+				return;
+			}
+			 item.groupCd = checkedItem[0].groupCd;
+			 result.param = item;
 					
 		}
 		else if(index == 3 && btnId =='saveBtn'){	

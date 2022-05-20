@@ -196,7 +196,8 @@
 		AND    MV.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
 		<if test = "groupCd != null and groupCd != ''">
 	    AND    MV.GROUP_CD        = #{groupCd, jdbcType=VARCHAR}
-	    </if>
+	    </if>	    
+	   ORDER BY SORT_NO,CODE_NM
 	</select>
 	  <insert id="create_defaultInfo3" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 

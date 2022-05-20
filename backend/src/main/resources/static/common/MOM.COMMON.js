@@ -1782,7 +1782,7 @@ function excelUploadGrid(file, grid) {
 	                   }
         				
         			}
-        			excelData[i][headerInfo[key]] = excelData[i][key];
+        			excelData[i][headerInfo[key]] = excelData[i][key].trim();
         			excelData[i]['NEW'] = 'Y';			
         			delete excelData[i][key];
         		}
