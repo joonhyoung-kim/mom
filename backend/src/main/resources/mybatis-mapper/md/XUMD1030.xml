@@ -25,7 +25,7 @@
    </select> 
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	     	SELECT * 
-	  FROM ( SELECT ROWNUM AS ID
+	  FROM ( SELECT ROWNUM AS KEY_ID
                  , A.*
                  <!--  , COUNT(*) OVER() AS ROW_COUNT  -->
       FROM (  
@@ -35,7 +35,6 @@
 			     , MCD.DIVISION_CD
 			     , MCD.DIVISION_NM
 			     , MP.PARTNER_CD
-			     , MP.PARTNER_CD AS KEY_ID
 			     , MP.PARTNER_NM
 			     , MP.PARTNER_NM_ENG
 			     , MP.PARTNER_TYPE
@@ -75,7 +74,7 @@
 		    ORDER BY  MP.PARTNER_NM	 ) A
         )    
          <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
-     WHERE ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
+     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
          </if>														
 	</select>
     <insert id="create_defaultInfo1" parameterType="java.util.List">  

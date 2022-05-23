@@ -28,11 +28,10 @@
  </select>
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
      SELECT * 
-	  FROM ( SELECT ROWNUM AS ID
+	  FROM ( SELECT ROWNUM AS KEY_ID
                  , A.*
                  <!--  , COUNT(*) OVER() AS ROW_COUNT  -->
       FROM ( SELECT MI.ITEM_ID
-                  , MI.ITEM_ID AS KEY_ID
 			      , MI.ITEM_NM
 			      , MI.ITEM_GROUP_CD
 			      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0001', MI.ITEM_GROUP_CD, 'KR') FROM DUAL) AS ITEM_GROUP_NM
@@ -116,7 +115,7 @@
 			ORDER BY MCD.COMPANY_NM,  MCD.DIVISION_NM, MI.ITEM_ID ) A
         )    
          <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
-     WHERE ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
+     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
          </if>				
  </select>
  <insert id="create_defaultInfo1" parameterType="java.util.List">

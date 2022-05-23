@@ -137,64 +137,80 @@
         </foreach>
        </where>
    </delete>
-   <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
-	    MERGE INTO MOM_PROGRAM MP
-	    USING (
-	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
-	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
-	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
-	                              TRIM(#{item.programId, jdbcType=VARCHAR})                                                                    as programId,
-					              #{item.programNm, jdbcType=VARCHAR}           															   as programNm,
-					              TRIM(#{item.programType, jdbcType=VARCHAR})    															   as programType,
-					              TRIM(#{item.templateId, jdbcType=INTEGER})     															   as templateId,
-					              TRIM(#{item.logYn, jdbcType=VARCHAR})          															   as logYn,
-					              TRIM(#{item.useYn, jdbcType=VARCHAR})         															   as useYn,
-					              TRIM(#{item.description, jdbcType=VARCHAR})    															   as description,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as createBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as updateBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
-	             FROM DUAL
-	        </foreach>
-	    ) PARAM 
-	    ON (  PROGRAM_ID    = PARAM.programId  )
-	    WHEN MATCHED THEN
-	    UPDATE
-	    SET		  PROGRAM_NM     = PARAM.programNm
-                , PROGRAM_TYPE   = PARAM.programType
-                , TEMPLATE_ID    = PARAM.templateId
-                , LOG_YN         = PARAM.logYn
-		        , USE_YN 		 = PARAM.useYn
- 		        , DESCRIPTION    = PARAM.description
-		        , UPDATE_BY      = PARAM.updateBy
-		        , UPDATE_DATE    = PARAM.updateDate
-			    	       
-	    WHEN NOT MATCHED THEN
-		INSERT ( 
-			      PROGRAM_ID
-		        , PROGRAM_NM
-		        , PROGRAM_TYPE
-		        , TEMPLATE_ID
-		        , LOG_YN
-		        , USE_YN
-		        , DESCRIPTION
-		        , CREATE_BY
-		        , CREATE_DATE
-		        , UPDATE_BY
-		        , UPDATE_DATE
-	    )   
-	    VALUES (
-                 PARAM.programId
-			   , PARAM.programNm
-			   , PARAM.programType
-	           , PARAM.templateId
-	           , PARAM.logYn
-	           , PARAM.useYn
-	           , PARAM.description
-			   , PARAM.createBy
-			   , PARAM.createDate
-			   , PARAM.updateBy
-			   , PARAM.updateDate
-	    )	 
-	</insert>
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_BOM 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.parentItemId, jdbcType=VARCHAR} as parentItemId,
+                            #{item.childItemId, jdbcType=VARCHAR} as childItemId,
+                            #{item.reqQty, jdbcType=NUMERIC} as reqQty,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as startDate,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as endDate,
+                            NVL(#{item.phantomFlag, jdbcType=VARCHAR},'N') as phantomFlag,
+                            NVL(#{item.mrpFlag, jdbcType=VARCHAR},'Y') as mrpFlag,
+                            NVL(#{item.issueType, jdbcType=VARCHAR},'A') as issueType,
+                            #{item.sortNo, jdbcType=NUMERIC} as sortNo,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 PARENT_ITEM_ID = PARAM.parentItemId AND
+                 CHILD_ITEM_ID = PARAM.childItemId )
+            WHEN MATCHED THEN 
+                 UPDATE SET REQ_QTY = PARAM.reqQty
+                          , START_DATE = PARAM.startDate
+                          , END_DATE = PARAM.endDate
+                          , PHANTOM_FLAG = PARAM.phantomFlag
+                          , MRP_FLAG = PARAM.mrpFlag
+                          , ISSUE_TYPE = PARAM.issueType
+                          , SORT_NO = PARAM.sortNo
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , PARENT_ITEM_ID
+                            , CHILD_ITEM_ID
+                            , REQ_QTY
+                            , START_DATE
+                            , END_DATE
+                            , PHANTOM_FLAG
+                            , MRP_FLAG
+                            , ISSUE_TYPE
+                            , SORT_NO
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.parentItemId
+                            , PARAM.childItemId
+                            , PARAM.reqQty
+                            , PARAM.startDate
+                            , PARAM.endDate
+                            , PARAM.phantomFlag
+                            , PARAM.mrpFlag
+                            , PARAM.issueType
+                            , PARAM.sortNo
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>
 </mapper>

@@ -7,7 +7,7 @@ var XUMD2020= {
 	var that = this;		
 	},
 	searchCallBack: function(index,your,action,btnId,param,result,data) {
-		if(index ==0 && btnId =='findBtn1'){	
+		if(index ==0 && btnId =='findBtn'){	
 			//AUIGrid.clearGridData(momWidget.grid[index]);
 			var gridItem = data;
 			for(var i=0;i<gridItem.length;i++){

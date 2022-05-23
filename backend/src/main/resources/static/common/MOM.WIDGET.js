@@ -810,7 +810,7 @@ var momWidget = {
 					     date  = today.getDate();  // 날짜
 					  }
 					  else{
-						
+						 
 					  }
 				}
 					else if(defaultValue.includes("LAST") && defaultValue.length>5){
@@ -1683,22 +1683,38 @@ var momWidget = {
 							  }
 							  else if(btnId=='INIT_PAGING' ){
 								var entireItem = [];
-								var tmpItem = {};
-								for(var l = 0, max = that.columnProperty[index].length; l< max; l++){
+								var tmpObj = JSON.parse(JSON.stringify(data[0]));
+								var tmpItem = that.objectInitialize(tmpObj);
+							
+							/*	for(var l = 0, max = that.columnProperty[index].length; l< max; l++){
 									//if(that.columnProperty[index][l]['columnShow']=='Y'){
 										tmpItem[that.columnProperty[index][l]['columnId']] = '';
 									//}
-								}
+								}*/
 								
 								
-								for(var i = 0, max2 = that.totalRowCount[index]-data.length; i< max2; i++){
-									tmpItem.keyId = new Date().getTime() + Math.random();
+								for(var i = 0, max2 = that.totalRowCount[index]; i< max2; i++){
+									//tmpItem.keyId = new Date().getTime() + Math.random();
 									entireItem.push(JSON.parse(JSON.stringify(tmpItem)));
 									
 								}
+							/*	for(var k = 0, max3 = data.length; k< max3; k++){
+									data[k].keyId = new Date().getTime() + Math.random();
+									
+								}
+								*/
+									for(var q = 0, max4 = that.totalRowCount[index]; q< max4; q++){
+									  //  AUIGrid.setCellValue(that.grid[index], q, "keyId", q+1);
+									 entireItem[q]['keyId'] = q+1;
+									
+								}
 								
-								    AUIGrid.setGridData(that.grid[index], entireItem);  
-									AUIGrid.addRow(that.grid[index], data, "first"); 
+								      AUIGrid.setGridData(that.grid[index], entireItem);  
+								      AUIGrid.updateRowsById(that.grid[index], data,false); 
+									//AUIGrid.addRow(that.grid[index], data, "first"); 
+								
+								
+									
 
 							  }
 							  else if(btnId=='PAGING'){
@@ -2377,13 +2393,13 @@ var momWidget = {
 				var nowEndPage = nowPagingNum*maxPagingNum > totalCount ? totalCount:nowPagingNum*maxPagingNum;	  
 				var startItem = [];
 				var endItem = [];
-				var rowIndexes =[];
-			for(var i=nowStartPage-1,max=nowEndPage; i<max;i++){ 
-					rowIndexes.push(i);
-			  }
+			/*	var rowIndexes =[];
+				  for(var i=nowStartPage-1,max=nowEndPage; i<max;i++){ 
+						rowIndexes.push(i);
+				  }*/
 
-				AUIGrid.updateRows(that.grid[index], data,rowIndexes,false); 
-			
+				//AUIGrid.updateRows(that.grid[index], data,rowIndexes,true); 
+			      AUIGrid.updateRowsById(that.grid[index], data,false);
 
 			},
 	// 등록버튼 이벤트 핸들러
@@ -2796,6 +2812,8 @@ var momWidget = {
 					 var requireColumns  = {};	
 					 var dataTypeColumns = {};		
 					 var dataTypePass    = {};	
+					 var successCount = 0;
+					 var failCount    = 0;
 					if(your != undefined && your['exUpCheckCallInit'] != undefined) {
 						your.exUpCheckCallInit(index, your);
 					}	
@@ -2810,8 +2828,8 @@ var momWidget = {
 							
 				 }
 				 for(var i=0,max=excelUpGridCount;i<max;i++){
-				 AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 
-
+				     AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 
+						
 						//headerText :  isPass[AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField]=='Y' ? AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].headerText+'(O)':AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].headerText+'(X)',
 						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							 if(value == undefined){
@@ -2826,7 +2844,7 @@ var momWidget = {
 								   }
 							 }
 							 else if(dataTypeColumns[dataField]=='numeric'){
-								   if(isNaN(value)==true && value  ){     
+								   if(isNaN(value)== true && value  ){     
 								   		dataTypePass[dataField] = 'N';
 							       }
 							       else{
@@ -2842,33 +2860,36 @@ var momWidget = {
 								//-- dataField 로 변경하기
 					
 	                                    isPass[dataField] = 'N' ; 
-	                                
+	                                 	failCount ++;
 								        return 'excel-upload-danger';
 							        }
 							        else{
 											if (isPass[dataField] != 'N'){
 												isPass[dataField] = 'Y' ; 
 											}
-								      
+								    successCount++;
 									return '';
 									}
 								}
 								else{
 									if(dataTypePass[dataField] =='N'){
+										 failCount ++;
 										 return 'excel-upload-danger';
 									}	
 									else{
 										   if (isPass[dataField] != 'N'){
 												isPass[dataField] = 'Y' ; 
 											}
+									successCount++;		
 									return '';
 									}
 									   
 								}
 								
 							
-	
+	                      
 						}
+						
 					 });
 							}
 						
@@ -2887,6 +2908,9 @@ var momWidget = {
 						AUIGrid.destroy(that.excelUpGrid[index]);
 	 				 	AUIGrid.create(that.excelUpGrid[index],checkedColumnLayout,checkedGridProp);
 	 				 	AUIGrid.setGridData(that.excelUpGrid[index],checkedGridData);
+	 				    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료 성공:'+successCount+'실패:'+failCount});
+/*	 				     successCount = 0;
+	 				     failCount = 0;*/
 			});
 			$(document).on('click','#'+saveBtnExUpBtnId, function(e) {
 				//that.splashShow();
@@ -4980,7 +5004,46 @@ var momWidget = {
 			});
 		}
 	},
+	objectInitialize: function(obj) {
+		let self = this;
+        self.obj = obj;
+        
+       $.each(obj, function (item_name, item) {
+
+
+        let datatype = $.type(item);
+
+ 
+
+        if (datatype == "number")
+            self.obj[item_name] = 0;   // 정수는 0 으로 초기화
+
+
+        else if (datatype == "string")
+            self.obj[item_name] = '';   // 문자는 '' 으로 초기화
+
+
+        else if (datatype == "boolean")
+            self.obj[item_name] = false;   // boolean 는 false 으로 초기화
+
+
+        else if (datatype == "array")
+            self.obj[item_name] = [];   // 배열은 [] 으로 초기화
+
+
+        else if (datatype == "object") {
+            if (deep)   // deep 적용 : object 를 다시 $.ObjectInitialize 를 호출하여 초기화 한다.
+                $.ObjectInitialize(self.obj[item_name]);
+            else
+                self.obj[item_name] = {};   // object는  {} 으로 초기화
+        }
+
+
+    });
+
+    return self.obj;
 		
+	},	
 	procExcelDownAll2: function(index, pageId1, your) {
 		var that = this.grid == undefined ? this.momWidget : this;
 		
@@ -7380,6 +7443,7 @@ var momWidget = {
 			
 		}, 40, index, initCallBack, your);
 	},
+
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Global 함수 관련
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

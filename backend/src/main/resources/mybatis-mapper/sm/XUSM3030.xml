@@ -483,7 +483,7 @@
 				             , #{item.gridId,            jdbcType=VARCHAR}
 				             , #{item.actionType,        jdbcType=VARCHAR}
 				             , #{i}+1
-				             , #{item.columnId,          jdbcType=VARCHAR} 
+				             , TRIM(#{item.columnId,          jdbcType=VARCHAR})
 				             , #{item.columnNm,          jdbcType=VARCHAR}
 				             , NVL(#{item.dataType,      jdbcType=VARCHAR},'string')
 				             , #{item.dataFormat,        jdbcType=VARCHAR} 
