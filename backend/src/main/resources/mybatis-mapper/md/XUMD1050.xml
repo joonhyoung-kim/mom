@@ -119,5 +119,77 @@
           )
         </foreach>
        </where>
-   </delete>  
+  </delete>  
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_WORK_CENTER 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.workGroupCd, jdbcType=VARCHAR} as workGroupCd,
+                            #{item.workCenterCd, jdbcType=VARCHAR} as workCenterCd,
+                            #{item.workCenterNm, jdbcType=VARCHAR} as workCenterNm,
+                            #{item.routingId, jdbcType=VARCHAR} as routingId,
+                            #{item.workCenterType, jdbcType=VARCHAR} as workCenterType,
+                            #{item.consumeLocationCd, jdbcType=VARCHAR} as consumeLocationCd,
+                            #{item.goodLocationCd, jdbcType=VARCHAR} as goodLocationCd,
+                            #{item.badLocationCd, jdbcType=VARCHAR} as badLocationCd,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 WORK_CENTER_CD = PARAM.workCenterCd )
+            WHEN MATCHED THEN 
+                 UPDATE SET WORK_GROUP_CD = PARAM.workGroupCd
+                          , WORK_CENTER_NM = PARAM.workCenterNm
+                          , ROUTING_ID = PARAM.routingId
+                          , WORK_CENTER_TYPE = PARAM.workCenterType
+                          , CONSUME_LOCATION_CD = PARAM.consumeLocationCd
+                          , GOOD_LOCATION_CD = PARAM.goodLocationCd
+                          , BAD_LOCATION_CD = PARAM.badLocationCd
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , WORK_GROUP_CD
+                            , WORK_CENTER_CD
+                            , WORK_CENTER_NM
+                            , ROUTING_ID
+                            , WORK_CENTER_TYPE
+                            , CONSUME_LOCATION_CD
+                            , GOOD_LOCATION_CD
+                            , BAD_LOCATION_CD
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.workGroupCd
+                            , PARAM.workCenterCd
+                            , PARAM.workCenterNm
+                            , PARAM.routingId
+                            , PARAM.workCenterType
+                            , PARAM.consumeLocationCd
+                            , PARAM.goodLocationCd
+                            , PARAM.badLocationCd
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>   
 </mapper>

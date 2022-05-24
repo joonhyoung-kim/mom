@@ -62,7 +62,7 @@
                   ,  UPDATE_BY
                   ,  UPDATE_DATE )
          VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
-                  (   #{item.companyCd, jdbcType=VARCHAR}
+                  (   #{item.compan    yCd, jdbcType=VARCHAR}
                   ,   #{item.divisionCd, jdbcType=VARCHAR}
                   ,   #{item.customerCd, jdbcType=VARCHAR}
                   ,   #{item.customerItemId, jdbcType=VARCHAR}
@@ -114,4 +114,60 @@
         </foreach>
        </where>
    </delete>
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_CUSTOMER_ITEM_MAPPING 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.customerCd, jdbcType=VARCHAR} as customerCd,
+                            #{item.customerItemId, jdbcType=VARCHAR} as customerItemId,
+                            #{item.itemId, jdbcType=VARCHAR} as itemId,
+                            #{item.reqQty, jdbcType=NUMERIC} as reqQty,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 CUSTOMER_CD = PARAM.customerCd AND
+                 CUSTOMER_ITEM_ID = PARAM.customerItemId AND
+                 ITEM_ID = PARAM.itemId )
+            WHEN MATCHED THEN 
+                 UPDATE SET REQ_QTY = PARAM.reqQty
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , CUSTOMER_CD
+                            , CUSTOMER_ITEM_ID
+                            , ITEM_ID
+                            , REQ_QTY
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.customerCd
+                            , PARAM.customerItemId
+                            , PARAM.itemId
+                            , PARAM.reqQty
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>   
 </mapper>

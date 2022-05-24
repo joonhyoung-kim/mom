@@ -100,8 +100,7 @@
           ,  UPDATE_DATE     = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
       WHERE 1=1
       AND   COMPANY_CD       = TRIM(#{item.companyCd,     jdbcType=VARCHAR})
-      AND   DIVISION_CD      = TRIM(#{item.divisionCd,    jdbcType=VARCHAR}) 
-      AND   WORK_CENTER_CD   = TRIM(#{item.workCenterCd,  jdbcType=VARCHAR})      
+      AND   DIVISION_CD      = TRIM(#{item.divisionCd,    jdbcType=VARCHAR})  
       AND   WORK_STATION_CD  = TRIM(#{item.workStationCd, jdbcType=VARCHAR})       
     </foreach>
   </update>
@@ -112,11 +111,62 @@
         <foreach collection="list" item="item" open="" close="" separator="OR"> 
           (   
 	               COMPANY_CD        = TRIM(#{item.companyCd,     jdbcType=VARCHAR})
-	         AND   DIVISION_CD       = TRIM(#{item.divisionCd,    jdbcType=VARCHAR}) 
-	         AND   WORK_CENTER_CD    = TRIM(#{item.workCenterCd,  jdbcType=VARCHAR})      
+	         AND   DIVISION_CD       = TRIM(#{item.divisionCd,    jdbcType=VARCHAR})   
              AND   WORK_STATION_CD   = TRIM(#{item.workStationCd, jdbcType=VARCHAR})    
           )
         </foreach>
        </where>
   </delete>  
+ <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_WORK_STATION 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.workCenterCd, jdbcType=VARCHAR} as workCenterCd,
+                            #{item.workStationCd, jdbcType=VARCHAR} as workStationCd,
+                            #{item.workStationNm, jdbcType=VARCHAR} as workStationNm,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 WORK_STATION_CD = PARAM.workStationCd )
+            WHEN MATCHED THEN 
+                 UPDATE SET WORK_CENTER_CD = PARAM.workCenterCd
+                          , WORK_STATION_NM = PARAM.workStationNm
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , WORK_CENTER_CD
+                            , WORK_STATION_CD
+                            , WORK_STATION_NM
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.workCenterCd
+                            , PARAM.workStationCd
+                            , PARAM.workStationNm
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>  
 </mapper>

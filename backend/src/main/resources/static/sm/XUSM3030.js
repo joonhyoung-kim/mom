@@ -1109,6 +1109,7 @@ var XUSM3030 = {
 	}, 
 	buttonGrid: function(queryId) {
 		var that = this;
+		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"등록&수정"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
@@ -1124,10 +1125,32 @@ var XUSM3030 = {
 			 var columnProperty = [
 			{
 				  dataField 	: 'buttonId' 
-				, headerText 	: '버튼ID'
-				, width			:  200
+				, headerText 	: '버튼아이디'
+				, width			: 200
 				, style			: 'my-column-style-edit2'
-			},{
+				, labelFunction: function(rowIndex, columnIndex, value, item) { 
+		            	var retStr = "";
+		            	var comboList = buttonTypeList;
+		    			for(var i=0,len=comboList.length; i<len; i++) { 
+		    					  if(comboList[i]["code"] == value) {
+		        					  retStr = comboList[i]["value"];
+		        					  break;
+		        				  } 				    				
+		    			}
+		    			
+		    			return retStr == "" ? value : retStr;	               
+					}
+					, editRenderer : {
+						type: 'ComboBoxRenderer', 
+						autoCompleteMode : true, // 자동완성 모드 설정 
+						matchFromFirst : false, //  처음부터 매치가 아닌 단순 포함되는 자동완성
+						autoEasyMode : true,    //  자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver: true,  
+						list: buttonTypeList, 
+						keyField:   'code', 
+						valueField: 'value'
+					}
+			}, {
 				  dataField 	: 'buttonNm' 
 				, headerText 	: '버튼명'
 				, width			:  150
@@ -1284,6 +1307,8 @@ var XUSM3030 = {
 
 		});	
 		AUIGrid.bind('#grid1', "cellEditEnd", function(e) {
+			var buttonNmText = '';
+			var buttonEvent  = '';
 			if(e.dataField == 'dropdownDetail') {
 				var dropDownParam ='';
 				if(e.item['dropdownId']=='DD00001'){
@@ -1303,6 +1328,38 @@ var XUSM3030 = {
 					dropDownParam = e.item['headerDropdownDetail'];		
 				}
 				AUIGrid.setCellValue('#grid1', e.rowIndex, 'headerDropdownParam', dropDownParam);
+			}
+			if(chooseTab =='button' && e.dataField=='buttonId'){
+				  if(e.value == 'createBtn'){
+					     buttonNmText ='등록';
+					     buttonEvent  = 'C';
+				 }
+				 else if(e.value == 'editBtn'){
+					     buttonNmText ='수정';
+					     buttonEvent  = 'U';
+				 }	
+				 else if(e.value == 'copyBtn'){
+					     buttonNmText ='복사';
+					     buttonEvent  = 'CP';
+				 }			
+				 else if(e.value == 'delBtn'){
+					     buttonNmText ='삭제';
+					      buttonEvent  = 'D';
+				 }				
+				 else if(e.value == 'excelDownBtn'){
+					     buttonNmText ='엑셀';
+					     buttonEvent  = 'NONE';
+				 }
+				 else if(e.value == 'excelTmpBtn'){
+					buttonNmText ='업로드양식';
+					buttonEvent  = 'NONE';
+				 }
+				 else if(e.value == 'excelUpBtn'){
+					buttonNmText ='업로드';
+				    buttonEvent  = 'CU';
+				 }
+				  AUIGrid.setCellValue('#grid1', e.rowIndex, "buttonNm", buttonNmText);
+				  AUIGrid.setCellValue('#grid1', e.rowIndex, "eventType", buttonEvent);
 			}
 		});
 	
@@ -1962,7 +2019,7 @@ var XUSM3030 = {
 
 		});
 		
-
+		
 	
 	
 	},

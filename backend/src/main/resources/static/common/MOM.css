@@ -3020,8 +3020,10 @@ border-color: #d8dce3 !important;
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 45rem !important;
-    margin-top: -64rem !important;
+   /*  margin-left: 45rem !important;
+    margin-top: -64rem !important; */
+    margin-top: -40% !important;
+    margin-left: 36% !important;
     background: white !important; 
     height: 37rem !important;
     border-radius: 0.5rem;

@@ -26,6 +26,7 @@ var momWidget = {
 	checkedRowItem:         [],
 	searchComboQueryId:     [],
 	searchComboMinLength:   [],	
+	sortingInfo:            [],
 	INFINITE: 			    100000000,	
 	uploadFlag: 		    0,
 	downSequence:		    100,	
@@ -300,7 +301,7 @@ var momWidget = {
 		    			  
 		    		  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='DS'){
-		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="200" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
 		    			  remarkYn    = 'Y';
 		    		  }
 		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){			  
@@ -338,6 +339,7 @@ var momWidget = {
 			      var isDropDown ='N';
 			      var columnId = '';
 			      var isRequire = 'N';
+			      var sortTmp   = [];
 		
 
 			    	 if(index == 0 ){
@@ -416,6 +418,12 @@ var momWidget = {
 			    	   isDropDown = that.columnProperty[index][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
 			    	   columnId = that.columnProperty[index][i]['columnId'];
 			    	   isRequire = that.columnProperty[index][i]['columnRequire'] == 'Y' ? 'Y': 'N';
+			    	   sortType = that.columnProperty[index][i]['sortMethod'] == 'ASC' ? 1: -1;
+			    	   sortNo   = that.columnProperty[index][i]['sortNo'] == '' ? 0: that.columnProperty[index][i]['sortNo'];
+			    	   if(sortNo > 0){
+							sortTmp.push({dataField : columnId, sortType : sortType,sortNo:sortNo}) ;
+					   }
+			    	   
 			    	 //that.columnProperty[index].splice(i,1);
 			    	   columnProp[i] =  {
 					    	      dataField 	: columnId 
@@ -523,7 +531,12 @@ var momWidget = {
 			    	
 			    	   }
 			    	   	
-			      } 		 				    				     
+			      } 		
+			         sortTmp.sort(function(a,b){ return a.sortNo-b.sortNo});	
+			         for(var k=0,max5=sortTmp.length;k<max5;k++){	
+				         delete sortTmp[k]['sortNo'];
+					}
+			        that.sortingInfo[index] = sortTmp;		     
 	          	    that.excelDownProperty[index]   = excelDownProp; 
 			   	    that.excelUploadProperty[index] = excelUploadProp; 
 					var excelUploadProp = that.excelUploadProperty[index];				
@@ -1722,8 +1735,13 @@ var momWidget = {
 							  }							  
 							  else{
 								AUIGrid.setGridData(that.grid[index], data);  
+								
 							 }
-    				        	          				           
+    				        	 
+									if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
+											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
+									}
+										           
                                   	if(callBackFunc != undefined) {	
 									  callBackFunc('SUCCESS', data,index,event);
 								    }						  						
@@ -2814,6 +2832,8 @@ var momWidget = {
 					 var dataTypePass    = {};	
 					 var successCount = 0;
 					 var failCount    = 0;
+					 var errCount=0;
+					 var nowColumn = '';
 					if(your != undefined && your['exUpCheckCallInit'] != undefined) {
 						your.exUpCheckCallInit(index, your);
 					}	
@@ -2828,10 +2848,15 @@ var momWidget = {
 							
 				 }
 				 for(var i=0,max=excelUpGridCount;i<max;i++){
-				     AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField, { 
+					 nowColumn =AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField;
+				     AUIGrid.setColumnPropByDataField(that.excelUpGrid[index],nowColumn , { 
 						
 						//headerText :  isPass[AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].dataField]=='Y' ? AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].headerText+'(O)':AUIGrid.getColumnLayout(that.excelUpGrid[index])[i].headerText+'(X)',
 						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						/*	if(dataField != nowColumn){
+								
+								return '';
+							}*/
 							 if(value == undefined){
 								value = '';
 							 }
@@ -2851,9 +2876,7 @@ var momWidget = {
 										dataTypePass[dataField]    = 'Y';	
 								   }
 							}
-							else{
-								
-							}
+
 								if(requireColumns[dataField] == 'Y' ){
 									if(!value || dataTypePass[dataField] =='N'){
 								//AUIGrid.showToastMessage(that.excelUpGrid[index], rowIndex, columnIndex, "Y/N만 입력가능!");
@@ -2867,7 +2890,7 @@ var momWidget = {
 											if (isPass[dataField] != 'N'){
 												isPass[dataField] = 'Y' ; 
 											}
-								    successCount++;
+								    //successCount++;
 									return '';
 									}
 								}
@@ -2880,7 +2903,7 @@ var momWidget = {
 										   if (isPass[dataField] != 'N'){
 												isPass[dataField] = 'Y' ; 
 											}
-									successCount++;		
+									//successCount++;		
 									return '';
 									}
 									   
@@ -2891,8 +2914,10 @@ var momWidget = {
 						}
 						
 					 });
+			
 							}
-						
+						var totalCount =  AUIGrid.getRowCount(that.excelUpGrid[index]);
+						successCount = totalCount - failCount;
 						var checkedGridProp = that.excelUpGridProperty[index];
 						var checkedColumnLayout	= AUIGrid.getColumnLayout(that.excelUpGrid[index]);
 						var checkedGridData = AUIGrid.getGridData(that.excelUpGrid[index]);
@@ -2908,7 +2933,7 @@ var momWidget = {
 						AUIGrid.destroy(that.excelUpGrid[index]);
 	 				 	AUIGrid.create(that.excelUpGrid[index],checkedColumnLayout,checkedGridProp);
 	 				 	AUIGrid.setGridData(that.excelUpGrid[index],checkedGridData);
-	 				    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료 성공:'+successCount+'실패:'+failCount});
+	 				    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
 /*	 				     successCount = 0;
 	 				     failCount = 0;*/
 			});
@@ -3342,7 +3367,7 @@ var momWidget = {
 				              initParam = your.initParam;
 			             }
 			        	  momWidget.findBtnClicked(btnIndex, initParam, true, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
-			        	  $('#' +'defaultPop'+(index+1)).momModal('hide');
+			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
