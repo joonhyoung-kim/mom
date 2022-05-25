@@ -60,6 +60,9 @@
 		AND    MCD.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
 	    AND    MCD.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
 	    AND    MSD.SHIFT_CD       = #{shiftCd, jdbcType=VARCHAR}
+	    <if test="useYn != null and useYn != ''">
+	     AND MSD.USE_YN = #{useYn, jdbcType=VARCHAR}
+	    </if>   
 		ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM , MSD.SHIFT_DETAIL_NM  
   </select>
     <select id="get_defaultInfo3" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
@@ -91,6 +94,9 @@
 		AND    MM.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
 	    AND    MM.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
 	    AND    MM.SHIFT_CD       = #{shiftCd, jdbcType=VARCHAR}		
+	    <if test="useYn != null and useYn != ''">
+	    AND    MM.USE_YN = #{useYn, jdbcType=VARCHAR}
+	    </if>  
         ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM , MT.REST_TIME_NM
 
   </select>
@@ -248,5 +254,29 @@
       AND    SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
       AND    REST_TIME_CD = #{item.restTimeCd, jdbcType=VARCHAR}
     </foreach>
-  </update>        
+  </update>   
+    <delete id="remove_defaultInfo2" parameterType="java.util.List">
+      DELETE FROM MOM_SHIFT_DETAIL
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
+           AND  SHIFT_DETAIL_CD = #{item.shiftDetailCd, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+  </delete>    
+   <delete id="remove_defaultInfo3" parameterType="java.util.List">
+      DELETE FROM MOM_SHIFT_REST_TIME_MAP
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
+           AND  REST_TIME_CD = #{item.restTimeCd, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+  </delete> 
 </mapper>

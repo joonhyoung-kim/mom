@@ -1654,7 +1654,10 @@ var momWidget = {
         var totalParam = {};
         var queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.defaultInfo'+(index+1) : menuId+'.defaultInfo'+(index+1);
 		var that= this;	
+		   if(splash==true){
 			that.splashShow();
+		   }
+			
 		
 	        initParam = that.checkInitParam(index,param,your); //init param 설정시 세팅
 	        checkSearchParam = that.checkSearchParam(index,param,your); //search param 설정시 세팅
@@ -1680,50 +1683,72 @@ var momWidget = {
 	  				queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.totalCount'+(index+1) : menuId+'.totalCount'+(index+1);
 			  }
               setTimeout(function() {
-            	 
+            	  //that.splashShow();
 	              mom_ajax('R', queryId, totalParam, function(result, data) {
     				            if(result != 'SUCCESS') {
     					             return;
     				            }  
     				  
-    				          if(btnId=='BACK'){
-								   that.excelDownGridData[index] = data;
-								   that.backWork[index] = 'N';
+    				          if(btnId=='BACK'){	 							  
+								    that.excelDownGridData[index] = data;
+								    that.backWork[index] = 'N';
+								   	var excelData = that.excelDownGridData[index]; 
+									AUIGrid.setGridData(that.excelDownGrid[index], excelData);												
+									var	fileName = that.pageProperty[index]['menuId'] + '_' + get_current_date('yyyy-mm-dd');
+								    var excelDownOpt = {fileName: fileName ,
+										    		    progressBar: true,
+										    		    showRowNumColumn:false,
+										    		    footers: undefined,
+										    		    exportWithStyle: true
+								    		            };
+				    
+				    excelDownOpt.afterRequestCallback = function() { // 엑셀 만들고 호출되는 콜백함수
+					$('.aui-grid-export-progress-modal').remove();
+					// AUIGrid.GridData(that.excelGrid[index]);
+					
+					//$('#excelArea' + (index + 1)).remove();
+					//AUIGrid.destroy(that.excelDownGrid[index]);
+					//that.exceldownGrid[index] = undefined;
+				}
+				//option.footers = footerProperty;
+				    //that.excelDownGrid[index]
+					  AUIGrid.exportToXlsx("#excelGrid"+(index+1), excelDownOpt);
+					  				
+				$('.aui-grid-export-progress-modal').height('100%');
+				$('#grid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
+								   //that.splashHide();
 							      //AUIGrid.setGridData(that.grid[index], data);  
 							  }
 							  else if(btnId=='TOTAL'){
 								that.totalRowCount[index] = data[0]['totalCount'];
 							  }
 							  else if(btnId=='INIT_PAGING' ){
-								var entireItem = [];
-								var tmpObj = JSON.parse(JSON.stringify(data[0]));
-								var tmpItem = that.objectInitialize(tmpObj);
-							
-							/*	for(var l = 0, max = that.columnProperty[index].length; l< max; l++){
-									//if(that.columnProperty[index][l]['columnShow']=='Y'){
-										tmpItem[that.columnProperty[index][l]['columnId']] = '';
-									//}
-								}*/
-								
-								
-								for(var i = 0, max2 = that.totalRowCount[index]; i< max2; i++){
+					
+								if(data.length>=that.gridProperty[index][0]['pageRowCount']){
+									var entireItem = [];
+									var tmpObj = JSON.parse(JSON.stringify(data[0]));
+									var tmpItem = that.objectInitialize(tmpObj);
+
+									for(var i = 0, max2 = that.totalRowCount[index]; i< max2; i++){
 									//tmpItem.keyId = new Date().getTime() + Math.random();
 									entireItem.push(JSON.parse(JSON.stringify(tmpItem)));
 									
-								}
-							/*	for(var k = 0, max3 = data.length; k< max3; k++){
-									data[k].keyId = new Date().getTime() + Math.random();
-									
-								}
-								*/
+								    }
+
 									for(var q = 0, max4 = that.totalRowCount[index]; q< max4; q++){
 									  //  AUIGrid.setCellValue(that.grid[index], q, "keyId", q+1);
 									 entireItem[q]['keyId'] = q+1;
 									
 								}
-								
-								      AUIGrid.setGridData(that.grid[index], entireItem);  
-								      AUIGrid.updateRowsById(that.grid[index], data,false); 
+									 AUIGrid.setGridData(that.grid[index], entireItem);  
+								     AUIGrid.updateRowsById(that.grid[index], data,false); 
+								}
+								else{
+									 AUIGrid.setGridData(that.grid[index], data); 
+								}
+								    if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
+											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
+									} 
 									//AUIGrid.addRow(that.grid[index], data, "first"); 
 								
 								
@@ -1735,12 +1760,13 @@ var momWidget = {
 							  }							  
 							  else{
 								AUIGrid.setGridData(that.grid[index], data);  
+								if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
+											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
+									}
 								
 							 }
     				        	 
-									if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
-											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
-									}
+									
 										           
                                   	if(callBackFunc != undefined) {	
 									  callBackFunc('SUCCESS', data,index,event);
@@ -2485,7 +2511,7 @@ var momWidget = {
 		
 		    });
 		     $(document).on('click', '.' + paginLastBtnClass, function(e) {
-				var nowPagingBtn = e.target.pageNum; 
+				    var nowPagingBtn = e.target.pageNum; 
 					
 					if(nowPagingBtn == undefined) {
 						return;
@@ -2545,7 +2571,8 @@ var momWidget = {
 		    });
 		    
 		  $(document).on('click', '#' + findBtnId, function(e) {  
-			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용			
+			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
+			     that.findBtnClicked(index, {}, true, 'TOTAL',menuId,your);	
 		    	 that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['menuId'],your);
 		    }	
 		    else{
@@ -3171,7 +3198,7 @@ var momWidget = {
 				$('#' +'defaultPop'+(index+1)).momModal('show');
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);				
-				s
+				
 				callBackResult = that.checkActionCallBack(index, 'CP', param, 'copyBtn', your,param);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
@@ -3239,7 +3266,8 @@ var momWidget = {
 					
 				
 			});
-			$(document).on('click', '#' + savePopBtnId, function(e) {	
+			$(document).on('click', '#' + savePopBtnId, function(e) {
+				momWidget.splashShow();	
 				var param = [];
 				var initParam ={};
 		
@@ -3366,7 +3394,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, true, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
 			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
@@ -3437,11 +3465,13 @@ var momWidget = {
 					that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES10491']});					
 					return;
 				}
-				if(that.checkActionCallInit(index, 'D', param, 'delBtn'+(index+1), your)['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
-					  momWidget.splashHide();
-				      return;
-				}			
+				callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,param);
+				if(callInitResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    }
+				  param = callInitResult['param'];	
 				  mom_ajax('D', that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
 			            if(result != 'SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
@@ -3455,8 +3485,8 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 						}	
-								
-			        	  momWidget.findBtnClicked(index, {}, true, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);
+						  param = callBackResult['param'];	
+			        	  momWidget.findBtnClicked(index, param, false, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
@@ -3476,17 +3506,10 @@ var momWidget = {
 						your.excelDownCallInit(index, your);
 					}					
 					if(that.gridProperty[index][0]['usePaging']== true){
-						that.backWork[index] = 'Y';		    
+						//that.backWork[index] = 'Y';		    
 						that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
-						if(that.backWork[index] =='N'){
-							var excelData = that.excelDownGridData[index];
-						}
-						else{
-							  momWidget.messageBox({type:'warning', width:'400', height: '145', html: '조회중입니다 잠시만기다려 주세요.'});
-					          momWidget.splashHide();
-				              return;
-						}
-							
+						return;
+	
 					}	
 					else{
 							var excelData = AUIGrid.getGridData(that.grid[index]); 
@@ -4163,7 +4186,7 @@ var momWidget = {
 								             $('#'+popupId).jqxComboBox('checkIndex', 0); 
 							          }
 							          else{
-											 $('#'+popupId).jqxComboBox({selectedIndex: 0 });
+											// $('#'+popupId).jqxComboBox({selectedIndex: 0 });
 							         }
 						        		
 						        	 }							        	 
@@ -5874,25 +5897,25 @@ var momWidget = {
 		if(action == 'C' && your.createCallInit != undefined) {
 			 your.createCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(action == 'CP' && your.copyCallInit != undefined) {
+		if(action == 'CP' && your.copyCallInit != undefined) {
 			 your.copyCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(action == 'E' && your.excelCallInit != undefined) {
+		if(action == 'E' && your.excelCallInit != undefined) {
 			 your.excelCallInit(index,your,action,btnId,param,result);	
 		}
-		else if(action == 'R' && your.searchCallInit != undefined) {
+		if(action == 'R' && your.searchCallInit != undefined) {
 			 your.searchCallInit(index,your,action,btnId,param,result);	
 		}
-		else if(action == 'GS' && your.saveCallInit != undefined) {
+		if(action == 'GS' && your.saveCallInit != undefined) {
 				your.saveCallInit(index,your,action,btnId,param,result);			
 		} 
-		else if((action == 'C' || action == 'U' || action == 'P') && your.saveCallInit != undefined) {
+		if((action == 'C' || action == 'U' || action == 'P') && your.saveCallInit != undefined) {
 			 your.saveCallInit(index,your,action,btnId,param,result);			
 	    } 
-		else if(action == 'D'  && your.delCallInit != undefined) {		
+		if(action == 'D'  && your.delCallInit != undefined) {		
 			 your.delCallInit(index,your,action,btnId,param,result);			
 		}
-		else if(action == 'U' && your.editCallBack != undefined) {
+		if(action == 'U' && your.editCallBack != undefined) {
 			 your.editCallBack(index,your,action,btnId,param,result);	
 		}	
 		
@@ -5912,22 +5935,22 @@ var momWidget = {
 		if(action == 'CP' && your.copyCallBack != undefined) {
 			your.copyCallBack(index,your,action,btnId,param,result,data);	
 		}	
-		else if(action == 'E' && your.excelCallBack != undefined) {
+		if(action == 'E' && your.excelCallBack != undefined) {
 			your.excelCallBack(index,your,action,btnId,param,result,data);	
 		}
-		else if(action == 'R' && your.searchCallBack != undefined) {
+		if(action == 'R' && your.searchCallBack != undefined) {
 			your.searchCallBack(index,your,action,btnId,param,result,data);	
 		}
-		else if(action == 'GS' && your.saveCallBack != undefined) {
+		if(action == 'GS' && your.saveCallBack != undefined) {
 				your.saveCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if((action == 'C' || action == 'U' || action == 'P') && your.saveCallBack != undefined) {
+		if((action == 'C' || action == 'U' || action == 'P') && your.saveCallBack != undefined) {
 			your.saveCallBack(index,your,action,btnId,param,result,data);		
 	} 
-		else if(action == 'D'  && your.delCallBack != undefined) {		
+		if(action == 'D'  && your.delCallBack != undefined) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
-		else if(action == 'U' && your.editCallBack != undefined) {
+		if(action == 'U' && your.editCallBack != undefined) {
 			     your.editCallBack(index,your,action,btnId,param,result,data);	
 		}
 	

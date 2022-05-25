@@ -68,8 +68,18 @@ var VIEW= {
 					    var endTime   = items[0]['endTime'].split(':');
 					    var startTimeToSec = Number(startTime[0])*3600 + Number(startTime[1])*60;
 					    var endTimeToSec = Number(endTime[0])*3600 + Number(endTime[1])*60;
-					    items[0]['workTime'] = (endTimeToSec - startTimeToSec )/60;
-			            result.param = items;
+					    if(startTimeToSec>endTimeToSec){
+						items[0]['workTime'] = (86400 + (endTimeToSec - startTimeToSec ))/60
+					    }
+					    else if(startTimeToSec == endTimeToSec){
+						items[0]['workTime'] = 1440;
+			          
+					    }
+					    else{
+						items[0]['workTime'] = (endTimeToSec - startTimeToSec )/60;
+			          
+					    }
+					     result.param = items;
         
 	    }
 	    else if(index == 1 && btnId =='saveBtnDP'){		           
@@ -78,7 +88,17 @@ var VIEW= {
 				    var endTime   = items[0]['endTime'].split(':');
 				    var startTimeToSec = Number(startTime[0])*3600 + Number(startTime[1])*60;
 				    var endTimeToSec = Number(endTime[0])*3600 + Number(endTime[1])*60;
-				    items[0]['workTime'] = (endTimeToSec - startTimeToSec )/60;
+				       if(startTimeToSec>endTimeToSec){
+						items[0]['workTime'] = (86400 + (endTimeToSec - startTimeToSec ))/60
+					    }
+					    else if(startTimeToSec == endTimeToSec){
+						items[0]['workTime'] = 1440;
+			          
+					    }
+					    else{
+						items[0]['workTime'] = (endTimeToSec - startTimeToSec )/60;
+			          
+					    }
 		            result.param = items;
 		            that.initParam = {shiftCd: items[0].shiftCd};
         
@@ -90,12 +110,27 @@ var VIEW= {
 			 result.param = '';
 					
 	    }
+	/*    else if(index == 1 && btnId=='delBtn'){
+		result.param = {shiftCd:AUIGrid.getSelectedItems(widget.grid[index])[0]['item']['shiftCd']}
+		}*/
 		else if(index == 2 && (btnId=='createBtn' || btnId=='editBtn')){	
 			 result.param = '';
 					
 	   }
+	/*   else if(index == 2 && btnId=='delBtn'){
+		result.param = {shiftCd:AUIGrid.getSelectedItems(widget.grid[index])[0]['item']['shiftCd']}
+	   }*/
 
-	}	
+	},
+	delCallBack	: function(index,your,action,btnId,param,result) {
+		 if(index == 1 && btnId=='delBtn'){
+			result.param = {shiftCd:AUIGrid.getSelectedItems(widget.grid[index])[0]['item']['shiftCd']}
+		 }
+		 else if(index == 2 && btnId=='delBtn'){
+			result.param = {shiftCd:AUIGrid.getSelectedItems(widget.grid[index])[0]['item']['shiftCd']}
+		 }
+		
+	}
 	
 };
 
