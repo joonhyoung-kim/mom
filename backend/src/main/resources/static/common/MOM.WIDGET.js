@@ -2965,7 +2965,7 @@ var momWidget = {
 	 				     failCount = 0;*/
 			});
 			$(document).on('click','#'+saveBtnExUpBtnId, function(e) {
-				//that.splashShow();
+				that.splashShow();
 				 var bar = $('.bar');
 				 var percent = $('.percent');
 				 var status = $('#status');
@@ -2981,12 +2981,13 @@ var momWidget = {
 						param.push(checkedItems[i]); 														
 				    }
 					if(param.length>=1000){
+						that.splashHide();
 					    $("#pleaseWaitDialog").modal('show');
 					}
 					else{
-						that.splashShow();
+						//that.splashShow();
 					}
-				if(that.checkActionCallInit(index, 'GS', param, 'createBtn'+index, your)['result'] != 'SUCCESS') {
+				if(that.checkActionCallInit(index, 'GS', param, 'saveUpBtn', your)['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
 					  momWidget.splashHide();
 				      return;
@@ -2996,6 +2997,7 @@ var momWidget = {
 						 param[0].excelUpYn = 'Y';
 						 param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
 						 mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+							  $('#excelUpPop'+(index+1)).momModal('hide');
 					            if(data[0]['p_err_code']=='E') {
 					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
 									  momWidget.splashHide();
@@ -3006,7 +3008,7 @@ var momWidget = {
 									  momWidget.splashHide();
 								      return;
 								} momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);	
-					        	  $('#excelUpPop'+(index+1)).momModal('hide');
+					        	  //$('#excelUpPop'+(index+1)).momModal('hide');
 					        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 								  momWidget.splashHide();
 								  $("#pleaseWaitDialog").modal('hide');
@@ -3026,8 +3028,11 @@ var momWidget = {
 
 				$('#'+excelFile).val('');
 				//AUIGrid.update(that.excelUpGrid[index]);
+							setTimeout(function() {
+
 						that.splashHide();
-							}, 500);
+							}, 1000);
+							}, 1000);
 			
 		//AUIGrid.showToastMessage(that.excelUpGrid[index], 2, 0, "Y/N만 입력가능!");
 			});
@@ -5915,9 +5920,9 @@ var momWidget = {
 		if(action == 'D'  && your.delCallInit != undefined) {		
 			 your.delCallInit(index,your,action,btnId,param,result);			
 		}
-		if(action == 'U' && your.editCallBack != undefined) {
+	/*	if(action == 'U' && your.editCallBack != undefined) {
 			 your.editCallBack(index,your,action,btnId,param,result);	
-		}	
+		}	*/
 		
 
 			return {result:result.result,param:result.param,msg:result.msg};
@@ -5950,9 +5955,9 @@ var momWidget = {
 		if(action == 'D'  && your.delCallBack != undefined) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
-		if(action == 'U' && your.editCallBack != undefined) {
+/*		if(action == 'U' && your.editCallBack != undefined) {
 			     your.editCallBack(index,your,action,btnId,param,result,data);	
-		}
+		}*/
 	
 			return {result:result.result,param:result.param,msg:result.msg};
 		

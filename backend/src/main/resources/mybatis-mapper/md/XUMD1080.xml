@@ -174,18 +174,18 @@
       AND    OPERATION_ID = #{item.operationId, jdbcType=VARCHAR}
     </foreach>
   </update>    
-  <delete id="remove_defaultInfo2" parameterType="java.util.List">
+   <delete id="remove_defaultInfo2" parameterType="java.util.List">
       DELETE FROM MOM_ROUTING_PATH
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
-        (       COMPANY_CD = #{item.companyCd
-           AND  DIVISION_CD = #{item.divisionCd
-           AND  ROUTING_ID = #{item.routingId
-           AND  OPERATION_ID = #{item.operationId
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  ROUTING_ID = #{item.routingId, jdbcType=VARCHAR}
+           AND  OPERATION_ID = #{item.operationId, jdbcType=VARCHAR}
         )
        </foreach>
       </where>
-  </delete>  
+  </delete>
     <insert id="upsert_defaultInfo1" parameterType="java.util.List">
       MERGE INTO MOM_ROUTING 
             USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">

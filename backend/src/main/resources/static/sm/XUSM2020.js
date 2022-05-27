@@ -19,7 +19,7 @@ var XUSM2020 = {
 				AUIGrid.expandAll(momWidget.grid[0]);
 				isExpanded = true;
 			} else {
-				AUIGrid.collapseAll(momWidget.grid[0]);
+				AUIGrid.collapseAll(momWidget.grid[0] );
 				isExpanded = false;
 			}
 		});
@@ -38,10 +38,23 @@ var XUSM2020 = {
 		}
 	
 	},
-	saveCallInit: function(index,your,action,btnId,param){
-		if(index == 1){
-			for(var i=0;i<param.length;i++){
-				param[i].msgType = 'MENU';
+
+	saveCallInit: function(index,your,action,btnId,param,result){
+		if(index == 0 && btnId =='saveBtn'){
+			var gridItem =  AUIGrid.getGridData(momWidget.grid[index]);
+			for(var i=0,max=gridItem.length;i<max;i++){
+				 if(AUIGrid.isCheckedRowById(momWidget.grid[index],gridItem[i]['menuId']) == true){
+					gridItem[i]['useYnFlag'] = 'Y';									
+				}
+				else{
+					gridItem[i]['useYnFlag'] = 'N';		
+				}
+			}
+			result.param = gridItem;
+		}
+		else if(index == 1){
+			for(var j=0;j<param.length;j++){
+				  param[j].msgType = 'MENU';
 				if(param[1].menuNm == undefined || param[1].menuNm ==''){
 					param[1].menuNm = param[0].menuNm;
 				}

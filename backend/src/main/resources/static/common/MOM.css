@@ -20,6 +20,11 @@
     height: 10%;
  
 }
+.left-side-menu {
+  height:98% !important;
+  overflow:auto;
+ 
+}
 .modal-header-excelUp {
     /* min-height: 16.43px; */
     padding: 15px;

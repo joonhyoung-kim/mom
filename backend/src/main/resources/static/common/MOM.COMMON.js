@@ -114,7 +114,7 @@ leftMenuAuth: function(el,params) {
 		var leftMenuTopLv3 = '';
 		var leftMenuTop = '<div class="sticky is-expanded" style="margin-bottom: -73.9773px;">'+
 		'<div class="app-sidebar__overlay active" data-bs-toggle="sidebar"></div>'+
-		  '<div class="app-sidebar ps open">'+
+		  '<div class="app-sidebar  open">'+
 			'<div class="side-header">'+
 				'<a class="header-brand1" href="index.html"> <img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">'+
 				  '<img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo-1.png" class="header-brand-img toggle-logo" alt="logo">'+
@@ -122,7 +122,7 @@ leftMenuAuth: function(el,params) {
 		          '<img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo-3.png" class="header-brand-img light-logo1" alt="logo">'+
 				 '</a>'+
 			'</div>'+
-		   '<div class="main-sidemenu is-expanded">'+
+		   '<div class="main-sidemenu is-expanded left-side-menu">'+
 			 '<div class="slide-left disabled active is-expanded" id="slide-left">'+
 					'<svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">'+
 			         '<path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>'+
@@ -1746,6 +1746,11 @@ function excelUploadGrid(file, grid) {
         var wb = XLSX.read(fileData, {type : 'binary'});
         wb.SheetNames.forEach(function(sheetName) {
 	        var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
+	     if(rowObj.length>100000){
+		   // momWidget.splashHide();
+			momWidget.messageBox({type:'warning', width:'400', height: '145', html: '10만건 이하로 업로드 해주세요(현재크기:'+rowObj.length+')'});
+	        return;
+		 }
 	        var reRowObj = JSON.stringify(rowObj); 
 	        if(reRowObj.indexOf('<![CDATA') > -1) {
 	        	reRowObj = reRowObj.replaceAll('<![CDATA[','').replaceAll(']]>','');
@@ -1769,7 +1774,7 @@ function excelUploadGrid(file, grid) {
             columnInfo[key] = format;
 
         }
-        
+      
         for(var i = 0; i < excelData.length; i++) {
         	for(var key in excelData[i]) {
         		if(headerInfo[key] != undefined) {
@@ -1778,7 +1783,7 @@ function excelUploadGrid(file, grid) {
 		                        excelData[i][key] = excelData[i][key]+''.replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
 	                   }
 	                   else{
-								excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
+								excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'');
 	                   }
         				
         			}
@@ -1814,7 +1819,10 @@ function excelUploadGrid(file, grid) {
     	
        // excel_upload_new_run(grid, excelData, call_back);
     };
-    
+ /*     if(file.files[0]['size']>100000){
+			momWidget.messageBox({type:'warning', width:'400', height: '145', html: '10만건 이하로 업로드 해주세요(현재크기:'+file.files[0]['size']+')'});
+	        return;
+		}*/
     reader.readAsBinaryString(file.files[0]);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
