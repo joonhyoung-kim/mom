@@ -16,8 +16,9 @@
 	         , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
 		     , MCD.DIVISION_NM
-		     , MCC.CODE_CATEGORY
-		     , MCC.CODE_CATEGORY_NM
+		     , MCC.CODE_CATEGORY AS CATEGORY_CD
+		     , MCC.CODE_CATEGORY AS KEY_ID
+		     , MCC.CODE_CATEGORY_NM AS CATEGORY_NM
 		     , MCC.SORT_NO
 		     , MCC.USE_YN
 		     , MCC.DESCRIPTION
@@ -81,7 +82,7 @@
                <foreach collection="list" item="item"  open="" separator="OR" close="">
                (      COMPANY_CD    = #{item.companyCd,   jdbcType=VARCHAR}
                   AND DIVISION_CD   = #{item.divisionCd,  jdbcType=VARCHAR}
-                  AND CODE_CATEGORY = #{item.codeCategory, jdbcType=VARCHAR}
+                  AND CODE_CATEGORY = #{item.categoryCd, jdbcType=VARCHAR}
                )      
              </foreach>
             </where>  
@@ -180,8 +181,8 @@
 		AND    MCC.CODE_CATEGORY  = MGC.CODE_CATEGORY
 		AND    MCC.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
 		AND    MCC.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
-	    <if test = "codeCategory != null and codeCategory != ''">
-		AND    MCC.CODE_CATEGORY  = #{codeCategory, jdbcType=VARCHAR}
+	    <if test = "categoryCd != null and categoryCd != ''">
+		AND    MCC.CODE_CATEGORY  = #{categoryCd, jdbcType=VARCHAR}
 	    </if>
 		<if test = "groupCdNm != null and groupCdNm != ''">
 		AND  (UPPER(MGC.GROUP_CD)  LIKE '%' || UPPER(#{groupCdNm, jdbcType=VARCHAR}) || '%'  OR UPPER(MGC.GROUP_CODE_NM)  LIKE '%' || UPPER(#{groupCdNm, jdbcType=VARCHAR}) || '%')

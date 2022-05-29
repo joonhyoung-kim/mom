@@ -1446,13 +1446,15 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		type = 'POST';	
-		excelUpYn = param[0].excelUpYn == undefined ? 'N':param[0].excelUpYn;
-		sessionId = param[0].sessionId == undefined ? '':param[0].sessionId;
 		if(param.length==0){
+				excelUpYn = param[0] == undefined ? 'N':param[0].excelUpYn;
+		        sessionId = param[0] == undefined ? '':param[0].sessionId;
 				param.push({divisionCd:siteInfo.divisionCd,companyCd:siteInfo.companyCd,langCd:siteInfo.languageCd,userId:userInfo.userNo,commitYn:commitYn,p_err_code:'',p_err_msg:'',requestType:requestType});
 			    param = JSON.stringify(param);
 		}
 		else{
+			excelUpYn = param[0].excelUpYn == undefined ? 'N':param[0].excelUpYn;
+		    sessionId = param[0].sessionId == undefined ? '':param[0].sessionId;
 			for(var i = 0;i<param.length;i++){
 				param[i].divisionCd  = siteInfo.divisionCd;
 				param[i].companyCd   = siteInfo.companyCd;

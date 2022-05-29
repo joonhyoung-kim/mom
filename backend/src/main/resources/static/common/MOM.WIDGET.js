@@ -1120,7 +1120,7 @@ var momWidget = {
 		},
 	createFileUploadPop: {
 		excelUp : function(index,title) {			
-			var html  = '<div class="modal" id="excelUpPop'+(index+1)+'" style="display: none;" aria-hidden="true">'+
+			var html  = '<div class="modal" id="excelUpPop'+(index+1)+'" style="z-index: 9999;display: none;" aria-hidden="true">'+
 			    '<div class="modal-dialog" role="document">'+
 			        '<div class="modal-content excelUploadPop">'+
 			            '<div class="modal-header-excelUp">'+
@@ -2967,7 +2967,7 @@ var momWidget = {
 	 				     failCount = 0;*/
 			});
 			$(document).on('click','#'+saveExUpBtnId, function(e) {
-					$('#excelUpPop'+(index+1)).modal('hide');	
+					$('#excelUpPop'+(index+1)).momModal('hide');	
 				that.splashShow();
 				
 				 var bar = $('.bar');
@@ -3059,6 +3059,7 @@ var momWidget = {
 				$('#excelFile1').val('')
 				 AUIGrid.destroy(that.excelUpGrid[index]);
 				//AUIGrid.clearGridData(that.excelUpGrid[index]);
+				//$('#excelUpPop'+(index+1)).css('opacity', '0');
 				$('#excelUpPop'+(index+1)).momModal('hide');
 				
 			});
@@ -3100,7 +3101,7 @@ var momWidget = {
 					};
 					that.excelUpGridProperty[index] = gridPros;
 					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-					$('#' +'excelUpPop'+(index+1)).modal('show');
+					$('#' +'excelUpPop'+(index+1)).momModal('show');
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
 			$(document).on('click', '#' + addBtnId, function() {	
@@ -5016,7 +5017,7 @@ var momWidget = {
 						if(that.columnProperty[index1] == undefined) {
 							continue;
 						} else {
-							$('body').append('<div id="temp_div2_' + (index1 + 1) + '" style="width:100%; position:fixed; height:100%; z-index: -999; top:0px"><div id="excelGrid' + (index1 + 1)  + '"></div></div>');
+							$('body').append('<div id="temp_div2_' + (index1 + 1) + '" style="width:100%; position:fixed; height:100%; /*z-index: -999;*/ top:0px"><div id="excelGrid' + (index1 + 1)  + '"></div></div>');
 							
 							if(JSON.stringify(that.columnProperty[index1]).length < 4) {
 								continue;

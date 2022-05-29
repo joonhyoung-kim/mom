@@ -30,7 +30,7 @@ var singleRowIndex = undefined;
 // 2020.04.12 hyjeong end
 var XUSM3030 = {
 	initParam		:  undefined,
-	searchParam		:  [['menuId','gridId','programId']],
+	searchParam		:  [['menuId','gridId']],
 	init: function() {			
 		var that = this;
 	     $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#eeb55e;font-weight:bold:color:#22741C;}</style>');
@@ -215,64 +215,11 @@ var XUSM3030 = {
 			 AUIGrid.create('#grid1', columnProperty, gridProperty); 
 			 that.gridEvent();
 		     AUIGrid.setGridData('#grid1', data2);
-		   /*  for(var i=0,max=gridProp.length;i<max;i++){		
-  				AUIGrid.setCellValue('#grid1', i, "validValue", gridProp[i]['propertyValue']);
-     		 }*/
-		/*     for(var i=0,max=gridProp.length;i<max;i++){		
-				AUIGrid.setCellValue('#grid1', i, "validValue", gridProp[i]['propertyValue']);
-		      }*/
-	  /*      	AUIGrid.setColumnPropByDataField('#grid1', 'validValue', {
-					labelFunction: function(rowIndex, columnIndex, value, item) { 
-						if(gridProp[rowIndex]['validValue'] == '' ||  gridProp[rowIndex]['validValue'] == undefined){
-							return '';
-						}
-                    	var retStr = "";
-                    	var comboList = gridProp[rowIndex]['validValue'];
-                    	var type = typeof(gridProp[rowIndex]['validValue'][0]['code']) == 'boolean' ? 'boolean': 'string';
-            			for(var i=0,len=comboList.length; i<len; i++) {
-            				if(type == 'boolean'){
-            					if(comboList[i]["code"].toString() == value) {
-                					retStr = comboList[i]["value"];
-                					break;
-                				}
-            				}
-            				else{
-            					  if(comboList[i]["code"] == value) {
-                					retStr = comboList[i]["value"];
-                					break;
-                				}
-            				}
-            				
-            			}
-            			return retStr == "" ? value : retStr;
-                       
-					},
-					editRenderer : {
-						type: 'ComboBoxRenderer',
-						showEditorBtnOver: true, 
-						list: gridProp[0].validValue, 
-						keyField: 'code', 
-						valueField: 'value',
-							listFunction : function(rowIndex, columnIndex, item, dataField) {
-									  return gridProp[rowIndex]['validValue'] ;           
-							}
-
-					}
-					
-			 	});*/
+             momWidget.splashHide();
 		      	momWidget.splashHide();
 	      }, undefined, undefined, this, false,'Y');
 	
 
-
-
-			/* for(var i=0,max=gridProp.length;i<max;i++){		
-					AUIGrid.setCellValue('#grid1', i, "validValue", gridProp[i]['propertyValue']);
-			 }*/
-		 
-		
-		//tuCommon.cellClick(grid1, 'single');
-		//tuCommon.cellClick(grid1);
 	}, 
 	columnGrid: function(queryId) {
 		var that = this;
@@ -280,7 +227,7 @@ var XUSM3030 = {
 		var dataTypeList  = [{"code":"string","value":"문자"},{"code":"numeric","value":"숫자"},{"code":"date","value":"날짜"},{"code":"boolean","value":"참/거짓"}];
 		var columnTypeList  = [{"code":"T","value":"텍스트"},{"code":"S","value":"싱글-드롭다운"},{"code":"M","value":"멀티-드롭다운"},{"code":"CK","value":"체크박스"},{"code":"C","value":"캘린더"}];
 		var sortMethod    = [{"code":"ASC","value":"오름차순"},{"code":"DESC","value":"내림차순"},{"code":"NONE","value":"사용안함"}];
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -611,6 +558,7 @@ var XUSM3030 = {
 		 AUIGrid.create('#grid1', columnProperty, gridProperty);
 		 that.gridEvent();
 		 AUIGrid.setGridData('#grid1', columnProp);
+		 momWidget.splashHide();
 		   }, undefined, undefined, this, false,'Y');	
 		  }, undefined, undefined, this, false,'Y');	
 		 
@@ -621,7 +569,7 @@ var XUSM3030 = {
 		var that = this;
 		var searchTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"}];
 		var headerTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"}];
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -878,6 +826,7 @@ var XUSM3030 = {
 			 that.gridEvent();
 			 searchProp.sort(function(a,b){ return a.searchSeq-b.searchSeq});
 			 AUIGrid.setGridData('#grid1', searchProp);	
+			 momWidget.splashHide();
 		 }, undefined, undefined, this, false,'Y');	
 		  }, undefined, undefined, this, false,'Y');	
 		
@@ -885,7 +834,7 @@ var XUSM3030 = {
 	popupGrid: function(queryId) {
 		var that = this;
 		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"C","value":"캘린더"},{"code":"C-HM","value":"시분"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"},{"code":"DG","value":"드롭다운그리드"},{"code":"DS","value":"비고"}];
-		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
+		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -1102,7 +1051,7 @@ var XUSM3030 = {
 			 AUIGrid.create('#grid1', columnProperty, gridProperty);
 			 that.gridEvent();
 			 AUIGrid.setGridData('#grid1', popupProp);	
-		
+		     momWidget.splashHide();
 		 }, undefined, undefined, this, false,'Y');	
 		}, undefined, undefined, this, false,'Y');	
 		
@@ -1111,7 +1060,7 @@ var XUSM3030 = {
 		var that = this;
 		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"등록&수정"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
-		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
+		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -1251,6 +1200,7 @@ var XUSM3030 = {
 			 AUIGrid.create('#grid1', columnProperty, gridProperty);
 			 that.gridEvent();
 			 AUIGrid.setGridData('#grid1', buttonProp);	
+			 momWidget.splashHide();
 		}, undefined, undefined, this, false,'Y');	
 		 }, undefined, undefined, this, false,'Y');	
 		
@@ -1684,6 +1634,7 @@ var XUSM3030 = {
 			var checkedItems = AUIGrid.getGridData('#grid1');
 			var mapList = [];
 			var queryId = 'gridProp';
+			var queryId2 = 'gridInfo';
 			for(var i=0,max=checkedItems.length;i<max;i++){	
 				//mapList[i] = checkedItems[i]['item'];
 				mapList[i] = checkedItems[i];
@@ -1695,18 +1646,23 @@ var XUSM3030 = {
 			}
 			if(chooseTab == 'grid'){
 				queryId = 'gridProp';
+				queryId2 = 'gridInfo';
 			}
 			else if(chooseTab == 'column'){
 				queryId = 'columnProp';
+				queryId2 = 'columnInfo';
 			}
 			else if(chooseTab == 'search'){
 				queryId = 'searchProp';
+				queryId2 = 'searchInfo';
 			}
 			else if(chooseTab == 'popup'){
 				queryId = 'popupProp';
+				queryId2 = 'popupInfo';
 			}
 			else if(chooseTab == 'button'){
 				queryId = 'buttonProp';
+				queryId2 = 'buttonInfo';
 			}
 			else{
 				
@@ -1724,7 +1680,22 @@ var XUSM3030 = {
 							      return;
 						      } 
 						   momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});		
-						   $("#findBtn1").trigger("click");
+						   //$("#findBtn1").trigger("click");
+							if(chooseTab == 'grid'){
+								that.gridGrid(queryId2);
+							}
+							else if(chooseTab == 'column'){
+								that.columnGrid(queryId2);
+							}
+							else if(chooseTab == 'search'){
+								that.searchGrid(queryId2);
+							}
+							else if(chooseTab == 'popup'){
+								that.popupGrid(queryId2);
+							}
+							else if(chooseTab == 'button'){
+								that.buttonGrid(queryId2);
+							}
 					   }, undefined, undefined, this, false,'Y','proc');
 					   
 				 }, undefined, undefined, this, false,'Y','crud');
@@ -1736,26 +1707,32 @@ var XUSM3030 = {
 			var checkedItems = AUIGrid.getCheckedRowItems('#grid1');
 			var mapList = [];
 			var queryId = 'gridProp';
+			var queryId2 = 'gridInfo';
 			for(var i=0,max=checkedItems.length;i<max;i++){	
 				mapList[i] = checkedItems[i]['item'];
 				mapList[i].menuId       = $('#menuId').val();
 				mapList[i].gridId       = $('#gridId').val();
 				mapList[i].actionType   ='D';
 			}
-			if(chooseTab == 'grid'){
+		   if(chooseTab == 'grid'){
 				queryId = 'gridProp';
+				queryId2 = 'gridInfo';
 			}
 			else if(chooseTab == 'column'){
 				queryId = 'columnProp';
+				queryId2 = 'columnInfo';
 			}
 			else if(chooseTab == 'search'){
 				queryId = 'searchProp';
+				queryId2 = 'searchInfo';
 			}
 			else if(chooseTab == 'popup'){
 				queryId = 'popupProp';
+				queryId2 = 'popupInfo';
 			}
 			else if(chooseTab == 'button'){
 				queryId = 'buttonProp';
+				queryId2 = 'buttonInfo';
 			}
 			else{
 				
@@ -1774,7 +1751,22 @@ var XUSM3030 = {
 						      return;
 					      } 
 					       momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});		
-					   $("#findBtn1").trigger("click");
+					  // $("#findBtn1").trigger("click");
+					  	if(chooseTab == 'grid'){
+								that.gridGrid(queryId2);
+							}
+							else if(chooseTab == 'column'){
+								that.columnGrid(queryId2);
+							}
+							else if(chooseTab == 'search'){
+								that.searchGrid(queryId2);
+							}
+							else if(chooseTab == 'popup'){
+								that.popupGrid(queryId2);
+							}
+							else if(chooseTab == 'button'){
+								that.buttonGrid(queryId2);
+							}
 				   }, undefined, undefined, this, false,'Y');				   
 			 }, undefined, undefined, this, false,'Y');
 		});
@@ -1935,7 +1927,7 @@ var XUSM3030 = {
 	setComboBox: function() {
 		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'containsignorecase',remoteAutoComplete: false});	
 		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
-		$('#programId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120});	
+		
 		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {
 		      if(result != 'SUCCESS') {
 		    	  momWidget.splashHide();
@@ -1950,18 +1942,7 @@ var XUSM3030 = {
 			    return;
 
 	}, undefined, undefined, this, false,'Y');	
-	  mom_ajax('R', 'XUSM3030.programList', {}, function(result, data) {
-		      if(result != 'SUCCESS') {
-		    	  momWidget.splashHide();
-			      return;							     
-		      }					       
-			  	 $('#programId').jqxComboBox("clear");			
-			  	 $('#programId').jqxComboBox("source",data);	
-				//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
-				//momWidget.splashHide();
-			    return;
 
-	}, undefined, undefined, this, false);	
 		/*  mom_ajax('R', 'XUSM3030.programList', {}, function(result, data) {
 		      if(result != 'SUCCESS') {
 		    	  momWidget.splashHide();

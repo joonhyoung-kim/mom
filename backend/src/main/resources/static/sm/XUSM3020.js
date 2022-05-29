@@ -56,7 +56,7 @@ var VIEW= {
             if(checkedItem.length ==0){
 	          $(defaultPop2).momModal('hide');
             }
-		    $("#codeCategoryDP2").val(checkedItem[0]['codeCategory']);
+		    $("#codeCategoryDP2").val(checkedItem[0]['categoryCd']);
 				
 		}
 		else if(index ==2 && btnId =='createBtn'){	
@@ -77,7 +77,7 @@ var VIEW= {
 				result.result = 'FAIL';
 				return;
 			}
-			param.codeCategory = checkedItem[0].codeCategory;
+			result.param = {categoryCd:checkedItem[0].categoryCd};
 					
 		}
 		else if(index == 2 && btnId =='findBtn'){	
