@@ -9,6 +9,6 @@ var XUMD1030= {
 };
 
 $(document).ready(function(event){	
-	momWidget.init(1, menuId, XUMD1030);
+	momWidget.init(1, menuId, XUMD1030); 
 	XUMD1030.init();
 });

@@ -355,7 +355,8 @@ public class MomDao {
 	        				   System.out.println("UPSERT 실패 카운트="+resultCount);
 	                		   return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");      					  		 
 	            		}            		       				        			       			
-            } catch(Exception e) { 
+            } catch(Exception e) {
+            	ProgressInfo.successCount = 0;
             	dataSourceTransactionManager.rollback(transactionStatus);
             	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
         		throw cdae;
@@ -389,8 +390,10 @@ public class MomDao {
     	TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
     	SqlSession sqlSession1 = null;
     	try {
-    		sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);  		
+    		sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);  	
+    		//sqlSession1 = sqlSessionFactory.openSession(true);  		
     		resultCount = sqlSession1.delete(query, param);
+    		System.out.println("리절트카운트="+resultCount);
     		if(resultCount != 0 ) {
 				sqlSession1.flushStatements();
 	        	dataSourceTransactionManager.commit(transactionStatus);
@@ -398,6 +401,7 @@ public class MomDao {
 				      return FrameworkUtil.createResponseMap(false,"DB삭제 실패");      				
 			}
         } catch(Exception e) {
+        	System.out.println("에러="+resultCount);
         	dataSourceTransactionManager.rollback(transactionStatus);
         } finally {
         	sqlSession1.close();  

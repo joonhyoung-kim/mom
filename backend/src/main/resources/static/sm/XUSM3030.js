@@ -1368,7 +1368,10 @@ var XUSM3030 = {
 		var that = this;	
 	
 	
-		$(document).on('change', '#menuId', function() {
+		$(document).on('change', '#menuId', function(e) {
+			 if ($("#menuId").jqxComboBox('isOpened')){
+				return;
+			}
 			  if($('#gridId').val()!=''){
 				  momWidget.splashShow();
 				    var gridId = '1';
@@ -1673,101 +1676,7 @@ var XUSM3030 = {
 
 				      	momWidget.splashHide();
 			     	
-/*			mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result1, data1) {
-			      if(result1 != 'SUCCESS') {
-				      return;
-				      momWidget.splashHide();
-			      }  
-						
-				      var columnString = data1[0]['columnProperty'];
-				      var searchString = data1[0]['searchProperty'];
-				      var popupString = data1[0]['popupProperty'];
-				      var buttonString = data1[0]['buttonProperty'];
-				    //  var searchString = data1[0]['search']
-					      columnString = columnString.substr(1);
-					      columnString = columnString.substr(0,  columnString.length-1);
-					      searchString = searchString.substr(1);
-					      searchString = searchString.substr(0,  searchString.length-1);
-					      popupString  = popupString.substr(1);
-					      popupString  = popupString.substr(0,  popupString.length-1);		 
-					      buttonString = buttonString.substr(1);
-					      buttonString = buttonString.substr(0,  buttonString.length-1);
-					      					      
-				          columnProp = JSON.parse(columnString); 
-				          searchProp = JSON.parse(searchString);
-			       		  popupProp  = JSON.parse(popupString); 
-			       		  buttonProp = JSON.parse(buttonString); 
-				      	if(chooseTab == 'grid'){
-				      		that.gridGrid();
-							for(var i=0,max=gridProp.length;i<max;i++){		
-								AUIGrid.setCellValue('#grid1', i, "validValue", gridProp[i]['propertyValue']);
-							}
-						}
-						else if(chooseTab == 'column'){
-							AUIGrid.setGridData('#grid1', columnProp);
-							for(var i=0,max=gridProp.length;i<max;i++){		
-								AUIGrid.setCellValue('#grid1', i, "validValue", gridProp[i]['propertyValue']);
-							}
-						} 
-						else if(chooseTab == 'search'){
-							that.searchGrid();
-							
-						}
-						else if (chooseTab == 'popup'){
-							that.popupGrid();
-						}
-						else if (chooseTab == 'button'){
-							that.buttonGrid();
-						}
-						else {
-							that.gridGrid();
-						}
-			        	AUIGrid.setColumnPropByDataField('#grid1', 'validValue', {
-							labelFunction: function(rowIndex, columnIndex, value, item) { 
-								if(gridProp[rowIndex]['validValue'] == '' ||  gridProp[rowIndex]['validValue'] == undefined){
-									return '';
-								}
-                            	var retStr = "";
-                            	var comboList = gridProp[rowIndex]['validValue'];
-                            	var type = typeof(gridProp[rowIndex]['validValue'][0]['code']) == 'boolean' ? 'boolean': 'string';
-                    			for(var i=0,len=comboList.length; i<len; i++) {
-                    				if(type == 'boolean'){
-                    					if(comboList[i]["code"].toString() == value) {
-                        					retStr = comboList[i]["value"];
-                        					break;
-                        				}
-                    				}
-                    				else{
-                    					  if(comboList[i]["code"] == value) {
-                        					retStr = comboList[i]["value"];
-                        					break;
-                        				}
-                    				}
-                    				
-                    			}
-                    			return retStr == "" ? value : retStr;
-                               
-							},
-							editRenderer : {
-								type: 'ComboBoxRenderer',
-								showEditorBtnOver: true, 
-								list: gridProp[0].validValue, 
-								keyField: 'code', 
-								valueField: 'value',
-									listFunction : function(rowIndex, columnIndex, item, dataField) {
-											  return gridProp[rowIndex]['validValue'] ;           
-									}
-
-							}
-							
-					 	});
-				      	momWidget.splashHide();
-			     
-			      
-			  
-			      
-			      
-		}, undefined, undefined, this, false,'Y');	*/						
+			
 		});
 		$(document).on('click', '#saveBtn', function() {
 			momWidget.splashShow();
@@ -1808,7 +1717,7 @@ var XUSM3030 = {
 						      momWidget.splashHide();
 						      return;
 					      }
-					   mom_ajax('R', 'XUSM3030.'+queryId, {}, function(result2, data2) {
+					   mom_ajax('P', 'XUSM3030.'+queryId, [], function(result2, data2) {
 						   if(result2 != 'SUCCESS') {
 						    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '실패하였습니다!'});			     
 							      momWidget.splashHide();
@@ -1858,7 +1767,7 @@ var XUSM3030 = {
 					      momWidget.splashHide();
 					      return;
 				      }
-				   mom_ajax('R', 'XUSM3030.'+queryId, {}, function(result2, data2) {
+				   mom_ajax('P', 'XUSM3030.'+queryId, [], function(result2, data2) {
 					   if(result2 != 'SUCCESS') {
 					    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '실패하였습니다!'});			     
 						      momWidget.splashHide();
@@ -2024,7 +1933,7 @@ var XUSM3030 = {
 	
 	},
 	setComboBox: function() {
-		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'containsignorecase'});	
+		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'containsignorecase',remoteAutoComplete: false});	
 		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
 		$('#programId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120});	
 		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {
@@ -2041,6 +1950,18 @@ var XUSM3030 = {
 			    return;
 
 	}, undefined, undefined, this, false,'Y');	
+	  mom_ajax('R', 'XUSM3030.programList', {}, function(result, data) {
+		      if(result != 'SUCCESS') {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }					       
+			  	 $('#programId').jqxComboBox("clear");			
+			  	 $('#programId').jqxComboBox("source",data);	
+				//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
+				//momWidget.splashHide();
+			    return;
+
+	}, undefined, undefined, this, false);	
 		/*  mom_ajax('R', 'XUSM3030.programList', {}, function(result, data) {
 		      if(result != 'SUCCESS') {
 		    	  momWidget.splashHide();

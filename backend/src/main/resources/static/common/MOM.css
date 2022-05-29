@@ -13,6 +13,7 @@
     font-weight: bold;
     margin: 0;
 }
+
 .modal-header {
     /* min-height: 16.43px; */
     padding: 15px;
@@ -21,7 +22,7 @@
  
 }
 .left-side-menu {
-  height:98% !important;
+  height:100% !important;
   overflow:auto;
  
 }
@@ -491,7 +492,7 @@ border-color: #d8dce3 !important;
     /* top: -2.2rem; */
     /* margin-left: 10%; */
     /* padding-left: 1rem; */
-    margin-left: 1rem;
+    margin-left: 30rem;
     float: left;
     margin-top: -1.8rem;
     font-weight: 600;
@@ -599,7 +600,7 @@ border-color: #d8dce3 !important;
 			    border-bottom: 1px solid #666666;
 			    border-bottom: none;
 			    padding-top: 0;
-			    top: -0.5rem;
+			   /*  top: -0.5rem; */
 }
 
 .excelCheckPopPanel {

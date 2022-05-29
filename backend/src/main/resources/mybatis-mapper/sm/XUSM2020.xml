@@ -10,11 +10,12 @@
 	
       <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
 		  SELECT LEVEL
-		       , A.MENU_ID
-		       , A.PARENT_MENU_ID
+		       , A.MENU_ID 
+		       , A.PARENT_MENU_ID 
 		       , A.MENU_NM
 		       , A.SORT_NO
 		       , A.USE_YN AS USE_YN_FLAG
+		       , A.MENU_TYPE
 		  FROM ( WITH C_DIV AS ( SELECT MDM.MENU_ID  
 		                              , MDM.MENU_NM 
 		                                   , MDM.PARENT_MENU_ID 
@@ -28,6 +29,7 @@
 			                ,  NVL(S.MENU_NM , MM.MENU_NM )  AS MENU_NM 
 			                , S.SORT_NO   
 		                    , CASE WHEN S.MENU_ID IS NOT NULL THEN S.USE_YN ELSE 'N' END AS USE_YN 
+		                    , MENU_TYPE
 		              FROM    MOM_MENU MM
 		                    , C_DIV    S                 
 		              WHERE   MM.MENU_ID  = S.MENU_ID (+)  

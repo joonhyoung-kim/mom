@@ -1417,8 +1417,8 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	    url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		type = 'POST';	
-		excelUpYn = param[0].excelUpYn == undefined ? 'N':param[0].excelUpYn;
-		sessionId = param[0].sessionId == undefined ? '':param[0].sessionId;
+		excelUpYn = param[0] == undefined ? 'N':param[0].excelUpYn;
+		sessionId = param[0] == undefined ? '':param[0].sessionId;
 		if(param.length==0){
 				param.push({divisionCd:siteInfo.divisionCd,companyCd:siteInfo.companyCd,langCd:siteInfo.languageCd,userId:userInfo.userNo,commitYn:commitYn,p_err_code:'',p_err_msg:'',requestType:requestType});
 			    param = JSON.stringify(param);
@@ -1573,6 +1573,8 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	            						 return;
 	            					}
 	            					else{
+		                                  bar.width('0%');
+		                                  percent.text('0%');  
 	            						  momWidget.splashHide();
 	            						  return;
 	            					}
@@ -1783,7 +1785,7 @@ function excelUploadGrid(file, grid) {
 		                        excelData[i][key] = excelData[i][key]+''.replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
 	                   }
 	                   else{
-								excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'');
+								excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').trim();
 	                   }
         				
         			}

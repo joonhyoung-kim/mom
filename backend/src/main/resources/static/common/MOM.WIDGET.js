@@ -11,6 +11,7 @@ var momWidget = {
 	gridProperty: 		    [],
 	gridExtraProperty:      [],
 	columnProperty: 	    [],
+	columnProp:             [],
 	columnDropdown:         [],
 	searchProperty: 	    [],
 	buttonProperty: 	    [],
@@ -549,6 +550,7 @@ var momWidget = {
 					 
 				    }
                     else{
+	     					 that.columnProp[index] = columnProp;
 							 that.grid[index] = AUIGrid.create('#grid'+(index+1), columnProp, that.gridProperty[index][0]); 
 					}
 		
@@ -2473,7 +2475,7 @@ var momWidget = {
 			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
 			var excelFile          = 'excelFile'+(index + 1);  
 			var isExpanded         = true;
-			var saveBtnExUpBtnId   = 'saveBtnExUp'+(index + 1);
+			var saveExUpBtnId   = 'saveBtnExUp'+(index + 1);
 			var exUpCheckBtnId     = 'exUpCheck'+(index + 1);
 			var exUpCheckDownBtnId = 'exUpCheckDown'+(index + 1);
 			var reportBtnId        = 'reportBtn'+(index + 1);
@@ -2964,12 +2966,15 @@ var momWidget = {
 /*	 				     successCount = 0;
 	 				     failCount = 0;*/
 			});
-			$(document).on('click','#'+saveBtnExUpBtnId, function(e) {
+			$(document).on('click','#'+saveExUpBtnId, function(e) {
+					$('#excelUpPop'+(index+1)).modal('hide');	
 				that.splashShow();
+				
 				 var bar = $('.bar');
 				 var percent = $('.percent');
 				 var status = $('#status');
-				 
+				   bar.width('0%');
+		           percent.text('0%');  
             
                 status.empty();
                 var percentVal = '0%';
@@ -2977,12 +2982,18 @@ var momWidget = {
                 percent.html(percentVal);*/
 				var param = [];					
 			    var checkedItems = AUIGrid.getGridData(that.excelUpGrid[index]);
+			      if(checkedItems.length == 0){
+					momWidget.messageBox({type:'warning', width:'400', height: '145', html:'데이터가 없습니다!'});
+			        momWidget.splashHide();
+			        return;
+				}
 					for(var i=0,max=checkedItems.length;i<max;i++){	
 						param.push(checkedItems[i]); 														
 				    }
 					if(param.length>=1000){
 						that.splashHide();
-					    $("#pleaseWaitDialog").modal('show');
+						 $("#pleaseWaitDialog").momModal('show');
+					
 					}
 					else{
 						//that.splashShow();
@@ -2991,14 +3002,22 @@ var momWidget = {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
 					  momWidget.splashHide();
 				      return;
-				}						
+				}	
+					 				
 				  var actionType = 'CU';	
+				  
 					setTimeout(function() {
+						
 						 param[0].excelUpYn = 'Y';
 						 param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
+					
+						// $("#pleaseWaitDialog").modal('show');
 						 mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
-							  $('#excelUpPop'+(index+1)).momModal('hide');
+							   bar.width('0%');
+					           percent.text('0%');  
+							
 					            if(data[0]['p_err_code']=='E') {
+									  $("#pleaseWaitDialog").momModal('hide');
 					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
 									  momWidget.splashHide();
 						              return;
@@ -3011,7 +3030,7 @@ var momWidget = {
 					        	  //$('#excelUpPop'+(index+1)).momModal('hide');
 					        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 								  momWidget.splashHide();
-								  $("#pleaseWaitDialog").modal('hide');
+								  $("#pleaseWaitDialog").momModal('hide');
 							      return;
 				          }, undefined, undefined, this, true);
 					}, 500);
@@ -3081,7 +3100,7 @@ var momWidget = {
 					};
 					that.excelUpGridProperty[index] = gridPros;
 					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-					$('#' +'excelUpPop'+(index+1)).momModal('show');
+					$('#' +'excelUpPop'+(index+1)).modal('show');
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
 			$(document).on('click', '#' + addBtnId, function() {	
@@ -3390,7 +3409,7 @@ var momWidget = {
 							  momWidget.splashHide();
 				              return;
 			            } 
-			               callBackResult = that.checkActionCallBack(index, actionType, param, 'createBtn'+index, your);   				                         							  						
+			               callBackResult = that.checkActionCallBack(index, actionType, {}, 'createBtn'+index, your);   				                         							  						
 			        	if(callBackResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 							  momWidget.splashHide();
@@ -3453,7 +3472,7 @@ var momWidget = {
 				$('#' +'defaultPop'+(index+1)).momModal('show');
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);		
-				callBackResult = that.checkActionCallBack(index, actionType, param, 'editBtn', your,param);
+				callBackResult = that.checkActionCallBack(index, actionType, {}, 'editBtn', your,param);
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
@@ -3465,6 +3484,7 @@ var momWidget = {
 			});
 			$(document).on('click', '#' + delBtnId, function(e) {	
 				var param = [];
+				var callBackParam = {};
 				param = that.getCheckedRowItems(that.grid[index]);
 				if(param.length < 1) {
 					that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES10491']});					
@@ -3484,14 +3504,14 @@ var momWidget = {
 				              return;
 			            }    				                         							  						
 			  
-						callBackResult = that.checkActionCallBack(index, 'D', param, 'delBtn', your,param);
+						callBackResult = that.checkActionCallBack(index, 'D', {}, 'delBtn', your,param);
 				        if(callBackResult['result']  != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 							  momWidget.splashHide();
 						      return;
 						}	
-						  param = callBackResult['param'];	
-			        	  momWidget.findBtnClicked(index, param, false, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your);
+						  callBackParam = callBackResult['param'];	
+			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;

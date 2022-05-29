@@ -667,39 +667,39 @@
                                                 )
        }    	           
     </select>   -->
-        <select id="get_gridProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_WIDGET_PKG.upsert_grid_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
+        <select id="proc_gridProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
+            { CALL MOM_WIDGET_PKG.upsert_grid_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-													          , #{userId, jdbcType=VARCHAR, mode=IN} )}    	              
+													          , #{userId, jdbcType=VARCHAR, mode=IN} )}    	            
         </select>  
-        <select id="get_columnProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_WIDGET_PKG.upsert_column_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
+        <select id="proc_columnProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">   
+          { CALL MOM_WIDGET_PKG.upsert_column_property_proc(    #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-													          , #{userId, jdbcType=VARCHAR, mode=IN} )}    	              
+													          , #{userId, jdbcType=VARCHAR, mode=IN} )}												            	              
         </select> 
-        <select id="get_searchProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_WIDGET_PKG.upsert_search_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
+        <select id="proc_searchProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">   
+           { CALL MOM_WIDGET_PKG.upsert_search_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-													          , #{userId, jdbcType=VARCHAR, mode=IN} )}    	              
+													          , #{userId, jdbcType=VARCHAR, mode=IN} )}             
          </select>   
-         <select id="get_popupProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_WIDGET_PKG.upsert_popup_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
+         <select id="proc_popupProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap"> 
+            { CALL MOM_WIDGET_PKG.upsert_popup_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-													          , #{userId, jdbcType=VARCHAR, mode=IN} )}    	              
+													          , #{userId, jdbcType=VARCHAR, mode=IN} )}  													           	              
          </select> 
-         <select id="get_buttonProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_WIDGET_PKG.upsert_button_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
+         <select id="proc_buttonProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
+       		{ CALL MOM_WIDGET_PKG.upsert_button_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-													          , #{userId, jdbcType=VARCHAR, mode=IN} )}    	              
+													          , #{userId, jdbcType=VARCHAR, mode=IN} )}  				                                              , #{item.divisionCd, jdbcType=VARCHAR, mode=IN})}									  , #{item.userId, jdbcType=VARCHAR, mode=IN} )  													            	              
          </select> 
 </mapper>

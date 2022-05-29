@@ -10,7 +10,7 @@ var XUSM2030 = {
 	/*	  mom_ajax('R', 'XUSM2020.defaultInfo1', {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
 			  
 		  }, undefined, undefined, this, false,'Y');*/
-		momWidget.findBtnClicked(0, {}, true, 'INIT',menuId,XUSM2030,[]);
+	
 	},
 	event: function() {
 		var that = this;
@@ -35,23 +35,40 @@ var XUSM2030 = {
 		}
 	
 	},
-	saveCallInit: function(index,your,action,btnId,param,result) {
-		if(index==1){
-			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0]);
-			if(checkedItem =='FAIL'){
-        		result.result = 'FAIL';
-        		return;
+
+		saveCallInit: function(index,your,action,btnId,param,result){
+		if(index == 1 && btnId =='saveBtn'){
+			var gridItem =  AUIGrid.getGridData(momWidget.grid[index]);
+			for(var i=0,max=gridItem.length;i<max;i++){
+					 if(AUIGrid.isCheckedRowById(momWidget.grid[index],gridItem[i]['menuId']) == true){
+					gridItem[i]['useYn'] = 'Y';									
+				 }
+				 else{
+					gridItem[i]['useYn'] = 'N';		
+				 }
+				// gridItem[i].authGroupCd = JSON.parse(sessionStorage.userInfo)[0]['authGroupCd'];
+				  gridItem[i].authGroupCd = AUIGrid.getSelectedItems(momWidget.grid[0])[0]['item']['authGroupCd'];
+				}
+			for(var k=0,max2=gridItem.length;k<max2;k++){			
+				 if(AUIGrid.isCheckedRowById(momWidget.grid[index],gridItem[k]['menuId']) == false && gridItem[k]['menuType'] == 'M'){
+					for(var j=0,max3=gridItem.length;j<max3;j++){
+				    	if(gridItem[j]['parentMenuId']== gridItem[k]['menuId']){
+					          gridItem[j]['useYn'] = 'N';	
+					}								
+				 }
+				 
 			}
-			for(var i=0,max=param.length; i<max;i++){
-				 param[i].authGroupCd = checkedItem[0]['authGroupCd'];
-			}	
-			
+		
+		
+			result.param = gridItem;
+		  }
 		}
-	
+		
+		
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index==1 && btnId== "saveBtn"+(index+1)){
-			param.authGroupCd = that.paramTmp.authGroupCd;
+		if(index==1 && btnId== "saveBtn"){
+			result.param = {authGroupCd:that.paramTmp.authGroupCd};
 			
 		}
 	/*	else if(index==1 && btnId== "saveBtn"+(index+1)){
@@ -65,7 +82,28 @@ var XUSM2030 = {
 			result = 'SUCCESS';
 		}*/
 		
-	}	
+	},
+		searchCallBack: function(index,your,action,btnId,param,result,data) {
+		if(index ==1 && (btnId =='CELLCLICK' || btnId == 'saveBtn')){
+			/*var gridItem = AUIGrid.getGridData(momWidget.grid[index])
+			 for(var i=0,max=gridItem.length; i<max;i++){
+			      if(gridItem[i]['useYnFlag'] == 'Y'){
+				      
+				  }
+			  }
+			param.menuId = gridItem[0].menuId;*/
+			AUIGrid.setCheckedRowsByValue(momWidget.grid[index], "useYn", "Y");
+			
+		}
+
+},
+delCallBack	: function(index,your,action,btnId,param,result) {
+		 if(index == 0 && btnId=='delBtn'){
+				AUIGrid.clearGridData(momWidget.grid[1]);
+		 }
+		 
+		
+	}
 };
 
 $(document).ready(function(event){

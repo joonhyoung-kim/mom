@@ -10,10 +10,10 @@
 			AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 		    AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  		
 			<if test="partnerCd != null and partnerCd != ''">
-			AND (MP.PARTNER_CD LIKE '%' || TRIM(UPPER(#{partnerCd, jdbcType=VARCHAR})) || '%' )
+			AND (TRIM(UPPER(MP.PARTNER_CD)) LIKE '%' || TRIM(UPPER(#{partnerCd, jdbcType=VARCHAR})) || '%' )
 			</if>
 			<if test="partnerNm != null and partnerNm != ''">
-		    AND (MP.PARTNER_NM LIKE '%' || TRIM(UPPER(#{partnerNm, jdbcType=VARCHAR})) || '%' )
+		    AND (TRIM(UPPER(MP.PARTNER_NM)) LIKE '%' || TRIM(UPPER(#{partnerNm, jdbcType=VARCHAR})) || '%' )
 			</if>
 			<if test="partnerType != null and partnerType != ''">
 		    AND MP.PARTNER_TYPE IN (${partnerType})
@@ -25,7 +25,8 @@
    </select> 
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	     	SELECT * 
-	  FROM ( SELECT ROWNUM AS KEY_ID
+	  FROM ( SELECT ROWNUM AS KEY_ID,
+	                ROWNUM AS ID
                  , A.*
                  <!--  , COUNT(*) OVER() AS ROW_COUNT  -->
       FROM (  
@@ -60,10 +61,10 @@
 			AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 		    AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  		
 			<if test="partnerCd != null and partnerCd != ''">
-			AND (MP.PARTNER_CD LIKE '%' || TRIM(UPPER(#{partnerCd, jdbcType=VARCHAR})) || '%' )
+			AND (TRIM(UPPER(MP.PARTNER_CD)) LIKE '%' || TRIM(UPPER(#{partnerCd, jdbcType=VARCHAR})) || '%' )
 			</if>
 			<if test="partnerNm != null and partnerNm != ''">
-		    AND (MP.PARTNER_NM LIKE '%' || TRIM(UPPER(#{partnerNm, jdbcType=VARCHAR})) || '%' )
+		    AND (TRIM(UPPER(MP.PARTNER_NM)) LIKE '%' || TRIM(UPPER(#{partnerNm, jdbcType=VARCHAR})) || '%' )
 			</if>
 			<if test="partnerType != null and partnerType != ''">
 		    AND MP.PARTNER_TYPE IN (${partnerType})
