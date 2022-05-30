@@ -27,6 +27,8 @@ var momWidget = {
 	checkedRowItem:         [],
 	searchComboQueryId:     [],
 	searchComboMinLength:   [],	
+	popupComboQueryId:      [],
+	popupComboMinLength:    [],	
 	sortingInfo:            [],
 	INFINITE: 			    100000000,	
 	uploadFlag: 		    0,
@@ -194,6 +196,7 @@ var momWidget = {
 		    		  if(that.searchProperty[index][i]['headerType']=='S'){
 			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+ ' class="searchSelectField"></select>';
 			    	  }
+			    	  
 			    	  else if (that.searchProperty[index][i]['headerType']=='M'){
 			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+' class="searchSelectField"></select>';
 			    	  }
@@ -203,6 +206,10 @@ var momWidget = {
 			    		    		   
 			    	  if(that.searchProperty[index][i]['searchType']=='S'){
 			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+ ' class="searchSelectField"></select>';
+			    	  }
+			    	  else if(that.searchProperty[index][i]['searchType']=='SS'){
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+ ' class="searchSelectField-search-combo"></select>';
+		    			   
 			    	  }
 			    	  else if (that.searchProperty[index][i]['searchType']=='M'){
 			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></select>';
@@ -286,7 +293,7 @@ var momWidget = {
 		    			  
 			    	  }
 			    	  else if(that.popupProperty[index][i]['popupType']=='SS'){
-		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField-search-combo"></select>';
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
 		    			   
 			    	  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='C'){
@@ -434,33 +441,49 @@ var momWidget = {
 	    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
 					  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
 					  			, visible       : gridShow  
+					  			, filter : {
+							      showIcon : true
+								}
 					  		
 	                    };
-			    	    excelDownProp[i] =  {
-					    	      dataField 	: columnId 
-					  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
-						   		, dataType      : that.columnProperty[index][i]['dataType'] 
-								, formatString  : that.columnProperty[index][i]['dataFormat']
-	    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false  
-	    	                    , headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
-					  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
-					  			, visible       : excelDownShow
-					  		 	
-	                    };
-			    	    excelUploadProp[i] =  {
-					    	      dataField 	: columnId 
-					  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
-					  			, headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
-						   		, dataType      : that.columnProperty[index][i]['dataType'] 
-								, formatString  : that.columnProperty[index][i]['dataFormat']
-	    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
-					  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'
-					  		    , visible       : excelUploadShow
-	                     };
+	                    if(excelDownShow){
+						    excelDownProp.push({
+									    	      dataField 	: columnId 
+									  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
+										   		, dataType      : that.columnProperty[index][i]['dataType'] 
+												, formatString  : that.columnProperty[index][i]['dataFormat']
+					    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false  
+					    	                    , headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
+									  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
+									  			, visible       : excelDownShow
+									  		 
+					                    });
+					      if(widthUse == 'Y'){
+			    		  excelDownProp[excelDownProp.length - 1].width  = that.columnProperty[index][i]['columnWidth'];
+			    		
+			    	   }
+						}
+			    	
+	                    if(excelUploadShow){
+							   excelUploadProp.push({
+										    	      dataField 	: columnId 
+										  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
+										  			, headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
+											   		, dataType      : that.columnProperty[index][i]['dataType'] 
+													, formatString  : that.columnProperty[index][i]['dataFormat']
+						    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
+										  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'
+										  		    , visible       : true
+						                     }); 
+						 if(widthUse == 'Y'){			    		  
+			    		     excelUploadProp[excelUploadProp.length - 1].width = that.columnProperty[index][i]['columnWidth'];
+			    	   }
+						                     
+						}
+			    	 
 			    	   if(widthUse == 'Y'){
 			    		   columnProp[i].width      = that.columnProperty[index][i]['columnWidth'];
-			    		   excelDownProp[i].width   = that.columnProperty[index][i]['columnWidth'];
-			    		   excelUploadProp[i].width = that.columnProperty[index][i]['columnWidth'];
+			    		
 			    	   }
 			    	   if(isCheckBox =='Y'){
 			    		   columnProp[i].renderer = {
@@ -2262,12 +2285,39 @@ var momWidget = {
 		});
 		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
 			if(e.keyCode == 13){ //엔터
-			var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+			var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
 			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
-			var minLength = that.searchComboMinLength[index][popupId] ;
-			var queryId = that.searchComboQueryId[index][popupId];
+			var minLength = that.searchComboMinLength[index][searchId+(index+1)] ;
+			var queryId = that.searchComboQueryId[index][searchId+(index+1)];
 			if(searchString.length < minLength)	{
 						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+						return;
+			}
+			else{
+				mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
+						      if(result != 'SUCCESS') {
+						    	  momWidget.splashHide();
+							      return;							     
+						      }	
+						      $('#'+searchId).jqxComboBox({source: data});
+						   		setTimeout(function() {
+	                				$('#'+searchId).jqxComboBox('open' ); 
+    							},500);
+						      		}, undefined, undefined, that, false);
+			}
+				
+
+			} 
+
+		});
+		$(document).on('keydown', '.searchSelectField-popup-combo', function(e) {
+			if(e.keyCode == 13){ //엔터
+			var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
+			var minLength = that.popupComboMinLength[index][popupId] ;
+			var queryId = that.popupComboQueryId[index][popupId];
+			if(searchString.length < minLength)	{
+						that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
 						return;
 			}
 			else{
@@ -2291,16 +2341,44 @@ var momWidget = {
 	},
 		setComboBoxSet: function(index, your) {
 		var that =  momWidget;	
-
+        var searchId = '';
+        var popupId = '';
+        var searchType = '';
+        var popupType = '';
+        var paramMap   = [];
+        var searchQueryId = '';
+        var popupQueryId = '';
+        var searchHeaderDropdownId = '';
+        var searchHeaderType = '';
+        var popupHeaderDropdownId = '';
+        var popupHeaderType = '';
+        var searchComboMinLength={};
+        var searchComboItem = {};
+        var popupComboMinLength={};
+        var popupComboItem = {};
+        var searchDropdownId  = '';
+        var popupDropdownId  = '';
+        var searchNameSpace  = '';
+        var popupNameSpace  = '';
+        var searchMinLen=1;
+        var popupMinLen=1;
+        var maxItemWidth = 0;
+        var maxItemWidthArry = 0;
+        var maxItemWidthNum = 0;
+        var searchDropdownParam =[];
+        var popupDropdownParam =[];
 		  for(var i=0,max=that.searchProperty[index].length; i<max;i++){
-			var searchType = that.searchProperty[index][i]['searchType'];
-			var searchId = that.searchProperty[index][i]['searchId'];
-			var headerDropdownId  = that.searchProperty[index][i]['headerDropdownId'];
-			var headerSearchType  = that.searchProperty[index][i]['headerType'];
-			
-			 
-			if(searchType == 'S' || searchType == 'M' || headerSearchType == 'S'||headerSearchType == 'M'){	      
-				        if(headerDropdownId != '' && headerDropdownId != undefined){
+			 searchType = that.searchProperty[index][i]['searchType'];
+			 searchId = that.searchProperty[index][i]['searchId'];
+			 searchHeaderDropdownId  = that.searchProperty[index][i]['headerDropdownId'];
+			 searchHeaderType  = that.searchProperty[index][i]['headerType'];
+			 searchDropdownId  = that.searchProperty[index][i]['dropdownId'];
+			 searchNameSpace   = searchDropdownId.substr(0, 2);  
+
+
+			  
+			if(searchType == 'S' || searchType == 'M' || searchHeaderType == 'S'||searchHeaderType == 'M' || searchType == 'SS'){	      
+				        if(searchHeaderDropdownId != '' && searchHeaderDropdownId != undefined){
 				        	 $('#'+searchId+'Header').jqxComboBox({ displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false});
 				        	 $('#'+searchId+'Header').prev().prev().attr('class','circle-dh')
 				        	 $('#'+searchId+'Header').jqxComboBox({selectedIndex: 0 });
@@ -2310,9 +2388,9 @@ var momWidget = {
 				        		$('#'+searchId).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
 				        		$('#'+searchId).on('bindingComplete', function (e) {
 				  
-				  var maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
-				  var maxItemWidthArry = maxItemWidth.split('px');
-				  var maxItemWidthNum = Number(maxItemWidthArry[0]);
+				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
+				   maxItemWidthArry = maxItemWidth.split('px');
+				   maxItemWidthNum = Number(maxItemWidthArry[0]);
 				  if(maxItemWidthNum<160){
 					 maxItemWidth = '160px';
 				 }
@@ -2323,12 +2401,41 @@ var momWidget = {
 			      });
 				        		
 				 }
+				 else if(searchType == 'SS'){
+						searchMinLen  = Number(that.searchProperty[index][i]['defaultValue'].trim());
+						searchComboMinLength[searchId+(index+1)] = searchMinLen;
+						if(searchDropdownId != '' && searchDropdownId != undefined){
+						searchQueryId = searchDropdownId;
+						searchComboItem[searchId+(index+1)] = searchNameSpace+'.'+searchQueryId;
+							 
+							// paramMap[i] = splitArray[0]:; 
+						}
+						else{
+							    searchQueryId = searchDropdownId;
+							 //   paramMap[i] = ; 
+						}
+					that.searchComboQueryId[index] = searchComboItem;
+					that.searchComboMinLength[index] = searchComboMinLength; 		    
+						     $('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+		  $('#'+searchId).on('bindingComplete', function (e) {				  
+				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+				   maxItemWidthArry = maxItemWidth.split('px');
+				   maxItemWidthNum = Number(maxItemWidthArry[0]);
+				  if(maxItemWidthNum<160){
+					 maxItemWidth = '160px';
+				 }
+				 else{
+					maxItemWidth = maxItemWidthNum+30+'px'
+				 }
+				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });
+				}
 				else{
 				      $('#'+searchId).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'}); 
-				      $('#'+searchId).on('bindingComplete', function (e) {				  
-				  var maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-				  var maxItemWidthArry = maxItemWidth.split('px');
-				  var maxItemWidthNum = Number(maxItemWidthArry[0]);
+				    	  $('#'+searchId).on('bindingComplete', function (e) {				  
+				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+				   maxItemWidthArry = maxItemWidth.split('px');
+				   maxItemWidthNum = Number(maxItemWidthArry[0]);
 				  if(maxItemWidthNum<160){
 					 maxItemWidth = '160px';
 				 }
@@ -2338,6 +2445,7 @@ var momWidget = {
 				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });
 				        	}
+				        
 				        	  
 				        }
 
@@ -2345,26 +2453,19 @@ var momWidget = {
 		
 			}
 		
+		
 			}
 
-			var dropdownId = undefined;
-			var headerDropdownId = undefined;
-			var queryId = undefined;
-			var nameSpace  = undefined;
-			var paramMap   = [];
-			var searchComboMinLength={};
-			var searchComboItem = {};
-			var popupType ='';
-			var popupId ='';
+
 		  for(var j=0,max2=that.popupProperty[index].length; j<max2;j++){
 			
-				dropdownId       = that.popupProperty[index][j]['dropdownId'];
-				dropdownParam    = that.popupProperty[index][j]['dropdownParam'];
+				popupDropdownId       = that.popupProperty[index][j]['dropdownId'];
+				popupDropdownParam   = that.popupProperty[index][j]['dropdownParam'] == '' ? []:that.popupProperty[index][j]['dropdownParam'];
 			    popupType        = that.popupProperty[index][j]['popupType']; 
-			    nameSpace        = dropdownId.substr(0, 2);  
+			    popupNameSpace   = popupDropdownId.substr(0, 2);  
 			    queryId          = '';
 			    paramMap.length  = 0;
-			    minLength        = 1;
+			  //  minLength        = 1;
 			    popupId = that.popupProperty[index][j]['popupId'] + 'DP' +(index+1);
 					if(popupType == 'S'  ||  popupType == 'DG' ){    
 						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});       		
@@ -2374,27 +2475,27 @@ var momWidget = {
 					$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
 				}
 				else if(popupType == 'SS'){
-						minLength  = Number(that.popupProperty[index][j]['defaultValue'].trim());
-						searchComboMinLength[popupId] = minLength;
-						if(dropdownId != '' && dropdownId != undefined){
-						 queryId = dropdownId;
-						searchComboItem[popupId] = nameSpace+'.'+queryId;
+						popupMinLen  = Number(that.popupProperty[index][j]['defaultValue'].trim());
+						popupComboMinLength[popupId+'DP'+(index+1)] = popupMinLen;
+						if(popupDropdownId != '' && popupDropdownId != undefined){
+						popupQueryId = popupDropdownId;
+						popupComboItem[popupId+'DP'+(index+1)] =  popupNameSpace +'.'+popupQueryId;
 							 
 							// paramMap[i] = splitArray[0]:; 
 						}
 						else{
-							    queryId = dropdownId;
+							    popupQueryId = popupDropdownId;
 							 //   paramMap[i] = ; 
 						}
-					that.searchComboQueryId[index] = searchComboItem;
-					that.searchComboMinLength[index] = searchComboMinLength; 		    
-						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+minLength +' or more characters',minLength: minLength,remoteAutoComplete: false});
+					that.popupComboQueryId[index] = popupComboItem;
+					that.popupComboMinLength[index] = popupComboMinLength; 		    
+						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+popupMinLen +' or more characters',minLength: popupMinLen,remoteAutoComplete: false});
 	
 				}
 				   	 $('#'+popupId).on('bindingComplete', function (e) {
-							  var maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-							  var maxItemWidthArry = maxItemWidth.split('px');
-							  var maxItemWidthNum = Number(maxItemWidthArry[0]);
+							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
 							  if(maxItemWidthNum<160){
 								 maxItemWidth = '160px';
 							 }

@@ -700,6 +700,6 @@
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-													          , #{userId, jdbcType=VARCHAR, mode=IN} )}  				                                              , #{item.divisionCd, jdbcType=VARCHAR, mode=IN})}									  , #{item.userId, jdbcType=VARCHAR, mode=IN} )  													            	              
+													          , #{userId, jdbcType=VARCHAR, mode=IN} )}  				                                                       	              
          </select> 
 </mapper>

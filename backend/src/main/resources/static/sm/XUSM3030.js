@@ -243,6 +243,7 @@ var XUSM3030 = {
 			, headerText 	: '컬럼명'
 			, width			: 200
 			, style			: 'my-column-style-edit2'
+		
 		},{
 			  dataField 	: 'dataType' 
 			, headerText 	: '데이터타입'
@@ -551,7 +552,8 @@ var XUSM3030 = {
 			, 'enableDragByCellDrag' : true
 			// 드랍 가능 여부 (기본값 : true)
 			, 'enableDrop' : true
-			//, fixedColumnCount : 2
+			, fixedColumnCount : 2
+			, editableOnFixedCell: true
 		};
 		 columnProp = data;
 		 AUIGrid.destroy('#grid1', columnProperty, gridProperty);
@@ -567,7 +569,7 @@ var XUSM3030 = {
 	
 	searchGrid: function(queryId) {
 		var that = this;
-		var searchTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"}];
+		var searchTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"}];
 		var headerTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"}];
 		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {

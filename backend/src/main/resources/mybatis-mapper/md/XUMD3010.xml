@@ -74,8 +74,14 @@ FROM   (SELECT MCD.COMPANY_CD
         AND    MUP.DIVISION_CD = MI.DIVISION_CD
         AND    MUP.ITEM_ID     = MI.ITEM_ID       
         AND    MUP.PRICE_CATEGORY = 'P'    
-       <if test="customerCd != null and customerCd != ''">
-	   AND MUP.CUSTOMER_CD IN (${customerCd})
+       <if test="partnerCd != null and partnerCd != ''">
+	   AND MUP.PARTNER_CD IN (${partnerCd})
+	   </if>
+	   <if test="searchKey != null and searchKey != ''">
+	   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+	   </if>
+	   <if test="searchKey != null and searchKey != ''">
+	   AND MUP.PARTNER_CD IN (${searchKey})
 	   </if>
 	   <if test="customerItemId != null and customerItemId != ''">
 	   AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
@@ -178,4 +184,84 @@ FROM   (SELECT MCD.COMPANY_CD
        </foreach>
       </where>
   </delete>
+    <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_UNIT_PRICE 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            'P' as priceCategory,
+                            #{item.partnerCd, jdbcType=VARCHAR} as partnerCd,
+                            #{item.itemId, jdbcType=VARCHAR} as itemId,
+                            #{item.currencyCd, jdbcType=VARCHAR} as currencyCd,
+                            #{item.prevUnitPrice, jdbcType=NUMERIC} as prevUnitPrice,
+                            #{item.unitPrice, jdbcType=NUMERIC} as unitPrice,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as startDate,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as endDate,
+                            #{item.priceType, jdbcType=VARCHAR} as priceType,
+                            #{item.mainPartnerYn, jdbcType=VARCHAR} as mainPartnerYn,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 PRICE_CATEGORY = PARAM.priceCategory AND
+                 PARTNER_CD = PARAM.partnerCd AND
+                 ITEM_ID = PARAM.itemId AND
+                 CURRENCY_CD = PARAM.currencyCd AND
+                 START_DATE = PARAM.startDate AND
+                 END_DATE = PARAM.endDate )
+            WHEN MATCHED THEN 
+                 UPDATE SET PREV_UNIT_PRICE = PARAM.prevUnitPrice
+                          , UNIT_PRICE = PARAM.unitPrice
+                          , PRICE_TYPE = PARAM.priceType
+                          , MAIN_PARTNER_YN = PARAM.mainPartnerYn
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , PRICE_CATEGORY
+                            , PARTNER_CD
+                            , ITEM_ID
+                            , CURRENCY_CD
+                            , PREV_UNIT_PRICE
+                            , UNIT_PRICE
+                            , START_DATE
+                            , END_DATE
+                            , PRICE_TYPE
+                            , MAIN_PARTNER_YN
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.priceCategory
+                            , PARAM.partnerCd
+                            , PARAM.itemId
+                            , PARAM.currencyCd
+                            , PARAM.prevUnitPrice
+                            , PARAM.unitPrice
+                            , PARAM.startDate
+                            , PARAM.endDate
+                            , PARAM.priceType
+                            , PARAM.mainPartnerYn
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>
 </mapper>
