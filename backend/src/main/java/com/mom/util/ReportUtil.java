@@ -35,6 +35,7 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+
 @Component
 public class ReportUtil {
 	  /** The connection. */ 
@@ -118,7 +119,8 @@ public Map<String,Object> createReport(String fileName,String fileType,Map<Strin
             	   parameters.put(entry.getKey().toString(), entry.getValue().toString());
                }
             }   
-            System.out.println("파라미터?"+parameters);  
+            System.out.println("파라미터?"+parameters); 
+            System.out.println("풀패스?"+ rootPath+jasperPath+fileName+".jasper");
             jasperPrint =  JasperFillManager.fillReport(rootPath+jasperPath+fileName+".jasper", parameters, connection);
             //jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);  
             System.out.println("time : " + (System.currentTimeMillis() - start)+ " ms.");  

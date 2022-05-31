@@ -211,6 +211,10 @@ var momWidget = {
 		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+ ' class="searchSelectField-search-combo"></select>';
 		    			   
 			    	  }
+			    	  else if(that.searchProperty[index][i]['searchType']=='MS'){
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+ ' class="searchSelectField-search-combo"></select>';
+		    			   
+			    	  }
 			    	  else if (that.searchProperty[index][i]['searchType']=='M'){
 			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></select>';
 			    	  }
@@ -2378,7 +2382,7 @@ var momWidget = {
 
 
 			  
-			if(searchType == 'S' || searchType == 'M' || searchHeaderType == 'S'||searchHeaderType == 'M' || searchType == 'SS'){	      
+			if(searchType == 'S' || searchType == 'M' || searchHeaderType == 'S'||searchHeaderType == 'M' || searchType == 'SS' || searchType == 'MS'){	      
 				        if(searchHeaderDropdownId != '' && searchHeaderDropdownId != undefined){
 				        	 $('#'+searchId+'Header').jqxComboBox({ displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false});
 				        	 $('#'+searchId+'Header').prev().prev().attr('class','circle-dh')
@@ -2402,6 +2406,35 @@ var momWidget = {
 			      });
 				        		
 				 }
+				  else if(searchType == 'MS'){
+						searchMinLen  = Number(that.searchProperty[index][i]['defaultValue'].trim());
+						searchComboMinLength[searchId+(index+1)] = searchMinLen;
+						if(searchDropdownId != '' && searchDropdownId != undefined){
+						searchQueryId = searchDropdownId;
+						searchComboItem[searchId+(index+1)] = searchNameSpace+'.'+searchQueryId;
+							 
+							// paramMap[i] = splitArray[0]:; 
+						}
+						else{
+							    searchQueryId = searchDropdownId;
+							 //   paramMap[i] = ; 
+						}
+					that.searchComboQueryId[index] = searchComboItem;
+					that.searchComboMinLength[index] = searchComboMinLength; 		    
+						     $('#'+searchId).jqxComboBox({ displayMember: "label",checkboxes: true, valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+		  $('#'+searchId).on('bindingComplete', function (e) {				  
+				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
+				   maxItemWidthArry = maxItemWidth.split('px');
+				   maxItemWidthNum = Number(maxItemWidthArry[0]);
+				  if(maxItemWidthNum<160){
+					 maxItemWidth = '160px';
+				 }
+				 else{
+					maxItemWidth = maxItemWidthNum+30+'px'
+				 }
+				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });
+				}
 				 else if(searchType == 'SS'){
 						searchMinLen  = Number(that.searchProperty[index][i]['defaultValue'].trim());
 						searchComboMinLength[searchId+(index+1)] = searchMinLen;
@@ -2547,8 +2580,15 @@ var momWidget = {
 				  }*/
 
 				//AUIGrid.updateRows(that.grid[index], data,rowIndexes,true); 
+				
 			      AUIGrid.updateRowsById(that.grid[index], data,false);
-
+			      //AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
+			     // AUIGrid.refreshRows(that.grid[index], data, "my-flash-style", 200); 
+	                  	
+											
+								
+    				
+   			
 			},
 	// 등록버튼 이벤트 핸들러
 	setBtnEvent: function(index, your) {
@@ -2902,10 +2942,11 @@ var momWidget = {
 					      return;	
 					}			
 					param[0].fileName  = that.pageProperty[index]['menuId']+'_'+(index+1);
-					param[0].fileType = 'xlsx';
+					//param[0].fileType = 'xlsx';
+					param[0].fileType = 'pdf';
 			   // param = that.checkSearchParam(index,param,your); 	   
 				$.ajax({
-    				url:common.contextPath() + '/createReport',
+    				url:mCommon.contextPath() + '/createReport',
     				method: "get",
     				contentType: 'application/json; charset=UTF-8',
     				data :param[0],
@@ -2919,7 +2960,10 @@ var momWidget = {
 	                    momWidget.splashHide();
     					//window.open('../report-xlsx/'+param[0].fileName+'.'+param[0].fileType, '_blank','resizable=no,width=2000,height=1300,left=740,top=520');	
     					//history.pushState(null, null, '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType)
-           				location.href  = '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType;
+    					location.href = location.href;
+           				//location.href  = '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType;
+           				
+           				location.href  = '../report-pdf/'+param[0].fileName+'.'+param[0].fileType;
     					},7000);
     				},
     				error: function(e) {    				

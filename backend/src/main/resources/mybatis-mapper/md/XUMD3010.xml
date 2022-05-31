@@ -1,7 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD3010">
+	 <select id="get_totalCount1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	                     SELECT COUNT (A.UNIT_PRICE) AS TOTAL_COUNT
+FROM   (SELECT MCD.COMPANY_CD
+             , MCD.COMPANY_NM
+             , MCD.DIVISION_CD
+             , MCD.DIVISION_NM
+             , MUP.PRICE_CATEGORY
+             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0011', MUP.PRICE_CATEGORY, 'KR') FROM DUAL) AS PRICE_CATEGORY_NM     
+             , MUP.PARTNER_CD
+             , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.PARTNER_CD) FROM DUAL ) AS PARTNER_NM
+             , MUP.ITEM_ID
+             , MI.ITEM_NM
+             , MI.ITEM_SPEC
+             , MI.PURCHASE_UNIT 
+             , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.PURCHASE_UNIT) FROM DUAL) AS PURCHASE_UNIT_NM     
+             , MI.UNIT 
+              , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.UNIT) FROM DUAL) AS UNIT_NM     
+             , MUP.CURRENCY_CD
+             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'SM0017', MUP.CURRENCY_CD, 'KR') FROM DUAL) AS CURRENCY_NM   
+             , MUP.PREV_UNIT_PRICE
+             , MUP.UNIT_PRICE
+             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD') AS START_DATE 
+             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD')   AS END_DATE
+             , MUP.PRICE_TYPE
+             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
+             , MUP.MAIN_PARTNER_YN
+             , MUP.USE_YN
+             , MUP.DESCRIPTION
+             , MUP.UPDATE_BY
+             , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+             , TO_CHAR(MUP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+        FROM   MOM_COM_DIV_V MCD
+             , MOM_UNIT_PRICE MUP
+             , MOM_ITEM MI
+        WHERE  MCD.COMPANY_CD  = MUP.COMPANY_CD
+        AND    MCD.DIVISION_CD = MUP.DIVISION_CD
+        AND    MUP.COMPANY_CD  = MI.COMPANY_CD
+        AND    MUP.DIVISION_CD = MI.DIVISION_CD
+        AND    MUP.ITEM_ID     = MI.ITEM_ID       
+        AND    MUP.PRICE_CATEGORY = 'P'    
+       <if test="partnerCd != null and partnerCd != ''">
+	   AND MUP.PARTNER_CD IN (${partnerCd})
+	   </if>
+	   <if test="searchKey != null and searchKey != ''">
+	   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+	   </if>
+	   <if test="customerItemId != null and customerItemId != ''">
+	   AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
+	   </if>
+	   <if test="itemId != null and itemId != ''">
+	   AND (MUP.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	   </if>
+	   <if test="useYn != null and useYn != ''">
+	   AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
+	   </if>                       
+       ) A
+	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID 						
+   </select> 
+
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   	     	SELECT * 
+	  FROM ( SELECT ROWNUM AS KEY_ID,
+	                ROWNUM AS ID
+                 , B.*
+                 <!--  , COUNT(*) OVER() AS ROW_COUNT  -->
+      FROM (  
+		 
            SELECT A.COMPANY_CD
      , A.COMPANY_NM
      , PRICE_CATEGORY ||'_'|| PARTNER_CD || '_' || ITEM_ID || '_' || CURRENCY_CD AS KEY_ID
@@ -55,8 +121,8 @@ FROM   (SELECT MCD.COMPANY_CD
              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'SM0017', MUP.CURRENCY_CD, 'KR') FROM DUAL) AS CURRENCY_NM   
              , MUP.PREV_UNIT_PRICE
              , MUP.UNIT_PRICE
-             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD HH24:MI:SS') AS START_DATE 
-             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS END_DATE
+             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD') AS START_DATE 
+             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD')   AS END_DATE
              , MUP.PRICE_TYPE
              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
              , MUP.MAIN_PARTNER_YN
@@ -80,9 +146,6 @@ FROM   (SELECT MCD.COMPANY_CD
 	   <if test="searchKey != null and searchKey != ''">
 	   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
 	   </if>
-	   <if test="searchKey != null and searchKey != ''">
-	   AND MUP.PARTNER_CD IN (${searchKey})
-	   </if>
 	   <if test="customerItemId != null and customerItemId != ''">
 	   AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
 	   </if>
@@ -93,7 +156,11 @@ FROM   (SELECT MCD.COMPANY_CD
 	   AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
 	   </if>                       
        ) A
-	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID 
+	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID )B
+	    )    
+         <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
+     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
+         </if>	
 	</select>
    <insert id="create_defaultInfo1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
@@ -195,10 +262,10 @@ FROM   (SELECT MCD.COMPANY_CD
                             #{item.currencyCd, jdbcType=VARCHAR} as currencyCd,
                             #{item.prevUnitPrice, jdbcType=NUMERIC} as prevUnitPrice,
                             #{item.unitPrice, jdbcType=NUMERIC} as unitPrice,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as startDate,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as endDate,
+                            #{item.startDate, jdbcType=VARCHAR} as startDate,
+                            #{item.endDate, jdbcType=VARCHAR} as endDate,
                             #{item.priceType, jdbcType=VARCHAR} as priceType,
-                            #{item.mainPartnerYn, jdbcType=VARCHAR} as mainPartnerYn,
+                            NVL(#{item.mainPartnerYn, jdbcType=VARCHAR},'Y') as mainPartnerYn,
                             #{item.useYn, jdbcType=VARCHAR} as useYn,
                             #{item.description, jdbcType=VARCHAR} as description,
                             #{item.userId, jdbcType=VARCHAR} as createBy,
