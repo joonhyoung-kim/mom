@@ -28,8 +28,11 @@ var VIEW= {
 		if(index==0){
 			var item = e.item;	
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
-			momWidget.findBtnClicked(1, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
-			momWidget.findBtnClicked(2, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
+			  setTimeout(function() {
+	               momWidget.findBtnClicked(1, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
+			       momWidget.findBtnClicked(2, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
+    					},200);
+			
 		
 		
 	}

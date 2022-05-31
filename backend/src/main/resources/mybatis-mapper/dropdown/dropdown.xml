@@ -160,6 +160,9 @@
    FROM   MOM_PARTNER   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   <if test="searchKey != null and searchKey != ''">
+   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
    ORDER BY PARTNER_NM  
 </select>
 <select id="get_DD00020" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   

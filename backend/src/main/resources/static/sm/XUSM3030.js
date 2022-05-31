@@ -1321,9 +1321,9 @@ var XUSM3030 = {
 	
 	
 		$(document).on('change', '#menuId', function(e) {
-			 if ($("#menuId").jqxComboBox('isOpened')){
+			 /*if ($("#menuId").jqxComboBox('isOpened')){
 				return;
-			}
+			}*/
 			  if($('#gridId').val()!=''){
 				  momWidget.splashShow();
 				    var gridId = '1';
