@@ -1799,6 +1799,7 @@ var momWidget = {
     					           /*if(your.retrieveCallBack != undefined) {
     					        	   your.retrieveCallBack('SUCCESS', data, param, undefined, indexInfo, your);
     					           }*/
+    					            your.initParam = undefined;
     					            callBackResult = that.checkActionCallBack(index, 'R',  param, btnId, your,data);     	
     					            if(callBackResult['result'] != 'SUCCESS') {
 										  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});

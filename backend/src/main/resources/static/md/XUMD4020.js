@@ -28,8 +28,10 @@ var VIEW= {
 		if(index==0){
 			var item = e.item;	
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
+			VIEW.initParam = {shiftCd:item['shiftCd']};
 			momWidget.findBtnClicked(1, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
 			momWidget.findBtnClicked(2, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
+			
 		
 		
 	}
@@ -107,14 +109,14 @@ var VIEW= {
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 1 && (btnId=='createBtn' || btnId=='editBtn')){	
-			 result.param = '';
+			 result.param = VIEW.initParam;
 					
 	    }
 	/*    else if(index == 1 && btnId=='delBtn'){
 		result.param = {shiftCd:AUIGrid.getSelectedItems(widget.grid[index])[0]['item']['shiftCd']}
 		}*/
 		else if(index == 2 && (btnId=='createBtn' || btnId=='editBtn')){	
-			 result.param = '';
+			 result.param = VIEW.initParam;
 					
 	   }
 	/*   else if(index == 2 && btnId=='delBtn'){
