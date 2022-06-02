@@ -385,28 +385,42 @@ public class FrameworkUtil {
 		 * Object>)FrameworkUtil.multiLanguage.get(companyCd + divisionCd + locale +
 		 * "XML"); }
 		 */
-          
+		System.out.println("시작총개수?"+list.size());
 		for (int i = 0; i < list.size(); i++) { 
+		
 			Map<String, Object> map = list.get(i);
 			 if(map.get("pwEncode")!=null) {	
 				if (map.get("pwEncode").toString().equals("Y")) {
-					map.put("encodePw", passwordEncode(map.get("password").toString()));	
+					if(map.get("password")== null || map.get("password").equals("")) {
+						map.put("encodePw", "1234");	
+					}
+					else {
+						map.put("encodePw", passwordEncode(map.get("password").toString()));	
+					}
+					
 					list.remove(i);
+			
+						//System.out.println("맵은?"+map);
+					
+					
 					list.add(map);
 				} 
-			 }		
+			 }
+			 else {
+				 System.out.println("인코딩노필요");
+			 }
 			if (map == null || map.isEmpty()) {
 				if (i == 0) {
 					return new ArrayList<Map<String, Object>>();
 				}
-
+				System.out.println("빈데이터");
 				break;
 			}
 
 			// FrameworkUtil.createParam(map, crud, multiMap, userId, divisionCd, companyCd,
 			// locale);
 		}
-
+		System.out.println("마지막총개수?"+list.size());
 		return list;
 	}
 

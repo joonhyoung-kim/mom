@@ -26,9 +26,12 @@
 		         , MOM_DEPARTMENT MD
 		    WHERE  MDV.COMPANY_CD   = MD.COMPANY_CD
 			AND    MDV.DIVISION_CD  = MD.DIVISION_CD
-		   <if test = "deptCd != null and deptCd != ''">
+		<!--    <if test = "deptCd != null and deptCd != ''">
 		    AND MD.DEPT_CD  IN (${deptCd})
-		   </if>
+		   </if> -->
+		    <if test="searchKey != null and searchKey != ''">
+	        AND (DEPT_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR DEPT_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+	       </if>
 		   <if test = "deptNm != null and deptNm != ''">
 		    AND (UPPER(MD.DEPT_NM)  LIKE '%' || UPPER(#{deptNm, jdbcType=VARCHAR}) || '%')
 		   </if>

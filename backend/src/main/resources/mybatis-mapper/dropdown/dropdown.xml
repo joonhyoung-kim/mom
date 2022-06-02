@@ -16,17 +16,15 @@
     SELECT   DEPT_CD AS CODE 
 	     ,   DEPT_CD ||'('|| DEPT_NM ||')' AS LABEL
     FROM     MOM_DEPARTMENT
+    WHERE 1=1
+    AND     USE_YN      = 'Y'
+    <if test="searchKey != null and searchKey != ''">
+    AND (DEPT_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR DEPT_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+    </if>
     ORDER BY DEPT_NM
+
   </select> 
 
-<!--   <select id="get_DD00006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	  SELECT PROGRAM_ID AS CODE 
-		 ,   PROGRAM_ID ||'('|| PROGRAM_NM ||')' AS LABEL
-      FROM MOM_PROGRAM
-	  WHERE PROGRAM_TYPE = #{programType, jdbcType=VARCHAR} 
-	  AND   USE_YN = 'Y'
-	  ORDER BY PROGRAM_ID
-  </select>	 -->
   <select id="get_DD00005" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
         SELECT  MM.MENU_ID  AS CODE
              ,  MM.MENU_ID ||'('|| MM.MENU_NM ||')'  AS LABEL

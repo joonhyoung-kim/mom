@@ -1831,7 +1831,7 @@ var momWidget = {
 										  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 										  momWidget.splashHide();
 									      return;
-			 }
+			 						}
     					           $('td').removeClass('aui-grid-default-column');
     					             that.splashHide();
     			}, undefined, undefined, this, true);
@@ -2485,6 +2485,17 @@ var momWidget = {
 				 }
 				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });
+			          $('#'+searchId).on('close', function (e) {
+				     var tmpCd = e.target.children[1].value; 
+				            if(tmpCd ==''){
+								$('#'+e.target.id).jqxComboBox('clear');
+								return;
+							}
+							 
+							 //$('#'+e.target.id).val(tmpCd);
+			      });		
+			      
+			     
 				}
 				else{
 				      $('#'+searchId).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'}); 
@@ -2525,30 +2536,7 @@ var momWidget = {
 			    popupId = that.popupProperty[index][j]['popupId'] + 'DP' +(index+1);
 					if(popupType == 'S'  ||  popupType == 'DG' ){    
 						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});       		
-					 
-				}
-				else if (popupType == 'M'){
-					$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
-				}
-				else if(popupType == 'SS'){
-						popupMinLen  = Number(that.popupProperty[index][j]['defaultValue'].trim());
-						popupComboMinLength[popupId+'DP'+(index+1)] = popupMinLen;
-						if(popupDropdownId != '' && popupDropdownId != undefined){
-						popupQueryId = popupDropdownId;
-						popupComboItem[popupId+'DP'+(index+1)] =  popupNameSpace +'.'+popupQueryId;
-							 
-							// paramMap[i] = splitArray[0]:; 
-						}
-						else{
-							    popupQueryId = popupDropdownId;
-							 //   paramMap[i] = ; 
-						}
-					that.popupComboQueryId[index] = popupComboItem;
-					that.popupComboMinLength[index] = popupComboMinLength; 		    
-						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+popupMinLen +' or more characters',minLength: popupMinLen,remoteAutoComplete: false});
-	
-				}
-				   	 $('#'+popupId).on('bindingComplete', function (e) {
+					  	 $('#'+popupId).on('bindingComplete', function (e) {
 							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
 							  maxItemWidthArry = maxItemWidth.split('px');
 							   maxItemWidthNum = Number(maxItemWidthArry[0]);
@@ -2560,6 +2548,64 @@ var momWidget = {
 							 }
 							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });		
+				}
+				else if (popupType == 'M'){
+					$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
+					 	 $('#'+popupId).on('bindingComplete', function (e) {
+							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px'
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });		
+				}
+				else if(popupType == 'SS'){
+						popupMinLen  = Number(that.popupProperty[index][j]['defaultValue'].trim());
+						popupComboMinLength[popupId] = popupMinLen;
+						if(popupDropdownId != '' && popupDropdownId != undefined){
+						popupQueryId = popupDropdownId;
+						popupComboItem[popupId] =  popupNameSpace +'.'+popupQueryId;
+							 
+							// paramMap[i] = splitArray[0]:; 
+						}
+						else{
+							    popupQueryId = popupDropdownId;
+							 //   paramMap[i] = ; 
+						}
+					that.popupComboQueryId[index] = popupComboItem;
+					that.popupComboMinLength[index] = popupComboMinLength; 		    
+						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+popupMinLen +' or more characters',minLength: popupMinLen,remoteAutoComplete: false});
+	 	 $('#'+popupId).on('bindingComplete', function (e) {
+			if ($('#'+e.target.id).jqxComboBox('isOpened' ) == false){
+				return;
+			}
+							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px'
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });	
+			       $('#'+popupId).on('close', function (e) {
+				     var tmpCd = e.target.children[1].value; 
+				            if(tmpCd ==''){
+								$('#'+e.target.id).jqxComboBox('clear');
+								return;
+							}
+							 
+							 //$('#'+e.target.id).val(tmpCd);
+			      });			
+				}
+				  
 					  	 	
 						    			        	 
 						        
@@ -2590,6 +2636,7 @@ var momWidget = {
 					var nowPagingNum = Number(event.target.innerHTML); 
 								
 				}
+				
 				var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 				var totalCount   = that.totalRowCount[index];
 				var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
@@ -2605,10 +2652,10 @@ var momWidget = {
 				 $('.aui-grid-paging-number.aui-grid-paging-number-selected').removeClass('aui-grid-paging-number-selected');
 				 $('#click').addClass('aui-grid-paging-number-selected');
 			     AUIGrid.setGridData(that.grid[index], data); 
-								    if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
-											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
-									} 
-			   // AUIGrid.updateRowsById(that.grid[index], data,false);
+					    if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
+								AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
+						} 
+			       // AUIGrid.updateRowsById(that.grid[index], data,false);
 			      //AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
 			     // AUIGrid.refreshRows(that.grid[index], data, "my-flash-style", 200); 
 	                  	
@@ -2719,22 +2766,35 @@ var momWidget = {
 		
 		    });
 			 $(document).on('click', '.' + paginNextBtnClass, function(e) {
-				 $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-				   e.target.setAttribute('id','click');
-				var nowPagingNum =Number(e.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
-				var nowPagingBtn = e.target.pageNum; 
-					
+				 var pagingBtnHtml = '';
+				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
+				 var nextPagingNum =  Math.ceil(prevNum/10)*10+1;
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10;
+				 
+				 $('.aui-grid-paging-panel').empty();
+				 //$('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
+				  for(var i=nextPagingNum,max1=10; i<max1;i++){
+					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
+						if(i==endPageNum){
+								break;
+									}
+								
+				}
+				
+					$('.aui-grid-paging-panel').append(pagingBtnHtml);
+				  // e.target.setAttribute('id','click');
+				//var nowPagingNum =Number(e.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
+				var nowPagingBtn = e.target.pageNum; 					
 					if(nowPagingBtn == undefined) {
 						return;
 					}
 					else if(nowPagingBtn == 'next') {
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
-					var nowEndPage = nowPagingNum*maxPagingNum;	  
+					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
+					var nowEndPage = nextPagingNum*maxPagingNum ;	  
   				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
 					}
-				
-		
+						
 		    });
 			 $(document).on('click', '.' + pagingNumBtnClass, function(e) {
 				 $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
@@ -2933,7 +2993,7 @@ var momWidget = {
 					momWidget.splashShow();
 					var param = {loginId:$('#userNoDP'+(index+1)).val(),nowPass:$('#nowPassword'+(index+1)).val()};
 					$.ajax({
-    				url:common.contextPath() + '/passwordChange',
+    				url:mCommon.contextPath() + '/passwordChange',
     				method: "get",
     				contentType: 'application/json; charset=UTF-8',
     				data :param,

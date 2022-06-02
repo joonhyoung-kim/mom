@@ -117,4 +117,86 @@
              </foreach>
             </where>  
       </delete>
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_USER 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.userNo, jdbcType=VARCHAR} as userNo,
+                            #{item.userNm, jdbcType=VARCHAR} as userNm,
+                            #{item.userNmEng, jdbcType=VARCHAR} as userNmEng,
+                             '$2a$12$IXT9LU0ClgO7x27zPXXoeOF9qGCloK7pwGNnDqdpahq6iBNSvv3.y' as password,
+                            #{item.position, jdbcType=VARCHAR} as position,
+                            #{item.email, jdbcType=VARCHAR} as email,
+                            #{item.phoneNo, jdbcType=VARCHAR} as phoneNo,
+                            #{item.telNo, jdbcType=VARCHAR} as telNo,
+                            #{item.faxNo, jdbcType=VARCHAR} as faxNo,
+                            #{item.deptCd, jdbcType=VARCHAR} as deptCd,
+                            #{item.authGroupCd, jdbcType=VARCHAR} as authGroupCd,
+                            #{item.vendorCd, jdbcType=VARCHAR} as vendorCd,
+                            #{item.defaultLanguage, jdbcType=VARCHAR} as defaultLanguage,
+                            #{item.mapAddress, jdbcType=VARCHAR} as mapAddress,
+                            #{item.ipAddress, jdbcType=VARCHAR} as ipAddress,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 USER_NO = PARAM.userNo )
+            WHEN MATCHED THEN 
+                  UPDATE SET USER_NM = USER_NM
+                        
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , USER_NO
+                            , USER_NM
+                            , USER_NM_ENG
+                            , PASSWORD
+                            , POSITION
+                            , EMAIL
+                            , PHONE_NO
+                            , TEL_NO
+                            , FAX_NO
+                            , DEPT_CD
+                            , AUTH_GROUP_CD
+                            , VENDOR_CD
+                            , DEFAULT_LANGUAGE
+                            , MAP_ADDRESS
+                            , IP_ADDRESS
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.userNo
+                            , PARAM.userNm
+                            , PARAM.userNmEng
+                            , PARAM.password
+                            , PARAM.position
+                            , PARAM.email
+                            , PARAM.phoneNo
+                            , PARAM.telNo
+                            , PARAM.faxNo
+                            , PARAM.deptCd
+                            , PARAM.authGroupCd
+                            , PARAM.vendorCd
+                            , PARAM.defaultLanguage
+                            , PARAM.mapAddress
+                            , PARAM.ipAddress
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>      
 </mapper>
