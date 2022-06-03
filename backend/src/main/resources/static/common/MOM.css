@@ -1649,12 +1649,13 @@ border-color: #d8dce3 !important;
 .modal-content-change-pop {
     top: 10%;
     left: 23%;
-    width: 35%;
+  /*   width: 35%; */
     position: absolute;
     opacity: 1 !important;
    /*  z-index: 2000 !important; */
     margin-left: 6.5% !important;
     margin-top: 2% !important;
+    width: 55rem;
 }
 
 .passwordInputField {
@@ -1689,6 +1690,7 @@ border-color: #d8dce3 !important;
      margin-top: -0.1rem; 
     border: 1px solid darkgrey;
 }
+
 .fieldbox {
 	display: inline-block;
 	width: 150px;

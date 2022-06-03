@@ -33,7 +33,7 @@
 								 , USER_NM
 								 , USER_NM_ENG
 								 , PASSWORD
-								 , POSITION
+								 , POSITION 
 								 , EMAIL
 								 , PHONE_NO
 								 , TEL_NO
@@ -86,8 +86,8 @@
 		     , PASSWORD               = #{item.encodePw,            jdbcType=VARCHAR}
 			 , USER_NM_ENG            = #{item.userNmEng,           jdbcType=VARCHAR}
 			 , AUTH_GROUP_CD		  = #{item.authGroupCd,         jdbcType=VARCHAR}
-			 , DEPT_CD  	          = #{item.deptNm,              jdbcType=VARCHAR}
-			 , POSITION               = #{item.position,            jdbcType=VARCHAR}			 
+			 , DEPT_CD  	          = #{item.deptCd,              jdbcType=VARCHAR}
+			 , POSITION               = #{item.position,          jdbcType=VARCHAR}			 
 			 , TEL_NO                 = #{item.telNo,               jdbcType=VARCHAR}
 			 , PHONE_NO               = #{item.phoneNo,             jdbcType=VARCHAR} 
 			 , FAX_NO                 = #{item.faxNo,               jdbcType=VARCHAR}
