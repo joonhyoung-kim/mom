@@ -123,7 +123,7 @@ var momWidget = {
 				     popupString = popupString.substr(1,  popupString.length-2);  
 			  }   					 
 			       
-		    	  that.pageProperty[index]     = {programId:data1[0].programId,menuId:data1[0].menuId,templateId:data1[0].templateId};
+		    	  that.pageProperty[index]     = {programId:data1[0].programId,menuId:data1[0].menuId,templateId:data1[0].templateId,param:data1[0].param};
 			      that.gridProperty[index]     = JSON.parse(gridString);
 			      that.columnProperty[index]   = JSON.parse(columnString);
 			      
@@ -1678,19 +1678,30 @@ var momWidget = {
 	    
 	    var callInitResult = undefined;
 	    var callBackResult = undefined; 
-	    var initParam = {};
+	    var checkSearchParam = {};
 	    var checkSearchParam = {};
         var totalParam = {};
-        var queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.defaultInfo'+(index+1) : menuId+'.defaultInfo'+(index+1);
+        var queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.defaultInfo'+(index+1) : menuId+'.defaultInfo'+(index+1);
 		var that= this;	
+		var menuParam = that.pageProperty[index]['param'];
 		   if(splash==true){
 			that.splashShow();
 		   }
-			
-		
+		   if(menuParam != undefined){
+			   menuParam = JSON.parse(that.pageProperty[index]['param']);			
+		    }
+		   // param = that.pageProperty[index]['param'];
 	        initParam = that.checkInitParam(index,param,your); //init param 설정시 세팅
 	        checkSearchParam = that.checkSearchParam(index,param,your); //search param 설정시 세팅
-	        totalParam = Object.assign(checkSearchParam, initParam,param);   	        
+	         if(menuParam != undefined){
+			   totalParam = Object.assign(menuParam, checkSearchParam);   	 
+	           totalParam = Object.assign(totalParam,initParam,param);  
+		    }
+	        else{
+				 totalParam = Object.assign(checkSearchParam,totalParam,initParam,param);   	 
+			} 	 
+	       
+	               
 	    if(that.checkInitMessage(index,your) == 'CLEAR'){ //init message 설정시 세팅
 	    	totalParam = {};	    	  
 	    }
@@ -1709,7 +1720,7 @@ var momWidget = {
         	/*  param.startPage = that.startPage[index]; 
               praram.endPage  = that.endPage[index];*/
               if(btnId=='TOTAL'){
-	  				queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.totalCount'+(index+1) : menuId+'.totalCount'+(index+1);
+	  				queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.totalCount'+(index+1) : menuId+'.totalCount'+(index+1);
 			  }
               setTimeout(function() {
             	  //that.splashShow();
@@ -1723,7 +1734,7 @@ var momWidget = {
 								    that.backWork[index] = 'N';
 								   	var excelData = that.excelDownGridData[index]; 
 									AUIGrid.setGridData(that.excelDownGrid[index], excelData);												
-									var	fileName = that.pageProperty[index]['menuId'] + '_' + get_current_date('yyyy-mm-dd');
+									var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd');
 								    var excelDownOpt = {fileName: fileName ,
 										    		    progressBar: true,
 										    		    showRowNumColumn:false,
@@ -2308,7 +2319,11 @@ var momWidget = {
 			if(e.keyCode == 13){ //엔터
 				$('#findBtn'+(index+1)).click();
 			} 
-
+			else if(e.keyCode == 8 || e.keyCode == 46){
+				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+				$('#'+searchId).jqxComboBox('clearSelection');
+				$('#'+searchId).jqxComboBox('uncheckAll');
+			}
 		});
 		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
 			if(e.keyCode == 13){ //엔터
@@ -2335,6 +2350,8 @@ var momWidget = {
 				
 
 			} 
+			
+			
 
 		});
 		$(document).on('keydown', '.searchSelectField-popup-combo', function(e) {
@@ -2724,7 +2741,7 @@ var momWidget = {
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
 					var nowEndPage = nowPagingNum*maxPagingNum;	  
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
 					}
 				
 		
@@ -2742,7 +2759,7 @@ var momWidget = {
 					var nowPagingNum = Math.ceil(that.totalRowCount[index]/maxPagingNum);
 					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
 					var nowEndPage = nowPagingNum*maxPagingNum;	  
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
 					}
 				
 		
@@ -2760,7 +2777,7 @@ var momWidget = {
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
 					var nowEndPage = nowPagingNum*maxPagingNum;	  
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
 					}
 				
 		
@@ -2792,7 +2809,7 @@ var momWidget = {
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
 					var nowEndPage = nextPagingNum*maxPagingNum ;	  
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
 					}
 						
 		    });
@@ -2806,18 +2823,18 @@ var momWidget = {
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
 					var nowEndPage = nowPagingNum*maxPagingNum;	  
-  				 that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['menuId'],your,that.controlPaging,e);
+  				 that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
 		
 		    });
 		    
 		  $(document).on('click', '#' + findBtnId, function(e) {  
 			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
 			     that.findBtnClicked(index, {}, true, 'TOTAL',menuId,your);	
-		    	 that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['menuId'],your);
+		    	 that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
 		    }	
 		    else{
 			  //momWidget.findBtnClicked(1, {}, true, 'CELLCLICK',menuId,VIEW);
-			  that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
+			  that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['programId'],your);
 		    }	    	
 			
 			// e.preventDefault();
@@ -2870,7 +2887,7 @@ var momWidget = {
 			     var popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
 			    var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
 			    var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId);
-                var menuId = that.pageProperty[index]['menuId'];
+                var menuId = that.pageProperty[index]['programId'];
                     var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
                     if(isShow == 'block'){
 	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
@@ -3037,7 +3054,7 @@ var momWidget = {
 				if (param.length == 0){
 					      return;	
 					}			
-					param[0].fileName  = that.pageProperty[index]['menuId']+'_'+(index+1);
+					param[0].fileName  = that.pageProperty[index]['programId']+'_'+(index+1);
 					//param[0].fileType = 'xlsx';
 					param[0].fileType = 'pdf';
 			   // param = that.checkSearchParam(index,param,your); 	   
@@ -3073,7 +3090,7 @@ var momWidget = {
 			$(document).on('click','#'+exUpCheckDownBtnId, function() {
 				/*	var excelData = AUIGrid.getGridData(that.excelUpGrid[index]); 
 					AUIGrid.setGridData(that.excelDownGrid[index], excelData);		*/										
-					var	fileName = that.pageProperty[index]['menuId'] + '_' + get_current_date('yyyy-mm-dd')+'_검사결과';
+					var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd')+'_검사결과';
 				    var excelDownOpt = {fileName: fileName ,
 						    		    progressBar: true,
 						    		    showRowNumColumn:false,
@@ -3268,7 +3285,7 @@ var momWidget = {
 									  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
 									  momWidget.splashHide();
 								      return;
-								} momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1),momWidget.pageProperty[index]['menuId'],your,[]);	
+								} momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1),momWidget.pageProperty[index]['programId'],your,[]);	
 					        	  //$('#excelUpPop'+(index+1)).momModal('hide');
 					        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 								  momWidget.splashHide();
@@ -3524,7 +3541,7 @@ var momWidget = {
 			    		}
 			
 						 
-			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['menuId'],your);
+			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['programId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
@@ -3542,12 +3559,12 @@ var momWidget = {
 				var buttonId   = $('#defaultPop'+(index+1)).attr('btnId');
 				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
 				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
-				var queryId = that.pageProperty[index]['menuId']+'.defaultInfo'+(index+1);
+				var queryId = that.pageProperty[index]['programId']+'.defaultInfo'+(index+1);
 				var buttonParam = [];
 				var extraParam = {};
 			
 				if(actionType == 'P'){
-					queryId = that.pageProperty[index]['menuId']+'.'+buttonId+(index+1);
+					queryId = that.pageProperty[index]['programId']+'.'+buttonId+(index+1);
 				}
 				
 					
@@ -3666,7 +3683,7 @@ var momWidget = {
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
-		          }, undefined, undefined, this, false);
+		          }, undefined, index, this, false);
 				  
 			
 				
@@ -3754,7 +3771,7 @@ var momWidget = {
 						      return;
 						}	
 						  callBackParam = callBackResult['param'];	
-			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn' + (index + 1),momWidget.pageProperty[index]['menuId'],your);
+			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn' + (index + 1),momWidget.pageProperty[index]['programId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
@@ -3784,7 +3801,7 @@ var momWidget = {
 					}		
 				
 					AUIGrid.setGridData(that.excelDownGrid[index], excelData);												
-					var	fileName = that.pageProperty[index]['menuId'] + '_' + get_current_date('yyyy-mm-dd');
+					var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd');
 				    var excelDownOpt = {fileName: fileName ,
 						    		    progressBar: true,
 						    		    showRowNumColumn:false,
@@ -3812,7 +3829,7 @@ var momWidget = {
 				if(your != undefined && your['excelUploadCallInit'] != undefined) {
 					your.excelDownCallInit(index, your);
 				}																				
-				var	fileName = that.pageProperty[index]['menuId'] + '_template_' + get_current_date('yyyy-mm-dd');
+				var	fileName = that.pageProperty[index]['programId'] + '_template_' + get_current_date('yyyy-mm-dd');
 			    var excelDownOpt = {fileName: fileName ,
 					    		    progressBar: true,
 					    		    showRowNumColumn:false,

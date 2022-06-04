@@ -1379,6 +1379,13 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
     var sessionId = '';
     var interval = undefined;
     var paramSize = param.length;
+    if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
+		 var menuParam = JSON.parse(momWidget.pageProperty[index_info]['param']);
+         var keys = Object.keys(menuParam); 
+	  
+	   
+    }
+
 	if(requestType == undefined || requestType == ''){
 		requestType = 'crud';
 	}
@@ -1464,7 +1471,12 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[i].requestType = requestType;
 				param[i].p_err_code  = '';
 				param[i].p_err_msg   = '';
-				
+				if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
+					   for(var k=0,max=keys.length;k<max;k++){
+					   param[i][keys[k]] = menuParam[keys[k]];
+				       }
+				}
+
 			}
 			    param = JSON.stringify(param);
 		}
@@ -1490,6 +1502,11 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[i].requestType   = requestType;
 				param[i].p_err_code  = '';
 				param[i].p_err_msg   = '';
+					if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
+					   for(var k=0,max=keys.length;k<max;k++){
+					   param[i][keys[k]] = menuParam[keys[k]];
+				       }
+				}
 				
 			}
 			param = JSON.stringify(param);
@@ -1514,6 +1531,11 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[i].requestType   = requestType;
 				param[i].p_err_code  = '';
 				param[i].p_err_msg   = '';
+				if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
+					   for(var k=0,max=keys.length;k<max;k++){
+					   param[i][keys[k]] = menuParam[keys[k]];
+				       }
+				}
 				
 			}
 			param = JSON.stringify(param);

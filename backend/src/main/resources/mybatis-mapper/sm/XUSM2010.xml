@@ -148,7 +148,7 @@
 				             , TRIM(#{item.userId, jdbcType=VARCHAR})
 				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
 				             , 'Y'
-				             , TRIM(#{item.param, jdbcType=VARCHAR})   
+				             , TRIM(${item.param})   
 				             , TRIM(#{item.programId, jdbcType=VARCHAR}) )				             
 	            </foreach>			               
     </insert>
@@ -166,7 +166,7 @@
 		     , UPDATE_BY      = #{item.userId, jdbcType=VARCHAR}
 		     , UPDATE_DATE    = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
 		     , STANDARD_FLAG  = #{item.standardFlag, jdbcType=VARCHAR}
-		     , PARAM          = #{item.param, jdbcType=VARCHAR}
+		     , PARAM          = ${item.param}
 		     , PROGRAM_ID     = #{item.programId, jdbcType=VARCHAR}
          <where>
                MENU_ID        = #{item.menuId} 

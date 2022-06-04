@@ -77,6 +77,7 @@
 		     , MW.SEARCH_PROPERTY
 		     , MW.POPUP_PROPERTY
 		     , MW.BUTTON_PROPERTY
+		     , MM.PARAM
 		FROM   MOM_WIDGET MW
             ,  MOM_MENU   MM
             ,  MOM_PROGRAM MP
