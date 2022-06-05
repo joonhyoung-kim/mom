@@ -2633,12 +2633,11 @@ var momWidget = {
 	
 
 	},
-		controlPaging : function(result,data,index,event) {
-			var that = momWidget;
-				
-				var nowPagingBtn = event.target.pageNum; 
-				if(nowPagingBtn != undefined && nowPagingBtn =='next') {
-						var nowPagingNum =Number(event.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
+		controlPaging : function(result,data,index,e) {
+			    var that = momWidget;
+
+		/*		if(e.target.classList.contains('aui-grid-paging-next')) {
+						var nowPagingNum =Number(e.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
 				}
 				else if(nowPagingBtn != undefined && nowPagingBtn =='prev') {
 						var nowPagingNum =Number(event.target.nextSibling.innerHTML);
@@ -2659,7 +2658,7 @@ var momWidget = {
 				var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
 				var nowEndPage = nowPagingNum*maxPagingNum > totalCount ? totalCount:nowPagingNum*maxPagingNum;	  
 				var startItem = [];
-				var endItem = [];
+				var endItem = [];*/
 			/*	var rowIndexes =[];
 				  for(var i=nowStartPage-1,max=nowEndPage; i<max;i++){ 
 						rowIndexes.push(i);
@@ -2765,55 +2764,152 @@ var momWidget = {
 		
 		    });
 			 $(document).on('click', '.' + paginPrevBtnClass, function(e) {
-				 $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-				   e.target.setAttribute('id','click');
-				var nowPagingNum =Number(e.target.nextSibling.innerHTML);
-				var nowPagingBtn = e.target.pageNum; 
+					// e.stopPropagation(); 
+				 var pagingBtnHtml = '';
+				 var leftHtml = '';
+				 var rightHtml = '';
+				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 var nextPagingNum =  Math.floor(prevNum/10)*10+1-10; //다음에 선택될버튼
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
+				 var pagingRow = Math.ceil(nextPagingNum/10);
+				 var endPageRow = Math.ceil(endPageNum/10)*10;
+				 var nextIcon = '>';
+				 var lastIcon = '>>';
+				 var fisrtIcon = '<<';
+				 var prevIcon = '<';
+				 var targetSeq = 1;
+				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
+					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
+						if(i==endPageNum){
+								break;
+						}
+								
+				}  
+				/* if(nextPagingNum<=10){
+					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
+					    pagingBtnHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+				 }*/
+				 if( nextPagingNum<=10){
+					    
+					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
+					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
+					      
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('.aui-grid-paging-panel').append(rightHtml);
+					    $('.aui-grid-paging-panel')[0].childNodes[0].setAttribute('id','click');
 					
+				 }
+				 else{
+					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
+					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
+					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
+					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
+					    $('.aui-grid-paging-panel').append(leftHtml);	
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('.aui-grid-paging-panel').append(rightHtml);
+					   $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
+				  }
+			
+				
+					
+					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
+					 
+				   
+				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
 					if(nowPagingBtn == undefined) {
 						return;
 					}
-					else if(nowPagingBtn == 'prev') {
+			
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
-					var nowEndPage = nowPagingNum*maxPagingNum;	  
+					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
+					var nowEndPage = nextPagingNum*maxPagingNum ;	  
   				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-					}
 				
 		
 		    });
 			 $(document).on('click', '.' + paginNextBtnClass, function(e) {
+				// e.stopPropagation(); 
 				 var pagingBtnHtml = '';
-				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
-				 var nextPagingNum =  Math.ceil(prevNum/10)*10+1;
-				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10;
-				 
-				 $('.aui-grid-paging-panel').empty();
-				 //$('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-				  for(var i=nextPagingNum,max1=10; i<max1;i++){
+				 var leftHtml = '';
+				 var rightHtml = '';
+				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 var nextPagingNum =  Math.ceil(prevNum/10)*10+1; //다음에 선택될버튼
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
+				 var pagingRow = Math.ceil(nextPagingNum/10);
+				 var endPageRow = Math.ceil(endPageNum/10)*10;
+				 var nextIcon = '>';
+				 var lastIcon = '>>';
+				 var fisrtIcon = '<<';
+				 var prevIcon = '<';
+				 var targetSeq = 1;
+				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
 					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
 						if(i==endPageNum){
 								break;
 									}
 								
 				}
+				/* if(nextPagingNum<=10){
+					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
+					    pagingBtnHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+				 }*/
+				 if((endPageRow-10)<nextPagingNum && nextPagingNum<endPageRow){
+					    
+					    leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
+					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
+					        $('.aui-grid-paging-panel').append(leftHtml);
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
+					
+				 }
+				 else{
+					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
+					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
+					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
+					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
+					    $('.aui-grid-paging-panel').append(leftHtml);	
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('.aui-grid-paging-panel').append(rightHtml);
+					   $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
+				  }
+			
 				
-					$('.aui-grid-paging-panel').append(pagingBtnHtml);
-				  // e.target.setAttribute('id','click');
-				//var nowPagingNum =Number(e.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
-				var nowPagingBtn = e.target.pageNum; 					
+					
+					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
+					 
+				   
+				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
 					if(nowPagingBtn == undefined) {
 						return;
 					}
-					else if(nowPagingBtn == 'next') {
+			
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
 					var nowEndPage = nextPagingNum*maxPagingNum ;	  
   				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-					}
+					
 						
 		    });
 			 $(document).on('click', '.' + pagingNumBtnClass, function(e) {
+				if($('.aui-grid-paging-panel').find('#click')[0]==undefined){
+					return;
+				}
+				if(e.target.classList.contains('aui-grid-paging-first')){
+					return;
+				}
+				if(e.target.classList.contains('aui-grid-paging-last')){
+					return;
+				}
+				if(e.target.classList.contains('aui-grid-paging-prev')){
+					return;
+				}
+				if(e.target.classList.contains('aui-grid-paging-next')){
+					return;
+				}
 				 $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
 				   e.target.setAttribute('id','click');
 					var nowPagingNum = Number(e.target.innerHTML); 
