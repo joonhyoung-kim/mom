@@ -407,7 +407,7 @@ public class FrameworkUtil {
 				} 
 			 }
 			 else {
-				 System.out.println("인코딩노필요");
+				
 			 }
 			if (map == null || map.isEmpty()) {
 				if (i == 0) {

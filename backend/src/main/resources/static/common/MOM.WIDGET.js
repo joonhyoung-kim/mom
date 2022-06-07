@@ -577,6 +577,11 @@ var momWidget = {
 					 
 				    }
                     else{
+	                      if(momWidget.gridProperty[index][0]['usePaging']){
+		                  /*   that.gridProperty[index][0]['pagingInfoLabelFunction'] = 	function(currentPage, totalPageCount, currentTopNumber, currentBottomNumber, dataLen) {
+							 return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + dataLen + " 개 )";
+						     };	*/
+						  }
 	     					 that.columnProp[index] = columnProp;
 							 that.grid[index] = AUIGrid.create('#grid'+(index+1), columnProp, that.gridProperty[index][0]); 
 					}
@@ -1763,33 +1768,13 @@ var momWidget = {
 								that.totalRowCount[index] = data[0]['totalCount'];
 							  }
 							  else if(btnId=='INIT_PAGING' ){
-					
-						/*		if(data.length>=that.gridProperty[index][0]['pageRowCount']){
-									var entireItem = [];
-									var tmpObj = JSON.parse(JSON.stringify(data[0]));
-									var tmpItem = that.objectInitialize(tmpObj);
 
-									for(var i = 0, max2 = that.totalRowCount[index]; i< max2; i++){
-									//tmpItem.keyId = new Date().getTime() + Math.random();
-									entireItem.push(JSON.parse(JSON.stringify(tmpItem)));
-									
-								    }
-
-									for(var q = 0, max4 = that.totalRowCount[index]; q< max4; q++){
-									  //  AUIGrid.setCellValue(that.grid[index], q, "keyId", q+1);
-									 entireItem[q]['keyId'] = q+1;
-									
-								}
-									 AUIGrid.setGridData(that.grid[index], entireItem);  
-								     AUIGrid.updateRowsById(that.grid[index], data,false); 
-								}
-								else{
-									 AUIGrid.setGridData(that.grid[index], data); 
-								}*/
 								var pageTotalNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']);
 								var pagingBtnHtml = '';
 								var rightNextBtnHtml  = '<span class ="aui-grid-paging-number aui-grid-paging-next">'+'>'+'</span>';
 								var rightLastBtnHtml = '<span class ="aui-grid-paging-number aui-grid-paging-last">'+'>'+'</span>'; 
+								var startPage= 1;
+				 				var endPage = 1; 
 								if (pageTotalNum >1){
 									for(var i = 2, max = 10; i<= max; i++){
 									pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';
@@ -1803,11 +1788,19 @@ var momWidget = {
 										$('.aui-grid-paging-panel').append(rightLastBtnHtml);
 									
 								}
-								
+									startPage = data[0]['id'];
+				 					endPage = data[data.length-1]['id'];
 									AUIGrid.setGridData(that.grid[index], data); 
+								
 								    if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
 											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
 									} 
+									for(var j=0,max2=data.length;j<max2;j++){		
+										AUIGrid.updateRow(that.grid[index], {id:startPage+j}, j,false);			
+									}
+									
+									$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + '1' + " / 전체페이징 : " + pageTotalNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
+									
 									$('.aui-grid-paging-number.aui-grid-paging-number-selected')[0].setAttribute('id','click');
 								    //AUIGR//뒤에 버튼추가해야함
 								    
@@ -2636,41 +2629,60 @@ var momWidget = {
 		controlPaging : function(result,data,index,e) {
 			    var that = momWidget;
 
-		/*		if(e.target.classList.contains('aui-grid-paging-next')) {
-						var nowPagingNum =Number(e.target.previousSibling.innerHTML)- momWidget.gridProperty[0][0]['showPageButtonCount'] +1;
-				}
-				else if(nowPagingBtn != undefined && nowPagingBtn =='prev') {
-						var nowPagingNum =Number(event.target.nextSibling.innerHTML);
-				}	
-				else if(nowPagingBtn != undefined && nowPagingBtn =='first') {
-						var nowPagingNum = 1;
-				}	
-				else if(nowPagingBtn != undefined && nowPagingBtn =='last') {
-						var nowPagingNum = Math.ceil(that.totalRowCount[index]/that.gridProperty[index][0]['pageRowCount']);
-				}					
-				else{
-					var nowPagingNum = Number(event.target.innerHTML); 
-								
-				}
-				
-				var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-				var totalCount   = that.totalRowCount[index];
-				var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
-				var nowEndPage = nowPagingNum*maxPagingNum > totalCount ? totalCount:nowPagingNum*maxPagingNum;	  
-				var startItem = [];
-				var endItem = [];*/
-			/*	var rowIndexes =[];
-				  for(var i=nowStartPage-1,max=nowEndPage; i<max;i++){ 
-						rowIndexes.push(i);
-				  }*/
-
-				//AUIGrid.updateRows(that.grid[index], data,rowIndexes,true); 
 				 $('.aui-grid-paging-number.aui-grid-paging-number-selected').removeClass('aui-grid-paging-number-selected');
 				 $('#click').addClass('aui-grid-paging-number-selected');
+				 var startPage= 1;
+				 var endPage = 1; 
+				 var nextPagingNum =1;
+				 var prevNum = 1;
+				 var infoHtml = '';
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
+				 var endPageRow = Math.ceil(endPageNum/10)*10;
+				 startPage = data[0]['id'];
+				 endPage = data[data.length-1]['id'];	
+		
+				if(e.target.classList.contains('aui-grid-paging-first')){
+					 nextPagingNum = 1;
+					 	 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
+					 $('.aui-grid-paging-panel').prepend(infoHtml);
+				}
+				else if(e.target.classList.contains('aui-grid-paging-last')){
+					 nextPagingNum = endPageRow-9;  //다음에 선택될버튼
+					 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
+					 $('.aui-grid-paging-panel').prepend(infoHtml);
+					 	 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
+					 $('.aui-grid-paging-panel').prepend(infoHtml);
+				}
+				else if(e.target.classList.contains('aui-grid-paging-prev')){
+					 prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
+					 nextPagingNum = Math.floor(prevNum/10)*10+1-10+10;  //다음에 선택될버튼
+					 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
+					 $('.aui-grid-paging-panel').prepend(infoHtml);
+				}
+				else if(e.target.classList.contains('aui-grid-paging-next')){
+					 prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
+					 nextPagingNum = Math.ceil(prevNum/10)*10+1-10;  //다음에 선택될버튼
+					 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
+					 $('.aui-grid-paging-panel').prepend(infoHtml);
+				}
+				else{
+					  nextPagingNum = Number(e.target.innerHTML);  //다음에 선택될버튼
+				}
+				 
+				 var nextCount = (nextPagingNum*that.gridProperty[index][0]['pageRowCount'])-that.gridProperty[index][0]['pageRowCount'] +1;				 
+				 var pagingRow = Math.ceil(nextPagingNum/10);
+				
 			     AUIGrid.setGridData(that.grid[index], data); 
+			    
+					
 					    if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
 								AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
 						} 
+				for(var i=0,max1=data.length;i<max1;i++){
+					//AUIGrid.setCellValue(that.grid[index], 0, "seq", i+1);		
+					AUIGrid.updateRow(that.grid[index], {id:startPage+i}, i,false);			
+				}
+				$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nextPagingNum + " / 전체페이징 : " + endPageNum + "( " + nextCount + "~" + that.totalRowCount[index] + " 개 )";		
 			       // AUIGrid.updateRowsById(that.grid[index], data,false);
 			      //AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
 			     // AUIGrid.refreshRows(that.grid[index], data, "my-flash-style", 200); 
@@ -2728,49 +2740,131 @@ var momWidget = {
 			}*/
 
 			 $(document).on('click', '.' + paginFirstBtnClass, function(e) {
-				   $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-				   e.target.setAttribute('id','click');
-				   var nowPagingBtn = e.target.pageNum; 
+				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
+					return;
+				}
+			 var pagingBtnHtml = '';
+				 var leftHtml = '';
+				 var rightHtml = '';
+				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 var nextPagingNum =  1; //다음에 선택될버튼
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
+				 var pagingRow = Math.ceil(nextPagingNum/10);
+				 var endPageRow = Math.ceil(endPageNum/10)*10;
+				 var nextIcon = '>';
+				 var lastIcon = '>>';
+				 var fisrtIcon = '<<';
+				 var prevIcon = '<';
+				 var targetSeq = 1;
+				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
+					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
+						if(i==endPageNum){
+								break;
+						}
+								
+				}  
+
+				
+					    
+					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
+					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
+					      
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('.aui-grid-paging-panel').append(rightHtml);
+					    $('.aui-grid-paging-panel')[0].childNodes[0].setAttribute('id','click');
 					
+
+			
+				
+					
+					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
+					 
+				   
+				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
 					if(nowPagingBtn == undefined) {
 						return;
 					}
-					else if(nowPagingBtn == 'first') {
-					var nowPagingNum =1
+			
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
-					var nowEndPage = nowPagingNum*maxPagingNum;	  
+					var nowStartPage = 1;
+					var nowEndPage = nextPagingNum*maxPagingNum ;	  
   				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-					}
 				
 		
 		    });
 		     $(document).on('click', '.' + paginLastBtnClass, function(e) {
-			       $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-				   e.target.setAttribute('id','click');
-				    var nowPagingBtn = e.target.pageNum; 
+				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
+					return;
+				}
+			   	// e.stopPropagation(); 
+				 var pagingBtnHtml = '';
+				 var leftHtml = '';
+				 var rightHtml = '';
+				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
+				 var endPageRow = Math.ceil(endPageNum/10)*10;
+				 var nextPagingNum = endPageRow-9; //다음에 선택될버튼
+				// var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
+			
+				 var pagingRow = Math.ceil(nextPagingNum/10);
+				
+				 var nextIcon = '>';
+				 var lastIcon = '>>';
+				 var fisrtIcon = '<<';
+				 var prevIcon = '<';
+				 var targetSeq = 1;
+				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
+					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
+						if(i==endPageNum){
+								break;
+									}
+								
+				}
+				/* if(nextPagingNum<=10){
+					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
+					    pagingBtnHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+				 }*/
+
+					    
+					    leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
+					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
+					        $('.aui-grid-paging-panel').append(leftHtml);
+					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
 					
+			
+			
+				
+					
+					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
+					 
+				   
+				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
 					if(nowPagingBtn == undefined) {
 						return;
 					}
-					else if(nowPagingBtn == 'last') {
-					var maxPagingNum = that.gridProperty[index][0]['pageRowCount'];
-					var nowPagingNum = Math.ceil(that.totalRowCount[index]/maxPagingNum);
-					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1;
-					var nowEndPage = nowPagingNum*maxPagingNum;	  
+			
+					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
+					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
+					var nowEndPage = nextPagingNum*maxPagingNum ;	  
   				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-					}
 				
 		
 		    });
 			 $(document).on('click', '.' + paginPrevBtnClass, function(e) {
+				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
+					return;
+				}
 					// e.stopPropagation(); 
 				 var pagingBtnHtml = '';
 				 var leftHtml = '';
 				 var rightHtml = '';
 				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
 				 var nextPagingNum =  Math.floor(prevNum/10)*10+1-10; //다음에 선택될버튼
-				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
 				 var pagingRow = Math.ceil(nextPagingNum/10);
 				 var endPageRow = Math.ceil(endPageNum/10)*10;
 				 var nextIcon = '>';
@@ -2830,13 +2924,17 @@ var momWidget = {
 		
 		    });
 			 $(document).on('click', '.' + paginNextBtnClass, function(e) {
+				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
+					return;
+				}
 				// e.stopPropagation(); 
 				 var pagingBtnHtml = '';
 				 var leftHtml = '';
 				 var rightHtml = '';
 				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
 				 var nextPagingNum =  Math.ceil(prevNum/10)*10+1; //다음에 선택될버튼
-				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
+				// var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
+				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
 				 var pagingRow = Math.ceil(nextPagingNum/10);
 				 var endPageRow = Math.ceil(endPageNum/10)*10;
 				 var nextIcon = '>';
@@ -2857,7 +2955,7 @@ var momWidget = {
 					    pagingBtnHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
 					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
 				 }*/
-				 if((endPageRow-10)<nextPagingNum && nextPagingNum<endPageRow){
+				 if((endPageRow-10)<nextPagingNum && nextPagingNum<=endPageRow){
 					    
 					    leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
 					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
@@ -2890,11 +2988,18 @@ var momWidget = {
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
 					var nowEndPage = nextPagingNum*maxPagingNum ;	  
+						
   				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-					
+					//$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nextPagingNum + " / 전체페이징 : " + endPageNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
 						
 		    });
 			 $(document).on('click', '.' + pagingNumBtnClass, function(e) {
+				if(e.target.parentElement == null || e.target.parentElement == undefined){
+					return;
+				}
+				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
+					return;
+				}
 				if($('.aui-grid-paging-panel').find('#click')[0]==undefined){
 					return;
 				}
@@ -2918,9 +3023,11 @@ var momWidget = {
 					}
 					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
 					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
-					var nowEndPage = nowPagingNum*maxPagingNum;	  
+					var nowEndPage = nowPagingNum*maxPagingNum;	 
+					var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호 
+					
   				 that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-		
+		//$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nowPagingNum + " / 전체페이징 : " + endPageNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
 		    });
 		    
 		  $(document).on('click', '#' + findBtnId, function(e) {  
@@ -3322,8 +3429,8 @@ var momWidget = {
 	 				     failCount = 0;*/
 			});
 			$(document).on('click','#'+saveExUpBtnId, function(e) {
-					$('#excelUpPop'+(index+1)).momModal('hide');	
-				that.splashShow();
+			     $('#excelUpPop'+(index+1)).momModal('hide');	
+				 that.splashShow();
 				
 				 var bar = $('.bar');
 				 var percent = $('.percent');
@@ -3387,7 +3494,7 @@ var momWidget = {
 								  momWidget.splashHide();
 								  $("#pleaseWaitDialog").momModal('hide');
 							      return;
-				          }, undefined, undefined, this, true);
+				          }, undefined, index, this, true);
 					}, 500);
 				 
 				
@@ -3427,7 +3534,7 @@ var momWidget = {
 						usePaging : true,
 						
 						// 한 화면 페이징 버턴 개수 5개로 지정
-						showPageButtonCount : 5,
+						showPageButtonCount : 10,
 						
 						// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
 						showPageRowSelect : true,
@@ -3435,8 +3542,8 @@ var momWidget = {
 						// 한 화면에 출력되는 행 개수 30개로 지정
 						// pageRowCount 의 크기가 너무 크면 퍼포먼스가 낮아집니다.
 						// 그리드 페이징은 해당 행 수만큼 DOM을 만들기 때문입니다.
-						pageRowCount : 30,
-						
+						pageRowCount : 100,
+						showRowNumColumn: true,
 						// 페이징 하단에 출력되는 페이징 정보 텍스트 변경 함수
 						// 파라메터 설명 
 						// currentPage : 현재 페이지, 
@@ -3446,7 +3553,7 @@ var momWidget = {
 						// dataLen : 전체 데이터 수
 						// 리턴 : 리턴되는 스트링이 출력됩니다.
 						pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber, currentBottomNumber, dataLen) {
-							return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + currentBottomNumber + " 행 )";
+							return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + dataLen + " 개 )";
 						},
 						
 						// 그룹핑 패널 사용
@@ -3711,8 +3818,7 @@ var momWidget = {
 				var popupCount = that.popupProperty[index].length;
 				var popupItem  = that.popupProperty[index];
 				for(var i=0 ;i<popupCount;i++){
-					if(actionType == 'C' && that.popupProperty[index][i]['insertEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){
-					
+					if(actionType == 'C' && that.popupProperty[index][i]['insertEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){				
 						if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() ==''){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();

@@ -188,8 +188,8 @@ ORDER BY A.UNIT_CATEGORY_NM
        </foreach>
       </where>
   </delete>
-  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
-      MERGE INTO MOM_ITEM_UNIT_REL 
+<insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_ITEM_UNIT_REL A
             USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
                      SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
                             #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
@@ -206,11 +206,11 @@ ORDER BY A.UNIT_CATEGORY_NM
                             MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
                      FROM DUAL
                    </foreach> ) PARAM
-            ON ( COMPANY_CD = PARAM.companyCd AND
-                 DIVISION_CD = PARAM.divisionCd AND
-                 ITEM_ID = PARAM.itemId AND
-                 UNIT = PARAM.unit AND
-                 CONVERSION_UNIT = PARAM.conversionUnit )
+            ON ( A.COMPANY_CD = PARAM.companyCd AND
+                 A.DIVISION_CD = PARAM.divisionCd AND
+                 A.ITEM_ID = PARAM.itemId AND
+                 A.UNIT = PARAM.unit AND
+                 A.CONVERSION_UNIT = PARAM.conversionUnit )
             WHEN MATCHED THEN 
                  UPDATE SET UNIT_QTY = PARAM.unitQty
                           , CONVERSION_UNIT_QTY = PARAM.conversionUnitQty
@@ -247,5 +247,5 @@ ORDER BY A.UNIT_CATEGORY_NM
                             , PARAM.createDate
                             , PARAM.updateBy
                             , PARAM.updateDate )
-  </insert>  
+  </insert>
   </mapper>    

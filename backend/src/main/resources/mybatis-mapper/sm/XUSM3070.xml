@@ -89,4 +89,56 @@
        </foreach>
       </where>
   </delete>
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_IL_CATEGORY A
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.ilGroupCd, jdbcType=VARCHAR} as ilGroupCd,
+                            #{item.ilType, jdbcType=VARCHAR} as ilType,
+                            #{item.ilTypeNm, jdbcType=VARCHAR} as ilTypeNm,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( A.COMPANY_CD = PARAM.companyCd AND
+                 A.DIVISION_CD = PARAM.divisionCd AND
+                 A.IL_TYPE = PARAM.ilType )
+            WHEN MATCHED THEN 
+                 UPDATE SET IL_GROUP_CD = PARAM.ilGroupCd
+                          , IL_TYPE_NM = PARAM.ilTypeNm
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , IL_GROUP_CD
+                            , IL_TYPE
+                            , IL_TYPE_NM
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.ilGroupCd
+                            , PARAM.ilType
+                            , PARAM.ilTypeNm
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>
 </mapper>

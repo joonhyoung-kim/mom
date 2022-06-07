@@ -171,7 +171,8 @@ var XUSM2010 = {
 		});
 		
 		$(document).on('change', '#actType-popUp', function() {
-			    var checkedItem = AUIGrid.getCheckedRowItems('#grid1')[0].item;
+			   // var checkedItem = AUIGrid.getCheckedRowItems('#grid1')[0].item;
+			   var checkedItem =  AUIGrid.getSelectedItems('#grid1')[0]['item'];
                 if($('#actType-popUp').val() == 'C'){		
                 	
 					$("#menuId-popUp").removeAttr("readonly");

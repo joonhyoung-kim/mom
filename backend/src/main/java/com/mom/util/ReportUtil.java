@@ -36,6 +36,7 @@ import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
+
 @Component
 public class ReportUtil {
 	  /** The connection. */ 
