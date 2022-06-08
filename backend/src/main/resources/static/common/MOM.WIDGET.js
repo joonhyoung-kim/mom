@@ -352,7 +352,7 @@ var momWidget = {
 			      var columnId = '';
 			      var isRequire = 'N';
 			      var sortTmp   = [];
-		
+		          var groupHeader = 'N';
 
 			    	 if(index == 0 ){
 				    
@@ -432,24 +432,30 @@ var momWidget = {
 			    	   isRequire = that.columnProperty[index][i]['columnRequire'] == 'Y' ? 'Y': 'N';
 			    	   sortType = that.columnProperty[index][i]['sortMethod'] == 'ASC' ? 1: -1;
 			    	   sortNo   = that.columnProperty[index][i]['sortNo'] == '' ? 0: that.columnProperty[index][i]['sortNo'];
+			    	  // groupHeader  = that.columnProperty[index][i]['columnType'] == 'G' ? 'Y': 'N';
+			    	   
 			    	   if(sortNo > 0){
 							sortTmp.push({dataField : columnId, sortType : sortType,sortNo:sortNo}) ;
 					   }
 			    	   
 			    	 //that.columnProperty[index].splice(i,1);
-			    	   columnProp[i] =  {
-					    	      dataField 	: columnId 
-					  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
-						   		, dataType      : that.columnProperty[index][i]['dataType'] 
-								, formatString  : that.columnProperty[index][i]['dataFormat']
-	    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
-					  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
-					  			, visible       : gridShow  
-					  			, filter : {
-							      showIcon : true
-								}
-					  		
-	                    };
+			    	
+							  columnProp[i] =  {
+								    	      dataField 	: columnId 
+								  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
+									   		, dataType      : that.columnProperty[index][i]['dataType'] 
+											, formatString  : that.columnProperty[index][i]['dataFormat']
+				    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
+								  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
+								  			, visible       : gridShow  
+								  			, filter : {
+										      showIcon : true
+											}
+								  		
+				                    };
+							
+				
+			    	 
 	                    if(excelDownShow){
 						    excelDownProp.push({
 									    	      dataField 	: columnId 
@@ -497,12 +503,12 @@ var momWidget = {
 											,unCheckValue : 'N'
 										};
 			    		   
-			    		   columnProp[i].headerRenderer = { 
+			    		 /*  columnProp[i].headerRenderer = { 
 			    				type : "CheckBoxHeaderRenderer",
 			    				position : "right",
 			    				dependentMode : true
 			    				//onClick : myHeaderCheckClick 
-			    			};
+			    			};*/
 			    	   }
 			    	   if(isDropDown =='Y'){
 			    		   var dropDownQueryId = that.columnProperty[index][i]['dropdownId'];		    		   
@@ -558,8 +564,71 @@ var momWidget = {
 			    		   }, undefined, undefined, this, false,'Y');
 			    	
 			    	   }
+			    	   
+			    /*	  if(groupHeader =='Y'){
+				          var childrenTmp =[];
+				          var childrenColumn = JSON.parse(momWidget.columnProperty[index][i]['groupingColumn'].replace(/\'/gi, '"'));
+				          for(var k=0,max4=that.columnProperty[index].length;k<max4;k++){	
+					           for(var k2=0,max5=Object.keys(childrenColumn[0]).length;k2<max5;k2++){
+						             if(that.columnProperty[index][k]['columnId'] == childrenColumn[0]['columnId'+(k2+1)] ){
+							             childrenTmp.push(columnProp[k]);
+										 delete columnProp[k];
+										 
+										 		
+									 }
+					           }
+						  }
+						  columnProp.children = childrenTmp;
+								
+						} */
+			    	   
+			    	   
 			    	   	
-			      } 		
+			      } 	
+			      	
+				          var childrenTmp =[];
+				          var childrenColumn = [];
+				          var parentId = '';
+				          var deleteColumn = [];
+				         
+				          for(var k=0,max4=that.columnProperty[index].length;k<max4;k++){	
+					               if(that.columnProperty[index][k]['columnType'] != 'G' ){
+						                  continue;
+										}
+										parentId = that.columnProperty[index][k]['columnId'];
+										//Object.keys(childrenColumn[0]).lengt
+									childrenColumn = JSON.parse(momWidget.columnProperty[index][k]['groupingColumn'].replace(/\'/gi, '"'));
+							for(var k2=0,max5=columnProp.length;k2<max5;k2++){		
+					           for(var k3=0,max6=Object.keys(childrenColumn[0]).length;k3<max6;k3++){
+						             if(columnProp[k2]['dataField'] == childrenColumn[0]['columnId'+(k3+1)] ){
+							             childrenTmp.push(columnProp[k2]);
+							             deleteColumn.push({index:k2});
+										
+										 
+										 		
+									 }
+					           }
+					            
+					        }
+					        	for(var k4=0,max7=columnProp.length;k4<max7;k4++){		
+					              if(parentId == columnProp[k4]['dataField']){
+											columnProp[k4].children = childrenTmp;
+										}
+					            
+					        }
+					    
+					         
+					        childrenTmp =[];
+					        parentId = '';
+						  }
+						   for(var k5=0,max8=deleteColumn.length;k5<max8;k5++){		
+					            delete columnProp[deleteColumn[k5]['index']];
+					            
+					        }
+						var filteredColumnProp = columnProp.filter(function (el) {
+							  return el != null;
+							});		
+						 	
 			         sortTmp.sort(function(a,b){ return a.sortNo-b.sortNo});	
 			         for(var k=0,max5=sortTmp.length;k<max5;k++){	
 				         delete sortTmp[k]['sortNo'];
@@ -582,8 +651,8 @@ var momWidget = {
 							 return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + dataLen + " 개 )";
 						     };	*/
 						  }
-	     					 that.columnProp[index] = columnProp;
-							 that.grid[index] = AUIGrid.create('#grid'+(index+1), columnProp, that.gridProperty[index][0]); 
+	     					 that.columnProp[index] = filteredColumnProp;
+							 that.grid[index] = AUIGrid.create('#grid'+(index+1), filteredColumnProp, that.gridProperty[index][0]); 
 					}
 		
 	           
@@ -1688,16 +1757,15 @@ var momWidget = {
         var totalParam = {};
         var queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.defaultInfo'+(index+1) : menuId+'.defaultInfo'+(index+1);
 		var that= this;	
-		var menuParam = that.pageProperty[index]['param'];
+		var menuParam = that.pageProperty[index] == undefined ? []: that.pageProperty[index]['param'] == undefined ? undefined:JSON.parse(that.pageProperty[index]['param']);
 		   if(splash==true){
 			that.splashShow();
 		   }
-		   if(menuParam != undefined){
-			   menuParam = JSON.parse(that.pageProperty[index]['param']);			
-		    }
+   
 		   // param = that.pageProperty[index]['param'];
 	        initParam = that.checkInitParam(index,param,your); //init param 설정시 세팅
 	        checkSearchParam = that.checkSearchParam(index,param,your); //search param 설정시 세팅
+	        
 	         if(menuParam != undefined){
 			   totalParam = Object.assign(menuParam, checkSearchParam);   	 
 	           totalParam = Object.assign(totalParam,initParam,param);  
@@ -1902,6 +1970,9 @@ var momWidget = {
 			 if(dropdownId != '' && dropdownId != undefined){
 				 if(searchType =='M'){
 					 var checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
+					 if(checkedItem == undefined || checkedItem.length == 0){
+						continue;
+					}
 					 var paramText   = '';
 					 for(var j = 0, max2 = checkedItem.length; j< max2; j++ ){
 						 paramText += ",'"+checkedItem[j]['value']+"'";						 
@@ -2544,8 +2615,23 @@ var momWidget = {
 			    paramMap.length  = 0;
 			  //  minLength        = 1;
 			    popupId = that.popupProperty[index][j]['popupId'] + 'DP' +(index+1);
-					if(popupType == 'S'  ||  popupType == 'DG' ){    
+					if(popupType == 'S' ){    
 						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});       		
+					  	 $('#'+popupId).on('bindingComplete', function (e) {
+							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px';
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });		
+				}
+				else if(popupType == 'DG' ){    
+						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'press enter to open'});       		
 					  	 $('#'+popupId).on('bindingComplete', function (e) {
 							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
 							  maxItemWidthArry = maxItemWidth.split('px');
@@ -3069,7 +3155,7 @@ var momWidget = {
 					}
 				}
 	
-			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:dropdownGridId+1}, function(result1, data1) { 
+			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:momWidget.pageProperty[index]['programId'],gridId:dropdownGridId+1}, function(result1, data1) { 
 		         if(result1 != 'SUCCESS' || data1.length == 0) {
 		    	  momWidget.splashHide();
 			      return;							     
@@ -3158,7 +3244,7 @@ var momWidget = {
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
 				  			 
-		    	 that.findBtnClicked(dropdownGridId, {keyId1:fieldValue}, true, 'INIT',menuId,your,function(callBackResult, callBackData) {
+		    	 that.findBtnClicked(dropdownGridId, [{keyId1:fieldValue}], true, 'INIT',menuId,your,function(callBackResult, callBackData) {
 						                 if(callBackResult != 'SUCCESS' || callBackData.length==0) {
 						    	            momWidget.splashHide();
 						    	            momWidget.messageBox({type:'warning', width:'400', height: '145', html: '조회된 데이터없음!'});
@@ -4630,7 +4716,7 @@ var momWidget = {
 							
 			for(var i = 0, max = that.popupProperty[index].length; i< max; i++) {	
 				popupId          = that.popupProperty[index][i]['popupId']+ 'DP' + (index + 1);
-				dropdownGridId   = that.popupProperty[index][i]['popupId']+ 'DG' + (index + 1);;
+				dropdownGridId   = that.popupProperty[index][i]['popupId']+ 'DG' + (index + 1);
 				dropdownId       = that.popupProperty[index][i]['dropdownId'];
 				dropdownParam    = that.popupProperty[index][i]['dropdownParam'];
 			    popupType        = that.popupProperty[index][i]['popupType']; 

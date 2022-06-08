@@ -154,6 +154,7 @@
 			  ,	DROPDOWN_ID
 			  ,	DROPDOWN_PARAM
 			  , COLUMN_REQUIRE
+			  , GROUPING_COLUMN
 			FROM   MOM_COLUMN_PROPERTY		   	  
 		    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 			AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
@@ -476,6 +477,7 @@
 							 ,DROPDOWN_ID
                              ,DROPDOWN_PARAM 
                              ,COLUMN_REQUIRE 
+                             ,GROUPING_COLUMN
 							 , CREATE_BY
 						) VALUES(
                                #{item.companyCd,         jdbcType=VARCHAR}
@@ -503,7 +505,8 @@
 				             , NVL(#{item.columnType,        jdbcType=VARCHAR},'T')
 				             , #{item.dropdownId,            jdbcType=VARCHAR}
 				             , #{item.dropdownParam,         jdbcType=VARCHAR}	
-				             , NVL(#{item.columnRequire,     jdbcType=VARCHAR},'N')			             
+				             , NVL(#{item.columnRequire,     jdbcType=VARCHAR},'N')		
+				             , #{item.groupingColumn,         jdbcType=VARCHAR}		             
 				             , #{item.userId,                jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               
