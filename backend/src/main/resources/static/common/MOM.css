@@ -344,6 +344,13 @@
     height:calc(100% - 4.8rem); 
     border: none;
 }
+.gridArea-tm3hv-h02-01{
+	background: #f0f0f5;
+   /*  height: 17.5rem; */
+   /* height: 76%; */
+    height: calc(100% - 8rem);
+    border: none;
+}
 .gridArea-tm4vvh-h01-03{
 	background: #f0f0f5;
    /*  height: 17.5rem; */

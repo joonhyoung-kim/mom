@@ -28,10 +28,24 @@ var VIEW= {
 					    let newParam = [];				   												
 						var date1 = new Date(items[0]['startDate']);
 						var date2 = new Date(items[0]['endDate']);
-		 				var diffDate = date1.getTime() - date2.getTime();	  
-					    var dateDays = Math.abs(diffDate / (1000 * 3600 * 24));
+						var startTimeToSec = date1.getTime();
+				        var endTimeToSec   = date2.getTime();
+				        if(startTimeToSec>endTimeToSec){
+						var diffDate = (86400 + (endTimeToSec - startTimeToSec ))/60
+					    }
+					    else if(startTimeToSec == endTimeToSec){
+						//var diffDate= 1440;
+			            var diffDate= 86400;
+					    }
+					    else{
+						var diffDate = (endTimeToSec - startTimeToSec )/60;
+			          
+					    }
+		 		  		 				
+					   // var dateDays = Math.abs(diffDate / (1000 * 3600 * 24));
+					   dateDays = Math.ceil(diffDate / (86400));
 					    var today = new Date(items[0]['startDate']);  //startdate 넣어야댐
-					    for(var i=0;i<=dateDays;i++){
+					    for(var i=0;i<dateDays;i++){
 						     today = new Date(items[0]['startDate']);						
 						     today = new Date(today.setDate(today.getDate()+i));
 							 year  = today.getFullYear()+''; // 년도

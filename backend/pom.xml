@@ -11,7 +11,7 @@
 		<version>0.0.1-SNAPSHOT</version> <name>jwtlogin</name> -->
 	<groupId>com.mom</groupId>
 	<artifactId>MOM</artifactId>
-	<version>1.0</version>
+	<version>2.0</version>
 	<packaging>war</packaging>
 	<name>jwtlogin</name>
 	<description>Jwt Login Restful Server</description>

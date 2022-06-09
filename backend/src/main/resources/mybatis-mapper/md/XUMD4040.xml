@@ -1,8 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD4040">
+   <select id="get_totalCount1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	         SELECT COUNT(*) AS TOTAL_COUNT
+              FROM( SELECT     MCD.COMPANY_CD
+						     , MCD.COMPANY_NM
+						     , MCD.DIVISION_CD
+						     , MCD.DIVISION_NM
+						     , MSS.WORK_CENTER_CD
+						     , ( SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.WORK_CENTER_CD )  FROM DUAL) AS WORK_CENTER_NM
+						     , TO_CHAR(MSS.APPLY_DATE ,'YYYY-MM-DD') AS APPLY_DATE
+						     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MCD.COMPANY_CD,MCD.DIVISION_CD, 'SM0019', 
+						         (SELECT MC.WEEK_DAY
+						          FROM   MOM_CALENDAR MC
+						          WHERE  MC.COMPANY_CD   = MSS.COMPANY_CD
+						          AND    MC.DIVISION_CD  = MSS.DIVISION_CD
+						          AND    MC.DATE_ID      = MSS.APPLY_DATE
+						        ), #{item.langCd, jdbcType=VARCHAR}) FROM DUAL) AS WEEK_DAY_NM  
+						     ,  ( SELECT MC.WEEK_DAY
+						          FROM   MOM_CALENDAR MC
+						          WHERE  MC.COMPANY_CD   = MSS.COMPANY_CD
+						          AND    MC.DIVISION_CD  = MSS.DIVISION_CD
+						          AND    MC.DATE_ID      = MSS.APPLY_DATE			
+						        ) AS WEEK_DAY 
+						     , MSS.SHIFT_CD
+						     , MS.SHIFT_NM
+						     , MS.START_TIME
+						     , MS.END_TIME
+						    ,  MSS.DAY_OFF_YN
+						     , MS.WORK_TIME
+						     , MT.REST_TIME
+						     , (MS.WORK_TIME - MT.REST_TIME)  AS REAL_WORK_TIME
+						     , MSS.UPDATE_BY
+						     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+						     , TO_CHAR(MSS.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+						    <!--  , MSS.WORK_CENTER_CD ||'_'||MSS.SHIFT_CD||'_'||MSS.APPLY_DATE AS KEY_ID -->
+						     , MSS.DESCRIPTION
+					        FROM     MOM_COM_DIV_V       MCD
+							       , MOM_SHIFT_SCHEDULE  MSS
+							       , MOM_SHIFT           MS
+							       , MOM_SHIFT_REST_TIME_V MT
+							WHERE  MCD.COMPANY_CD   = MSS.COMPANY_CD
+							AND    MCD.DIVISION_CD  = MSS.DIVISION_CD   
+							AND    MSS.COMPANY_CD   = MS.COMPANY_CD
+							AND    MSS.DIVISION_CD  = MS.DIVISION_CD    
+							AND    MSS.SHIFT_CD     = MS.SHIFT_CD 
+							AND    MS.COMPANY_CD    = MT.COMPANY_CD
+							AND    MS.DIVISION_CD   = MT.DIVISION_CD    
+							AND    MS.SHIFT_CD      = MT.SHIFT_CD 
+							AND    MSS.APPLY_DATE BETWEEN TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+					        <if test="workCenterCd != null and workCenterCd != ''">
+						    AND MSS.WORK_CENTER_CD IN (${workCenterCd})
+						    </if>	
+	)	 
+	WHERE  1=1 
+	<if test="weekDay != null and weekDay != ''">
+	AND  WEEK_DAY IN (${weekDay})
+	</if>	       						
+   </select> 
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
    SELECT *
+   FROM(SELECT ROWNUM AS KEY_ID,
+	                ROWNUM AS ID
+                 , A.*                 
    FROM( SELECT    MCD.COMPANY_CD
 			     , MCD.COMPANY_NM
 			     , MCD.DIVISION_CD
@@ -25,8 +85,16 @@
 			        ) AS WEEK_DAY 
 			     , MSS.SHIFT_CD
 			     , MS.SHIFT_NM
-			     , MS.START_TIME
-			     , MS.END_TIME
+			     , CASE WHEN DAY_OFF_YN = 'N' THEN MS.START_TIME
+                        WHEN DAY_OFF_YN = 'Y' THEN '00:00'
+                   ELSE '00:00'
+                   END AS START_TIME
+                 , CASE WHEN DAY_OFF_YN = 'N' THEN MS.END_TIME
+                        WHEN DAY_OFF_YN = 'Y' THEN '00:00'
+                   ELSE '00:00'
+                   END AS END_TIME
+			 <!--     , MS.START_TIME
+			     , MS.END_TIME -->
 			    ,  MSS.DAY_OFF_YN
 			     , MS.WORK_TIME
 			     , MT.REST_TIME
@@ -34,7 +102,7 @@
 			     , MSS.UPDATE_BY
 			     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
 			     , TO_CHAR(MSS.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-			     , MSS.WORK_CENTER_CD ||'_'||MSS.SHIFT_CD||'_'||MSS.APPLY_DATE AS KEY_ID
+			  <!--    , MSS.WORK_CENTER_CD ||'_'||MSS.SHIFT_CD||'_'||MSS.APPLY_DATE AS KEY_ID -->
 			     , MSS.DESCRIPTION
         FROM     MOM_COM_DIV_V       MCD
 		       , MOM_SHIFT_SCHEDULE  MSS
@@ -52,12 +120,15 @@
         <if test="workCenterCd != null and workCenterCd != ''">
 	    AND MSS.WORK_CENTER_CD IN (${workCenterCd})
 	    </if>	
-	)	 
+	) A 
 	WHERE  1=1 
 	<if test="weekDay != null and weekDay != ''">
-	AND  WEEK_DAY IN (${weekDay})
+	AND  A.WEEK_DAY IN (${weekDay})
 	</if>	       
-    ORDER BY COMPANY_NM, DIVISION_NM, WORK_CENTER_CD, APPLY_DATE, SHIFT_NM            
+    ORDER BY KEY_ID,A.COMPANY_NM, A.DIVISION_NM, A.WORK_CENTER_CD, A.APPLY_DATE, A.SHIFT_NM )
+    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
+    WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
+    </if>           
 	</select>
   <select id="proc_customBtnA2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_copy_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}

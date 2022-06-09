@@ -221,7 +221,9 @@ var momWidget = {
 			    	   else if (that.searchProperty[index][i]['searchType']=='C'){
 			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></div>';
 			    	  }
-			    	
+			    	  else if (that.searchProperty[index][i]['searchType']=='CP'){
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+' class="searchSelectField"></div><div id='+that.searchProperty[index][i]['searchId']+'ED'+' class="searchSelectField"></div>';
+			    	  }
 			    	  else{
 			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId'] +' input-type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
 			    	  }
@@ -866,7 +868,7 @@ var momWidget = {
 					   
 			}, undefined, undefined, this, false);
 			}
-			else if(searchType == 'C' ){
+			else if(searchType == 'C'  ){
 					var today = new Date();  
 					var year  = undefined; // 년도
 				    var month = undefined;;  // 월
@@ -960,6 +962,102 @@ var momWidget = {
 				$('#'+searchId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
 				$('#'+searchId).jqxDateTimeInput('setDate', calendar);
 				
+			}
+			else if(searchType == 'CP'){
+					var today = new Date();  
+					var year  = undefined; // 년도
+				    var month = undefined;;  // 월
+				    var date  = undefined;;  // 날짜
+				if(defaultValue == 'TODAY'){
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				    
+				}
+				else if(defaultValue == 'INIT'){
+					     today = new Date(today.getFullYear(), today.getMonth(), 1);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
+				else if(defaultValue == 'LAST'){
+					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
+				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
+				var dateNum  =	defaultValue.substring(5,defaultValue.length-1);
+				var dateType =	defaultValue.substring(defaultValue.length,defaultValue.length-1);
+				  if(dateType == 'M'){
+					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				  }
+				  else if (dateType == 'D'){
+					 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+					 year  = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date  = today.getDate();  // 날짜
+				  }
+				  else{
+					
+				  }
+				
+				}
+				else if(defaultValue.includes("INIT") && defaultValue.length>5){
+					var dateNum  =	defaultValue.substring(4,6);
+				    var dateType =	defaultValue.substring(6,7);
+				    today = new Date(today.getFullYear(), today.getMonth(), 1);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
+						 
+					  }
+				}
+					else if(defaultValue.includes("LAST") && defaultValue.length>5){
+					var dateNum  =	defaultValue.substring(4,6);
+				    var dateType =	defaultValue.substring(6,7);
+				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
+						
+					  }
+				}
+				else{
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				}
+						
+				 var calendar = new Date();
+                 calendar.setFullYear(year, month, date);
+				$('#'+searchId+'SD').jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'SD').jqxDateTimeInput('setDate', calendar);
+				$('#'+searchId+'ED').jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'ED').jqxDateTimeInput('setDate', calendar);
 			}
 			else{
 				
@@ -1851,9 +1949,12 @@ var momWidget = {
 									}
 									
 								   }
-										$('.aui-grid-paging-panel').append(pagingBtnHtml);
+								        $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);
+								          $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightNextBtnHtml);
+								            $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightLastBtnHtml);
+									/*	$('.aui-grid-paging-panel').append(pagingBtnHtml);
 										$('.aui-grid-paging-panel').append(rightNextBtnHtml);
-										$('.aui-grid-paging-panel').append(rightLastBtnHtml);
+										$('.aui-grid-paging-panel').append(rightLastBtnHtml);*/
 									
 								}
 									startPage = data[0]['id'];
@@ -1867,9 +1968,9 @@ var momWidget = {
 										AUIGrid.updateRow(that.grid[index], {id:startPage+j}, j,false);			
 									}
 									
-									$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + '1' + " / 전체페이징 : " + pageTotalNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
+									$('#grid'+(index+1)).find('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + '1' + " / 전체페이징 : " + pageTotalNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
 									
-									$('.aui-grid-paging-number.aui-grid-paging-number-selected')[0].setAttribute('id','click');
+									$('#grid'+(index+1)).find('.aui-grid-paging-number.aui-grid-paging-number-selected')[0].setAttribute('id','click');
 								    //AUIGR//뒤에 버튼추가해야함
 								    
 									//AUIGrid.addRow(that.grid[index], data, "first"); 
@@ -2730,26 +2831,26 @@ var momWidget = {
 				if(e.target.classList.contains('aui-grid-paging-first')){
 					 nextPagingNum = 1;
 					 	 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-					 $('.aui-grid-paging-panel').prepend(infoHtml);
+					 $('#grid'+(index+1)).find('.aui-grid-paging-panel').prepend(infoHtml);
 				}
 				else if(e.target.classList.contains('aui-grid-paging-last')){
 					 nextPagingNum = endPageRow-9;  //다음에 선택될버튼
 					 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
 					 $('.aui-grid-paging-panel').prepend(infoHtml);
 					 	 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-					 $('.aui-grid-paging-panel').prepend(infoHtml);
+					 $('#grid'+(index+1)).find('.aui-grid-paging-panel').prepend(infoHtml);
 				}
 				else if(e.target.classList.contains('aui-grid-paging-prev')){
 					 prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
 					 nextPagingNum = Math.floor(prevNum/10)*10+1-10+10;  //다음에 선택될버튼
 					 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-					 $('.aui-grid-paging-panel').prepend(infoHtml);
+					 $('#grid'+(index+1)).find('.aui-grid-paging-panel').prepend(infoHtml);
 				}
 				else if(e.target.classList.contains('aui-grid-paging-next')){
 					 prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
 					 nextPagingNum = Math.ceil(prevNum/10)*10+1-10;  //다음에 선택될버튼
 					 infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-					 $('.aui-grid-paging-panel').prepend(infoHtml);
+					 $('#grid'+(index+1)).find('.aui-grid-paging-panel').prepend(infoHtml);
 				}
 				else{
 					  nextPagingNum = Number(e.target.innerHTML);  //다음에 선택될버튼
@@ -2768,7 +2869,8 @@ var momWidget = {
 					//AUIGrid.setCellValue(that.grid[index], 0, "seq", i+1);		
 					AUIGrid.updateRow(that.grid[index], {id:startPage+i}, i,false);			
 				}
-				$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nextPagingNum + " / 전체페이징 : " + endPageNum + "( " + nextCount + "~" + that.totalRowCount[index] + " 개 )";		
+				
+				$('#grid'+(index+1)).find('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nextPagingNum + " / 전체페이징 : " + endPageNum + "( " + nextCount + "~" + that.totalRowCount[index] + " 개 )";		
 			       // AUIGrid.updateRowsById(that.grid[index], data,false);
 			      //AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
 			     // AUIGrid.refreshRows(that.grid[index], data, "my-flash-style", 200); 
@@ -2826,13 +2928,17 @@ var momWidget = {
 			}*/
 
 			 $(document).on('click', '.' + paginFirstBtnClass, function(e) {
+				if(e.target.closest('#grid'+(index+1))==null){
+					 return;
+				}
 				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
 					return;
 				}
 			 var pagingBtnHtml = '';
 				 var leftHtml = '';
 				 var rightHtml = '';
-				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				// var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
 				 var nextPagingNum =  1; //다음에 선택될버튼
 				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
 				 var pagingRow = Math.ceil(nextPagingNum/10);
@@ -2842,7 +2948,7 @@ var momWidget = {
 				 var fisrtIcon = '<<';
 				 var prevIcon = '<';
 				 var targetSeq = 1;
-				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
 				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
 					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
 						if(i==endPageNum){
@@ -2856,9 +2962,10 @@ var momWidget = {
 					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
 					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
 					      
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('.aui-grid-paging-panel').append(rightHtml);
-					    $('.aui-grid-paging-panel')[0].childNodes[0].setAttribute('id','click');
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel')[0].childNodes[0].setAttribute('id','click');
+					 
 					
 
 			
@@ -2880,6 +2987,9 @@ var momWidget = {
 		
 		    });
 		     $(document).on('click', '.' + paginLastBtnClass, function(e) {
+			if(e.target.closest('#grid'+(index+1))==null){
+					 return;
+				}
 				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
 					return;
 				}
@@ -2887,7 +2997,8 @@ var momWidget = {
 				 var pagingBtnHtml = '';
 				 var leftHtml = '';
 				 var rightHtml = '';
-				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 //var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
 				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
 				 var endPageRow = Math.ceil(endPageNum/10)*10;
 				 var nextPagingNum = endPageRow-9; //다음에 선택될버튼
@@ -2900,7 +3011,7 @@ var momWidget = {
 				 var fisrtIcon = '<<';
 				 var prevIcon = '<';
 				 var targetSeq = 1;
-				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
 				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
 					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
 						if(i==endPageNum){
@@ -2917,8 +3028,8 @@ var momWidget = {
 					    
 					    leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
 					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
-					        $('.aui-grid-paging-panel').append(leftHtml);
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
 					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
 					
 			
@@ -2941,6 +3052,9 @@ var momWidget = {
 		
 		    });
 			 $(document).on('click', '.' + paginPrevBtnClass, function(e) {
+				if(e.target.closest('#grid'+(index+1))==null){
+					 return;
+				}
 				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
 					return;
 				}
@@ -2948,7 +3062,8 @@ var momWidget = {
 				 var pagingBtnHtml = '';
 				 var leftHtml = '';
 				 var rightHtml = '';
-				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 //var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
 				 var nextPagingNum =  Math.floor(prevNum/10)*10+1-10; //다음에 선택될버튼
 				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
 				 var pagingRow = Math.ceil(nextPagingNum/10);
@@ -2958,7 +3073,7 @@ var momWidget = {
 				 var fisrtIcon = '<<';
 				 var prevIcon = '<';
 				 var targetSeq = 1;
-				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
 				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
 					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
 						if(i==endPageNum){
@@ -2976,8 +3091,8 @@ var momWidget = {
 					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
 					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
 					      
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('.aui-grid-paging-panel').append(rightHtml);
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
 					    $('.aui-grid-paging-panel')[0].childNodes[0].setAttribute('id','click');
 					
 				 }
@@ -2986,10 +3101,10 @@ var momWidget = {
 					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
 					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
 					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					    $('.aui-grid-paging-panel').append(leftHtml);	
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('.aui-grid-paging-panel').append(rightHtml);
-					   $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);	
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
+					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
 				  }
 			
 				
@@ -3010,6 +3125,9 @@ var momWidget = {
 		
 		    });
 			 $(document).on('click', '.' + paginNextBtnClass, function(e) {
+				if(e.target.closest('#grid'+(index+1))==null){
+					 return;
+				}
 				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
 					return;
 				}
@@ -3017,7 +3135,8 @@ var momWidget = {
 				 var pagingBtnHtml = '';
 				 var leftHtml = '';
 				 var rightHtml = '';
-				 var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
+				 
+				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
 				 var nextPagingNum =  Math.ceil(prevNum/10)*10+1; //다음에 선택될버튼
 				// var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
 				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
@@ -3028,7 +3147,7 @@ var momWidget = {
 				 var fisrtIcon = '<<';
 				 var prevIcon = '<';
 				 var targetSeq = 1;
-				 $('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
+				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
 				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
 					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
 						if(i==endPageNum){
@@ -3045,8 +3164,9 @@ var momWidget = {
 					    
 					    leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
 					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
-					        $('.aui-grid-paging-panel').append(leftHtml);
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
+		
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
 					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
 					
 				 }
@@ -3055,10 +3175,10 @@ var momWidget = {
 					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
 					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
 					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					    $('.aui-grid-paging-panel').append(leftHtml);	
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('.aui-grid-paging-panel').append(rightHtml);
-					   $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);	
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
+					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
+					   $('#grid'+(index+1)).find('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
 				  }
 			
 				
@@ -3080,6 +3200,11 @@ var momWidget = {
 						
 		    });
 			 $(document).on('click', '.' + pagingNumBtnClass, function(e) {
+				//e.stopPropagation();
+			
+				if(e.target.closest('#grid'+(index+1))==null){
+					 return;
+				}
 				if(e.target.parentElement == null || e.target.parentElement == undefined){
 					return;
 				}
@@ -3102,7 +3227,8 @@ var momWidget = {
 					return;
 				}
 				 $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-				   e.target.setAttribute('id','click');
+				    e.target.setAttribute('id','click');
+				    //var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
 					var nowPagingNum = Number(e.target.innerHTML); 
 					if(isNaN(nowPagingNum) == true){
 						return;
@@ -3113,6 +3239,7 @@ var momWidget = {
 					var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호 
 					
   				 that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
+  				 
 		//$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nowPagingNum + " / 전체페이징 : " + endPageNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
 		    });
 		    

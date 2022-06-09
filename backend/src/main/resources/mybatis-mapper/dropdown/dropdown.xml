@@ -10,7 +10,7 @@
 	AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	AND     GROUP_CD    = #{groupCd, jdbcType=VARCHAR}
 	AND     USE_YN      = 'Y'
-	ORDER BY SORT_NO
+	ORDER BY LABEL
   </select> 
   <select id="get_DD00004" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
     SELECT   DEPT_CD AS CODE 
@@ -21,7 +21,7 @@
     <if test="searchKey != null and searchKey != ''">
     AND (DEPT_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR DEPT_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
     </if>
-    ORDER BY DEPT_NM
+    ORDER BY LABEL
 
   </select> 
 
@@ -35,7 +35,7 @@
 	    AND     MDM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}  
         AND     MDM.MENU_ID  <![CDATA[ <> 'root' ]]>
         AND     MM.MENU_TYPE = 'P'       
-        ORDER BY MM.SORT_NO 
+        ORDER BY LABEL 
   </select>
   <select id="get_DD00006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT GRID_ID        AS CODE 
@@ -50,7 +50,7 @@
 	  SELECT TEMPLATE_ID AS CODE
            , TEMPLATE_ID ||'('|| TEMPLATE_NM ||')' AS LABEL
 	  FROM   MOM_GRID_TEMPLATE
-	  ORDER BY TEMPLATE_ID 
+	  ORDER BY LABEL
   </select>	
   <select id="get_DD00008" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	  SELECT AUTH_GROUP_CD AS CODE 
@@ -58,7 +58,7 @@
       FROM   MOM_AUTH_GROUP
       WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	  AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-      ORDER BY AUTH_GROUP_NM
+      ORDER BY LABEL
   </select>	
   
   <select id="get_DD00012" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
@@ -88,7 +88,7 @@
 	WHERE  USE_YN = 'Y'
 	AND    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-	ORDER BY SORT_NO, CODE_CATEGORY_NM 
+	ORDER BY LABEL
   </select>  
   <select id="get_DD00015" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
 	SELECT GROUP_CD AS CODE 
@@ -97,7 +97,7 @@
 	WHERE  USE_YN = 'Y'
 	AND    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
-    ORDER BY SORT_NO, GROUP_CODE_NM
+    ORDER BY LABEL
   </select>  
   <select id="get_DD00016" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT UNIT     AS CODE 
@@ -106,7 +106,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY UNIT_NM
+   ORDER BY LABEL
    </select>
   <select id="get_DD10000" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">	
 	SELECT B.TABLE_NAME AS CODE
@@ -143,7 +143,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY PLANT_NM 
+   ORDER BY LABEL
 </select>
 <select id="get_DD00018" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT LOCATION_CD   AS CODE 
@@ -152,7 +152,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY LOCATION_NM 
+   ORDER BY LABEL 
 </select>
    
 <select id="get_DD00019" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
@@ -165,7 +165,7 @@
    <if test="searchKey != null and searchKey != ''">
    AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
    </if>
-   ORDER BY PARTNER_NM  
+   ORDER BY LABEL
 </select>
 <select id="get_DD00020" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT ITEM_ID    AS CODE 
@@ -177,7 +177,7 @@
    <if test="searchKey != null and searchKey != ''">
    AND ( UPPER(ITEM_ID) LIKE '%' || UPPER(TRIM(#{searchKey, jdbcType=VARCHAR}) || '%' ))
    </if>
-   ORDER BY ITEM_NM    
+   ORDER BY LABEL
 </select>
 <select id="get_DD00021" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT WORK_GROUP_CD    AS CODE 
@@ -186,7 +186,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY WORK_GROUP_NM        
+   ORDER BY LABEL    
 </select>
 <select id="get_DD00022" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT WORK_CENTER_CD     AS CODE 
@@ -195,7 +195,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY WORK_CENTER_NM    
+   ORDER BY LABEL    
 </select>
 <select id="get_DD00023" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT WORK_STATION_CD     AS CODE 
@@ -204,7 +204,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY WORK_STATION_NM   
+   ORDER BY LABEL
 </select>      
 <select id="get_DD00024" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
     SELECT OPERATION_ID AS CODE 
@@ -213,7 +213,7 @@
 	WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
     AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
     AND    USE_YN      = 'Y'
-	ORDER BY OPERATION_NM
+	ORDER BY LABEL
 </select>    
 <select id="get_DD00025" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT ROUTING_ID      AS CODE 
@@ -222,7 +222,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY ROUTING_NM  
+   ORDER BY LABEL
 </select>
 <select id="get_DD00026" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT IL_TYPE      AS CODE 
@@ -231,7 +231,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY IL_TYPE_NM
+   ORDER BY LABEL
 </select>
 <select id="get_DD00027" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT IO_TYPE       AS CODE 
@@ -240,7 +240,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY IO_TYPE_NM
+   ORDER BY LABEL
 </select>   
 <select id="get_DD00028" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT PO_TYPE       AS CODE 
@@ -249,7 +249,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
    AND    USE_YN      = 'Y' 
-   ORDER BY PO_TYPE_NM
+   ORDER BY LABEL
 </select>
 <select id="get_DD00029" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT SO_TYPE       AS CODE 
@@ -258,7 +258,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY SO_TYPE_NM
+   ORDER BY LABEL
 </select>
 <select id="get_DD00030" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT REST_TIME_CD       AS CODE 
@@ -267,7 +267,7 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY REST_TIME_NM
+   ORDER BY LABEL
 </select>
 <select id="get_DD00031" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT SHIFT_CD        AS CODE 
@@ -276,6 +276,6 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
-   ORDER BY SHIFT_NM
+   ORDER BY LABEL
  </select> 
 </mapper>
