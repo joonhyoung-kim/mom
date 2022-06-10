@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD4040">
+ <select id="get_checkShift" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	 SELECT SHIFT_CD
+     FROM MOM_SHIFT_SCHEDULE
+	 WHERE 1=1
+	 AND   COMPANY_CD  =  #{companyCd, jdbcType=VARCHAR}
+	 AND   DIVISION_CD =  #{divisionCd, jdbcType=VARCHAR}
+	 AND   TO_CHAR(APPLY_DATE,'YYYY-MM-DD')  = #{applyDate, jdbcType=VARCHAR}
+	 AND   WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
+   </select> 
    <select id="get_totalCount1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	         SELECT COUNT(*) AS TOTAL_COUNT
               FROM( SELECT     MCD.COMPANY_CD
@@ -86,7 +95,7 @@
 			     , MSS.SHIFT_CD
 			     , MS.SHIFT_NM
 			     , CASE WHEN DAY_OFF_YN = 'N' THEN MS.START_TIME
-                        WHEN DAY_OFF_YN = 'Y' THEN '00:00'
+                        WHEN DAY_OFF_YN = 'Y' THEN '00:00'                       
                    ELSE '00:00'
                    END AS START_TIME
                  , CASE WHEN DAY_OFF_YN = 'N' THEN MS.END_TIME
@@ -96,9 +105,18 @@
 			 <!--     , MS.START_TIME
 			     , MS.END_TIME -->
 			    ,  MSS.DAY_OFF_YN
-			     , MS.WORK_TIME
-			     , MT.REST_TIME
-			     , (MS.WORK_TIME - MT.REST_TIME)  AS REAL_WORK_TIME
+			    , CASE WHEN DAY_OFF_YN = 'N' THEN MS.WORK_TIME
+                       WHEN DAY_OFF_YN = 'Y' THEN 0
+                  ELSE 0
+                  END AS WORK_TIME                  
+                , CASE WHEN DAY_OFF_YN = 'N' THEN MT.REST_TIME
+                       WHEN DAY_OFF_YN = 'Y' THEN 0
+                  ELSE 0
+                  END AS REST_TIME                 
+                , CASE WHEN DAY_OFF_YN = 'N' THEN MS.WORK_TIME - MT.REST_TIME
+                       WHEN DAY_OFF_YN = 'Y' THEN 0
+                   ELSE 0
+                   END AS REAL_WORK_TIME
 			     , MSS.UPDATE_BY
 			     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
 			     , TO_CHAR(MSS.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE

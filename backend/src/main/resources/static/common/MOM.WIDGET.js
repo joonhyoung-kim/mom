@@ -681,20 +681,20 @@ var momWidget = {
 		    if(that.gridProperty[index][0]['usePaging'] ==true){ //페이징사용
 				if(that.gridExtraProperty[index]['initSearch']=='Y'){
 				 // that.backWork[index] = 'Y';		
-				  that.findBtnClicked(index, {}, true, 'TOTAL',menuId,your);	
-		    	  that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',menuId,your);
+				  that.findBtnClicked(index, {}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);	
+		    	  that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',momWidget.pageProperty[0]['programId'],your);
 		    	//  that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
 		    	}
 		    	else{
 			      that.backWork[index] = 'Y';
-			      that.findBtnClicked(index, {}, true, 'TOTAL',menuId,your);			
-			  	  that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
+			      that.findBtnClicked(index, {}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);			
+			  	  that.findBtnClicked(index, {}, true, 'BACK',momWidget.pageProperty[0]['programId'],your);
 				}
 			  
 		    }
 		    else{//페이징 미사용
 				if(that.gridExtraProperty[index]['initSearch']=='Y'){
-		    	 that.findBtnClicked(index, {}, true, 'INIT',menuId,your);
+		    	 that.findBtnClicked(index, {}, true, 'INIT',momWidget.pageProperty[0]['programId'],your);
 		    }
 			}
 		  
@@ -1934,7 +1934,17 @@ var momWidget = {
 								that.totalRowCount[index] = data[0]['totalCount'];
 							  }
 							  else if(btnId=='INIT_PAGING' ){
-
+								if(data.length ==0){
+									AUIGrid.setGridData(that.grid[index], data); 
+							
+								}
+								else if(that.gridProperty[index][0]['pageRowCount'] > that.totalRowCount[index]){
+									AUIGrid.setGridData(that.grid[index], data); 
+										 if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
+											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
+									} 
+								}
+								else{
 								var pageTotalNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']);
 								var pagingBtnHtml = '';
 								var rightNextBtnHtml  = '<span class ="aui-grid-paging-number aui-grid-paging-next">'+'>'+'</span>';
@@ -1957,7 +1967,9 @@ var momWidget = {
 										$('.aui-grid-paging-panel').append(rightLastBtnHtml);*/
 									
 								}
-									startPage = data[0]['id'];
+							
+							
+										startPage = data[0]['id'];
 				 					endPage = data[data.length-1]['id'];
 									AUIGrid.setGridData(that.grid[index], data); 
 								
@@ -1971,6 +1983,8 @@ var momWidget = {
 									$('#grid'+(index+1)).find('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + '1' + " / 전체페이징 : " + pageTotalNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
 									
 									$('#grid'+(index+1)).find('.aui-grid-paging-number.aui-grid-paging-number-selected')[0].setAttribute('id','click');
+								
+								
 								    //AUIGR//뒤에 버튼추가해야함
 								    
 									//AUIGrid.addRow(that.grid[index], data, "first"); 
@@ -1978,6 +1992,7 @@ var momWidget = {
 								
 									
 
+							  }
 							  }
 							  else if(btnId=='PAGING'){
 								
@@ -2488,6 +2503,15 @@ var momWidget = {
 				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
 				$('#'+searchId).jqxComboBox('clearSelection');
 				$('#'+searchId).jqxComboBox('uncheckAll');
+			}
+		});
+		$(document).on('keydown','.searchSelectField.jqx-datetimeinput', function(e) {
+			if(e.keyCode == 13){ //엔터
+				$('#findBtn'+(index+1)).click();
+			} 
+			else if(e.keyCode == 8 || e.keyCode == 46){
+				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+				$('#'+searchId).val('');
 			}
 		});
 		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
@@ -3245,7 +3269,7 @@ var momWidget = {
 		    
 		  $(document).on('click', '#' + findBtnId, function(e) {  
 			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(index, {}, true, 'TOTAL',menuId,your);	
+			     that.findBtnClicked(index, {}, true, 'TOTAL',that.pageProperty[index]['programId'],your);	
 		    	 that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
 		    }	
 		    else{
@@ -4978,7 +5002,10 @@ var momWidget = {
 						
 					  }
 				}
-				else{
+			/*	else if(defaultValue.includes("-") && defaultValue.length>9){
+					
+				}*/
+				else{ //
 					 year = today.getFullYear(); // 년도
 				     month = today.getMonth() ;  // 월
 				     date = today.getDate();  // 날짜
@@ -5044,9 +5071,17 @@ var momWidget = {
 						}
 					}
 				
-					if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined && this.popupProperty[index][i]['popupType'] != 'C'&& this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
-						     	
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+					if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined  && this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
+						     	if(this.popupProperty[index][i]['popupType'] == 'C' && defaultValue.includes("-") && defaultValue.length>9){							
+							     $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+								}
+								else if(this.popupProperty[index][i]['popupType'] == 'C' &&(  this.popupProperty[index][i]['defaultValue'].includes("INIT") ||  this.popupProperty[index][i]['defaultValue'].includes("LAST") ||  this.popupProperty[index][i]['defaultValue'].includes("TODAY"))){
+									
+								}
+								else{
+									 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+								}
+							
 					}
 					
 				
@@ -5063,7 +5098,17 @@ var momWidget = {
 							 continue;
 						 }
 						 else{
-							    $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+							if(momWidget.popupProperty[index][j]['popupType'] =='C'){
+								if(checkedItems[i][this.popupProperty[index][j]['popupId']] == undefined){
+									continue;
+								}
+								checkedItems[i][this.popupProperty[index][j]['popupId']] = checkedItems[i][this.popupProperty[index][j]['popupId']].substr(0,10);
+								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+							}
+							else{
+								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+							}
+							    
 						 }
 						
 					}				
@@ -5118,7 +5163,17 @@ var momWidget = {
 							 continue;
 						 }
 						 else{
-							    $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								if(momWidget.popupProperty[index][j]['popupType'] =='C'){
+									if(checkedItems[i][this.popupProperty[index][j]['popupId']] == undefined){
+									continue;
+								}
+								checkedItems[i][this.popupProperty[index][j]['popupId']] = checkedItems[i][this.popupProperty[index][j]['popupId']].substr(0,10);
+								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+							}
+							else{
+								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+							}
+							   
 						 }
 						
 					}				
@@ -6594,8 +6649,11 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		if(action == 'C' && your.createCallInit != undefined) {
+		if(action == 'C'   && your.createCallInit != undefined) {
 			 your.createCallInit(index,your,action,btnId,param,result);				 
+		}
+		if(action == 'U' && your.editCallInit != undefined) {
+			 your.editCallInit(index,your,action,btnId,param,result);				 
 		}
 		if(action == 'CP' && your.copyCallInit != undefined) {
 			 your.copyCallInit(index,your,action,btnId,param,result);				 
@@ -6629,9 +6687,13 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		if(action == 'C' && your.createCallBack != undefined) {
+		if(action == 'C'  && your.createCallBack != undefined) {
 			your.createCallBack(index,your,action,btnId,param,result,data);	
-		}		
+		}
+		if(action == 'U' && your.editCallBack != undefined) {
+			your.editCallBack(index,your,action,btnId,param,result,data);	
+		}	
+					
 		if(action == 'CP' && your.copyCallBack != undefined) {
 			your.copyCallBack(index,your,action,btnId,param,result,data);	
 		}	

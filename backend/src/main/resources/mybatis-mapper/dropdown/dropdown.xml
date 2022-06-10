@@ -10,7 +10,7 @@
 	AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	AND     GROUP_CD    = #{groupCd, jdbcType=VARCHAR}
 	AND     USE_YN      = 'Y'
-	ORDER BY LABEL
+	ORDER BY SORT_NO,LABEL
   </select> 
   <select id="get_DD00004" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
     SELECT   DEPT_CD AS CODE 

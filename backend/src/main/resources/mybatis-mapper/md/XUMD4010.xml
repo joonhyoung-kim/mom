@@ -26,8 +26,8 @@
     AND    MCD.DIVISION_CD  = MC.DIVISION_CD   
     AND    MC.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
 	AND    MC.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}  	
-	AND    MC.WEEK_START_DATE <![CDATA[>]]> TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')
-	AND    MC.WEEK_END_DATE <![CDATA[<]]> TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
+	AND    MC.DATE_ID <![CDATA[>]]>= TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')
+	AND    MC.DATE_ID <![CDATA[<]]> TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
     ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MC.DATE_ID   
    </select>
    <update id="modify_defaultInfo1" parameterType="java.util.List">

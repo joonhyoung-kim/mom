@@ -25,25 +25,32 @@ var VIEW= {
     saveCallInit: function(index,your,action,btnId,param,result) {
 	     if(index == 0 && action == 'C' && btnId =='saveBtnDP'){		           
 					    var items = param;	
+					    	
 					    let newParam = [];				   												
 						var date1 = new Date(items[0]['startDate']);
 						var date2 = new Date(items[0]['endDate']);
-						var startTimeToSec = date1.getTime();
-				        var endTimeToSec   = date2.getTime();
+						var startTimeToSec = date1.getTime()/1000;
+				        var endTimeToSec   = date2.getTime()/1000;
 				        if(startTimeToSec>endTimeToSec){
-						var diffDate = (86400 + (endTimeToSec - startTimeToSec ))/60
+					        /*  momWidget.messageBox({type:'danger', width:'400', height: '145', html:'종료일은 시작일 이후여야 합니다!'});
+							  momWidget.splashHide();*/
+							  result.result = 'FAIL';
+							  result.msg = '종료일은 시작일 이후여야 합니다!';
+						      return;
+						/*var diffDate = (86400 + (endTimeToSec - startTimeToSec ))*/
 					    }
 					    else if(startTimeToSec == endTimeToSec){
 						//var diffDate= 1440;
 			            var diffDate= 86400;
 					    }
 					    else{
-						var diffDate = (endTimeToSec - startTimeToSec )/60;
+						
+						var diffDate = (endTimeToSec - startTimeToSec )+86400;
 			          
 					    }
 		 		  		 				
 					   // var dateDays = Math.abs(diffDate / (1000 * 3600 * 24));
-					   dateDays = Math.ceil(diffDate / (86400));
+					   dateDays = Math.abs(diffDate / (86400));
 					    var today = new Date(items[0]['startDate']);  //startdate 넣어야댐
 					    for(var i=0;i<dateDays;i++){
 						     today = new Date(items[0]['startDate']);						
@@ -62,7 +69,22 @@ var VIEW= {
 						   
 						     
 					    }
-			             result.param = newParam;
+					    mom_ajax('R', 'XUMD4040.checkShift', {applyDate:newParam[0]['applyDate'],workCenterCd:newParam[0]['workCenterCd']}, function(result1, data1) { 
+							        if(result1 != 'SUCCESS' ) {
+							    		  result.result = 'FAIL';
+							              result.msg = '통신에러!';
+								          return;							     
+							        }
+							        if(data1.length > 0){
+								  		  result.result = 'FAIL';
+							              result.msg = '적용일 기간에 SHIFT 존재합니다!!';
+								          return;		
+									}			
+									  result.param = newParam;
+			  						}, undefined, undefined, this, false);
+					    
+					    
+			            
         
 	    }
 	    else if(index == 0 && action == 'U' && btnId =='saveBtnDP'){
@@ -87,7 +109,15 @@ var VIEW= {
 	}
 
 	},
-	
+	editCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==0 && btnId =='editBtn'){	
+	           var items = param;	
+	          $('#startDate'+'DP1').val(items[0]['applyDate']);
+			  $('#endDate'+'DP1').val(items[0]['applyDate']);	
+		}
+	 
+
+	},
 	
 };
 

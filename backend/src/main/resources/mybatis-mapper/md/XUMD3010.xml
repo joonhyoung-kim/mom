@@ -40,9 +40,11 @@ FROM   (SELECT MCD.COMPANY_CD
         AND    MUP.COMPANY_CD  = MI.COMPANY_CD
         AND    MUP.DIVISION_CD = MI.DIVISION_CD
         AND    MUP.ITEM_ID     = MI.ITEM_ID       
-        AND    MUP.PRICE_CATEGORY = 'P'    
+       <if test="priceCategory != null and priceCategory != ''">
+	    AND MUP.PRICE_CATEGORY = #{priceCategory, jdbcType=VARCHAR}
+	   </if>     
        <if test="partnerCd != null and partnerCd != ''">
-	   AND MUP.PARTNER_CD IN (${partnerCd})
+	   AND MUP.PARTNER_CD = #{partnerCd, jdbcType=VARCHAR}
 	   </if>
 	   <if test="searchKey != null and searchKey != ''">
 	   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
@@ -51,11 +53,19 @@ FROM   (SELECT MCD.COMPANY_CD
 	   AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
 	   </if>
 	   <if test="itemId != null and itemId != ''">
-	   AND (MUP.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	   AND (UPPER(MUP.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
+	   </if>
+	   <if test="itemNm != null and itemNm != ''">
+	   AND (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm, jdbcType=VARCHAR}) || '%' )
 	   </if>
 	   <if test="useYn != null and useYn != ''">
 	   AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
-	   </if>                       
+	   </if>    
+	   <if test="basicDate != null and basicDate != ''">   
+	     <![CDATA[           
+	     AND    (MUP.START_DATE <= TO_DATE(#{basicDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{basicDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') <= MUP.END_DATE  )  
+	     ]]>
+	   </if>    
        ) A
 	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID 						
    </select> 
@@ -101,7 +111,7 @@ FROM   (SELECT MCD.COMPANY_CD
              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'SM0001', MUP.USE_YN, 'KR') FROM DUAL) AS USE_YN_NM
              , MUP.DESCRIPTION
              , MUP.UPDATE_BY
-             , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+             , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
              , TO_CHAR(MUP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
         FROM   MOM_COM_DIV_V MCD
              , MOM_UNIT_PRICE MUP
@@ -110,23 +120,33 @@ FROM   (SELECT MCD.COMPANY_CD
         AND    MCD.DIVISION_CD = MUP.DIVISION_CD
         AND    MUP.COMPANY_CD  = MI.COMPANY_CD
         AND    MUP.DIVISION_CD = MI.DIVISION_CD
-        AND    MUP.ITEM_ID     = MI.ITEM_ID       
-        AND    MUP.PRICE_CATEGORY = 'P'    
+        AND    MUP.ITEM_ID     = MI.ITEM_ID   
+       <if test="priceCategory != null and priceCategory != ''">
+	    AND MUP.PRICE_CATEGORY = #{priceCategory, jdbcType=VARCHAR}
+	   </if>         
        <if test="partnerCd != null and partnerCd != ''">
-	   AND MUP.PARTNER_CD IN (${partnerCd})
+	   AND MUP.PARTNER_CD = #{partnerCd, jdbcType=VARCHAR}
 	   </if>
 	   <if test="searchKey != null and searchKey != ''">
 	   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
 	   </if>
 	   <if test="customerItemId != null and customerItemId != ''">
-	   AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
+	   AND (UPPER(MUP.CUSTOMER_ITEM_ID) LIKE '%' || UPPER(#{customerItemId, jdbcType=VARCHAR}) || '%' )
 	   </if>
 	   <if test="itemId != null and itemId != ''">
-	   AND (MUP.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	   AND (UPPER(MUP.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
+	   </if>
+	   <if test="itemNm != null and itemNm != ''">
+	   AND (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm, jdbcType=VARCHAR}) || '%' )
 	   </if>
 	   <if test="useYn != null and useYn != ''">
 	   AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
-	   </if>                       
+	   </if>  
+	   <if test="basicDate != null and basicDate != ''">     
+	     <![CDATA[           
+	     AND    (MUP.START_DATE <= TO_DATE(#{basicDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{basicDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') <= MUP.END_DATE  )  
+	     ]]>
+	   </if>                        
        ) A
 	   ORDER BY KEY_ID,A.COMPANY_NM , A.DIVISION_NM, A.ITEM_ID )	       
        <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
@@ -157,7 +177,7 @@ FROM   (SELECT MCD.COMPANY_CD
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , 'P'
+                , #{item.priceCategory, jdbcType=VARCHAR}
               <if test='item.priceCategory != null and item.priceCategory.equals("P")'>
 	            , #{item.vendorCd, jdbcType=VARCHAR}
 		      </if>
@@ -195,8 +215,8 @@ FROM   (SELECT MCD.COMPANY_CD
            , CURRENCY_CD = #{item.currencyCd, jdbcType=VARCHAR}
            , PREV_UNIT_PRICE = UNIT_PRICE
            , UNIT_PRICE = #{item.unitPrice, jdbcType=NUMERIC}
-           , START_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-           , END_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+           , START_DATE = TO_DATE(#{item.startDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+           , END_DATE = TO_DATE(#{item.endDate, jdbcType=VARCHAR},'YYYY-MM-DD')
            , PRICE_TYPE = #{item.priceType, jdbcType=VARCHAR}
            , MAIN_PARTNER_YN = #{item.mainPartnerYn, jdbcType=VARCHAR}
            , USE_YN = #{item.useYn, jdbcType=VARCHAR}
