@@ -22,6 +22,7 @@ var VIEW= {
 			  	}, undefined, undefined, this, false);
 		});
 	},
+	
     saveCallInit: function(index,your,action,btnId,param,result) {
 	     if(index == 0 && action == 'C' && btnId =='saveBtnDP'){		           
 					    var items = param;	
@@ -88,7 +89,7 @@ var VIEW= {
         
 	    }
 	    else if(index == 0 && action == 'U' && btnId =='saveBtnDP'){
-			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0]);
+			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0],true);
 			var items = param;	
 			if(checkedItem =='FAIL'){
         		result.result = 'FAIL';
@@ -118,7 +119,27 @@ var VIEW= {
 	 
 
 	},
-	
+	customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 1 || index == 2){
+			var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
+			if(checkedItems == 0){
+				 result.msg = '데이터를 체크해주세요!';
+				 result.result = 'FAIL';
+			}
+			$('#startDate'+'DP'+(index+1)).val($('#startDate').val());
+			$('#endDate'+'DP'+(index+1)).val($('#endDate').val());	
+			
+		}
+		else{
+			  //var items = param;	
+	          $('#startDate'+'DP'+(index+1)).val($('#startDate').val());
+			  $('#endDate'+'DP'+(index+1)).val($('#endDate').val());	
+		}
+	        
+		
+	 
+
+	},
 };
 
 $(document).ready(function(event){	

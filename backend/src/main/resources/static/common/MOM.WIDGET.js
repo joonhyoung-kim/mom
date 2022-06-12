@@ -4785,9 +4785,9 @@ var momWidget = {
 			     indexItems['parent'] = index;
 			     indexItems['child'] = customIndex;
 				 that.setPopup(indexItems,actionType);	
-				 if(that.setPopup(indexItems,actionType) == 'FAIL'){
+			/*	 if(that.setPopup(indexItems,actionType) == 'FAIL'){
 					return;
-				}
+				}*/
 				 $('#defaultPop'+(customIndex+1)).attr('actionType', actionType);
 			 
 				 callInitResult = that.checkActionCallInit(customIndex, actionType, param, 'createBtn', your);
@@ -4847,11 +4847,14 @@ var momWidget = {
             	return param;
             },
          // 체크된 아이템 얻기
-            getCheckedRowItems: function(gridId) {
+            getCheckedRowItems: function(gridId,msgShow) {
             	var checkedItems = AUIGrid.getCheckedRowItems(gridId);
             	var param = [];
             	if(checkedItems.length <= 0) {
-            		momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0012')});
+	                 if(msgShow){
+					momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0012')});
+					}
+            		
       			    momWidget.splashHide();
             		return param;
             	}
@@ -5105,7 +5108,7 @@ var momWidget = {
 			}
 			else if(type == 'U'){	
 								
-				var checkedItems = this.getCheckedRowItems(this.grid[index]);
+				var checkedItems = this.getCheckedRowItems(this.grid[index],true);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
 					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
 								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');		
@@ -5170,7 +5173,7 @@ var momWidget = {
 				
 			}
 				else if (type =='P'){
-				var checkedItems = this.getCheckedRowItems('#grid'+(parentIndex+1));
+				var checkedItems = this.getCheckedRowItems('#grid'+(parentIndex+1),false);
 				if(checkedItems.length ==0){
 					return 'FAIL';
 				}
@@ -5248,7 +5251,7 @@ var momWidget = {
 				
 			}
 			else if (type =='CP'){
-				var checkedItems = this.getCheckedRowItems(this.grid[index]);
+				var checkedItems = this.getCheckedRowItems(this.grid[index],false);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
 					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
 						 $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');	
@@ -5409,7 +5412,7 @@ var momWidget = {
 		
 		if(isExist != undefined) {
 			$(document).on('click', '#' + copyBtnId, function(e) {
-				var selectedItem = AUIGrid.getCheckedRowItems(that.grid[index]);
+				var selectedItem = AUIGrid.getCheckedRowItems(that.grid[index],true);
 				if(selectedItem.length < 1) {
 					that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES10491']});					
 					return;
@@ -5458,7 +5461,7 @@ var momWidget = {
 		isExist = document.getElementById(linkCopyBtn);		
 		if(isExist != undefined) {
 			$(document).on('click', '#' + linkCopyBtn, function(e) {
-				var selectedItem = AUIGrid.getCheckedRowItems(that.grid[index]);
+				var selectedItem = AUIGrid.getCheckedRowItems(that.grid[index],true);
 				if(selectedItem.length < 1) {
 					that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES10491']});					
 					return;
@@ -5496,7 +5499,7 @@ var momWidget = {
 		
 		if(isExist != undefined) {
 			$(document).on('click', '#' + downBtnId, function(e) {
-				var selectedItems1 = AUIGrid.getCheckedRowItems(that.grid[index]);
+				var selectedItems1 = AUIGrid.getCheckedRowItems(that.grid[index],true);
 				if(selectedItems1.length < 1) {
 					that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES11610']});					
 					return;
@@ -6751,6 +6754,9 @@ var momWidget = {
 		if(action == 'CP' && your.copyCallInit != undefined) {
 			 your.copyCallInit(index,your,action,btnId,param,result);				 
 		}
+		if(action == 'P' && your.customCallInit != undefined) {
+			 your.customCallInit(index,your,action,btnId,param,result);				 
+		}
 		if(action == 'E' && your.excelCallInit != undefined) {
 			 your.excelCallInit(index,your,action,btnId,param,result);	
 		}
@@ -6789,6 +6795,9 @@ var momWidget = {
 					
 		if(action == 'CP' && your.copyCallBack != undefined) {
 			your.copyCallBack(index,your,action,btnId,param,result,data);	
+		}	
+		if(action == 'P' && your.customCallBack != undefined) {
+			your.customCallBack(index,your,action,btnId,param,result,data);	
 		}	
 		if(action == 'E' && your.excelCallBack != undefined) {
 			your.excelCallBack(index,your,action,btnId,param,result,data);	
@@ -7134,7 +7143,7 @@ var momWidget = {
 						} else if(actionToken == 'grid') {
 							param = AUIGrid.getGridData(that.grid[index]);
 						} else if(actionToken == 'checkedGrid') {
-							var checkedItems = AUIGrid.getCheckedRowItems(that.grid[index]);
+							var checkedItems = AUIGrid.getCheckedRowItems(that.grid[index],true);
 							if(checkedItems.length < 1) {
 								that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES11610']}); // 20200617
 																																		// /
@@ -7148,7 +7157,7 @@ var momWidget = {
 								return;
 							}
 							
-							param = AUIGrid.getCheckedRowItems(that.grid[index])[0]['item'];
+							param = AUIGrid.getCheckedRowItems(that.grid[index],true)[0]['item'];
 						} else if(actionToken == 'selectedGrid') {
 							param = AUIGrid.getSelectedItems(that.grid[index])[0]['item'];
 							if(param.length < 1) {
@@ -7459,7 +7468,7 @@ var momWidget = {
 					} else if(actionFirstToken[1] == 'grid') {
 						param = AUIGrid.getGridData(that.grid[index]);
 					} else if(actionFirstToken[1] == 'checkedGrid') {
-						param = AUIGrid.getCheckedRowItems(that.grid[index])[0]['item'];
+						param = AUIGrid.getCheckedRowItems(that.grid[index],true)[0]['item'];
 						if(param.length < 1) {
 							that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES11610']});							
 							return;
@@ -7518,7 +7527,7 @@ var momWidget = {
 							} else if(actionFirstToken[2] == 'grid') {
 								param = AUIGrid.getGridData(that.grid[currentGridIndex])[0];
 							} else if(actionFirstToken[2] == 'checkedGrid') {
-								param = AUIGrid.getCheckedRowItems(that.grid[currentGridIndex])[0]['item'];
+								param = AUIGrid.getCheckedRowItems(that.grid[currentGridIndex],true)[0]['item'];
 								if(param.length < 1) {
 									that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES11610']});									
 									return;
@@ -7594,12 +7603,12 @@ var momWidget = {
 						} else if(actionFirstToken[2] == 'grid') {
 							param = AUIGrid.getGridData(that.grid[index])[0];
 						} else if(actionFirstToken[2] == 'checkedGrid') {
-							checkRowItems = AUIGrid.getCheckedRowItems(that.grid[index]);
+							checkRowItems = AUIGrid.getCheckedRowItems(that.grid[index],true);
 							if(checkRowItems.length < 1) {
 								that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES11610']});								
 								return;
 							} else {
-								param = AUIGrid.getCheckedRowItems(that.grid[index])[0]['item'];
+								param = AUIGrid.getCheckedRowItems(that.grid[index],true)[0]['item'];
 								var searchParam = that.createParam4Form(index, '#form');
 								if(searchParam.fromDate != '' && searchParam.toDate != '') {
 									param.fromDate = searchParam.fromDate;
@@ -7684,7 +7693,7 @@ var momWidget = {
 					} else if(actionFirstToken[2] == 'grid') {
 						param = AUIGrid.getGridData(that.grid[index]);
 					} else if(actionFirstToken[2] == 'checkedGrid') {
-						var param1 = AUIGrid.getCheckedRowItems(that.grid[index]);
+						var param1 = AUIGrid.getCheckedRowItems(that.grid[index],true);
 						if(param1.length < 1) {
 							that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES11610']});
 							
@@ -7707,7 +7716,7 @@ var momWidget = {
 						}
 					} else if(actionFirstToken[2].indexOf('checkedGrid') >= 0) {
 						var currentGridIndex = parseInt(actionFirstToken[2].substring(actionFirstToken[2].indexOf('checkedGrid') + 'checkedGrid'.length)) - 1;
-						var param1 = AUIGrid.getCheckedRowItems(that.grid[currentGridIndex]);
+						var param1 = AUIGrid.getCheckedRowItems(that.grid[currentGridIndex],true);
 						if(param1.length < 1) {
 							that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES11610']});
 							
@@ -7750,7 +7759,7 @@ var momWidget = {
 					} else if(actionFirstToken[3] == 'grid') {
 						callBackParam = AUIGrid.getGridData(that.grid[index]);
 					} else if(actionFirstToken[3] == 'checkedGrid') {
-						var callBackParam1 = AUIGrid.getCheckedRowItems(that.grid[index]);
+						var callBackParam1 = AUIGrid.getCheckedRowItems(that.grid[index],true);
 						for(var j = 0; j < callBackParam1.length; j++) {
 							callBackParam[j] = callBackParam1[j]['item'];
 						}
@@ -7875,12 +7884,12 @@ var momWidget = {
 						} else if(actionFirstToken[2] == 'grid') {
 							param = AUIGrid.getGridData(that.grid[index]);
 						} else if(actionFirstToken[2] == 'checkedGrid') {
-							var checkedItems = AUIGrid.getCheckedRowItems(that.grid[index]);
+							var checkedItems = AUIGrid.getCheckedRowItems(that.grid[index],true);
 							if(checkedItems == undefined || checkedItems.length < 1) {
 								that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES11335']});								
 								return;
 							}
-							param = AUIGrid.getCheckedRowItems(that.grid[index])[0]['item'];
+							param = AUIGrid.getCheckedRowItems(that.grid[index],true)[0]['item'];
 						} else if(actionFirstToken[2] == 'selectedGrid') {
 							param = AUIGrid.getSelectedItems(that.grid[index])[0]['item'];
 						} else if(actionFirstToken[2].indexOf('param') >= 0 && your[actionFirstToken[2]] != undefined) {
@@ -7896,7 +7905,7 @@ var momWidget = {
 						} else if(actionFirstToken[3] == 'grid') {
 							callBackParam = AUIGrid.getGridData(that.grid[index]);
 						} else if(actionFirstToken[3] == 'checkedGrid') {
-							var callBackParam1 = AUIGrid.getCheckedRowItems(that.grid[index]);
+							var callBackParam1 = AUIGrid.getCheckedRowItems(that.grid[index],true);
 							for(var j = 0; j < callBackParam1.length; j++) {
 								callBackParam[j] = callBackParam1[j]['item'];
 							}
@@ -8064,9 +8073,9 @@ var momWidget = {
 				} else if(actionNextToken[1] == 'grid') {
 					param = AUIGrid.getGridData(that.grid[indexInfo['index']])[0];
 				} else if(actionNextToken[1] == 'checkedGrid') {
-					param = AUIGrid.getCheckedRowItems(that.grid[indexInfo['index']])[0]['item'];
+					param = AUIGrid.getCheckedRowItems(that.grid[indexInfo['index']],true)[0]['item'];
 				} else if(actionNextToken[1] == 'selectedGrid') {
-					param = AUIGrid.getSelectedItems(that.grid[indexInfo['index']])[0]['item'];
+					param = AUIGrid.getSelectedItems(that.grid[indexInfo['index']],true)[0]['item'];
 				} else if(actionNextToken[1] == 'data') {
 					param = data[0];
 				} else if(actionNextToken[1] == 'callBack') {
@@ -8186,7 +8195,7 @@ var momWidget = {
 					} else if(actionNextToken[2] == 'grid') {
 						param = AUIGrid.getGridData(that.grid[index])[0];
 					} else if(actionNextToken[2] == 'checkedGrid') {
-						param = AUIGrid.getCheckedRowItems(that.grid[index])[0]['item'];
+						param = AUIGrid.getCheckedRowItems(that.grid[index],true)[0]['item'];
 					} else if(actionNextToken[2] == 'selectedGrid') {
 						param = AUIGrid.getSelectedItems(that.grid[index])[0]['item'];
 					} else if(actionNextToken[2] == 'data') {
@@ -8257,7 +8266,7 @@ var momWidget = {
 				} else if(actionNextToken[2] == 'grid') {
 					param = AUIGrid.getGridData(that.grid[indexInfo['index']]);
 				} else if(actionNextToken[2] == 'checkedGrid') {
-					var param1 = AUIGrid.getCheckedRowItems(that.grid[indexInfo['index']]);
+					var param1 = AUIGrid.getCheckedRowItems(that.grid[indexInfo['index']],true);
 					for(var j = 0; j < param1.length; j++) {
 						param[j] = param1[j]['item'];
 					}
@@ -9766,7 +9775,7 @@ var momWidget = {
 	clickCancelBtn2: function(index, your) {
 		var that = this.grid == undefined ? this.momWidget : this;
 		$(document).on('click', '#cancelCellBtn' + (index + 1), function() {
-			var checkedItems = AUIGrid.getCheckedRowItems(that.grid[index]);
+			var checkedItems = AUIGrid.getCheckedRowItems(that.grid[index],true);
 			if(checkedItems.length <= 0) {
 				that.messageBox({type:'warning', width:'400', height: '145', html: Language.lang['MESSAGES10585']});
 				return;

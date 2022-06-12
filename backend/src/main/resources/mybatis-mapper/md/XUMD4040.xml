@@ -159,6 +159,37 @@
 					                                          , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
 					                                          , #{toWorkGroupCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
+  </select> 
+  <select id="proc_customBtnB3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.xumd4040_wc_copy_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{toWorkCenterCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
+  </select>  
+    <select id="proc_customBtnC4" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_dayoff_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , #{workGroupCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
+  </select>  
+    <select id="proc_customBtnD5" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.xumd4040_wc_dayoff_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
   <insert id="create_defaultInfo1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
