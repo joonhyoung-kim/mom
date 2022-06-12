@@ -1947,21 +1947,24 @@ var momWidget = {
 								else{
 								var pageTotalNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']);
 								var pagingBtnHtml = '';
+								var pagingInfoHtml =  '<span class ="aui-grid-paging-info-text">'+'>'+'</span>';
 								var rightNextBtnHtml  = '<span class ="aui-grid-paging-number aui-grid-paging-next">'+'>'+'</span>';
 								var rightLastBtnHtml = '<span class ="aui-grid-paging-number aui-grid-paging-last">'+'>'+'</span>'; 
 								var startPage= 1;
 				 				var endPage = 1; 
 								if (pageTotalNum >1){
-									for(var i = 2, max = 10; i<= max; i++){
+									for(var i = 1, max = 10; i<= max; i++){
 									pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';
 									if(i==pagingBtnHtml){
 										break;
 									}
 									
 								   }
-								        $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);
-								          $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightNextBtnHtml);
-								            $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightLastBtnHtml);
+								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty();
+								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);
+								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightNextBtnHtml);
+					               $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightLastBtnHtml);
+					               $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingInfoHtml); 
 									/*	$('.aui-grid-paging-panel').append(pagingBtnHtml);
 										$('.aui-grid-paging-panel').append(rightNextBtnHtml);
 										$('.aui-grid-paging-panel').append(rightLastBtnHtml);*/
@@ -1979,9 +1982,16 @@ var momWidget = {
 									for(var j=0,max2=data.length;j<max2;j++){		
 										AUIGrid.updateRow(that.grid[index], {id:startPage+j}, j,false);			
 									}
+								
+												$('#grid'+(index+1)).find('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + '1' + " / 전체페이징 : " + pageTotalNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
 									
-									$('#grid'+(index+1)).find('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + '1' + " / 전체페이징 : " + pageTotalNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
-									
+							
+									for(var k=0,max3=data.length;k<max3;k++){
+										if($('.aui-grid-paging-panel')[0].children[k].innerText =='1'){
+											$('.aui-grid-paging-panel')[0].children[k].classList.add('aui-grid-paging-number-selected');											
+											break;
+										}
+									}
 									$('#grid'+(index+1)).find('.aui-grid-paging-number.aui-grid-paging-number-selected')[0].setAttribute('id','click');
 								
 								
@@ -2974,15 +2984,13 @@ var momWidget = {
 				 var targetSeq = 1;
 				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
 				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
-					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
+					   pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
 						if(i==endPageNum){
 								break;
 						}
 								
-				}  
+			  	 }  
 
-				
-					    
 					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
 					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
 					      
@@ -4757,6 +4765,7 @@ var momWidget = {
 				var customIndex = 0;
 				var buttonParam = [];
 				var param = [];
+				var indexItems ={parent:0,child:0};
 
 				for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']+(index+1)== btnId){
@@ -4773,8 +4782,12 @@ var momWidget = {
 					}
 				}	
 				
-			
-				 that.setPopup(customIndex,actionType);	
+			     indexItems['parent'] = index;
+			     indexItems['child'] = customIndex;
+				 that.setPopup(indexItems,actionType);	
+				 if(that.setPopup(indexItems,actionType) == 'FAIL'){
+					return;
+				}
 				 $('#defaultPop'+(customIndex+1)).attr('actionType', actionType);
 			 
 				 callInitResult = that.checkActionCallInit(customIndex, actionType, param, 'createBtn', your);
@@ -4850,6 +4863,8 @@ var momWidget = {
 		// Level 2. 등록 팝업창 열기시 데이터 복사, by procCreateBtn, procEditBtn
 		setPopup: function(index, type) {
 			var that = this;
+			var parentIndex = index['parent'] == undefined ? index : index['parent'];
+			var index = index['child'] == undefined ? index : index['child'];
 			var searchId = undefined;
 			var dropdownId = undefined;
 			var headerDropdownId = undefined;
@@ -5029,7 +5044,7 @@ var momWidget = {
 				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {
 								
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS' ) { //콤보박스
 						
 						
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
@@ -5115,7 +5130,7 @@ var momWidget = {
 				}
 				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {									
 					if(this.popupProperty[index][i]['updateEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS' ) { //콤보박스							
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
 							 
@@ -5154,6 +5169,84 @@ var momWidget = {
 				}
 				
 			}
+				else if (type =='P'){
+				var checkedItems = this.getCheckedRowItems('#grid'+(parentIndex+1));
+				if(checkedItems.length ==0){
+					return 'FAIL';
+				}
+				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
+					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
+						// $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');	
+						 if(this.popupProperty[index][j]['popupId'] == undefined || this.popupProperty[index][j]['popupId'] == ''){	
+							 continue;
+						 }
+						 else{
+								if(momWidget.popupProperty[index][j]['popupType'] =='C'){
+									if(checkedItems[i][this.popupProperty[index][j]['popupId']] == undefined){
+									continue;
+								}
+								checkedItems[i][this.popupProperty[index][j]['popupId']] = checkedItems[i][this.popupProperty[index][j]['popupId']].substr(0,10);
+								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+							}
+							else{
+								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+							}
+							   
+						 }
+						
+					}				
+				}
+				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {						
+					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 
+						}					
+						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
+						}
+						else{ // 텍스트
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+						}
+					} 
+					else{ // 수정가능
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: false});
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 
+						}					
+						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
+						}
+						else{ // 텍스트
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
+							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+						}
+					}
+						if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined  && this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
+						     	if(this.popupProperty[index][i]['popupType'] == 'C' && defaultValue.includes("-") && defaultValue.length>9){							
+							     $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+								}
+								else if(this.popupProperty[index][i]['popupType'] == 'C' &&(  this.popupProperty[index][i]['defaultValue'].includes("INIT") ||  this.popupProperty[index][i]['defaultValue'].includes("LAST") ||  this.popupProperty[index][i]['defaultValue'].includes("TODAY"))){
+									
+								}
+								else{
+									 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+								}
+							
+					}
+					
+				}
+				
+			}
 			else if (type =='CP'){
 				var checkedItems = this.getCheckedRowItems(this.grid[index]);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
@@ -5180,7 +5273,7 @@ var momWidget = {
 				}
 				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {						
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
 							 

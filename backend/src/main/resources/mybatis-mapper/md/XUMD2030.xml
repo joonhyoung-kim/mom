@@ -62,7 +62,7 @@
                   ,  UPDATE_BY
                   ,  UPDATE_DATE )
          VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
-                  (   #{item.compan    yCd, jdbcType=VARCHAR}
+                  (   #{item.companyCd, jdbcType=VARCHAR}
                   ,   #{item.divisionCd, jdbcType=VARCHAR}
                   ,   #{item.customerCd, jdbcType=VARCHAR}
                   ,   #{item.customerItemId, jdbcType=VARCHAR}
