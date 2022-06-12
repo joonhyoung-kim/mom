@@ -4018,7 +4018,7 @@ var momWidget = {
 					
 				if(btnIndex != undefined && btnPopYn == 'Y'){
 					for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
-					if(that.buttonProperty[btnIndex][i]['buttonId']==buttonId){
+					if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '') && that.buttonProperty[btnIndex][i]['buttonId']==buttonId){
 						buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
 						break;
 					}
@@ -4310,7 +4310,7 @@ var momWidget = {
 		  for(var i=0;i<that.popupProperty[index].length;i++){
 			    popupId = that.popupProperty[index][i]['popupId'];
 				searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
-			if(that.popupProperty[index][i]['popupType'] =='M'){
+			if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
 				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
 				for(var j=0;j<checkedItem.length;j++){
 					 mapItem[popupId] = checkedItem[j]['value'];
