@@ -71,14 +71,14 @@ var momWidget = {
 		    	  momWidget.splashHide();
 			      return;							     
 		      }
-		      var columnProp = [];
-		      var excelDownProp = [];
-		      var excelUploadProp = [];
-		      var columnType = 'default'; 
-		      var classItem  = [];
-		      var searchItem = [];
-		      var popupItem = [];
-		      var labelField = '';
+		      var columnProp = []; // 메인그리드 컬럼정보
+		      var excelDownProp = []; //엑셀다운그리드 컬럼정보
+		      var excelUploadProp = []; // 엑셀업로드그리드 컬럼정보
+		      var columnType = 'default';  //컬럼타입
+		      var classItem  = []; // 클래스 정보
+		      var searchItem = []; // 검색 필드 클래스 정보
+		      var popupItem = []; // 팝업 필드 클래스 정보
+		      var labelField = ''; 
 		      var headerField = '';
 		      var createPop = '';
 		      var editPop = '';

@@ -99,16 +99,22 @@ var VIEW= {
 			    result.param = items;  
                        
 	    }
-	    else if (index == 1 && btnId =='saveBtnDP'){
+	/*    else if (index == 1 && btnId =='saveBtnDP'){
 		                var items = param;				
-					 /*   for(var i=0;i<=items.length;i++){						
-						    items[0]['toWorkGroupCd'][i]['typeMap']  = items[0]['typeMap'];
-						    items[0]['toWorkGroupCd'][i]['typeList'] =  items[0]['typeList'];
+					    for(var i=0;i<=items.length;i++){		
+						if(items[i]['fromWorkCd'] == $('#toWorkGroupCdDP2').val()){
+							items[0]['toWorkGroupCd'][0]['toWorkGroupCd']
+						}				
+					
 						     
-					    }*/
+					    }
 			            result.param = items;
 	}
-
+     else if (index == 2 && btnId =='saveBtnDP'){
+		                var items = param;				
+				
+			            result.param = items;
+	}*/
 	},
 	editCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='editBtn'){	
