@@ -549,18 +549,27 @@ var momWidget = {
 					    		   columnProp[i].editRenderer = {			    				   
 								   				type: 'ComboBoxRenderer',
 								   				autoCompleteMode : true,  // 자동완성 모드 설정
-								   				matchFromFirst : false,  // 처음부터 매치가 아닌 단순 포함되는 자동완성
+								   				matchFromFirst : true,  // 처음부터 매치가 아닌 단순 포함되는 자동완성
 								   				autoEasyMode : true,     // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 								   				showEditorBtnOver: true, // 에디터 버튼 마우스 올릴시 보여줄지
 								   				listAlign:'left',        // 라벨 정렬
 								   				/*list: that.columnDropdown[index][columnId], */
 								   				keyField: 'code', 
-								   				valueField: 'label'  ,
+								   				valueField: 'label' ,
 								   			    listFunction : function(rowIndex, columnIndex, item, dataField) {							   			    
 								   			                var combo = that.columnDropdown[index][that.columnProperty[index][columnIndex]['columnId']];
 									                        return combo;									 
 								                           
-								                }	                                                        
+								                },
+								    	validator : function(oldValue, newValue, item) {
+							var isValid = true;
+							
+							if(colorList.indexOf(newValue) == -1) {
+								isValid = false;
+							}
+							// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+							return { "validate" : isValid, "message"  : "Black, White, Red, Blue 만 입력 가능합니다." };
+						}                                                                    
 						           };
 					    		
 			    		   }, undefined, undefined, this, false,'Y');
