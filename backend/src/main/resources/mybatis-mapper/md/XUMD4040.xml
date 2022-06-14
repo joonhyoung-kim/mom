@@ -12,42 +12,21 @@
    </select> 
    <select id="get_totalCount1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	         SELECT COUNT(*) AS TOTAL_COUNT
-              FROM( SELECT     MCD.COMPANY_CD
-						     , MCD.COMPANY_NM
-						     , MCD.DIVISION_CD
-						     , MCD.DIVISION_NM
-						     , MSS.WORK_CENTER_CD
-						     , ( SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.WORK_CENTER_CD )  FROM DUAL) AS WORK_CENTER_NM
-						     , TO_CHAR(MSS.APPLY_DATE ,'YYYY-MM-DD') AS APPLY_DATE
-						     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MCD.COMPANY_CD,MCD.DIVISION_CD, 'SM0019', 
-						         (SELECT MC.WEEK_DAY
-						          FROM   MOM_CALENDAR MC
-						          WHERE  MC.COMPANY_CD   = MSS.COMPANY_CD
-						          AND    MC.DIVISION_CD  = MSS.DIVISION_CD
-						          AND    MC.DATE_ID      = MSS.APPLY_DATE
-						        ), #{item.langCd, jdbcType=VARCHAR}) FROM DUAL) AS WEEK_DAY_NM  
-						     ,  ( SELECT MC.WEEK_DAY
-						          FROM   MOM_CALENDAR MC
-						          WHERE  MC.COMPANY_CD   = MSS.COMPANY_CD
-						          AND    MC.DIVISION_CD  = MSS.DIVISION_CD
-						          AND    MC.DATE_ID      = MSS.APPLY_DATE			
+              FROM( SELECT    MSS.COMPANY_CD
+                            , MSS.DIVISION_CD
+						    , MSS.APPLY_DATE
+						    
+						    ,  ( SELECT MC.WEEK_DAY
+						         FROM   MOM_CALENDAR MC
+						         WHERE  MC.COMPANY_CD   = MSS.COMPANY_CD
+						         AND    MC.DIVISION_CD  = MSS.DIVISION_CD
+						         AND    MC.DATE_ID      = MSS.APPLY_DATE			
 						        ) AS WEEK_DAY 
-						     , MSS.SHIFT_CD
-						     , MS.SHIFT_NM
-						     , MS.START_TIME
-						     , MS.END_TIME
-						    ,  MSS.DAY_OFF_YN
-						     , MS.WORK_TIME
-						     , MT.REST_TIME
-						     , (MS.WORK_TIME - MT.REST_TIME)  AS REAL_WORK_TIME
-						     , MSS.UPDATE_BY
-						     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSS.COMPANY_CD, MSS.DIVISION_CD, MSS.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
-						     , TO_CHAR(MSS.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-						    <!--  , MSS.WORK_CENTER_CD ||'_'||MSS.SHIFT_CD||'_'||MSS.APPLY_DATE AS KEY_ID -->
-						     , MSS.DESCRIPTION
 					        FROM     MOM_COM_DIV_V       MCD
 							       , MOM_SHIFT_SCHEDULE  MSS
 							       , MOM_SHIFT           MS
+							       , MOM_WORK_GROUP      MWG
+		       					   , MOM_WORK_CENTER     MWC
 							       , MOM_SHIFT_REST_TIME_V MT
 							WHERE  MCD.COMPANY_CD   = MSS.COMPANY_CD
 							AND    MCD.DIVISION_CD  = MSS.DIVISION_CD   
@@ -57,7 +36,19 @@
 							AND    MS.COMPANY_CD    = MT.COMPANY_CD
 							AND    MS.DIVISION_CD   = MT.DIVISION_CD    
 							AND    MS.SHIFT_CD      = MT.SHIFT_CD 
+							AND    MWC.COMPANY_CD   = MWG.COMPANY_CD
+							AND    MWC.DIVISION_CD  = MWG.DIVISION_CD    
+							AND    MWC.WORK_GROUP_CD   = MWG.WORK_GROUP_CD 
+							AND    MSS.COMPANY_CD      = MWC.COMPANY_CD   
+					        AND    MSS.DIVISION_CD     = MWC.DIVISION_CD 
+							AND    MSS.WORK_CENTER_CD  = MWC.WORK_CENTER_CD
 							AND    MSS.APPLY_DATE BETWEEN TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+					        <if test="dayOffYn != null and dayOffYn != ''">
+						    AND MSS.DAY_OFF_YN = #{dayOffYn, jdbcType=VARCHAR}
+						    </if>	
+							<if test="workGroupCd != null and workGroupCd != ''">
+						    AND MWG.WORK_GROUP_CD IN (${workGroupCd})
+						    </if>	
 					        <if test="workCenterCd != null and workCenterCd != ''">
 						    AND MSS.WORK_CENTER_CD IN (${workCenterCd})
 						    </if>	
@@ -150,6 +141,9 @@
         AND    MSS.DIVISION_CD     = MWC.DIVISION_CD 
 		AND    MSS.WORK_CENTER_CD  = MWC.WORK_CENTER_CD
 		AND    MSS.APPLY_DATE BETWEEN TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+	    <if test="dayOffYn != null and dayOffYn != ''">
+	    AND MSS.DAY_OFF_YN = #{dayOffYn, jdbcType=VARCHAR}
+	    </if>	
 		<if test="workGroupCd != null and workGroupCd != ''">
 	    AND MWG.WORK_GROUP_CD IN (${workGroupCd})
 	    </if>	

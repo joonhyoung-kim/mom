@@ -3477,15 +3477,16 @@ var momWidget = {
 			
 			// e.preventDefault();
 		});
-			$(document).on('keydown','.grid-pop', function(e) {
-			if(e.keyCode == 13) {
-				if(document.activeElement.id.indexOf('defaultPop') != -1){
+			$(document).on('click','.grid-pop', function(e) {
+			//if(e.keyCode == 13) {
+			/*	if(document.activeElement.id.indexOf('defaultPop') != -1){
 					return;
-				}
+				}*/
 				var columnProp = [];	
-				var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
-				
-				var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+				//var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
+				var activeId =  e.target.parentElement.parentElement.parentElement.parentElement.id.split('DP');
+				var clickedElment = e.target.parentElement.parentElement.parentElement.parentElement.id;
+				//var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
 					
 				if(clickedElment =='' || clickedElment.indexOf('DP') == -1){
 					return;
@@ -3604,7 +3605,8 @@ var momWidget = {
 					});
 		       
 				}, undefined, undefined, this, false);
-				}
+				
+				//}
 				e.stopImmediatePropagation();
 			});
 			
@@ -5125,8 +5127,9 @@ var momWidget = {
 						        	// $('#'+popupId).jqxComboBox('focus');
 					}, undefined, undefined, that, false);
 					}
-
-
+				else if(popupType == 'SS' || popupType == 'MS' ){
+					$('#'+popupId).jqxComboBox('clear');
+				}
 				else if(popupType == 'C'){
 					var today = new Date();  
 					var year  = undefined; // 년도
@@ -5237,7 +5240,7 @@ var momWidget = {
 				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {
 								
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS' ) { //콤보박스
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS' || this.popupProperty[index][i]['popupType'] == 'DG') { //콤보박스
 						
 						
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
