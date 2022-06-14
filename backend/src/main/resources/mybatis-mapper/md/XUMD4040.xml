@@ -131,7 +131,10 @@
         FROM     MOM_COM_DIV_V       MCD
 		       , MOM_SHIFT_SCHEDULE  MSS
 		       , MOM_SHIFT           MS
+		       , MOM_WORK_GROUP MWG
+		       , MOM_WORK_CENTER     MWC
 		       , MOM_SHIFT_REST_TIME_V MT
+		     
 		WHERE  MCD.COMPANY_CD   = MSS.COMPANY_CD
 		AND    MCD.DIVISION_CD  = MSS.DIVISION_CD   
 		AND    MSS.COMPANY_CD   = MS.COMPANY_CD
@@ -140,7 +143,16 @@
 		AND    MS.COMPANY_CD    = MT.COMPANY_CD
 		AND    MS.DIVISION_CD   = MT.DIVISION_CD    
 		AND    MS.SHIFT_CD      = MT.SHIFT_CD 
+		AND    MWC.COMPANY_CD   = MWG.COMPANY_CD
+		AND    MWC.DIVISION_CD  = MWG.DIVISION_CD    
+		AND    MWC.WORK_GROUP_CD   = MWG.WORK_GROUP_CD 
+		AND    MSS.COMPANY_CD      = MWC.COMPANY_CD   
+        AND    MSS.DIVISION_CD     = MWC.DIVISION_CD 
+		AND    MSS.WORK_CENTER_CD  = MWC.WORK_CENTER_CD
 		AND    MSS.APPLY_DATE BETWEEN TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+		<if test="workGroupCd != null and workGroupCd != ''">
+	    AND MWG.WORK_GROUP_CD IN (${workGroupCd})
+	    </if>	
         <if test="workCenterCd != null and workCenterCd != ''">
 	    AND MSS.WORK_CENTER_CD IN (${workCenterCd})
 	    </if>	
@@ -183,7 +195,7 @@
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
-					                                          , #{workGroupCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{workGroupCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
     <select id="proc_customBtnD5" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
@@ -193,7 +205,7 @@
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
-					                                          , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{workCenterCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
   <insert id="create_defaultInfo1" parameterType="java.util.List">

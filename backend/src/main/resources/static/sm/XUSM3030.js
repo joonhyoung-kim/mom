@@ -644,7 +644,7 @@ var XUSM3030 = {
 				, style			: 'my-column-style-edit3'
 			    , headerTooltip : { 
 				  show : true,
-				  tooltipHtml : '<div style="width:300px;"><p>초기값 지정(디폴트는 입력값)</p><p>CHECK_ALL : 콤보박스-멀티 인경우에 전체체크</P><P>INDEX+N: 싱글/멀티 콤보박스에서 지정 인덱스 선택</p></div>'
+				  tooltipHtml : '<div style="width:300px;"><p>초기값 지정(디폴트는 입력값)</p><p>CHECK_ALL : 콤보박스-멀티 인경우에 전체체크</P><P>INDEX+N: 싱글/멀티 콤보박스에서 지정 인덱스 선택</p><P>캘린더:  조합법:TODAY/INIT/LAST(+/-)정수*(D/M)</p><P>캘린더(기간): 조합법:주차수*W(+/-)정수*(D/M)</p></div>'
 		        }
 			},		
 			{

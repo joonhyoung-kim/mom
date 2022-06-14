@@ -351,6 +351,23 @@
     height: calc(100% - 8rem);
     border: none;
 }
+.fromToIcon{
+    display: inline-block;
+    position: relative;
+    top: -0.7rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    left: -6.5rem;
+}
+.fromDateField{
+    position: relative;
+    left: -7rem;
+}
+.toDateField{
+   position: relative;
+   left: -6rem;
+}
+
 .gridArea-tm4vvh-h01-03{
 	background: #f0f0f5;
    /*  height: 17.5rem; */
@@ -1144,6 +1161,7 @@ border-color: #d8dce3 !important;
 	background-attachment: scroll;
 	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
 }
+
 .searcharea-pop.R1 {
     height: 38rem;
 }
@@ -3067,6 +3085,22 @@ border-color: #d8dce3 !important;
     border: 1px solid #4d4d4e !important;
    
 }
+.gridPop-C5-R4 {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 90rem !important;
+    position: relative !important;
+    margin-left: 20rem !important;
+    margin-top: -72rem !important;
+    background: white !important; 
+    height: 32rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
 .defaultPop-C6-R4 {
     z-index: 1050;
 /* 	display: none ; */
@@ -3298,6 +3332,18 @@ input:focus{
     margin-top: -21rem !important;
     background: white !important;
     height: 15.5rem !important;
+    border: 1px solid rgb(77, 77, 78) !important;
+}
+.gridPop-C10-R8 {
+    z-index: 1050;
+    border-radius: 0.5rem;
+    float: none !important;
+    width: 90rem !important;
+    position: relative !important;
+    margin-left: 40rem !important;
+    margin-top: -21rem !important;
+    background: white !important;
+    height: 22.8rem !important;
     border: 1px solid rgb(77, 77, 78) !important;
 }
 .side-menu__item {

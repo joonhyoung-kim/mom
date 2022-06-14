@@ -194,38 +194,38 @@ var momWidget = {
 
 			      for(var i=0,max=searchRowcnt; i<max;i++){	
 		    		  if(that.searchProperty[index][i]['headerType']=='S'){
-			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+ ' class="searchSelectField"></select>';
+			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+'SP'+(index+1)+' class="searchSelectField"></select>';
 			    	  }
 			    	  
 			    	  else if (that.searchProperty[index][i]['headerType']=='M'){
-			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+' class="searchSelectField"></select>';
+			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+'SP'+(index+1)+' class="searchSelectField"></select>';
 			    	  }
 			    	  else {
 			    		  headerField = that.searchProperty[index][i]['columnRequire'] != 'Y' ? '<div multi-lang="" class="textblock">'+that.searchProperty[index][i]['searchNm']+'</div>': '<div multi-lang="" class="textblock orange">'+that.searchProperty[index][i]['searchNm']+'</div>';
 			    	  }
 			    		    		   
 			    	  if(that.searchProperty[index][i]['searchType']=='S'){
-			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+ ' class="searchSelectField"></select>';
+			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField"></select>';
 			    	  }
 			    	  else if(that.searchProperty[index][i]['searchType']=='SS'){
-		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+ ' class="searchSelectField-search-combo"></select>';
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="searchSelectField-search-combo"></select>';
 		    			   
 			    	  }
 			    	  else if(that.searchProperty[index][i]['searchType']=='MS'){
-		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+ ' class="searchSelectField-search-combo"></select>';
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="searchSelectField-search-combo"></select>';
 		    			   
 			    	  }
 			    	  else if (that.searchProperty[index][i]['searchType']=='M'){
-			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></select>';
+			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField"></select>';
 			    	  }
 			    	   else if (that.searchProperty[index][i]['searchType']=='C'){
-			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+' class="searchSelectField"></div>';
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField"></div>';
 			    	  }
 			    	  else if (that.searchProperty[index][i]['searchType']=='CP'){
-			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+' class="searchSelectField"></div><div id='+that.searchProperty[index][i]['searchId']+'ED'+' class="searchSelectField"></div>';
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+(index+1)+' class="fromDateField searchSelectField"></div>' +'<div id="fromToIcon" class="fromToIcon" >~</div>'+ '<div id='+that.searchProperty[index][i]['searchId']+'ED'+(index+1)+' class="toDateField searchSelectField"></div>';
 			    	  }
 			    	  else{
-			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId'] +' input-type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
+			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' input-type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
 			    	  }
 			    	  searchItem[i] =  {	  			    	  
 				    	  searchId:         that.searchProperty[index][i]['searchId'],
@@ -836,15 +836,15 @@ var momWidget = {
 				      }		
 				      
 				        if(headerDropdownId != '' && headerDropdownId != undefined){
-				        	 $('#'+searchId+'Header').jqxComboBox({source: data});
-				        	 $('#'+searchId+'Header').prev().prev().attr('class','circle-dh')
-				        	 $('#'+searchId+'Header').jqxComboBox({selectedIndex: 0 });
+				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({source: data});
+				        	 $('#'+searchId+'Header'+'SP'+(index+1)).prev().prev().attr('class','circle-dh')
+				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({selectedIndex: 0 });
 				        }
 				        else{
 				        	if(searchType == 'M'){
-				        		$('#'+searchId).jqxComboBox({source: data});	
+				        		$('#'+searchId +'SP'+(index+1)).jqxComboBox({source: data});	
 				        	if(defaultValue == 'CHECK_ALL'){
-								$('#'+searchId).jqxComboBox('checkAll'); 
+								//$('#'+searchId +'SP'+(index+1)).jqxComboBox('checkAll'); 
 							}
 							else{
 								//$('#'+searchId).jqxComboBox('checkIndex', 0); 
@@ -854,8 +854,8 @@ var momWidget = {
 				        		//$('#'+searchId).val(defaultValue); 
 				        	}
 				        	else{
-				        		$('#'+searchId).jqxComboBox({source: data}); 
-				        		$('#'+searchId).val(defaultValue); 
+				        		$('#'+searchId+'SP'+(index+1)).jqxComboBox({source: data}); 
+				        		$('#'+searchId+'SP'+(index+1)).val(defaultValue); 
 				        	}
 				        	  
 				        }
@@ -891,6 +891,39 @@ var momWidget = {
 					     month = today.getMonth() ;  // 월
 					     date  = today.getDate();  // 날짜
 				}
+						else if(defaultValue.includes("W") && defaultValue.length>1 && !(defaultValue.includes("+") || defaultValue.includes("-"))){
+					      var weekNum =	defaultValue.substring(0,defaultValue.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue.substring(0,defaultValue.indexOf('W'));
+					      
+					      year = moment(moment().years()+weekNum, 'YYYYWW').format('YYYY');					     
+					      month = moment(moment().years()+weekNum, 'YYYYWW').format('MM')-1+'';
+					      date = moment(moment().years()+weekNum, 'YYYYWW').format('DD');
+					     
+				}
+					else if(defaultValue.includes("W") && defaultValue.length>1 && (defaultValue.includes("+") || defaultValue.includes("-"))){
+						var weekNum ='1';
+						var dateType ='+';
+						var calNum = 0;
+			
+						  if (defaultValue.indexOf('+')>0){
+							  dateType = defaultValue.substring(defaultValue.indexOf('+'),defaultValue.indexOf('+')+1); 
+							  weekNum =	defaultValue.substring(0,defaultValue.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue.substring(0,defaultValue.indexOf('W'));
+							  calNum = defaultValue.substring(defaultValue.indexOf('+')+1,defaultValue.length-1);
+							  year = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('YYYY')				     
+						      month = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('MM')-1+'';
+						      date = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('DD')
+						  }
+						  else  if (defaultValue.indexOf('-')>0){
+							  dateType = defaultValue.substring(defaultValue.indexOf('-'),defaultValue.indexOf('-')+1); 
+							  weekNum =	defaultValue.substring(0,defaultValue.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue.substring(0,defaultValue.indexOf('W'));
+							  calNum = defaultValue.substring(defaultValue.indexOf('-')+1,defaultValue.length-1);
+							  year = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('YYYY')				     
+						      month = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('MM')-1+'';
+						      date = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('DD')
+						  }
+					     
+					  
+					      
+				}
 				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
 				var dateNum  =	defaultValue.substring(5,defaultValue.length-1);
 				var dateType =	defaultValue.substring(defaultValue.length,defaultValue.length-1);
@@ -959,8 +992,8 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+searchId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
-				$('#'+searchId).jqxDateTimeInput('setDate', calendar);
+				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput('setDate', calendar);
 				
 			}
 			else if(searchType == 'CP'){
@@ -968,27 +1001,62 @@ var momWidget = {
 					var year  = undefined; // 년도
 				    var month = undefined;;  // 월
 				    var date  = undefined;;  // 날짜
-				if(defaultValue == 'TODAY'){
+				    const defaultValueArray = defaultValue.split('/');
+				    let defaultValue1 = defaultValueArray[0];
+				    let defaultValue2 = defaultValueArray[1];
+				if(defaultValue1 == 'TODAY'){
 					 year = today.getFullYear(); // 년도
 				     month = today.getMonth() ;  // 월
 				     date = today.getDate();  // 날짜
 				    
 				}
-				else if(defaultValue == 'INIT'){
+				else if(defaultValue1.includes("W") && defaultValue1.length>1 && !(defaultValue1.includes("+") || defaultValue1.includes("-"))){
+					      var weekNum =	defaultValue1.substring(0,defaultValue1.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue1.substring(0,defaultValue1.indexOf('W'));
+					      year = moment(moment().years()+weekNum, 'YYYYWW').format('YYYY');					     
+					      month = moment(moment().years()+weekNum, 'YYYYWW').format('MM')-1+'';
+					      date = moment(moment().years()+weekNum, 'YYYYWW').format('DD');
+					     
+				}
+					else if(defaultValue1.includes("W") && defaultValue1.length>1 && (defaultValue1.includes("+") || defaultValue1.includes("-"))){
+						var weekNum ='1';
+						var dateType ='+';
+						var calNum = 0;
+			
+						  if (defaultValue1.indexOf('+')>0){
+							  dateType = defaultValue1.substring(defaultValue1.indexOf('+'),defaultValue1.indexOf('+')+1); 
+							  weekNum =	defaultValue1.substring(0,defaultValue1.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue1.substring(0,defaultValue1.indexOf('W'));
+							  calNum = defaultValue1.substring(defaultValue1.indexOf('+')+1,defaultValue1.length-1);
+							  year = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('YYYY')				     
+						      month = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('MM')-1+'';
+						      date = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('DD')
+						  }
+						  else  if (defaultValue1.indexOf('-')>0){
+							  dateType = defaultValue1.substring(defaultValue1.indexOf('-'),defaultValue1.indexOf('-')+1); 
+							  weekNum =	defaultValue1.substring(0,defaultValue1.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue1.substring(0,defaultValue1.indexOf('W'));
+							  calNum = defaultValue1.substring(defaultValue1.indexOf('-')+1,defaultValue1.length-1);
+							  year = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('YYYY')				     
+						      month = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('MM')-1+'';
+						      date = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('DD')
+						  }
+					     
+					  
+					      
+				}
+				else if(defaultValue1 == 'INIT'){
 					     today = new Date(today.getFullYear(), today.getMonth(), 1);
 						 year  = today.getFullYear(); // 년도
 					     month = today.getMonth() ;  // 월
 					     date  = today.getDate();  // 날짜
 				}
-				else if(defaultValue == 'LAST'){
+				else if(defaultValue1 == 'LAST'){
 					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
 						 year  = today.getFullYear(); // 년도
 					     month = today.getMonth() ;  // 월
 					     date  = today.getDate();  // 날짜
 				}
-				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
-				var dateNum  =	defaultValue.substring(5,defaultValue.length-1);
-				var dateType =	defaultValue.substring(defaultValue.length,defaultValue.length-1);
+				else if(defaultValue1.includes("TODAY") && defaultValue1.length>5){
+				var dateNum  =	defaultValue1.substring(5,defaultValue1.length-1);
+				var dateType =	defaultValue1.substring(defaultValue1.length,defaultValue1.length-1);
 				  if(dateType == 'M'){
 					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
 					 year = today.getFullYear(); // 년도
@@ -1006,9 +1074,9 @@ var momWidget = {
 				  }
 				
 				}
-				else if(defaultValue.includes("INIT") && defaultValue.length>5){
-					var dateNum  =	defaultValue.substring(4,6);
-				    var dateType =	defaultValue.substring(6,7);
+				else if(defaultValue1.includes("INIT") && defaultValue1.length>5){
+					var dateNum  =	defaultValue1.substring(4,6);
+				    var dateType =	defaultValue1.substring(6,7);
 				    today = new Date(today.getFullYear(), today.getMonth(), 1);
 				      if(dateType == 'M'){
 						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
@@ -1026,9 +1094,9 @@ var momWidget = {
 						 
 					  }
 				}
-					else if(defaultValue.includes("LAST") && defaultValue.length>5){
-					var dateNum  =	defaultValue.substring(4,6);
-				    var dateType =	defaultValue.substring(6,7);
+					else if(defaultValue1.includes("LAST") && defaultValue1.length>5){
+					var dateNum  =	defaultValue1.substring(4,6);
+				    var dateType =	defaultValue1.substring(6,7);
 				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
 				      if(dateType == 'M'){
 						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
@@ -1054,10 +1122,132 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+searchId+'SD').jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
-				$('#'+searchId+'SD').jqxDateTimeInput('setDate', calendar);
-				$('#'+searchId+'ED').jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
-				$('#'+searchId+'ED').jqxDateTimeInput('setDate', calendar);
+				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput('setDate', calendar);
+			
+				
+				
+				if(defaultValue2 == 'TODAY'){
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				    
+				}
+				else if(defaultValue2 == 'INIT'){
+					     today = new Date(today.getFullYear(), today.getMonth(), 1);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
+				else if(defaultValue2 == 'LAST'){
+					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+				}
+				else if(defaultValue2.includes("TODAY") && defaultValue2.length>5){
+				var dateNum  =	defaultValue2.substring(5,defaultValue2.length-1);
+				var dateType =	defaultValue2.substring(defaultValue2.length,defaultValue2.length-1);
+				  if(dateType == 'M'){
+					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				  }
+				  else if (dateType == 'D'){
+					 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+					 year  = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date  = today.getDate();  // 날짜
+				  }
+				  else{
+					
+				  }
+				
+				}
+				else if(defaultValue2.includes("W") && defaultValue2.length>1 && !(defaultValue2.includes("+") || defaultValue2.includes("-"))){
+					      var weekNum =	defaultValue2.substring(0,defaultValue2.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue2.substring(0,defaultValue2.indexOf('W'));
+					      year = moment(moment().years()+weekNum, 'YYYYWW').format('YYYY');					     
+					      month = moment(moment().years()+weekNum, 'YYYYWW').format('MM')-1+'';
+					      date = moment(moment().years()+weekNum, 'YYYYWW').format('DD');
+					     
+				}
+					else if(defaultValue2.includes("W") && defaultValue2.length>1 && (defaultValue2.includes("+") || defaultValue2.includes("-"))){
+						var weekNum ='1';
+						var dateType ='+';
+						var calNum = 0;
+			
+						  if (defaultValue2.indexOf('+')>0){
+							  dateType = defaultValue2.substring(defaultValue2.indexOf('+'),defaultValue2.indexOf('+')+1); 
+							  weekNum =	defaultValue2.substring(0,defaultValue2.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue2.substring(0,defaultValue2.indexOf('W'));
+							  calNum = defaultValue2.substring(defaultValue2.indexOf('+')+1,defaultValue2.length-1);
+							  year = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('YYYY')				     
+						      month = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('MM')-1+'';
+						      date = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('DD')
+						  }
+						  else  if (defaultValue2.indexOf('-')>0){
+							  dateType = defaultValue2.substring(defaultValue2.indexOf('-'),defaultValue2.indexOf('-')+1); 
+							  weekNum =	defaultValue2.substring(0,defaultValue2.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue2.substring(0,defaultValue2.indexOf('W'));
+							  calNum = defaultValue2.substring(defaultValue2.indexOf('-')+1,defaultValue2.length-1);
+							  year = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('YYYY')				     
+						      month = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('MM')-1+'';
+						      date = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('DD')
+						  }
+					     
+					  
+					      
+				}
+				else if(defaultValue2.includes("INIT") && defaultValue2.length>5){
+					var dateNum  =	defaultValue2.substring(4,6);
+				    var dateType =	defaultValue2.substring(6,7);
+				    today = new Date(today.getFullYear(), today.getMonth(), 1);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
+						 
+					  }
+				}
+					else if(defaultValue2.includes("LAST") && defaultValue2.length>5){
+					var dateNum  =	defaultValue2.substring(4,6);
+				    var dateType =	defaultValue2.substring(6,7);
+				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
+				      if(dateType == 'M'){
+						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
+						 year = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date = today.getDate();  // 날짜
+				      }
+					  else if (dateType == 'D'){
+						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
+						 year  = today.getFullYear(); // 년도
+					     month = today.getMonth() ;  // 월
+					     date  = today.getDate();  // 날짜
+					  }
+					  else{
+						
+					  }
+				}
+				else{
+					 year = today.getFullYear(); // 년도
+				     month = today.getMonth() ;  // 월
+				     date = today.getDate();  // 날짜
+				}
+						
+				 var calendar = new Date();
+                 calendar.setFullYear(year, month, date);
+			
+				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput('setDate', calendar);
 			}
 			else{
 				
@@ -1937,7 +2127,7 @@ var momWidget = {
 								if(data.length ==0){
 									AUIGrid.setGridData(that.grid[index], data); 
 							
-								}
+								} 
 								else if(that.gridProperty[index][0]['pageRowCount'] > that.totalRowCount[index]){
 									AUIGrid.setGridData(that.grid[index], data); 
 										 if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
@@ -2091,11 +2281,11 @@ var momWidget = {
 			 searchType       = that.searchProperty[index][i]['searchType']; 
 			 headerSearchType = that.searchProperty[index][i]['headerType']; 
 			 if(headerDropdownId != '' && headerDropdownId != undefined){
-				 param[searchId+'Header'] = $('#'+searchId+'Header').val();
+				 param[searchId+'Header'] = $('#'+searchId+'Header'+'SP'+(index+1)).val();
 			}
 			 if(dropdownId != '' && dropdownId != undefined){
 				 if(searchType =='M'){
-					 var checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
+					 var checkedItem = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getCheckedItems');
 					 if(checkedItem == undefined || checkedItem.length == 0){
 						continue;
 					}
@@ -2106,13 +2296,13 @@ var momWidget = {
 					     param[searchId] = paramText.replace(',','').replace(/\"/gi, "");
 				 }
 				 else{
-					 param[searchId] = $('#'+searchId).val();
+					 param[searchId] = $('#'+searchId+'SP'+(index+1)).val();
 				 }
 				
 			 }
 			 
 			 else{
-				 param[searchId] = $('#'+searchId).val();
+				 param[searchId] = $('#'+searchId+'SP'+(index+1)).val();
 			 }
 			
 		}
@@ -2521,15 +2711,15 @@ var momWidget = {
 			} 
 			else if(e.keyCode == 8 || e.keyCode == 46){
 				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-				$('#'+searchId).val('');
+				$('#'+searchId+'SP'+(index+1)).val('');
 			}
 		});
 		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
 			if(e.keyCode == 13){ //엔터
 			var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
 			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
-			var minLength = that.searchComboMinLength[index][searchId+(index+1)] ;
-			var queryId = that.searchComboQueryId[index][searchId+(index+1)];
+			var minLength = that.searchComboMinLength[index][searchId] ;
+			var queryId = that.searchComboQueryId[index][searchId];
 			if(searchString.length < minLength)	{
 						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
 						return;
@@ -2622,14 +2812,14 @@ var momWidget = {
 			  
 			if(searchType == 'S' || searchType == 'M' || searchHeaderType == 'S'||searchHeaderType == 'M' || searchType == 'SS' || searchType == 'MS'){	      
 				        if(searchHeaderDropdownId != '' && searchHeaderDropdownId != undefined){
-				        	 $('#'+searchId+'Header').jqxComboBox({ displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false});
-				        	 $('#'+searchId+'Header').prev().prev().attr('class','circle-dh')
-				        	 $('#'+searchId+'Header').jqxComboBox({selectedIndex: 0 });
+				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({ displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false});
+				        	 $('#'+searchId+'Header'+'SP'+(index+1)).prev().prev().attr('class','circle-dh')
+				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({selectedIndex: 0 });
 				        }
 				        else{
 				        	if(searchType == 'M'){
-				        		$('#'+searchId).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
-				        		$('#'+searchId).on('bindingComplete', function (e) {
+				        		$('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
+				        		$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {
 				  
 				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
 				   maxItemWidthArry = maxItemWidth.split('px');
@@ -2646,10 +2836,10 @@ var momWidget = {
 				 }
 				  else if(searchType == 'MS'){
 						searchMinLen  = Number(that.searchProperty[index][i]['defaultValue'].trim());
-						searchComboMinLength[searchId+(index+1)] = searchMinLen;
+						searchComboMinLength[searchId+'SP'+(index+1)] = searchMinLen;
 						if(searchDropdownId != '' && searchDropdownId != undefined){
 						searchQueryId = searchDropdownId;
-						searchComboItem[searchId+(index+1)] = searchNameSpace+'.'+searchQueryId;
+						searchComboItem[searchId+'SP'+(index+1)] = searchNameSpace+'.'+searchQueryId;
 							 
 							// paramMap[i] = splitArray[0]:; 
 						}
@@ -2659,8 +2849,8 @@ var momWidget = {
 						}
 					that.searchComboQueryId[index] = searchComboItem;
 					that.searchComboMinLength[index] = searchComboMinLength; 		    
-						     $('#'+searchId).jqxComboBox({ displayMember: "label",checkboxes: true, valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
-		  $('#'+searchId).on('bindingComplete', function (e) {				  
+						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label",checkboxes: true, valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+		  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
 				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
 				   maxItemWidthArry = maxItemWidth.split('px');
 				   maxItemWidthNum = Number(maxItemWidthArry[0]);
@@ -2675,10 +2865,10 @@ var momWidget = {
 				}
 				 else if(searchType == 'SS'){
 						searchMinLen  = Number(that.searchProperty[index][i]['defaultValue'].trim());
-						searchComboMinLength[searchId+(index+1)] = searchMinLen;
+						searchComboMinLength[searchId+'SP'+(index+1)] = searchMinLen;
 						if(searchDropdownId != '' && searchDropdownId != undefined){
 						searchQueryId = searchDropdownId;
-						searchComboItem[searchId+(index+1)] = searchNameSpace+'.'+searchQueryId;
+						searchComboItem[searchId+'SP'+(index+1)] = searchNameSpace+'.'+searchQueryId;
 							 
 							// paramMap[i] = splitArray[0]:; 
 						}
@@ -2688,8 +2878,8 @@ var momWidget = {
 						}
 					that.searchComboQueryId[index] = searchComboItem;
 					that.searchComboMinLength[index] = searchComboMinLength; 		    
-						     $('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
-		  $('#'+searchId).on('bindingComplete', function (e) {				  
+						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+		  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
 				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
 				   maxItemWidthArry = maxItemWidth.split('px');
 				   maxItemWidthNum = Number(maxItemWidthArry[0]);
@@ -2701,7 +2891,7 @@ var momWidget = {
 				 }
 				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });
-			          $('#'+searchId).on('close', function (e) {
+			          $('#'+searchId+'SP'+(index+1)).on('close', function (e) {
 				     var tmpCd = e.target.children[1].value; 
 				            if(tmpCd ==''){
 								$('#'+e.target.id).jqxComboBox('clear');
@@ -2714,8 +2904,8 @@ var momWidget = {
 			     
 				}
 				else{
-				      $('#'+searchId).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'}); 
-				    	  $('#'+searchId).on('bindingComplete', function (e) {				  
+				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'}); 
+				    	  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
 				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
 				   maxItemWidthArry = maxItemWidth.split('px');
 				   maxItemWidthNum = Number(maxItemWidthArry[0]);
