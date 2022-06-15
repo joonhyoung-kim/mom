@@ -7,25 +7,25 @@ var XUSM9010 = {
 	init: function() {
 		var that = this;	
 		$('#grid1').remove();
-		var textareaHtml = '<textarea id = "xmlText" name="opinion" cols="264" rows="42"></textarea>';
+		var textareaHtml = '<textarea class = "xmlText" id = "xmlText" name="opinion"  ></textarea>';
 		var comboData = [{"code":"R","label":"SELECT"},{"code":"C","label":"INSERT"},{"code":"CU","label":"UPSERT"},{"code":"U","label":"UPDATE"},{"code":"D","label":"DELETE"}];
 		$('.grid-box1').prepend(textareaHtml);
-		$('#eventType').jqxComboBox("clear");	
-		$('#eventType').jqxComboBox('source',comboData);	
+		$('#eventTypeSP1').jqxComboBox("clear");	
+		$('#eventTypeSP1').jqxComboBox('source',comboData);	
 	},
 	searchCallBack: function(index,your,action,btnId,param,result,data) {
 		if(index ==0 && btnId =='findBtn'){	
 			//AUIGrid.clearGridData(momWidget.grid[index]);
 			var columnItem = data;
 			var xmlHtml   = '';
-			var eventType = $('#eventType').val();
+			var eventType = $('#eventTypeSP1').val();
 			var jdbcType  = 'VARCHAR';
 			var userId    = 'userId';
 			if(eventType == 'R'){
 				xmlHtml += '  <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">\n      SELECT  ';
 			  for(var i=0;i<columnItem.length;i++){	
 				 if(i == columnItem.length-1){
-					xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'        FROM      '+$('#tableId').val()+'\n'+'        WHERE   1=1\n  </select>';
+					xmlHtml += ' '+columnItem[i]['columnName']+'\n'+'        FROM      '+$('#tableIdSP1').val()+'\n'+'        WHERE   1=1\n  </select>';
 				}	
 				else{
 					if(columnItem[i]['dataType'] == 'DATE'){
@@ -42,7 +42,7 @@ var XUSM9010 = {
 			  }
 		    }
 		    else if(eventType == 'C'){
-			  xmlHtml += '  <insert id="create_defaultInfo1" parameterType="java.util.List">\n   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> \n     INTO '+$('#tableId').val()+' ('+'\n'+'                  ';
+			  xmlHtml += '  <insert id="create_defaultInfo1" parameterType="java.util.List">\n   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> \n     INTO '+$('#tableIdSP1').val()+' ('+'\n'+'                  ';
 			    for(var i=0;i<columnItem.length;i++){	
 				 if(i == columnItem.length-1){
 					xmlHtml += ''+columnItem[i]['columnName']+' )'+'\n'+'      VALUES \n              (  ';
@@ -98,7 +98,7 @@ var XUSM9010 = {
 					  pkItem.push(columnItem[j]);
 				  }
 			  }
-			  xmlHtml += '  <insert id="upsert_defaultInfo1" parameterType="java.util.List">\n      MERGE INTO '+$('#tableId').val()+' \n            USING('+' <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">\n                     SELECT' ;
+			  xmlHtml += '  <insert id="upsert_defaultInfo1" parameterType="java.util.List">\n      MERGE INTO '+$('#tableId'+'SP1').val()+' \n            USING('+' <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">\n                     SELECT' ;
 			    for(var i=0;i<columnItem.length;i++){	
 					if(columnItem[i]['dataType'] == 'VARCHAR' || columnItem[i]['dataType'] == 'VARCHAR2'){
 							jdbcType = 'VARCHAR';
@@ -202,7 +202,7 @@ var XUSM9010 = {
 			
 		    }
 			else if(eventType == 'U'){
-			  xmlHtml += '  <update id="modify_defaultInfo1" parameterType="java.util.List">\n    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">\n      UPDATE '+$('#tableId').val()+'\n'+'      SET    ';
+			  xmlHtml += '  <update id="modify_defaultInfo1" parameterType="java.util.List">\n    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">\n      UPDATE '+$('#tableId'+'SP1').val()+'\n'+'      SET    ';
 			    for(var i=0;i<columnItem.length;i++){	
 				     if(columnItem[i]['columnName']=='CREATE_BY' || columnItem[i]['columnName']=='CREATE_DATE' || columnItem[i]['isPk']=='Y'){
 					         continue;
@@ -260,7 +260,7 @@ var XUSM9010 = {
 					  pkItem.push(columnItem[i]);
 				  }
 			  }
-			  xmlHtml += '  <delete id="remove_defaultInfo1" parameterType="java.util.List">\n      DELETE FROM '+$('#tableId').val()+'\n'+'      <where>\n       <foreach collection="list" item="item" open="" close="" separator="OR">\n        (       ';
+			  xmlHtml += '  <delete id="remove_defaultInfo1" parameterType="java.util.List">\n      DELETE FROM '+$('#tableIdSP1').val()+'\n'+'      <where>\n       <foreach collection="list" item="item" open="" close="" separator="OR">\n        (       ';
 			  for(var i=0;i<pkItem.length;i++){								
 					if(i == pkItem.length-1){
 						xmlHtml += columnItem[i]['columnName']+' = #{item.'+columnItem[i]['columnName2']+', jdbcType=VARCHAR}'+'\n        )\n       </foreach>\n      </where>\n  </delete>';

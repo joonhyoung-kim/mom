@@ -564,9 +564,9 @@ var momWidget = {
 								    	validator : function(oldValue, newValue, item) {
 							var isValid = true;
 							
-							if(colorList.indexOf(newValue) == -1) {
+						/*	if(colorList.indexOf(newValue) == -1) {
 								isValid = false;
-							}
+							}*/
 							// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
 							return { "validate" : isValid, "message"  : "Black, White, Red, Blue 만 입력 가능합니다." };
 						}                                                                    
@@ -2309,6 +2309,10 @@ var momWidget = {
 				 }
 				
 			 }
+			 if (searchType =='CP'){
+				param[searchId+'SD'] = $('#'+searchId+'SD'+(index+1)).val();
+				param[searchId+'ED'] = $('#'+searchId+'ED'+(index+1)).val();
+			}
 			 
 			 else{
 				 param[searchId] = $('#'+searchId+'SP'+(index+1)).val();
@@ -4043,7 +4047,7 @@ var momWidget = {
 				var buttonId = targetArray[0];
 				var actionType = 'C';
 		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
-					if(that.buttonProperty[index][k]['buttonId'] == buttonId){
+					if(that.buttonProperty[index][k]['buttonId']+(index+1) == buttonId){
 						actionType = that.buttonProperty[index][k]['eventType'];
 						
 					}
@@ -4213,7 +4217,13 @@ var momWidget = {
 				var extraParam = {};
 			
 				if(actionType == 'P'){
-					queryId = that.pageProperty[index]['programId']+'.'+buttonId+(index+1);
+					if(buttonId.indexOf('createBtn') >= 0) {
+ 
+					}
+					else{
+						queryId = that.pageProperty[index]['programId']+'.'+buttonId+(index+1);
+					}
+					
 				}
 				
 					
@@ -4263,41 +4273,237 @@ var momWidget = {
 				//that.popUpSizeSet(index);		
 				var popupCount = that.popupProperty[index].length;
 				var popupItem  = that.popupProperty[index];
-				for(var i=0 ;i<popupCount;i++){
+				for(var i=0,max2=popupCount;i<max2;i++){
+					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
+					let fieldValues = [];
 					if(actionType == 'C' && that.popupProperty[index][i]['insertEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){				
-						if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() ==''){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
-							 momWidget.splashHide();
-				             return;
-						} 
-					}
-					else if (actionType == 'U' && that.popupProperty[index][i]['updateEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){
-						    if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() ==''){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
-							 momWidget.splashHide();
-				             return;
-						} 
-					}
-					else if (actionType == 'P'  && that.popupProperty[index][i]['columnRequire']=='Y'){
-						    if(that.popupProperty[index][i]['popupType'] =='M'){
-							  if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						} else{
-							
-						
-						      if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() ==''){
+						if(fieldValue ==''){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
 				             return;
 						}
-						} 
+					if(that.popupProperty[index][i]['popupType'] == 'S'){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
 					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+						
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+						
+					}			
+					else{
+						
+					}	
+					}
+					else if (actionType == 'U' && that.popupProperty[index][i]['updateEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){ 
+						    if(fieldValue ==''){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						if(that.popupProperty[index][i]['popupType'] == 'S'){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
+					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+						
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+						
+					}			
 					else{
 						
 					}
+					}
+						else if (actionType == 'CP' && that.popupProperty[index][i]['updateEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){
+						    if(fieldValue ==''){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						if(that.popupProperty[index][i]['popupType'] == 'S'){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
+					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+						
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+						
+					}			
+					else{
+						
+					}
+					}
+					else if (actionType == 'P'  && that.popupProperty[index][i]['columnRequire']=='Y'){
+						  if(fieldValue ==''){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+							if(that.popupProperty[index][i]['popupType'] == 'S'){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
+					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+						
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+						
+					}			
+					else{
+						
+					}
+						 
+						
+						 
+					}
+				
 					
 				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'){
 					 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() !=''){
@@ -5245,7 +5451,7 @@ var momWidget = {
 				}
 					
 			
-			if(type == 'C') {
+			if(type == 'C' || type=='P') {
 				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {
 								
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용

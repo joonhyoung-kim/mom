@@ -7,7 +7,10 @@
 		     , MCD.DIVISION_CD
 		     , MCD.DIVISION_NM
 		     , MD.DEMAND_ID
+		     , MD.DEMAND_ID AS KEY_ID
 		     , MD.DEMAND_TYPE
+		     , MD.PRIORITY
+             , MD.DESCRIPTION
 		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MD.COMPANY_CD,MD.DIVISION_CD, 'PP0001', MD.DEMAND_TYPE, 'KR') FROM DUAL) AS DEMAND_TYPE_NM     
 		     , MD.ITEM_ID
 		     , MI.ITEM_NM
@@ -36,7 +39,7 @@
 		     , MOM_WORK_ORDER MWO
 		     , MOM_SO_DTL MSD
 		WHERE  MCD.COMPANY_CD    = MD.COMPANY_CD
-		AND    MCD.DIVISION_CD   = MCD.DIVISION_CD
+		AND    MCD.DIVISION_CD   = MD.DIVISION_CD
 		AND    MD.COMPANY_CD     = MI.COMPANY_CD
 		AND    MD.DIVISION_CD    = MI.DIVISION_CD
 		AND    MD.ITEM_ID        = MI.ITEM_ID
@@ -48,6 +51,29 @@
 		AND    MD.SALES_ORDER_ID = MSD.SALES_ORDER_ID(+)
 		AND    MD.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
 		AND    MD.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
+		AND    MD.DUE_DATE BETWEEN TO_DATE(#{dueDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{dueDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+		<if test="demandId != null and demandId != ''">
+		AND (UPPER(MD.DEMAND_ID) LIKE '%' || UPPER(#{demandId , jdbcType=VARCHAR}) || '%' )
+		</if>
+		<if test="demandType != null and demandType != ''">
+		AND MD.DEMAND_TYPE IN (${demandType})
+		</if>	
+		<if test="itemIdNm != null and itemIdNm != ''">
+	    AND (UPPER(MD.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+		</if>
+		<if test="workCenterCd != null and workCenterCd != ''">
+		AND MD.WORK_CENTER_CD IN (${workCenterCd})
+		</if>	
+		<if test="searchRemainCheck != null and searchRemainCheck != ''">		
+		  <choose>
+		 	 <when test='searchRemainCheck.equals("1")'>	 	 
+		    	<![CDATA[  	AND MD.QTY - NVL(MWO.GOOD_QTY, 0) - NVL(MWO.CANCEL_QTY,0) > 0	]]> 
+		   	 </when>
+		 	 <when test='searchRemainCheck.equals("2")'>
+		  	  	<![CDATA[  AND MD.QTY - NVL(MWO.GOOD_QTY, 0) - NVL(MWO.CANCEL_QTY,0) = 0 ]]> 
+		  	 </when>    
+		  </choose>		
+		</if>	
 		ORDER BY MCD.COMPANY_NM
 		       , MCD.DIVISION_NM
 		       , MD.DUE_DATE
@@ -78,4 +104,62 @@
 		ORDER BY MB.ITEM_ID, MB.PRIORITY
 	</select>
 
+
+  <insert id="create_defaultInfo1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_DEMAND (
+                  COMPANY_CD
+                , DIVISION_CD
+                , DEMAND_ID
+                , SALES_ORDER_ID
+                , DEMAND_TYPE
+                , ITEM_ID
+                , DUE_DATE
+                , DUE_DATE_WEEK
+                , QTY
+                , PRIORITY
+                , WORK_CENTER_CD
+                , ALLOCATE_FLAG
+                , ALLOCATE_QTY
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.demandId, jdbcType=VARCHAR}
+                , #{item.salesOrderId, jdbcType=VARCHAR}
+                , #{item.demandType, jdbcType=VARCHAR}
+                , #{item.itemId, jdbcType=VARCHAR}
+                , TO_DATE(#{item.dueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , #{item.dueDateWeek, jdbcType=VARCHAR}
+                , #{item.qty, jdbcType=NUMERIC}
+                , #{item.priority, jdbcType=NUMERIC}
+                , #{item.workCenterCd, jdbcType=VARCHAR}
+                , 'N'
+                , 0
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+     <select id="proc_defaultInfo1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL mom_demand_pkg.sp_create_manual_demand(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{demandType,       jdbcType=VARCHAR, mode=IN} 
+					                                          , #{itemId,           jdbcType=VARCHAR, mode=IN}  
+					                                          , TO_DATE(#{dueDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , #{qty,              jdbcType=NUMERIC, mode=IN}  
+					                                          , #{priority,         jdbcType=NUMERIC, mode=IN}  
+					                                          , #{workCenterCd,     jdbcType=VARCHAR, mode=IN}  
+					                                          , #{description,      jdbcType=VARCHAR, mode=IN} 
+					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
+  </select>  
 </mapper>

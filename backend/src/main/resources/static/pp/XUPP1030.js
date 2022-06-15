@@ -10,7 +10,18 @@ var VIEW= {
 	},
 	event: function(e) {
 	
-	}
+	},
+	  cellClickCallBack: function(index,e) {
+		if(index == 1){
+			var item = e.item;	
+			$('#itemId'+'DP1').val(item['itemId']);
+			$('#workCenterCd'+'DP1').val(item['workCenterCd']);
+           // $('#dropDownGridPop'+(index+1)).remove();
+			//momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080,[]);
+			 //$('#dropDownGridPop'+(index+1)).remove();
+		}
+	
+	},	
 
 	
 	
