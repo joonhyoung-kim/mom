@@ -4204,10 +4204,12 @@ var momWidget = {
 				
 			});
 			$(document).on('click', '#' + savePopBtnId, function(e) {
-				momWidget.splashShow();	
+				 
+		        momWidget.splashShow();
+	    		setTimeout(function() {	
 				var param = [];
 				var initParam ={};
-		
+		        let searchResult = true;
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
 				var buttonId   = $('#defaultPop'+(index+1)).attr('btnId');
 				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
@@ -4215,7 +4217,7 @@ var momWidget = {
 				var queryId = that.pageProperty[index]['programId']+'.defaultInfo'+(index+1);
 				var buttonParam = [];
 				var extraParam = {};
-			
+				var validateCheck = true;
 				if(actionType == 'P'){
 					if(buttonId.indexOf('createBtn') >= 0) {
  
@@ -4276,13 +4278,14 @@ var momWidget = {
 				for(var i=0,max2=popupCount;i<max2;i++){
 					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
 					let fieldValues = [];
-					if(actionType == 'C' && that.popupProperty[index][i]['insertEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){				
-						if(fieldValue ==''){
+					
+					if(actionType == 'C' ){				
+						if(that.popupProperty[index][i]['columnRequire']=='Y' && fieldValue ==''){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
 				             return;
 						}
-					if(that.popupProperty[index][i]['popupType'] == 'S'){
+					if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
 						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						let containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
@@ -4298,7 +4301,7 @@ var momWidget = {
 					}
 					
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+					else if(that.popupProperty[index][i]['popupType'] == 'M' && fieldValue !=''){
 						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
@@ -4322,23 +4325,70 @@ var momWidget = {
 				         return;
 					}
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+					else if(that.popupProperty[index][i]['popupType'] == 'SS' && fieldValue !=''){
 						
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+							      if(result != 'SUCCESS' || data.length ==0) {
+							    	  searchResult = false;
+							    	  momWidget.splashHide();
+									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+								      return ;							     
+							      }	
+							       
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+									       break;
+										}
+										searchResult = false;
+							    	  
+									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+									  
+		                			
+	    						
+								 }
+							      
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
+						
+						 return;
+					}		      		
+				}
+				
 					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+					else if(that.popupProperty[index][i]['popupType'] == 'MS' && fieldValue !=''){
 						
 					}			
 					else{
 						
 					}	
 					}
-					else if (actionType == 'U' && that.popupProperty[index][i]['updateEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){ 
-						    if(fieldValue ==''){
+					else if (actionType == 'U' ){ 
+						    if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
 				             return;
 						} 
-						if(that.popupProperty[index][i]['popupType'] == 'S'){
+						if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
 						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						let containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
@@ -4354,7 +4404,7 @@ var momWidget = {
 					}
 					
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
 						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
@@ -4378,23 +4428,70 @@ var momWidget = {
 				         return;
 					}
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+		else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
+						   
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+							      if(result != 'SUCCESS' || data.length ==0) {
+							    	  searchResult = false;
+							    	  momWidget.splashHide();
+									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+								      return ;							     
+							      }	
+							       
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+									       break;
+										}
+										searchResult = false;
+							    	  
+									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+									  
+		                			
+	    						
+								 }
+							      
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
 						
+						 return;
+					}		      		
+				}
+				
 					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
 						
 					}			
 					else{
 						
 					}
 					}
-						else if (actionType == 'CP' && that.popupProperty[index][i]['updateEditFlag'] == 'Y'&& that.popupProperty[index][i]['columnRequire']=='Y'){
-						    if(fieldValue ==''){
+						else if (actionType == 'CP' ){
+						    if(fieldValue ==''&&that.popupProperty[index][i]['columnRequire']=='Y'){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
 				             return;
 						} 
-						if(that.popupProperty[index][i]['popupType'] == 'S'){
+						if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
 						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						let containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
@@ -4410,7 +4507,7 @@ var momWidget = {
 					}
 					
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
 						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
@@ -4434,23 +4531,68 @@ var momWidget = {
 				         return;
 					}
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+							      if(result != 'SUCCESS' || data.length ==0) {
+							    	  searchResult = false;
+							    	  momWidget.splashHide();
+									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+								      return ;							     
+							      }	
+							       
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+									       break;
+										}
+										searchResult = false;
+							    	  
+									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+									  
+		                			
+	    						
+								 }
+							      
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
 						
+						 return;
+					}		      		
+				}
 					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
 						
 					}			
 					else{
 						
 					}
 					}
-					else if (actionType == 'P'  && that.popupProperty[index][i]['columnRequire']=='Y'){
-						  if(fieldValue ==''){
+					else if (actionType == 'P' ){
+						  if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
 				             return;
 						} 
-							if(that.popupProperty[index][i]['popupType'] == 'S'){
+							if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
 						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						let containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
@@ -4466,7 +4608,7 @@ var momWidget = {
 					}
 					
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'){
+					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
 						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
@@ -4490,10 +4632,55 @@ var momWidget = {
 				         return;
 					}
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'){
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+							      if(result != 'SUCCESS' || data.length ==0) {
+							    	  searchResult = false;
+							    	  momWidget.splashHide();
+									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+								      return ;							     
+							      }	
+							       
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+									       break;
+										}
+										searchResult = false;
+							    	  
+									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+									  
+		                			
+	    						
+								 }
+							      
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
 						
+						 return;
+					}		      		
+				}
 					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'){
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
 						
 					}			
 					else{
@@ -4505,19 +4692,20 @@ var momWidget = {
 					}
 				
 					
-				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'){
-					 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim() !=''){
+				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'&& fieldValue !=''){
+				
 						  if(isNaN(Number($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim()))==true){
 							  momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' 숫자입력!'});
 							 momWidget.splashHide();
 				             return;
 						  }
-					 }						
+					 						
 				    }
 					
 				}
-				  //var actionType = $('#defaultPop1').attr('actionType');				 
-				  mom_ajax(actionType, queryId,param, function(result, data) {
+				
+					
+						 mom_ajax(actionType, queryId,param, function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
@@ -4538,6 +4726,8 @@ var momWidget = {
 						  momWidget.splashHide();
 					      return;
 		          }, undefined, index, this, false);
+							 
+				 },500);
 				  
 			
 				

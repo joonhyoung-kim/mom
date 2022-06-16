@@ -560,6 +560,7 @@ var XUSM3030 = {
 			, 'enableDrop' : true
 			, fixedColumnCount : 2
 			, editableOnFixedCell: true
+			, resetHScroll: false
 		};
 		 columnProp = data;
 		 AUIGrid.destroy('#grid1', columnProperty, gridProperty);

@@ -37,10 +37,10 @@
 		    AND ML.PLANT_CD IN (${plantNm})
 			</if>
 			<if test="locationCd != null and locationCd != ''">
-			AND (ML.LOCATION_CD LIKE '%' || TRIM(UPPER(#{locationCd, jdbcType=VARCHAR})) || '%' )
+			AND (UPPER(ML.LOCATION_CD) LIKE '%' || UPPER(#{locationCd, jdbcType=VARCHAR}) || '%' )
 			</if>
 			<if test="locationNm != null and locationNm != ''">
-		    AND (ML.LOCATION_NM LIKE '%' || TRIM(UPPER(#{locationNm, jdbcType=VARCHAR})) || '%' )
+		    AND (UPPER(ML.LOCATION_NM) LIKE '%' || UPPER(#{locationNm, jdbcType=VARCHAR}) || '%' )
 			</if>
 		    <if test="locationTypeNm != null and locationTypeNm != ''">
 			AND ML.LOCATION_TYPE IN (${locationTypeNm})
