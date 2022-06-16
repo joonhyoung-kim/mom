@@ -9,7 +9,14 @@ var VIEW= {
 		that.event();
 	},
 	event: function(e) {
-	
+	AUIGrid.bind('#grid1', 'cellEditBegin', function(e) {
+			if(e.dataField == 'workCenterCd' || e.dataField == 'priority') {
+				if(e.item.modifyYn =='N'){
+					return false;
+				}
+				//AUIGrid.setCellValue('#grid1', e.rowIndex, 'dropdownParam', e.item['dropdownDetail'] );
+			}
+		});
 	},
 	  cellClickCallBack: function(index,e) {
 		if(index == 1){
@@ -22,6 +29,7 @@ var VIEW= {
 		}
 	
 	},	
+			
 
 	
 	
@@ -29,7 +37,5 @@ var VIEW= {
 
 $(document).ready(function(event){	
 	momWidget.init(1, menuId, VIEW);	
-	momWidget.init(2, menuId, VIEW);	
-    momWidget.init(3, menuId, VIEW);	
 	VIEW.init();
 });

@@ -30,9 +30,12 @@
 		     , MD.UPDATE_BY
 		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MD.COMPANY_CD, MD.DIVISION_CD, MD.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
 		     , TO_CHAR(MD.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-		     , CASE WHEN NVL(MWO.GOOD_QTY, 0) > 0 THEN 'N' 
+		   <!--   , CASE WHEN NVL(MWO.GOOD_QTY, 0) > 0 THEN 'N' 
 		       ELSE 'Y'
-		       END               AS MODIFY_YN  
+		       END               AS MODIFY_YN   -->
+		       ,  CASE WHEN NVL(MD.QTY,0) >100 THEN 'N'
+		          ELSE 'Y'
+		          END AS MODIFY_YN
 		FROM   MOM_COM_DIV_V MCD
 		     , MOM_DEMAND MD
 		     , MOM_ITEM   MI
