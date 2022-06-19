@@ -6,7 +6,34 @@ var VIEW= {
 	  
 	init: function() {	
 		that = this;	
-		that.event();
+		//that.event();
+	},
+		saveCallInit: function(index,your,action,btnId,param,result) {
+			   if(index ==0 && btnId =='saveBtnDP' && action=='C' ){		           
+					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
+		
+			/*	        for(var i=0;i<gridItems.length;i++){
+					         gridItems[i]['msgType']     = $("#msgType2").val();
+					         gridItems[i]['msgCd']       = $("#msgCd2").val();					         
+					        
+					    }*/
+					     param[0]['borId'] = '1';
+			             result.param = param;
+        
+	    }
+	     else if(index ==0 && btnId =='saveBtnDP' && action=='U' ){		           
+					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
+		
+			/*	        for(var i=0;i<gridItems.length;i++){
+					         gridItems[i]['msgType']     = $("#msgType2").val();
+					         gridItems[i]['msgCd']       = $("#msgCd2").val();					         
+					        
+					    }*/
+					     param[0]['borId'] = items[0]['item']['borId'];
+			             result.param = param;
+        
+	    }
+
 	}
 	
 };

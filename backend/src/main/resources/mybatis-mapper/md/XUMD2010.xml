@@ -1,35 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD2010">
-   <select id="get_totalCount1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-             SELECT COUNT(*) AS TOTAL_COUNT
-		     FROM   MOM_COM_DIV_V MCD
-		          , MOM_ITEM MI
-			 WHERE  MCD.COMPANY_CD  = MI.COMPANY_CD
-			 AND    MCD.DIVISION_CD = MI.DIVISION_CD    
-			 AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
-		     AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  			
-			 <if test="itemId != null and itemId != ''">
-			 AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
-			 </if>
-			 <if test="itemNm != null and itemNm != ''">
-		     AND (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm , jdbcType=VARCHAR}) || '%' )
-			 </if>
-			 <if test="itemType != null and itemType != ''">
-		     AND MI.ITEM_TYPE IN (${itemType})
-			 </if>
-			 <if test="itemSpec != null and itemSpec != ''">
-		     AND (MI.ITEM_SPEC LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' )
-			 </if>
-		     <if test="useYn != null and useYn != ''">
-		     AND MI.USE_YN = #{useYn, jdbcType=VARCHAR}
-			 </if>
-			ORDER BY MCD.COMPANY_NM,  MCD.DIVISION_NM, MI.ITEM_ID 				
- </select>
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
      SELECT * 
 	  FROM ( SELECT ROWNUM AS KEY_ID
                  , A.*
+                 , COUNT(*) OVER() AS TOTAL_COUNT
                  <!--  , COUNT(*) OVER() AS ROW_COUNT  -->
       FROM ( SELECT MI.ITEM_ID
 			      , MI.ITEM_NM

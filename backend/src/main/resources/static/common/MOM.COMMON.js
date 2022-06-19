@@ -1831,6 +1831,7 @@ function excelUploadGrid(file, grid) {
         }
         if(refreshFlag) {
         	AUIGrid.setGridData(grid, excelData);
+        	AUIGrid.updateRowBlockToValue(grid, 0, excelData.length, "validateYn", "N");
         	
         } else {
         	AUIGrid.addRow(grid, excelData, 'last') //20210305 / pyj /웹 엑셀 업로드시 초기화 아닌 기존 row에 대한 add

@@ -1,80 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD3010">
-	 <select id="get_totalCount1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	                     SELECT COUNT (A.UNIT_PRICE) AS TOTAL_COUNT
-FROM   (SELECT MCD.COMPANY_CD
-             , MCD.COMPANY_NM
-             , MCD.DIVISION_CD
-             , MCD.DIVISION_NM
-             , MUP.PRICE_CATEGORY
-             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0011', MUP.PRICE_CATEGORY, 'KR') FROM DUAL) AS PRICE_CATEGORY_NM     
-             , MUP.PARTNER_CD
-             , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.PARTNER_CD) FROM DUAL ) AS PARTNER_NM
-             , MUP.ITEM_ID
-             , MI.ITEM_NM
-             , MI.ITEM_SPEC
-             , MI.PURCHASE_UNIT 
-             , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.PURCHASE_UNIT) FROM DUAL) AS PURCHASE_UNIT_NM     
-             , MI.UNIT 
-              , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MI.COMPANY_CD,MI.DIVISION_CD, MI.UNIT) FROM DUAL) AS UNIT_NM     
-             , MUP.CURRENCY_CD
-             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'SM0017', MUP.CURRENCY_CD, 'KR') FROM DUAL) AS CURRENCY_NM   
-             , MUP.PREV_UNIT_PRICE
-             , MUP.UNIT_PRICE
-             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD') AS START_DATE 
-             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD')   AS END_DATE
-             , MUP.PRICE_TYPE
-             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
-             , MUP.MAIN_PARTNER_YN
-             , MUP.USE_YN
-             , MUP.DESCRIPTION
-             , MUP.UPDATE_BY
-             , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MUP.COMPANY_CD, MUP.DIVISION_CD, MUP.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
-             , TO_CHAR(MUP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-        FROM   MOM_COM_DIV_V MCD
-             , MOM_UNIT_PRICE MUP
-             , MOM_ITEM MI
-        WHERE  MCD.COMPANY_CD  = MUP.COMPANY_CD
-        AND    MCD.DIVISION_CD = MUP.DIVISION_CD
-        AND    MUP.COMPANY_CD  = MI.COMPANY_CD
-        AND    MUP.DIVISION_CD = MI.DIVISION_CD
-        AND    MUP.ITEM_ID     = MI.ITEM_ID       
-       <if test="priceCategory != null and priceCategory != ''">
-	    AND MUP.PRICE_CATEGORY = #{priceCategory, jdbcType=VARCHAR}
-	   </if>     
-       <if test="partnerCd != null and partnerCd != ''">
-	   AND MUP.PARTNER_CD = #{partnerCd, jdbcType=VARCHAR}
-	   </if>
-	   <if test="searchKey != null and searchKey != ''">
-	   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
-	   </if>
-	   <if test="customerItemId != null and customerItemId != ''">
-	   AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
-	   </if>
-	   <if test="itemId != null and itemId != ''">
-	   AND (UPPER(MUP.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
-	   </if>
-	   <if test="itemNm != null and itemNm != ''">
-	   AND (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm, jdbcType=VARCHAR}) || '%' )
-	   </if>
-	   <if test="useYn != null and useYn != ''">
-	   AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
-	   </if>    
-	   <if test="basicDate != null and basicDate != ''">   
-	     <![CDATA[           
-	     AND    (MUP.START_DATE <= TO_DATE(#{basicDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{basicDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') <= MUP.END_DATE  )  
-	     ]]>
-	   </if>    
-       ) A
-	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID 						
-   </select> 
 
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
    	     	SELECT * 
       FROM (  
 		 SELECT ROWNUM AS KEY_ID
 	           ,ROWNUM AS ID
+	           , COUNT(*) OVER() AS TOTAL_COUNT
 	           ,A.*
 FROM   (SELECT MCD.COMPANY_CD
              , MCD.COMPANY_NM

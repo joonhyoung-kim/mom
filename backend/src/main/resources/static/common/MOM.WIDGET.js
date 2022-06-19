@@ -487,10 +487,11 @@ var momWidget = {
 										  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'
 										  		    , visible       : true
 						                     }); 
-						 if(widthUse == 'Y'){			    		  
+						 
+				
+			    	         if(widthUse == 'Y'){			    		  
 			    		     excelUploadProp[excelUploadProp.length - 1].width = that.columnProperty[index][i]['columnWidth'];
-			    	   }
-						                     
+			    	   }       
 						}
 			    	 
 			    	   if(widthUse == 'Y'){
@@ -646,6 +647,17 @@ var momWidget = {
 					}
 			        that.sortingInfo[index] = sortTmp;		     
 	          	    that.excelDownProperty[index]   = excelDownProp; 
+					excelUploadProp.unshift({
+										    	      dataField 	: 'validateYn'
+										  			, headerText 	: '검사여부' 
+										  			, headerStyle   : "my-header-style-default"
+											   		, dataType      : 'string'
+						    	                    , editable      :  false
+										  			, style			: 'aui-grid-default-column-center'
+										  		    , visible       : false
+						                     }); 
+			    		
+			    	   
 			   	    that.excelUploadProperty[index] = excelUploadProp; 
 					var excelUploadProp = that.excelUploadProperty[index];				
 					that.excelDownGrid[index]   = AUIGrid.create('#excelGrid' + (index + 1), that.excelDownProperty[index], that.gridProperty[index]);	
@@ -690,13 +702,13 @@ var momWidget = {
 		    if(that.gridProperty[index][0]['usePaging'] ==true){ //페이징사용
 				if(that.gridExtraProperty[index]['initSearch']=='Y'){
 				 // that.backWork[index] = 'Y';		
-				  that.findBtnClicked(index, {}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);	
+				  that.findBtnClicked(index,  {startPage:1,endPage:1}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);	
 		    	  that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',momWidget.pageProperty[0]['programId'],your);
 		    	//  that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
 		    	}
 		    	else{
 			      that.backWork[index] = 'Y';
-			      that.findBtnClicked(index, {}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);			
+			      that.findBtnClicked(index,  {startPage:1,endPage:1}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);			
 			  	  that.findBtnClicked(index, {}, true, 'BACK',momWidget.pageProperty[0]['programId'],your);
 				}
 			  
@@ -2090,7 +2102,7 @@ var momWidget = {
         	/*  param.startPage = that.startPage[index]; 
               praram.endPage  = that.endPage[index];*/
               if(btnId=='TOTAL'){
-	  				queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.totalCount'+(index+1) : menuId+'.totalCount'+(index+1);
+	  				//queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.totalCount'+(index+1) : menuId+'.totalCount'+(index+1);
 			  }
               setTimeout(function() {
             	  //that.splashShow();
@@ -2151,19 +2163,35 @@ var momWidget = {
 								var rightLastBtnHtml = '<span class ="aui-grid-paging-number aui-grid-paging-last">'+'>'+'</span>'; 
 								var startPage= 1;
 				 				var endPage = 1; 
-								if (pageTotalNum >1){
-									for(var i = 1, max = 10; i<= max; i++){
+				 				
+				 				if(pageTotalNum<=10){
+										for(var i = 1, max = pageTotalNum; i<= max; i++){
+														pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';
+														if(i==pagingBtnHtml){
+															break;
+														}
+														
+													   }
+													    $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty();
+								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);
+							       $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingInfoHtml); 
+								}
+				 			
+								  
+								else if ( 10< pageTotalNum){
+										for(var i = 1, max = 10; i<= max; i++){
 									pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';
 									if(i==pagingBtnHtml){
 										break;
 									}
 									
 								   }
-								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty();
+								  	    $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty();
 								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);
+							       $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingInfoHtml); 
 								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightNextBtnHtml);
 					               $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightLastBtnHtml);
-					               $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingInfoHtml); 
+					           
 									/*	$('.aui-grid-paging-panel').append(pagingBtnHtml);
 										$('.aui-grid-paging-panel').append(rightNextBtnHtml);
 										$('.aui-grid-paging-panel').append(rightLastBtnHtml);*/
@@ -2813,7 +2841,8 @@ var momWidget = {
         var maxItemWidthNum = 0;
         var searchDropdownParam =[];
         var popupDropdownParam =[];
-		  for(var i=0,max=that.searchProperty[index].length; i<max;i++){
+        if (momWidget.searchProperty.length > 0){
+	  for(var i=0,max=that.searchProperty[index].length; i<max;i++){
 			 searchType = that.searchProperty[index][i]['searchType'];
 			 searchId = that.searchProperty[index][i]['searchId'];
 			 searchHeaderDropdownId  = that.searchProperty[index][i]['headerDropdownId'];
@@ -2941,7 +2970,9 @@ var momWidget = {
 		
 		
 			}
-
+		}
+		
+		if (momWidget.popupProperty.length > 0){
 
 		  for(var j=0,max2=that.popupProperty[index].length; j<max2;j++){
 			
@@ -3045,7 +3076,7 @@ var momWidget = {
 						        
 		}
 			
-			
+			}
 	
 	
 
@@ -3480,7 +3511,7 @@ var momWidget = {
 		    
 		  $(document).on('click', '#' + findBtnId, function(e) {  
 			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(index, {}, true, 'TOTAL',that.pageProperty[index]['programId'],your);	
+			     that.findBtnClicked(index, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
 		    	 that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
 		    }	
 		    else{
@@ -3801,6 +3832,9 @@ var momWidget = {
 							 if(value == undefined){
 								value = '';
 							 }
+							  if(value == 'Y'&&dataField=='validateYn'){
+								 return 'excel-upload-danger';
+							 }
 						     if(dataTypeColumns[dataField]=='string'){
 							      if(value != undefined){     
 								   		dataTypePass[dataField] = 'Y';
@@ -3857,7 +3891,7 @@ var momWidget = {
 					 });
 			
 							}
-						var totalCount =  AUIGrid.getRowCount(that.excelUpGrid[index]);
+					/*	var totalCount =  AUIGrid.getRowCount(that.excelUpGrid[index]);
 						successCount = totalCount - failCount;
 						var checkedGridProp = that.excelUpGridProperty[index];
 						var checkedColumnLayout	= AUIGrid.getColumnLayout(that.excelUpGrid[index]);
@@ -3873,7 +3907,13 @@ var momWidget = {
 						}
 						AUIGrid.destroy(that.excelUpGrid[index]);
 	 				 	AUIGrid.create(that.excelUpGrid[index],checkedColumnLayout,checkedGridProp);
-	 				 	AUIGrid.setGridData(that.excelUpGrid[index],checkedGridData);
+	 				 	AUIGrid.setGridData(that.excelUpGrid[index],checkedGridData);*/
+
+	 			
+			
+						//AUIGrid.setGridData(that.excelUpGrid[index],excelupGridData);
+						
+	 				 	
 	 				    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
 /*	 				     successCount = 0;
 	 				     failCount = 0;*/
@@ -4279,7 +4319,8 @@ var momWidget = {
 					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
 					let fieldValues = [];
 					
-					if(actionType == 'C' ){				
+					if(actionType == 'C' ){		
+						 let containsYn = 'Y';		
 						if(that.popupProperty[index][i]['columnRequire']=='Y' && fieldValue ==''){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
@@ -4287,7 +4328,7 @@ var momWidget = {
 						}
 					if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
 						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
+						containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
 							if(comboBoxItems[j]['value'] == fieldValue){
 								containsYn = 'Y';
@@ -4383,6 +4424,7 @@ var momWidget = {
 					}	
 					}
 					else if (actionType == 'U' ){ 
+						    let containsYn = 'Y';
 						    if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG0013')});
 							 momWidget.splashHide();
@@ -4390,7 +4432,7 @@ var momWidget = {
 						} 
 						if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
 						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
+					    containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
 							if(comboBoxItems[j]['value'] == fieldValue){
 								containsYn = 'Y';
@@ -4748,6 +4790,8 @@ var momWidget = {
 				
 				if(isCheckCol == true){
 					if (param.length == 0){
+						  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '체크해주세요!'});
+					  momWidget.splashHide();
 					      return;	
 					}			
 										

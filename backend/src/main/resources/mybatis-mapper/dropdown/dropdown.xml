@@ -195,6 +195,9 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
+   <if test="searchKey != null and searchKey != ''">
+   AND (WORK_CENTER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR WORK_CENTER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
    ORDER BY LABEL    
 </select>
 <select id="get_DD00023" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
@@ -222,6 +225,9 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
+   <if test="searchKey != null and searchKey != ''">
+   AND (ROUTING_ID LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR ROUTING_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
    ORDER BY LABEL
 </select>
 <select id="get_DD00026" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   

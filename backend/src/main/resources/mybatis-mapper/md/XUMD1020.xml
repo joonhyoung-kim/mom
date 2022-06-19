@@ -26,7 +26,7 @@
 			     , ML.CREATE_BY
 			     , ML.CREATE_DATE
 			     , ML.UPDATE_BY
-			     , ML.UPDATE_DATE
+			     , ML.UPDATE_DATE 
 			FROM   MOM_COM_DIV_V MCD  
 			     , MOM_LOCATION ML
 			WHERE  MCD.COMPANY_CD  = ML.COMPANY_CD

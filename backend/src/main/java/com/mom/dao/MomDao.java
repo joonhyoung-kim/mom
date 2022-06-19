@@ -48,7 +48,7 @@ public class MomDao {
 	
 	public List<Map<String,Object>> getMapList(String query, Map<String,Object> param) {
 		PrintUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		//PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
@@ -168,7 +168,7 @@ public class MomDao {
 	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param)  {
 		ProgressInfo.successCount = 0;
 		PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		//PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		 System.out.println("크리에이트!");
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
@@ -279,7 +279,6 @@ public class MomDao {
 	public List<Map<String, Object>> upsertMapList(String query, List<Map<String,Object>> param) {
 		//PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
 		//PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
-		 System.out.println("업서트!");
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
@@ -296,17 +295,17 @@ public class MomDao {
         	try {
         	      sqlSession1 = sqlSessionFactory.openSession(); 		
         	      //sqlSession1 = SqlSessionFactorys.setSqlSession();
-        	      System.out.println("총데이터="+paramSize);
+        	      //System.out.println("총데이터="+paramSize);
         	      if(paramSize>=1000) {
         	    	  ProgressInfo.useYn = true;
         	    	  // 데이터가 1000 건이상일떄         	    	  
-        	    	  System.out.println("1000건이상데이터!");
+        	    	  //System.out.println("1000건이상데이터!");
         	    	  int upsertCount = paramSize/1000;                     // 총 upsert 실행횟수
         	    	  int upsertRemainCount = paramSize - upsertCount*1000; // 잔여 데이터 개수
         	    	  int splitCount  = 0;                                  // 누적 upsert 실행횟수
-        	          System.out.println("1000개단위 쿼리실행수="+upsertCount);
-        	          System.out.println("1000개단위 잔여개수="+upsertRemainCount);
-        	          System.out.println("누적 스플릿 카운트="+splitCount);
+        	          //System.out.println("1000개단위 쿼리실행수="+upsertCount);
+        	          //System.out.println("1000개단위 잔여개수="+upsertRemainCount);
+        	          //System.out.println("누적 스플릿 카운트="+splitCount);
         	    	  List<Map<String,Object>> splitParam = null;
         	    	  
         	    	  for(int i=0;i<upsertCount;i++) {                     
@@ -342,7 +341,7 @@ public class MomDao {
         	    	     resultCount = sqlSession1.insert(query, param);
         	      }
     			
-    			  System.out.println("성공 카운트="+resultCount);
+    			  //System.out.println("성공 카운트="+resultCount);
 	        			if(resultCount != 0) {	        				
 	        				//sqlSession1.commit();
 	        				if(param.get(0).get("commitYn")!=null) {
@@ -351,10 +350,10 @@ public class MomDao {
 		        					dataSourceTransactionManager.commit(transactionStatus);
 		        					sqlSession1.flushStatements();          	
 		        	            	sqlSession1.close();  
-		        		        	System.out.println("UPSERT 커밋성공!");
+		        		        	//System.out.println("UPSERT 커밋성공!");
 		        				} 
 	        				}	        			       	        	
-	        				System.out.println("UPSERT 커밋안함!");
+	        				//System.out.println("UPSERT 커밋안함!");
 	            		}
 	        			else {	   
 	        				   System.out.println("UPSERT 실패 카운트="+resultCount);

@@ -165,4 +165,73 @@
 					                                          , #{description,      jdbcType=VARCHAR, mode=IN} 
 					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
+  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+      MERGE INTO MOM_DEMAND 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.demandId, jdbcType=VARCHAR} as demandId,
+                            #{item.salesOrderId, jdbcType=VARCHAR} as salesOrderId,
+                            #{item.demandType, jdbcType=VARCHAR} as demandType,
+                            #{item.itemId, jdbcType=VARCHAR} as itemId,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as dueDate,
+                            #{item.dueDateWeek, jdbcType=VARCHAR} as dueDateWeek,
+                            #{item.qty, jdbcType=NUMERIC} as qty,
+                            #{item.priority, jdbcType=NUMERIC} as priority,
+                            #{item.workCenterCd, jdbcType=VARCHAR} as workCenterCd,
+                            #{item.allocateFlag, jdbcType=VARCHAR} as allocateFlag,
+                            #{item.allocateQty, jdbcType=NUMERIC} as allocateQty,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 DEMAND_ID = PARAM.demandId )
+            WHEN MATCHED THEN 
+                 UPDATE SET PRIORITY = PARAM.priority
+                          , WORK_CENTER_CD = PARAM.workCenterCd
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , DEMAND_ID
+                            , SALES_ORDER_ID
+                            , DEMAND_TYPE
+                            , ITEM_ID
+                            , DUE_DATE
+                            , DUE_DATE_WEEK
+                            , QTY
+                            , PRIORITY
+                            , WORK_CENTER_CD
+                            , ALLOCATE_FLAG
+                            , ALLOCATE_QTY
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.demandId
+                            , PARAM.salesOrderId
+                            , PARAM.demandType
+                            , PARAM.itemId
+                            , PARAM.dueDate
+                            , PARAM.dueDateWeek
+                            , PARAM.qty
+                            , PARAM.priority
+                            , PARAM.workCenterCd
+                            , PARAM.allocateFlag
+                            , PARAM.allocateQty
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>
 </mapper>
