@@ -104,7 +104,7 @@
 			AND    MBP.BOR_ID       = #{borId , jdbcType=VARCHAR}
 			ORDER BY  MBP.OPERATION_ID
 	</select>
-   <insert id="create_defaultInfo1" parameterType="java.util.List">
+<!--    <insert id="create_defaultInfo1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_BOR (
                   COMPANY_CD
@@ -146,7 +146,21 @@
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
               )
    </foreach>
-  </insert>
+  </insert> -->
+       <select id="proc_defaultInfo1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL mom_demand_pkg.sp_create_manual_demand(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{demandType,       jdbcType=VARCHAR, mode=IN} 
+					                                          , #{itemId,           jdbcType=VARCHAR, mode=IN}  
+					                                          , TO_DATE(#{dueDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , #{qty,              jdbcType=NUMERIC, mode=IN}  
+					                                          , #{priority,         jdbcType=NUMERIC, mode=IN}  
+					                                          , #{workCenterCd,     jdbcType=VARCHAR, mode=IN}  
+					                                          , #{description,      jdbcType=VARCHAR, mode=IN} 
+					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
+  </select>  
   <update id="modify_defaultInfo1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_BOR
