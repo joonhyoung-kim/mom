@@ -34,6 +34,7 @@
 	     , CONNECT_BY_ROOT(MB.CHILD_ITEM_ID)             AS BOM_ROOT
 	     , SYS_CONNECT_BY_PATH(MB.CHILD_ITEM_ID, ' -> ') AS BOM_PATH
 	     , CONNECT_BY_ISLEAF                             AS BOM_LEAF
+	     , MB.USE_YN 
 	FROM   MOM_COM_DIV_V MCD
 	     , MOM_BOM MB
 	     , MOM_ITEM MI
@@ -145,8 +146,8 @@
                             #{item.parentItemId, jdbcType=VARCHAR} as parentItemId,
                             #{item.childItemId, jdbcType=VARCHAR} as childItemId,
                             #{item.reqQty, jdbcType=NUMERIC} as reqQty,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as startDate,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as endDate,
+                            TO_DATE(#{item.startDate, jdbcType=VARCHAR},'YYYY-MM-DD') as startDate,
+                            TO_DATE(#{item.endDate, jdbcType=VARCHAR},'YYYY-MM-DD') as endDate,
                             NVL(#{item.phantomFlag, jdbcType=VARCHAR},'N') as phantomFlag,
                             NVL(#{item.mrpFlag, jdbcType=VARCHAR},'Y') as mrpFlag,
                             NVL(#{item.issueType, jdbcType=VARCHAR},'A') as issueType,

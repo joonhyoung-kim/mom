@@ -341,8 +341,41 @@ var momWidget = {
 			      }
 			      
 			     // searchAreaHtml = searchAreaHtml.replace(/#{searchAreaClass}/gi, classItem[0].searchAreaClass).replace(/#{searchItemClass}/gi, classItem[0].searchItemClass).replace(/#{labelBoxClass}/gi, classItem[0].labelBoxClass).replace(/#{circelClass}/gi, classItem[0].circelClass).replace(/#{labelTextClass}/gi, classItem[0].labelTextClass)replace(/#{searchNm}/gi, classItem[0].searchNm).replace(/#{labelField}/gi, classItem[0].labelField);
-			   		     
-			      var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+			 
+				   if(that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['usePaging']== true){
+					if(searchStyle =='h00'){
+						 var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+					}
+					else if(searchStyle =='h01'){
+						 var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+					} 
+					else if(searchStyle =='h02'){
+						 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+					} 
+					else if(searchStyle =='h03'){
+						 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+					} 
+				 
+				 }
+				 else{
+						if(searchStyle =='h00'){
+						 var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+					}
+					else if(searchStyle =='h01'){
+						  var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+					} 
+					else if(searchStyle =='h02'){
+						 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+					} 
+					else if(searchStyle =='h03'){
+						 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+					} 
+					
+				}
+				
+				
+			   
+			    
 			      var gridTabRightHtml = that.createGridTabArea.rightTab(index+1,that.buttonProperty[index]);
 			      var gridTabLeftHtml  = that.createGridTabArea.leftTab(index+1,that.gridExtraProperty[index]['gridTitle'],that.buttonProperty[index]);			      
 			      var widthUse = 'Y';
@@ -647,7 +680,7 @@ var momWidget = {
 					}
 			        that.sortingInfo[index] = sortTmp;		     
 	          	    that.excelDownProperty[index]   = excelDownProp; 
-					excelUploadProp.unshift({
+				/*	excelUploadProp.unshift({
 										    	      dataField 	: 'validateYn'
 										  			, headerText 	: '검사여부' 
 										  			, headerStyle   : "my-header-style-default"
@@ -655,7 +688,7 @@ var momWidget = {
 						    	                    , editable      :  false
 										  			, style			: 'aui-grid-default-column-center'
 										  		    , visible       : false
-						                     }); 
+						                     }); */
 			    		
 			    	   
 			   	    that.excelUploadProperty[index] = excelUploadProp; 
@@ -1449,10 +1482,34 @@ var momWidget = {
 			return html;
 		},
 	createGridArea: {
+		h00 : function(index,gridId,gridSizeClass) {
+	    var html   =	'<div class='+gridSizeClass+'>'
+		           +     '<div class = "gridTab'+index+'"></div>'
+	               +     '<div class = "grid-box'+index+'-h00">'
+	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
+	        	   +     '</div></div>';
+			return html;
+		},
 		h01 : function(index,gridId,gridSizeClass) {
 	    var html   =	'<div class='+gridSizeClass+'>'
 		           +     '<div class = "gridTab'+index+'"></div>'
-	               +     '<div class = "grid-box'+index+'">'
+	               +     '<div class = "grid-box'+index+'-h01">'
+	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
+	        	   +     '</div></div>';
+			return html;
+		},
+		h02 : function(index,gridId,gridSizeClass) {
+	    var html   =	'<div class='+gridSizeClass+'>'
+		           +     '<div class = "gridTab'+index+'"></div>'
+	               +     '<div class = "grid-box'+index+'-h02">'
+	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
+	        	   +     '</div></div>';
+			return html;
+		},
+		h03 : function(index,gridId,gridSizeClass) {
+	    var html   =	'<div class='+gridSizeClass+'>'
+		           +     '<div class = "gridTab'+index+'"></div>'
+	               +     '<div class = "grid-box'+index+'-h03">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
 	        	   +     '</div></div>';
 			return html;
@@ -2653,7 +2710,13 @@ var momWidget = {
 			$('.slide').css('background','red !important');
 				alert('감지!');
 		});*/
+		AUIGrid.bind(momWidget.grid[index], "ready", function(e) {
+			let scrollbar = $(e.pid).find('.aui-hscrollbar');
+		   if(scrollbar[0]!=undefined && scrollbar.css('display') !='none'){
 		
+			//alert('스크롤바있음');
+		   }
+		});
 		$(document).on('click', '#upBtn1', function() {
 			AUIGrid.moveRowsToUp(momWidget.grid[index]);
 		
@@ -4693,18 +4756,20 @@ var momWidget = {
 									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
 								      return ;							     
 							      }	
-							       
+							       	searchResult = false;
 							      for(var z=0,max7=data.length;z<max7;z++){
 								      if(data[z]['code'] == searchString){
 									       break;
+									       searchResult = true;
 										}
-										searchResult = false;
-							    	  
-									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+										}
+									
+							    	    
+									   
 									  
 		                			
 	    						
-								 }
+								 
 							      
 							      //$('#'+popupId).jqxComboBox({source: data});
 							   
@@ -4717,7 +4782,7 @@ var momWidget = {
 							      		
 							      		
 					if(!searchResult) {
-						
+						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
 						 return;
 					}		      		
 				}
@@ -4951,7 +5016,7 @@ var momWidget = {
 		  for(var i=0;i<that.popupProperty[index].length;i++){
 			    popupId = that.popupProperty[index][i]['popupId'];
 				searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
-			if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
+		/*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
 				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
 				for(var j=0;j<checkedItem.length;j++){
 					 mapItem[popupId] = checkedItem[j]['value'];
@@ -4961,6 +5026,14 @@ var momWidget = {
 			
 				}
 			
+				param[popupId]= listItem;
+			}*/
+				if( Object.keys(extraParam).length >0){			
+					 mapItem[popupId] = $('#'+searchId).val();
+					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
+					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
+					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
+
 				param[popupId]= listItem;
 			}
 			else{

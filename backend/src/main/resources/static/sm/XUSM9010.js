@@ -9,7 +9,7 @@ var XUSM9010 = {
 		$('#grid1').remove();
 		var textareaHtml = '<textarea class = "xmlText" id = "xmlText" name="opinion"  ></textarea>';
 		var comboData = [{"code":"R","label":"SELECT"},{"code":"C","label":"INSERT"},{"code":"CU","label":"UPSERT"},{"code":"U","label":"UPDATE"},{"code":"D","label":"DELETE"}];
-		$('.grid-box1').prepend(textareaHtml);
+		$('.grid-box1-h01').prepend(textareaHtml);
 		$('#eventTypeSP1').jqxComboBox("clear");	
 		$('#eventTypeSP1').jqxComboBox('source',comboData);	
 	},

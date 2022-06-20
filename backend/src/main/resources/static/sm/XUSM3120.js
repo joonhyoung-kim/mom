@@ -10,12 +10,19 @@ var VIEW= {
 	},
 	event: function(e) {
 
-	}
+	},
 	
-			
+		cellClickCallBack: function(index,e) {
+		if(index==0){
+			var item = e.item;	
+			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
+			  setTimeout(function() {
+	               momWidget.findBtnClicked(1, {idGenCd:item['idGenCd']}, true, 'CELLCLICK',menuId,VIEW);
+    			   },200);
 
-	
-	
+	}
+	},
+
 };
 
 $(document).ready(function(event){	
