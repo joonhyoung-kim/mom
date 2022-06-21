@@ -1947,7 +1947,7 @@ var momWidget = {
 		
 			
 		gridPop : function(index,colNum,rowNum,popupTitle) {
-			var topHtml =	'<div id="defaultPop'+index+'" class="modal defaultPop-C'+colNum+'-R'+rowNum+'">'
+			var topHtml =	'<div id="defaultPop'+index+'" gridPopIndex="'+(index+1)+'" class="modal defaultPop-C'+colNum+'-R'+rowNum+'">'
 	        +    '<div class="panelheader-gridPop">' 
 	        +     '<div class="modal-header-title-gridPop">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -2199,7 +2199,7 @@ var momWidget = {
 							      //AUIGrid.setGridData(that.grid[index], data);  
 							  }
 							  else if(btnId=='TOTAL'){
-								that.totalRowCount[index] = data[0]['totalCount'];
+								that.totalRowCount[index] = data.length==0 ? 0:data[0]['totalCount'];
 							  }
 							  else if(btnId=='INIT_PAGING' ){
 								if(data.length ==0){
@@ -4313,10 +4313,14 @@ var momWidget = {
 				var param = [];
 				var initParam ={};
 		        let searchResult = true;
+		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
+		        let buttonId = $('#defaultPop'+(index+1)).attr('btnId');
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
-				var buttonId   = $('#defaultPop'+(index+1)).attr('btnId');
 				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
 				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
+				var gridPopIndex   = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? index+1 : Number($('#defaultPop'+(index+1)).attr('gridPopIndex'));
+				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
+				//var btnIndex   = index;
 				var queryId = that.pageProperty[index]['programId']+'.defaultInfo'+(index+1);
 				var buttonParam = [];
 				var extraParam = {};
@@ -4326,15 +4330,16 @@ var momWidget = {
  
 					}
 					else{
-						queryId = that.pageProperty[index]['programId']+'.'+buttonId+(index+1);
+						queryId = that.pageProperty[index]['programId']+'.'+buttonId;
 					}
 					
 				}
 				
 					
-				if(btnIndex != undefined && btnPopYn == 'Y'){
+				//if(btnIndex != undefined && btnPopYn == 'Y'){
+					if(btnIndex != undefined && btnPopYn =='Y'){
 					for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
-					if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '') && that.buttonProperty[btnIndex][i]['buttonId']==buttonId){
+					if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
 						buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
 						break;
 					}
@@ -4378,7 +4383,11 @@ var momWidget = {
 				//that.popUpSizeSet(index);		
 				var popupCount = that.popupProperty[index].length;
 				var popupItem  = that.popupProperty[index];
-				for(var i=0,max2=popupCount;i<max2;i++){
+				if(gridPopYn=='Y'){
+					
+				}
+				else{
+					for(var i=0,max2=popupCount;i<max2;i++){
 					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
 					let fieldValues = [];
 					
@@ -4443,23 +4452,18 @@ var momWidget = {
 				else{
 	
 					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-							      if(result != 'SUCCESS' || data.length ==0) {
-							    	  searchResult = false;
+									searchResult = false;
+							      if(result != 'SUCCESS' || data.length ==0) {							    	  
 							    	  momWidget.splashHide();
-									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
 								      return ;							     
 							      }	
 							       
 							      for(var z=0,max7=data.length;z<max7;z++){
 								      if(data[z]['code'] == searchString){
+										   searchResult = true;
 									       break;
 										}
-										searchResult = false;
-							    	  
-									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
-									  
-		                			
-	    						
+
 								 }
 							      
 							      //$('#'+popupId).jqxComboBox({source: data});
@@ -4547,20 +4551,20 @@ var momWidget = {
 				else{
 	
 					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-							      if(result != 'SUCCESS' || data.length ==0) {
-							    	  searchResult = false;
-							    	  momWidget.splashHide();
-									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+						 			searchResult = false;
+							      if(result != 'SUCCESS' || data.length ==0) {							    	 
+							    	  momWidget.splashHide();								
 								      return ;							     
 							      }	
 							       
 							      for(var z=0,max7=data.length;z<max7;z++){
 								      if(data[z]['code'] == searchString){
+											searchResult = true;
 									       break;
 										}
-										searchResult = false;
+										
 							    	  
-									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+									
 									  
 		                			
 	    						
@@ -4652,17 +4656,18 @@ var momWidget = {
 							      if(result != 'SUCCESS' || data.length ==0) {
 							    	  searchResult = false;
 							    	  momWidget.splashHide();
-									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+									 
 								      return ;							     
 							      }	
 							       
 							      for(var z=0,max7=data.length;z<max7;z++){
 								      if(data[z]['code'] == searchString){
+									       searchResult = true;
 									       break;
 										}
-										searchResult = false;
+										
 							    	  
-									    that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+									 
 									  
 		                			
 	    						
@@ -4679,7 +4684,7 @@ var momWidget = {
 							      		
 							      		
 					if(!searchResult) {
-						
+						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
 						 return;
 					}		      		
 				}
@@ -4752,25 +4757,18 @@ var momWidget = {
 					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
 							      if(result != 'SUCCESS' || data.length ==0) {
 							    	  searchResult = false;
-							    	  momWidget.splashHide();
-									  that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+							 
 								      return ;							     
 							      }	
 							       	searchResult = false;
 							      for(var z=0,max7=data.length;z<max7;z++){
 								      if(data[z]['code'] == searchString){
+										   searchResult = true;
 									       break;
-									       searchResult = true;
+									       
 										}
 										}
-									
-							    	    
-									   
-									  
-		                			
-	    						
-								 
-							      
+
 							      //$('#'+popupId).jqxComboBox({source: data});
 							   
 		                		        momWidget.splashHide();
@@ -4782,6 +4780,7 @@ var momWidget = {
 							      		
 							      		
 					if(!searchResult) {
+						 momWidget.splashHide();
 						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
 						 return;
 					}		      		
@@ -4810,6 +4809,8 @@ var momWidget = {
 				    }
 					
 				}
+				}
+			
 				
 					
 						 mom_ajax(actionType, queryId,param, function(result, data) {
@@ -5012,10 +5013,12 @@ var momWidget = {
 		  var checkedItem = [];
 		  var listItem = [];
 		  var mapItem = {};
+	
 		  //param = that.getCheckedRowItems(index) == 'FAIL'? []:that.getCheckedRowItems(index);
 		  for(var i=0;i<that.popupProperty[index].length;i++){
 			    popupId = that.popupProperty[index][i]['popupId'];
 				searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
+				that.popupProperty[index][i]['popupId']+'DP'+(index+1);
 		/*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
 				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
 				for(var j=0;j<checkedItem.length;j++){
@@ -5028,20 +5031,25 @@ var momWidget = {
 			
 				param[popupId]= listItem;
 			}*/
-				if( Object.keys(extraParam).length >0){			
+				if(Object.keys(extraParam).length >0 && i==0){			
 					 mapItem[popupId] = $('#'+searchId).val();
 					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
 					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
+					 //listItem[j] = JSON.parse(JSON.stringify(mapItem));
 
-				param[popupId]= listItem;
+				
 			}
-			else{
+			else if(Object.keys(extraParam).length >0&&i>0){
+				 mapItem[popupId] = $('#'+searchId).val();
+			}
+		
 			
 				param[popupId]=$('#'+searchId).val(); 
 				
+			
+			 if(Object.keys(extraParam).length >0 && i==(that.popupProperty[index].length)-1 ){
+				param['arrayParam']= [mapItem];
 			}
-			 
 			  
 			  
 		  }

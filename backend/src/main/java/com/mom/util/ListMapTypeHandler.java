@@ -17,6 +17,8 @@ import org.apache.ibatis.type.TypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import oracle.jdbc.OracleConnection;
 @Slf4j
@@ -34,36 +36,35 @@ public class ListMapTypeHandler implements TypeHandler<Object> {
 		    String mapName = "";
 		    String listName = "";
 		    int    exceptNum = 2;
+		    ObjectMapper oMapper = new ObjectMapper();
 		   // String mapName = "WG_COPY_PROC_MAP";
 		   // String listName = "WG_COPY_PROC_LIST";
 			log.info("List Size --------> {}",objects.size());
 
 			for (int index = 0; index < objects.size(); index++) {
-				  System.out.println("진입2");
-				Map map = objects.get(index);
-
-				Object[] params = new Object[map.keySet().size()-exceptNum];
+				 
+				//Map map = objects.get(index);
+				 Map<String, Object> map = oMapper.convertValue(objects.get(index), Map.class);
+				//Map map = objects.get(index);
+				listName  =  map.get("typeList").toString().trim();
+			    mapName   =  map.get("typeMap").toString().trim();
+			    map.remove("typeList");
+			    map.remove("typeMap");
+				//Object[] params = new Object[map.keySet().size()-exceptNum];
+				Object[] params = new Object[map.keySet().size()];
+				log.info("Map Size --------> {}",map.keySet().size());
 				Iterator<String> iterator = map.keySet().iterator();
 				int keyIndex = 0;
 				while (iterator.hasNext()) {
 					String key = (String)iterator.next();
-					if(key.equals("typeMap")) {
-						mapName =  map.get(key).toString().trim();
-						
-					}
-					else if(key.equals("typeList")) {
-						listName = 	map.get(key).toString().trim();
-					}
-					else {
-						params[keyIndex] = map.get(key);
-					}
-					
+                    params[keyIndex] = map.get(key);
+										
 					log.info("{}:{}:{} -----> {}",index,keyIndex,key,map.get(key));
 					keyIndex++;
 				}
 
 				log.info("params -----> {}, length -----> {}",params,params.length);
-
+				log.info("map 스키마?",ps.getConnection().getTypeMap().toString()); ;
 				structs[index]  = 	ps.getConnection().createStruct(mapName,params);
 			
 			}

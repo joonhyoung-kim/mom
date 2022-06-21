@@ -10,11 +10,11 @@ var VIEW= {
 	
 	createCallBack: function(index,your,action,btnId,param,result,data) {
 		if(index ==0 && btnId =='createBtn'){	
-			$('#msgCd2').attr("readonly",false);
-			$('#msgCd2').css('background','#fff');
-		    $("#msgType2").jqxComboBox({disabled: false});
-		    $("#msgType2").jqxComboBox('selectIndex',0); 
-		    $('#msgCd2').val('');
+			$('#msgCd2SP2').attr("readonly",false);
+			$('#msgCd2SP2').css('background','#fff');
+		    $("#msgType2SP2").jqxComboBox({disabled: false});
+		    $("#msgType2SP2").jqxComboBox('selectIndex',0); 
+		    $('#msgCd2SP2').val('');
 			var gridItem = [{langCd2:'KR',langNm:'한글',msgNm:''},{langCd2:'EN',langNm:'영어',msgNm:''}];
 
 			AUIGrid.setGridData(widget.grid[1], gridItem);
@@ -26,12 +26,12 @@ var VIEW= {
 	copyCallBack: function(index,your,action,btnId,param,result,data) {
 		if(index ==0 && btnId =='copyBtn'){	
 			var gridItem = [{langCd2:'KR',langNm:'한글',msgNm:''},{langCd2:'EN',langNm:'영어',msgNm:''}];
-		    var checkedItem = param[0];
-			$('#msgCd2').attr("readonly",false);
-			$('#msgCd2').css('background','#fff');
-		    $("#msgType2").jqxComboBox({disabled: false});
-		    $('#msgType2').val(checkedItem["msgType"]);
-		    $('#msgCd2').val(checkedItem["msgCd"]);
+		    var checkedItem = data[0];
+			$('#msgCd2SP2').attr("readonly",false);
+			$('#msgCd2SP2').css('background','#fff');
+		    $("#msgType2SP2").jqxComboBox({disabled: false});
+		    $('#msgType2SP2').val(checkedItem["msgType"]);
+		    $('#msgCd2SP2').val(checkedItem["msgCd"]);
 			   for(var i=0;i<gridItem.length;i++){
 			        if(gridItem[i]['langCd2'] == 'KR'){
 				       gridItem[i]['msgNm'] = checkedItem['msgNmKr'];
@@ -50,12 +50,12 @@ var VIEW= {
 	editCallBack: function(index,your,action,btnId,param,result,data) {
 	     if(index ==0 && btnId =='editBtn'){
 		        var gridItem = [{langCd2:'KR',langNm:'한글',msgNm:''},{langCd2:'EN',langNm:'영어',msgNm:''}];
-		        var checkedItem = param[0];
-		        $("#msgType2").jqxComboBox({disabled: true});
-		        $('#msgCd2').attr("readonly",true); 
-		        $('#msgCd2').css('background','#ededed');
-		        $('#msgType2').val(checkedItem["msgType"]);
-		        $('#msgCd2').val(checkedItem["msgCd"]);
+		        var checkedItem = data[0];
+		        $("#msgType2SP2").jqxComboBox({disabled: true});
+		        $('#msgCd2SP2').attr("readonly",true); 
+		        $('#msgCd2SP2').css('background','#ededed');
+		        $('#msgType2SP2').val(checkedItem["msgType"]);
+		        $('#msgCd2SP2').val(checkedItem["msgCd"]);
 		       
 		        for(var i=0;i<gridItem.length;i++){
 			        if(gridItem[i]['langCd2'] == 'KR'){
@@ -66,9 +66,9 @@ var VIEW= {
 			        }
 		         }
 		        AUIGrid.setGridData(widget.grid[1], gridItem); 
-		        
+		       
 	    }
-
+            
 
 	},
 	saveCallInit: function(index,your,action,btnId,param,result) {

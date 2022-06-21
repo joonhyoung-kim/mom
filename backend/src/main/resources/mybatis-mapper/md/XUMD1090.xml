@@ -148,17 +148,24 @@
    </foreach>
   </insert> -->
        <select id="proc_defaultInfo1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL mom_demand_pkg.sp_create_manual_demand(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+          { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{demandType,       jdbcType=VARCHAR, mode=IN} 
-					                                          , #{itemId,           jdbcType=VARCHAR, mode=IN}  
-					                                          , TO_DATE(#{dueDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
-					                                          , #{qty,              jdbcType=NUMERIC, mode=IN}  
-					                                          , #{priority,         jdbcType=NUMERIC, mode=IN}  
-					                                          , #{workCenterCd,     jdbcType=VARCHAR, mode=IN}  
-					                                          , #{description,      jdbcType=VARCHAR, mode=IN} 
+					                                          , #{borId, jdbcType=VARCHAR, mode=IN}
+															  , #{itemId, jdbcType=VARCHAR, mode=IN}
+															  , #{routingId, jdbcType=VARCHAR, mode=IN}
+															  , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
+															  , #{tactTime, jdbcType=NUMERIC, mode=IN}
+															  , #{tactTimeUom, jdbcType=VARCHAR, mode=IN}
+															  , #{processLt, jdbcType=NUMERIC, mode=IN}
+															  , #{processLtUom, jdbcType=VARCHAR, mode=IN}
+															  , #{priority, jdbcType=NUMERIC, mode=IN}
+															  , #{yield, jdbcType=NUMERIC, mode=IN}
+															  , #{inLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{outLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{useYn, jdbcType=VARCHAR, mode=IN}
+															  , #{description, jdbcType=VARCHAR, mode=IN}															  
 					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
   <update id="modify_defaultInfo1" parameterType="java.util.List">
@@ -173,6 +180,8 @@
            , PROCESS_LT_UOM = #{item.processLtUom, jdbcType=VARCHAR}
            , PRIORITY = #{item.priority, jdbcType=NUMERIC}
            , YIELD = #{item.yield, jdbcType=NUMERIC}
+           , IN_LOCATION_CD = #{item.inLocationCd, jdbcType=VARCHAR}
+           , OUT_LOCATION_CD = #{item.outLocationCd, jdbcType=VARCHAR}
            , USE_YN = #{item.useYn, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
@@ -182,5 +191,5 @@
       AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
       AND    BOR_ID = #{item.borId, jdbcType=VARCHAR}
     </foreach>
-  </update>  
+  </update>
 </mapper>
