@@ -16,8 +16,8 @@
 		   , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.CONSUME_LOCATION_CD) FROM DUAL) AS CONSUME_LOCATION_NM
 		   , MWC.GOOD_LOCATION_CD
 		   , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.GOOD_LOCATION_CD) FROM DUAL) AS GOOD_LOCATION_NM
-		   , MWC.BAD_LOCATION_CD
-		   , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.BAD_LOCATION_CD) FROM DUAL) AS BAD_LOCATION_NM
+		   , MWC.DEFECT_LOCATION_CD
+		   , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.DEFECT_LOCATION_CD) FROM DUAL) AS DEFECT_LOCATION_NM
 		   , MWC.USE_YN
 		   , MWC.DESCRIPTION
 		   , MWC.CREATE_BY
@@ -36,10 +36,10 @@
       AND MWC.WORK_GROUP_CD IN (${workGroupCd})
 	  </if>
 	  <if test="workCenterCd != null and workCenterCd != ''">
-      AND (MWC.WORK_CENTER_CD LIKE '%' || TRIM(UPPER(#{workCenterCd, jdbcType=VARCHAR})) || '%' )
+      AND (UPPER(MWC.WORK_CENTER_CD) LIKE '%' || UPPER(#{workCenterCd, jdbcType=VARCHAR}) || '%' )
 	  </if>
 	  <if test="workCenterNm != null and workCenterNm != ''">
-      AND (MWC.WORK_CENTER_NM LIKE '%' || TRIM(UPPER(#{workCenterNm, jdbcType=VARCHAR})) || '%' )
+      AND (UPPER(MWC.WORK_CENTER_NM) LIKE '%' || UPPER(#{workCenterNm, jdbcType=VARCHAR}) || '%' )
 	  </if>
 	  <if test="workCenterType != null and workCenterType != ''">
       AND MWC.WORK_CENTER_TYPE IN (${workCenterType})
@@ -59,7 +59,7 @@
                ,  WORK_CENTER_TYPE
                ,  CONSUME_LOCATION_CD
                ,  GOOD_LOCATION_CD
-               ,  BAD_LOCATION_CD
+               ,  DEFECT_LOCATION_CD
                ,  USE_YN
                ,  DESCRIPTION
                ,  CREATE_BY
@@ -75,7 +75,7 @@
                ,   #{item.workCenterType,    jdbcType=VARCHAR}
                ,   #{item.consumeLocationCd, jdbcType=VARCHAR}
                ,   #{item.goodLocationCd,    jdbcType=VARCHAR}
-               ,   #{item.badLocationCd,     jdbcType=VARCHAR}
+               ,   #{item.defectLocationCd,     jdbcType=VARCHAR}
                ,   #{item.useYn,             jdbcType=VARCHAR}
                ,   #{item.description,       jdbcType=VARCHAR}
                ,   #{item.userId,            jdbcType=VARCHAR}
@@ -96,7 +96,7 @@
        ,  WORK_CENTER_TYPE    = #{item.workCenterType,    jdbcType=VARCHAR}
        ,  CONSUME_LOCATION_CD = #{item.consumeLocationCd, jdbcType=VARCHAR}
        ,  GOOD_LOCATION_CD    = #{item.goodLocationCd, 	  jdbcType=VARCHAR}
-       ,  BAD_LOCATION_CD     = #{item.badLocationCd, 	  jdbcType=VARCHAR}
+       ,  DEFECT_LOCATION_CD  = #{item.defectLocationCd, 	  jdbcType=VARCHAR}
        ,  USE_YN              = #{item.useYn, 			  jdbcType=VARCHAR}
        ,  DESCRIPTION         = #{item.description, 	  jdbcType=VARCHAR}
        ,  UPDATE_BY           = #{item.userId, 		  jdbcType=VARCHAR}
@@ -132,7 +132,7 @@
                             #{item.workCenterType, jdbcType=VARCHAR} as workCenterType,
                             #{item.consumeLocationCd, jdbcType=VARCHAR} as consumeLocationCd,
                             #{item.goodLocationCd, jdbcType=VARCHAR} as goodLocationCd,
-                            #{item.badLocationCd, jdbcType=VARCHAR} as badLocationCd,
+                            #{item.defectLocationCd, jdbcType=VARCHAR} as defectLocationCd,
                             #{item.useYn, jdbcType=VARCHAR} as useYn,
                             #{item.description, jdbcType=VARCHAR} as description,
                             #{item.userId, jdbcType=VARCHAR} as createBy,
@@ -151,7 +151,7 @@
                           , WORK_CENTER_TYPE = PARAM.workCenterType
                           , CONSUME_LOCATION_CD = PARAM.consumeLocationCd
                           , GOOD_LOCATION_CD = PARAM.goodLocationCd
-                          , BAD_LOCATION_CD = PARAM.badLocationCd
+                          , DEFECT_LOCATION_CD = PARAM.defectLocationCd
                           , USE_YN = PARAM.useYn
                           , DESCRIPTION = PARAM.description
                           , CREATE_BY = PARAM.createBy
@@ -168,7 +168,7 @@
                             , WORK_CENTER_TYPE
                             , CONSUME_LOCATION_CD
                             , GOOD_LOCATION_CD
-                            , BAD_LOCATION_CD
+                            , DEFECT_LOCATION_CD
                             , USE_YN
                             , DESCRIPTION
                             , CREATE_BY

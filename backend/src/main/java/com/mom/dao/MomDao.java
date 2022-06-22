@@ -277,8 +277,8 @@ public class MomDao {
     	return FrameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
 	public List<Map<String, Object>> upsertMapList(String query, List<Map<String,Object>> param) {
-		//PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
-		//PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		PrintUtil.print("MomDao", "upsertMapList", "#", "$", "query", query, true, true, false, debugOn);
+		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");

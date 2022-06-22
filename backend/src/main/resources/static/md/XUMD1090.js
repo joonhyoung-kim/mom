@@ -33,8 +33,21 @@ var VIEW= {
 			             result.param = param;
         
 	    }
+	   
 
 	},
+		searchCallBack: function(index,your,action,btnId,param,result,data) {
+		/*
+		    if(index ==1 && btnId =='saveBtnDP' && action=='CU' ){		           
+					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
+		
+		
+					     param[0]['borId'] = items[0]['item']['borId'];
+			             result.param = param;
+        
+	    }*/
+
+   },
 	cellClickCallBack: function(index,e) {
 		if(index==0){
 			var item = e.item;	

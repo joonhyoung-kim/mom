@@ -30,6 +30,7 @@ var momWidget = {
 	popupComboQueryId:      [],
 	popupComboMinLength:    [],	
 	sortingInfo:            [],
+	searchComboItems:       [],
 	INFINITE: 			    100000000,	
 	uploadFlag: 		    0,
 	downSequence:		    100,	
@@ -85,7 +86,7 @@ var momWidget = {
 		      var searchPop = '';	
 		      var circleClass = '';
 		      var textClass   = '';
-		                 
+		      var dropdownTmp = {};           
 		      var gridString   = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
 		      var columnString = data1[0]['columnProperty'] == undefined ? '[]':data1[0]['columnProperty'];
 		      var searchString = data1[0]['searchProperty'] == undefined ? '[]':data1[0]['searchProperty'];
@@ -551,7 +552,7 @@ var momWidget = {
 			    		   //var nameSpace = 'DD' + that.pageProperty[index]['programId'].substr(2,2);
 			    		   var nameSpace = 'DD';
 			    		   var param = {};
-			    		   var dropdownTmp = {};
+			    		   //var dropdownTmp = {};
 			    		   if(dropDownQueryId == 'DD00001'){
 			    			   dropDownQueryId = 'DD.DD00001';
 			    			   var dropdownParamArry = that.columnProperty[index][i]['dropdownParam'].split('=');
@@ -567,7 +568,7 @@ var momWidget = {
 			    				      momWidget.splashHide();
 			    			      } 
 			    			    dropdownTmp[columnId] = data2;
-			    			    that.columnDropdown[index]= dropdownTmp;
+			    			   // that.columnDropdown[index]= dropdownTmp;
 			    			    columnProp[i].labelFunction = function(rowIndex, columnIndex, value, item) { 
 					               	 var retStr = "";
 					               	 
@@ -584,7 +585,7 @@ var momWidget = {
 								   				type: 'ComboBoxRenderer',
 								   				autoCompleteMode : true,  // 자동완성 모드 설정
 								   				matchFromFirst : true,  // 처음부터 매치가 아닌 단순 포함되는 자동완성
-								   				autoEasyMode : true,     // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+								   				autoEasyMode : false,     // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 								   				showEditorBtnOver: true, // 에디터 버튼 마우스 올릴시 보여줄지
 								   				listAlign:'left',        // 라벨 정렬
 								   				/*list: that.columnDropdown[index][columnId], */
@@ -595,15 +596,17 @@ var momWidget = {
 									                        return combo;									 
 								                           
 								                },
-								    	validator : function(oldValue, newValue, item) {
-							var isValid = true;
-							
-						/*	if(colorList.indexOf(newValue) == -1) {
-								isValid = false;
-							}*/
-							// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-							return { "validate" : isValid, "message"  : "Black, White, Red, Blue 만 입력 가능합니다." };
-						}                                                                    
+							validator : function(oldValue, newValue, item) {
+					/*			var isValid = false;
+								for(var i=0, len=that.columnDropdown[index][columnId].length; i<len; i++) { // keyValueList 있는 값만..
+									if(that.columnDropdown[index][columnId][i]["code"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+								// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+								return { "validate" : isValid, "message"  : "리스트에 있는 값만 선택(입력) 가능합니다." };*/
+				}                                                                  
 						           };
 					    		
 			    		   }, undefined, undefined, this, false,'Y');
@@ -630,7 +633,7 @@ var momWidget = {
 			    	   
 			    	   	
 			      } 	
-			      	
+			      		    that.columnDropdown[index]= dropdownTmp;
 				          var childrenTmp =[];
 				          var childrenColumn = [];
 				          var parentId = '';
@@ -726,7 +729,7 @@ var momWidget = {
 		  */																							
 			
 			//that.setAddBtnEvent(index, your);				    // 행추가버튼 이벤트 핸들러 등록
-			that.setComboBoxSet(index,your);                  // 콤보박스 공통 이벤트 처리
+			that.setComboBoxSet(index,your);                    // 콤보박스 공통 이벤트 처리
 		    that.setSearchSet(index, your);                     // 검색조건 세팅
 		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
@@ -837,6 +840,7 @@ var momWidget = {
 		var splitArray1 = undefined;
 		var splitArray2 = undefined;
 		var defaultValue = undefined;
+		let comboTmp = {};
 		
 		
 		if(that.searchProperty[index] == undefined || that.searchProperty[index] == ''){
@@ -853,8 +857,9 @@ var momWidget = {
 		    defaultValue     = that.searchProperty[index][i]['defaultValue'];
 		    nameSpace        = dropdownId.substr(0, 2);  
 		    queryId          = '';
+		    searchId2 = searchId+'SP'+(index+1);
 		    paramMap.length = 0;
-		   
+		    comboTmp = {};
 			if(searchType == 'S' || searchType == 'M' || headerSearchType == 'S'||headerSearchType == 'M'){
 			/*	searchId = that.searchProperty[index][i]['searchId'];
 				dropdownId = that.searchProperty[index][i]['searchId'];
@@ -910,6 +915,9 @@ var momWidget = {
 				        	else{
 				        		$('#'+searchId+'SP'+(index+1)).jqxComboBox({source: data}); 
 				        		$('#'+searchId+'SP'+(index+1)).val(defaultValue); 
+				        		comboTmp[searchId2] = data;
+				        		that.searchComboItems[index]=comboTmp;
+
 				        	}
 				        	  
 				        }
@@ -2717,6 +2725,19 @@ var momWidget = {
 			//alert('스크롤바있음');
 		   }
 		});
+		AUIGrid.bind(that.grid[index], "cellEditEnd", function( e ) {				
+								for(var i=0, len=that.columnDropdown[index][e.dataField].length; i<len; i++) { // keyValueList 있는 값만..
+									if(that.columnDropdown[index][e.dataField][i]["code"] == e.value) {
+										break;
+									}
+									if(i==len-1){
+										AUIGrid.setCellValue(that.grid[index], e.columnIndex, e.dataField, e.oldValue);
+										that.messageBox({type: 'warning', width: '400', height: '145', html: '리스트에 없는 데이터입니다!'});
+									}
+								}
+							
+      // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
+			});
 		$(document).on('click', '#upBtn1', function() {
 			AUIGrid.moveRowsToUp(momWidget.grid[index]);
 		
@@ -3008,20 +3029,68 @@ var momWidget = {
 			      
 			     
 				}
-				else{
-				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'}); 
-				    	  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
-				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+				else if(searchType == 'S'){
+				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'none'});
+				    	$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {	
+					if($("#innerListBox" + e.owner.id + " div[role=option] span")[0]==undefined){
+						 
+						  maxItemWidth = '160px';
+					}	  
+					else{
+						 maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+					}
+				 
 				   maxItemWidthArry = maxItemWidth.split('px');
 				   maxItemWidthNum = Number(maxItemWidthArry[0]);
 				  if(maxItemWidthNum<160){
 					 maxItemWidth = '160px';
 				 }
 				 else{
-					maxItemWidth = maxItemWidthNum+30+'px'
+					maxItemWidth = maxItemWidthNum+30+'px';
 				 }
 				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });
+			      	$('#'+searchId+'SP'+(index+1)).on('propertychange change keyup paste input', function (e) {				  				  
+      					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
+      					if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[index][e.currentTarget.id] == undefined || that.searchComboItems[index][e.currentTarget.id] == ''){
+	          				return;
+						} 
+						//$('#'+e.currentTarget.id).val('');
+						let searchStr = $('#'+e.currentTarget.id).val();
+						//$('#'+e.currentTarget.id).jqxComboBox('clear');
+      					let oldItems = that.searchComboItems[index][e.currentTarget.id];
+      					let newItems = [];
+              			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					
+				 			if(oldItems[i]['label'].toUpperCase().indexOf($('#'+e.currentTarget.id).val().toUpperCase()) >=0){
+								//$("#jqxComboBox").jqxComboBox('removeItem', "List Item" ); 
+								 newItems.push(oldItems[i]);
+								//$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']}); 
+							}
+							else{
+								//$('#'+e.currentTarget.id).jqxComboBox('removeItem', oldItems[i]['code']);
+							}
+
+			  		   }
+			  		      
+	               			//$('#'+e.currentTarget.id).val(searchStr);
+    					
+			  		  
+			  		   if(newItems.length ==0 ){
+				 		   
+			  		       $('#'+e.currentTarget.id).jqxComboBox('source',oldItems);	
+						}
+						else{
+							
+			  		    	$('#'+e.currentTarget.id).jqxComboBox('source',newItems);	
+						}
+			  		     
+     					 $('#'+e.currentTarget.id).val(searchStr);
+
+				    	
+			      });
+				}
+				else{
+				     
 				        	}
 				        
 				        	  
@@ -4206,7 +4275,15 @@ var momWidget = {
 			$(document).on('click', '#' + copyBtnId, function(e) {	
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				var param = that.getCheckedRowItems(that.grid[index]);
-			
+				var actionType = 'C';
+				var targetArray = e.target.id.split('DP');
+				var buttonId = targetArray[0];
+		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
+					if(that.buttonProperty[index][k]['buttonId']+(index+1) == buttonId){
+						actionType = that.buttonProperty[index][k]['eventType'];
+						
+					}
+				}	
 				
 				if(isCheckCol == true){
 					if (param.length == 0){
@@ -4220,9 +4297,10 @@ var momWidget = {
 				      return;
 				}
 								
-				that.setPopup(index,'CP');	
-				$('#defaultPop'+(index+1)).attr('actionType', 'C');
-			    callInitResult = that.checkActionCallInit(index, 'CP', param, 'copyBtn', your);
+				that.setPopup(index,"CP");	
+				$('#defaultPop'+(index+1)).attr('actionType', actionType);
+				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
+			    callInitResult = that.checkActionCallInit(index, actionType, param, 'copyBtn', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -4239,7 +4317,7 @@ var momWidget = {
 				that.htmlResize(index,your);
 				//that.popUpSizeSet(index);				
 				
-				callBackResult = that.checkActionCallBack(index, 'CP', param, 'copyBtn', your,param);	
+				callBackResult = that.checkActionCallBack(index, actionType, param, 'copyBtn', your,param);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
@@ -4297,7 +4375,7 @@ var momWidget = {
 			    		}
 			
 						 
-			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['programId'],your);
+			        	  momWidget.findBtnClicked(index, param, true, 'saveBtn',momWidget.pageProperty[index]['programId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 						  momWidget.splashHide();
 					      return;
@@ -4326,7 +4404,7 @@ var momWidget = {
 				var extraParam = {};
 				var validateCheck = true;
 				if(actionType == 'P'){
-					if(buttonId.indexOf('createBtn') >= 0) {
+					if(buttonId.indexOf('createBtn') >= 0 || buttonId.indexOf('copyBtn') >= 0) {
  
 					}
 					else{
@@ -6130,6 +6208,7 @@ var momWidget = {
 		var that = this.grid == undefined ? this.momWidget : this;
 		
 		var copyBtnId = 'copyBtn' + (index + 1);
+		
 		var linkCopyBtn = 'linkCopyBtn' + (index + 1); 
 		var isExist = document.getElementById(copyBtnId);		
 		
@@ -6162,6 +6241,7 @@ var momWidget = {
 				selectedItem = 	selectedItem[0].item;
 				
 				that.createPopUp(index, your);
+				
 				that.popUpDataSetCopy(index, 'COPY', selectedItem);
 				
 				var message = that.procCallInit(index, 'CW', {param : selectedItem, callBackParam : undefined}, {index : index, op : 'copyBtn' + (index + 1)}, your);

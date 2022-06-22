@@ -75,13 +75,14 @@
      
 	</select>
 	 <select id="get_defaultInfo2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-		    SELECT      MCD.COMPANY_CD
+		    SELECT     MCD.COMPANY_CD
 				     , MCD.COMPANY_NM
 				     , MCD.DIVISION_CD
 				     , MCD.DIVISION_NM
 				     , MBP.BOR_ID
 				     , MBP.OPERATION_SEQ
 				     , MBP.OPERATION_ID
+				     , MBP.BOR_ID || '_' || MBP.OPERATION_ID AS KEY_ID
 				     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MBP.COMPANY_CD,MBP.DIVISION_CD,MBP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
 				     , MBP.WORK_STATION_CD
 				     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MBP.COMPANY_CD,MBP.DIVISION_CD,MBP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
@@ -192,4 +193,66 @@
       AND    BOR_ID = #{item.borId, jdbcType=VARCHAR}
     </foreach>
   </update>
+    <insert id="upsert_defaultInfo2" parameterType="java.util.List">
+      MERGE INTO MOM_BOR_PATH 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.borId, jdbcType=VARCHAR} as borId,
+                            #{item.operationSeq, jdbcType=NUMERIC} as operationSeq,
+                            #{item.operationId, jdbcType=VARCHAR} as operationId,
+                            #{item.workStationCd, jdbcType=VARCHAR} as workStationCd,
+                            #{item.inspectionYn, jdbcType=VARCHAR} as inspectionYn,
+                            #{item.finalOperationYn, jdbcType=VARCHAR} as finalOperationYn,
+                            #{item.milestone, jdbcType=VARCHAR} as milestone,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 BOR_ID = PARAM.borId AND
+                 OPERATION_ID = PARAM.operationId )
+            WHEN MATCHED THEN 
+                 UPDATE SET OPERATION_SEQ = PARAM.operationSeq
+                          , WORK_STATION_CD = PARAM.workStationCd
+                          , INSPECTION_YN = PARAM.inspectionYn
+                          , FINAL_OPERATION_YN = PARAM.finalOperationYn
+                          , MILESTONE = PARAM.milestone
+                          , DESCRIPTION = PARAM.description
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , BOR_ID
+                            , OPERATION_SEQ
+                            , OPERATION_ID
+                            , WORK_STATION_CD
+                            , INSPECTION_YN
+                            , FINAL_OPERATION_YN
+                            , MILESTONE
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.borId
+                            , PARAM.operationSeq
+                            , PARAM.operationId
+                            , PARAM.workStationCd
+                            , PARAM.inspectionYn
+                            , PARAM.finalOperationYn
+                            , PARAM.milestone
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>
 </mapper>
