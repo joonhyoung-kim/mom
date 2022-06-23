@@ -125,7 +125,13 @@ public class MomDao {
 			//new TestInnerResultHandler(result)
      
 			// sqlSession.select(query.trim(), paramMap.get(paramMap), new TestInnerResultHandler(result));
-			sqlSession.select(query.trim(), param.get(0), new TestInnerResultHandler(result));
+			if(param.size()>1) {
+				sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
+			}
+			else {
+				sqlSession.select(query.trim(), param.get(0), new TestInnerResultHandler(result));
+			}
+			
 			//sqlSession.select(query.trim(), param, testInnerResultHandler);
 			 
 			
@@ -168,7 +174,7 @@ public class MomDao {
 	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param)  {
 		ProgressInfo.successCount = 0;
 		PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
-		//PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		 System.out.println("크리에이트!");
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);

@@ -229,6 +229,8 @@ public class FrameworkUtil {
 			query = query.substring(0, pos) + "get_" + query.substring(pos);
 		} else if (crud.equals("C")) {
 			query = query.substring(0, pos) + "create_" + query.substring(pos);
+		}else if (crud.equals("CP")) {
+			query = query.substring(0, pos) + "create_" + query.substring(pos);
 		} else if (crud.equals("CU")) {
 			query = query.substring(0, pos) + "upsert_" + query.substring(pos);
 		} else if (crud.equals("U")) {

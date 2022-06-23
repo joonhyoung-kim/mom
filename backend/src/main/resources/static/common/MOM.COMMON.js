@@ -1449,7 +1449,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			param.userId = siteInfo.userId;
 		}*/
 	}
-	else if (type == 'C' || type == 'CU'){
+	else if (type == 'C' || type == 'CU' || type=='CP'){
 		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		type = 'POST';	

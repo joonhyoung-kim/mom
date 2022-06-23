@@ -12,25 +12,17 @@ var VIEW= {
 			   if(index ==0 && btnId =='saveBtnDP' && action=='C' ){		           
 					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
 		
-			/*	        for(var i=0;i<gridItems.length;i++){
-					         gridItems[i]['msgType']     = $("#msgType2").val();
-					         gridItems[i]['msgCd']       = $("#msgCd2").val();					         
-					        
-					    }*/
-					     param[0]['borId'] = '1';
-			             result.param = param;
+	
+					     //param[0]['borId'] = '1';
+			             //result.param = param;
         
 	    }
 	     else if(index ==0 && btnId =='saveBtnDP' && action=='U' ){		           
-					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
+					    //var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
 		
-			/*	        for(var i=0;i<gridItems.length;i++){
-					         gridItems[i]['msgType']     = $("#msgType2").val();
-					         gridItems[i]['msgCd']       = $("#msgCd2").val();					         
-					        
-					    }*/
-					     param[0]['borId'] = items[0]['item']['borId'];
-			             result.param = param;
+	
+					     //param[0]['borId'] = items[0]['item']['borId'];
+			             //result.param = param;
         
 	    }
 	   
@@ -53,7 +45,21 @@ var VIEW= {
 			var item = e.item;	
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
 			  setTimeout(function() {
-	               momWidget.findBtnClicked(1, {borId:item['borId']}, true, 'CELLCLICK',menuId,VIEW);
+			 mom_ajax('R', 'DD.DD00023', {workCenterCd:item['workCenterCd']}, function(result, data) {
+		      if(result != 'SUCCESS') {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }					       
+			    for(var i=0;i<widget.columnProperty[1].length;i++){
+					   if(widget.columnProperty[1][i]['columnId'] =='workStationCd'){
+						 widget.columnDropdown[1][widget.columnProperty[1][i]['columnId']]=data;
+					   }
+					}
+  widget.findBtnClicked(1, {borId:item['borId']}, true, 'CELLCLICK',menuId,VIEW);
+	}, undefined, undefined, this, false);	
+				
+				  
+	             
     			   },200);
 
 	}

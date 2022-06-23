@@ -34,10 +34,16 @@
 		     , MB.PRIORITY
 		     , MB.YIELD
 		     , MB.BOR_ID
+		     , MB.CONSUME_LOCATION_CD
+		     , MB.GOOD_LOCATION_CD
+		     , MB.DEFECT_LOCATION_CD
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.CONSUME_LOCATION_CD) FROM DUAL ) AS CONSUME_LOCATION_NM
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.GOOD_LOCATION_CD) FROM DUAL ) AS GOOD_LOCATION_NM
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.DEFECT_LOCATION_CD) FROM DUAL ) AS DEFECT_LOCATION_NM
 		     , MB.USE_YN
 		     , MB.DESCRIPTION
 		     , MB.CREATE_BY
-		      ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
 		     , TO_CHAR(MB.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
 		     , MB.UPDATE_BY
 		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
@@ -148,7 +154,7 @@
               )
    </foreach>
   </insert> -->
-       <select id="proc_defaultInfo1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+       <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -163,12 +169,129 @@
 															  , #{processLtUom, jdbcType=VARCHAR, mode=IN}
 															  , #{priority, jdbcType=NUMERIC, mode=IN}
 															  , #{yield, jdbcType=NUMERIC, mode=IN}
-															  , #{inLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{outLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{consumeLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{goodLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{defectLocationCd, jdbcType=VARCHAR, mode=IN}
 															  , #{useYn, jdbcType=VARCHAR, mode=IN}
 															  , #{description, jdbcType=VARCHAR, mode=IN}															  
 					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
+   <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{borId, jdbcType=VARCHAR, mode=IN}
+															  , #{itemId, jdbcType=VARCHAR, mode=IN}
+															  , #{routingId, jdbcType=VARCHAR, mode=IN}
+															  , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
+															  , #{tactTime, jdbcType=NUMERIC, mode=IN}
+															  , #{tactTimeUom, jdbcType=VARCHAR, mode=IN}
+															  , #{processLt, jdbcType=NUMERIC, mode=IN}
+															  , #{processLtUom, jdbcType=VARCHAR, mode=IN}
+															  , #{priority, jdbcType=NUMERIC, mode=IN}
+															  , #{yield, jdbcType=NUMERIC, mode=IN}
+															  , #{consumeLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{goodLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{defectLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{useYn, jdbcType=VARCHAR, mode=IN}
+															  , #{description, jdbcType=VARCHAR, mode=IN}															  
+					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
+  </select>  
+   <insert id="create_validateEx1"  parameterType="java.util.List" statementType="CALLABLE">
+   {CALL 
+    DECLARE 
+    BEGIN  
+     #{p_err_code, mode=OUT, jdbcType=VARCHAR, javaType=String} := 'E';
+     DELETE
+     FROM MOM_PROC_BOR
+     <foreach item="item" collection="list" index="i" separator=" " open="" close=";"> 
+     WHERE  COMPANY_CD  =  #{item[0].companyCd, jdbcType=VARCHAR}
+     AND    DIVISION_CD =  #{item[0].divisionCd, jdbcType=VARCHAR}
+     AND    CREATE_BY   =  #{item[0].userId, jdbcType=VARCHAR}
+     </foreach>
+     
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+       INTO MOM_PROC_BOR (
+                  COMPANY_CD
+                , DIVISION_CD
+                , BOR_ID
+                , ITEM_ID
+                , ROUTING_ID
+                , WORK_CENTER_CD
+                , TACT_TIME
+                , TACT_TIME_UOM
+                , PROCESS_LT
+                , PROCESS_LT_UOM
+                , PRIORITY
+                , YIELD
+                , CONSUME_LOCATION_CD
+                , GOOD_LOCATION_CD
+                , DEFECT_LOCATION_CD
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.borId, jdbcType=VARCHAR}
+                , #{item.itemId, jdbcType=VARCHAR}
+                , #{item.routingId, jdbcType=VARCHAR}
+                , #{item.workCenterCd, jdbcType=VARCHAR}
+                , #{item.tactTime, jdbcType=NUMERIC}
+                , #{item.tactTimeUom, jdbcType=VARCHAR}
+                , #{item.processLt, jdbcType=NUMERIC}
+                , #{item.processLtUom, jdbcType=VARCHAR}
+                , #{item.priority, jdbcType=NUMERIC}
+                , #{item.yield, jdbcType=NUMERIC}
+                , #{item.consumeLocationCd, jdbcType=VARCHAR}
+                , #{item.goodLocationCd, jdbcType=VARCHAR}
+                , #{item.defectLocationCd, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+               </foreach>
+              ;
+               SELECT
+            CASE 
+                WHEN COUNT(CREATE_BY) = 0 THEN 'S'
+                ELSE 'E' 
+            END  
+            INTO #{p_err_code, mode=OUT, jdbcType=VARCHAR, javaType=String}
+          FROM MOM_PROC_BOR
+          <foreach item="item" collection="list" index="i" separator=" " open="" close=";"> 
+          WHERE  COMPANY_CD  =  #{item[0].companyCd, jdbcType=VARCHAR}
+     	  AND    DIVISION_CD =  #{item[0].divisionCd, jdbcType=VARCHAR}
+     	  AND    CREATE_BY   =  #{item[0].userId, jdbcType=VARCHAR}
+         </foreach>
+              END }
+           
+  </insert>
+<!--    <select id="proc_excelUpBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{borId, jdbcType=VARCHAR, mode=IN}
+															  , #{itemId, jdbcType=VARCHAR, mode=IN}
+															  , #{routingId, jdbcType=VARCHAR, mode=IN}
+															  , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
+															  , #{tactTime, jdbcType=NUMERIC, mode=IN}
+															  , #{tactTimeUom, jdbcType=VARCHAR, mode=IN}
+															  , #{processLt, jdbcType=NUMERIC, mode=IN}
+															  , #{processLtUom, jdbcType=VARCHAR, mode=IN}
+															  , #{priority, jdbcType=NUMERIC, mode=IN}
+															  , #{yield, jdbcType=NUMERIC, mode=IN}
+															  , #{consumeLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{goodLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{defectLocationCd, jdbcType=VARCHAR, mode=IN}
+															  , #{useYn, jdbcType=VARCHAR, mode=IN}
+															  , #{description, jdbcType=VARCHAR, mode=IN}															  
+					                                          , #{userId,  jdbcType=VARCHAR, mode=IN} )}    	              
+  </select>   -->
   <update id="modify_defaultInfo1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_BOR
@@ -181,8 +304,9 @@
            , PROCESS_LT_UOM = #{item.processLtUom, jdbcType=VARCHAR}
            , PRIORITY = #{item.priority, jdbcType=NUMERIC}
            , YIELD = #{item.yield, jdbcType=NUMERIC}
-           , IN_LOCATION_CD = #{item.inLocationCd, jdbcType=VARCHAR}
-           , OUT_LOCATION_CD = #{item.outLocationCd, jdbcType=VARCHAR}
+           , CONSUME_LOCATION_CD = #{item.consumeLocationCd, jdbcType=VARCHAR}
+           , GOOD_LOCATION_CD = #{item.goodLocationCd, jdbcType=VARCHAR}
+           , DEFECT_LOCATION_CD = #{item.defectLocationCd, jdbcType=VARCHAR}
            , USE_YN = #{item.useYn, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
