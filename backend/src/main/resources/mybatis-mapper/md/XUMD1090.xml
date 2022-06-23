@@ -198,19 +198,18 @@
 															  , #{description, jdbcType=VARCHAR, mode=IN}															  
 					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-   <insert id="create_validateEx1"  parameterType="java.util.List" statementType="CALLABLE">
-   {CALL 
-    DECLARE 
-    BEGIN  
-     #{p_err_code, mode=OUT, jdbcType=VARCHAR, javaType=String} := 'E';
-     DELETE
-     FROM MOM_PROC_BOR
-     <foreach item="item" collection="list" index="i" separator=" " open="" close=";"> 
-     WHERE  COMPANY_CD  =  #{item[0].companyCd, jdbcType=VARCHAR}
-     AND    DIVISION_CD =  #{item[0].divisionCd, jdbcType=VARCHAR}
-     AND    CREATE_BY   =  #{item[0].userId, jdbcType=VARCHAR}
-     </foreach>
-     
+  <delete id="remove_validateEx1" parameterType="java.util.List">
+      DELETE FROM MOM_PROC_BOR
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>
+   <insert id="create_validateEx1"  parameterType="java.util.List" >    
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
        INTO MOM_PROC_BOR (
                   COMPANY_CD
@@ -254,23 +253,10 @@
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
               )
                </foreach>
-              ;
-               SELECT
-            CASE 
-                WHEN COUNT(CREATE_BY) = 0 THEN 'S'
-                ELSE 'E' 
-            END  
-            INTO #{p_err_code, mode=OUT, jdbcType=VARCHAR, javaType=String}
-          FROM MOM_PROC_BOR
-          <foreach item="item" collection="list" index="i" separator=" " open="" close=";"> 
-          WHERE  COMPANY_CD  =  #{item[0].companyCd, jdbcType=VARCHAR}
-     	  AND    DIVISION_CD =  #{item[0].divisionCd, jdbcType=VARCHAR}
-     	  AND    CREATE_BY   =  #{item[0].userId, jdbcType=VARCHAR}
-         </foreach>
-              END }
+
            
   </insert>
-<!--    <select id="proc_excelUpBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_validateEx1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -291,7 +277,7 @@
 															  , #{useYn, jdbcType=VARCHAR, mode=IN}
 															  , #{description, jdbcType=VARCHAR, mode=IN}															  
 					                                          , #{userId,  jdbcType=VARCHAR, mode=IN} )}    	              
-  </select>   -->
+  </select>   
   <update id="modify_defaultInfo1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_BOR

@@ -21,6 +21,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.mom.util.FrameworkUtil;
@@ -282,6 +283,7 @@ public class MomDao {
     	
     	return FrameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
+	@Transactional
 	public List<Map<String, Object>> upsertMapList(String query, List<Map<String,Object>> param) {
 		PrintUtil.print("MomDao", "upsertMapList", "#", "$", "query", query, true, true, false, debugOn);
 		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
@@ -294,12 +296,12 @@ public class MomDao {
 		int resultCount = 0;	
 		int paramSize = param.size();
         DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
-        defaultTransactionDefinition.setName("Transaction");
-        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);        	
-        TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
+       // defaultTransactionDefinition.setName("Transaction");
+        //defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);        	
+        //TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
         SqlSession sqlSession1 = null;
         	try {
-        	      sqlSession1 = sqlSessionFactory.openSession(); 		
+        	      sqlSession1 = sqlSessionFactory.openSession(ExecutorType.BATCH); 		
         	      //sqlSession1 = SqlSessionFactorys.setSqlSession();
         	      //System.out.println("총데이터="+paramSize);
         	      if(paramSize>=1000) {
@@ -319,10 +321,11 @@ public class MomDao {
         	    		  for(int j=splitCount;j<=splitCount+1000;j++) {
         	    			  splitParam.add(param.get(j));
         	    		  }
-        	    		  splitCount += 1000; // 스플릿 카운트 누적  
-            	    	  resultCount += sqlSession1.insert(query, splitParam); //  쿼리 실행결과 카운트 누적
-            	    	
-            	    	  ProgressInfo.successCount = resultCount;
+        	    		  splitCount += 1000; // 스플릿 카운트 누적 
+        	    		  for (Map<String, Object> param1 : splitParam) {
+            	    	   sqlSession1.insert(query, param1); //  쿼리 실행결과 카운트 누적
+        	    		  }
+            	    	  ProgressInfo.successCount = resultCount+=1000;
             	    	  
             	      }       	    	  
         	    	
@@ -332,7 +335,10 @@ public class MomDao {
             	    		  splitParam.add(param.get(k));
             	    		  
             	    		  splitCount  += upsertRemainCount;
-                	    	  resultCount += sqlSession1.insert(query, splitParam);
+            	    		  for (Map<String, Object> param2 : splitParam) {
+                	    	  sqlSession1.insert(query, param2);
+            	    		  }
+            	    		  ProgressInfo.successCount = resultCount+=upsertRemainCount;
                 	    	
                 	      }     
         	    	  }
@@ -343,36 +349,37 @@ public class MomDao {
 						 * for (int j=0;j<param.size();j++) { //
 						 * System.out.println("넣기직전파람?"+param.get(j)); }
 						 */
-        	    
-        	    	     resultCount = sqlSession1.insert(query, param);
+        	    	     for (Map<String, Object> param3 : param) {
+        	    	     resultCount = sqlSession1.insert(query, param3);
+        	    	     }
         	      }
     			
     			  //System.out.println("성공 카운트="+resultCount);
-	        			if(resultCount != 0) {	        				
+	        			if(resultCount != 0) {	 
+	        				//dataSourceTransactionManager.commit(transactionStatus);
+	        				sqlSession1.commit();
+	        				//sqlSession1.flushStatements();          	
+	                    	//sqlSession1.close();
+	                    	//sqlSession1.clearCache();
 	        				//sqlSession1.commit();
-	        				if(param.get(0).get("commitYn")!=null) {
-	        					if(param.get(0).get("commitYn").toString().equals("Y")) {
-	        			
-		        					dataSourceTransactionManager.commit(transactionStatus);
-		        					sqlSession1.flushStatements();          	
-		        	            	sqlSession1.close();  
-		        		        	//System.out.println("UPSERT 커밋성공!");
-		        				} 
-	        				}	        			       	        	
+	        			        			       	        	
 	        				//System.out.println("UPSERT 커밋안함!");
 	            		}
-	        			else {	   
+	        			else {	  
+		        				
 	        				   System.out.println("UPSERT 실패 카운트="+resultCount);
 	                		   return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");      					  		 
 	            		}            		       				        			       			
             } catch(Exception e) {
             	ProgressInfo.successCount = 0;
-            	dataSourceTransactionManager.rollback(transactionStatus);
+            	//dataSourceTransactionManager.rollback(transactionStatus);
             	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
         		throw cdae;
             } finally {			
-            	//sqlSession1.flushStatements();          	
-            	//sqlSession1.close();  
+            	
+            	sqlSession1.flushStatements();          	
+            	sqlSession1.close();
+            	sqlSession1.clearCache();
             	long endTime = System.currentTimeMillis();
                 long resutTime = endTime - startTime;            
                 PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         

@@ -2727,16 +2727,19 @@ var momWidget = {
 			//alert('스크롤바있음');
 		   }
 		});
-		AUIGrid.bind(that.grid[index], "cellEditEnd", function( e ) {				
-								for(var i=0, len=that.columnDropdown[index][e.dataField].length; i<len; i++) { // keyValueList 있는 값만..
+		AUIGrid.bind(that.grid[index], "cellEditEnd", function( e ) {
+			if(that.columnProperty[index][e.columnIndex]['columnType'] == 'S'){
+					for(var i=0, len=that.columnDropdown[index][e.dataField].length; i<len; i++) { // keyValueList 있는 값만..
 									if(that.columnDropdown[index][e.dataField][i]["code"] == e.value) {
 										break;
 									}
-									if(i==len-1){
+									if(i==len-1&&e.value!=''){
 										AUIGrid.setCellValue(that.grid[index], e.columnIndex, e.dataField, e.oldValue);
 										that.messageBox({type: 'warning', width: '400', height: '145', html: '리스트에 없는 데이터입니다!'});
 									}
 								}
+			}			
+							
 							
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
 			});
@@ -4005,13 +4008,22 @@ var momWidget = {
 					if(uploadItems.length ==0){
 						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: '데이터가없습니다!'});
 					}
-                 mom_ajax('C', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result1, data1) {
-		      if(result1 != 'SUCCESS') {
-		    	  momWidget.splashHide();
-			      return;							     
-		      }					       			
-
-       momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
+                 mom_ajax('D', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), [], function(result1, data1) {
+		      		if(result1 != 'SUCCESS') {
+			    	  momWidget.splashHide();
+			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삭제실패!'});
+				      return;							     
+		      		}					       			
+        mom_ajax('C', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
+				   if(result2 != 'SUCCESS') {
+			    	  momWidget.splashHide();
+			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
+				      return;							     
+		      		}
+		      				
+	    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
+	    }, undefined, undefined, this, false);	
+   
 	}, undefined, undefined, this, false);	
 	 				   
 

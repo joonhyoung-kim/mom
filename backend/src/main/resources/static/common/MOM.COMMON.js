@@ -1571,7 +1571,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 					},*/
 		beforeSend: function (xhr) {
 	              xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
-	            if(excelUpYn =='Y'){
+	            if(excelUpYn =='Y'&&param.length>=1000){
 	            	 bar.width('0%');
                      percent.html('0%');
 	            	 // progress Modal 열기
