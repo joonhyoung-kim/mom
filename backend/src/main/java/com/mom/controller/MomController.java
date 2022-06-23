@@ -105,6 +105,7 @@ public class MomController {
 			}
 			else {
 				result = momService.createMapList(query, param);
+				System.out.println("결과1?"+result);
 			}
 			
 		}
@@ -114,6 +115,7 @@ public class MomController {
 			System.out.println(result);
 			
 		}
+		System.out.println("결과2?"+result);
 		return result ;
 	}
 	

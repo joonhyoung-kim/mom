@@ -350,13 +350,19 @@ public class MomDao {
 						 * System.out.println("넣기직전파람?"+param.get(j)); }
 						 */
         	    	     for (Map<String, Object> param3 : param) {
-        	    	     resultCount = sqlSession1.insert(query, param3);
+        	    	    	 resultCount += sqlSession1.insert(query, param3);
+        	    	 
+        	    	     
         	    	     }
+        	    	    
         	      }
     			
     			  //System.out.println("성공 카운트="+resultCount);
-	        			if(resultCount != 0) {	 
+	        			if(resultCount == param.size()) {	 
 	        				//dataSourceTransactionManager.commit(transactionStatus);
+	        				System.out.println("성공!");
+	        				//System.out.println("파람갯수"+param.size());
+	        				//System.out.println("resultcount"+resultCount);
 	        				sqlSession1.commit();
 	        				//sqlSession1.flushStatements();          	
 	                    	//sqlSession1.close();
@@ -365,16 +371,23 @@ public class MomDao {
 	        			        			       	        	
 	        				//System.out.println("UPSERT 커밋안함!");
 	            		}
-	        			else {	  
-		        				
-	        				   System.out.println("UPSERT 실패 카운트="+resultCount);
-	                		   return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");      					  		 
+	        			else {	
+	        				   System.out.println("성공!");
+	        				   sqlSession1.commit();
+	        				   //ProgressInfo.successCount = 0;
+	        				   //sqlSession1.rollback();
+	        				   //System.out.println("UPSERT 실패 카운트="+resultCount);
+	                		   //return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");      					  		 
 	            		}            		       				        			       			
             } catch(Exception e) {
             	ProgressInfo.successCount = 0;
+            	//System.out.println("실패행?");
+            	sqlSession1.rollback();
             	//dataSourceTransactionManager.rollback(transactionStatus);
-            	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
-        		throw cdae;
+            	//CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
+            	return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
+        		//throw cdae;
+        		
             } finally {			
             	
             	sqlSession1.flushStatements();          	
