@@ -138,7 +138,83 @@
         </foreach>
        </where>
    </delete>
-  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+    <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap">
+      MERGE INTO MOM_BOM 
+            USING( 
+                     SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{parentItemId, jdbcType=VARCHAR} as parentItemId,
+                            #{childItemId, jdbcType=VARCHAR} as childItemId,
+                            #{reqQty, jdbcType=NUMERIC} as reqQty,
+                            TO_DATE(#{startDate, jdbcType=VARCHAR},'YYYY-MM-DD') as startDate,
+                            TO_DATE(#{endDate, jdbcType=VARCHAR},'YYYY-MM-DD') as endDate,
+                            NVL(#{phantomFlag, jdbcType=VARCHAR},'N') as phantomFlag,
+                            NVL(#{mrpFlag, jdbcType=VARCHAR},'Y') as mrpFlag,
+                            NVL(#{issueType, jdbcType=VARCHAR},'A') as issueType,
+                            #{sortNo, jdbcType=NUMERIC} as sortNo,
+                            #{useYn, jdbcType=VARCHAR} as useYn,
+                            #{description, jdbcType=VARCHAR} as description,
+                            #{userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 PARENT_ITEM_ID = PARAM.parentItemId AND
+                 CHILD_ITEM_ID = PARAM.childItemId )
+            WHEN MATCHED THEN 
+                 UPDATE SET REQ_QTY = PARAM.reqQty
+                          , START_DATE = PARAM.startDate
+                          , END_DATE = PARAM.endDate
+                          , PHANTOM_FLAG = PARAM.phantomFlag
+                          , MRP_FLAG = PARAM.mrpFlag
+                          , ISSUE_TYPE = PARAM.issueType
+                          , SORT_NO = PARAM.sortNo
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , PARENT_ITEM_ID
+                            , CHILD_ITEM_ID
+                            , REQ_QTY
+                            , START_DATE
+                            , END_DATE
+                            , PHANTOM_FLAG
+                            , MRP_FLAG
+                            , ISSUE_TYPE
+                            , SORT_NO
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.parentItemId
+                            , PARAM.childItemId
+                            , PARAM.reqQty
+                            , PARAM.startDate
+                            , PARAM.endDate
+                            , PARAM.phantomFlag
+                            , PARAM.mrpFlag
+                            , PARAM.issueType
+                            , PARAM.sortNo
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>
+ <!--  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
       MERGE INTO MOM_BOM 
             USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
                      SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
@@ -213,5 +289,5 @@
                             , PARAM.createDate
                             , PARAM.updateBy
                             , PARAM.updateDate )
-  </insert>
+  </insert> -->
 </mapper>

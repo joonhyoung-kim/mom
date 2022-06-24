@@ -55,11 +55,11 @@ public class MomDao {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return FrameworkUtil.createResponseListEmpty();
 		}
-		List<Map<String,Object>> result =  new ArrayList<>();
-		
+		//List<Map<String,Object>> result =  new ArrayList<>();
+		List<Map<String,Object>> result =  null;
 		long start = System.currentTimeMillis();
 		try {	
-			
+			 
 			//TestInnerResultHandler(result)
 			//result = sqlSession.selectList(query.trim(), param);	
 			//new TestInnerResultHandler(result)
@@ -77,19 +77,20 @@ public class MomDao {
 			 * param.get("p_err_code")); mapList.put("p_err_msg", param.get("p_err_msg"));
 			 * System.out.println("맵리스트="+mapList); //result.add(mapList); }
 			 */
-		   if(param.get("requestType")!=null) {	
-			  if(param.get("requestType").toString().equals("proc")){
-				 System.out.println("request="+param.get("requestType").toString());
-				result.add(param);
-			  }
-		   }
+			/*
+			 * if(param.get("requestType")!=null) {
+			 * if(param.get("requestType").toString().equals("proc")){
+			 * System.out.println("request="+param.get("requestType").toString());
+			 * result.add(param); } }
+			 */
 			//System.out.println("조회결과="+result);		
 			System.out.println("조회파람="+param);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			System.out.println("#### " + simpleDateFormat.format(today) + " Select " + param.get("companyCd") + ", " + query.substring(query.indexOf("get_")) + " = " + DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
-			
+			result = sqlSession.selectList(query.trim(), param);
+					  
 		} catch(Exception e) {
 			e.printStackTrace();
 			PrintUtil.print(null, null, null, "$", "getMapList : " + PrintUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
@@ -101,11 +102,12 @@ public class MomDao {
 			return FrameworkUtil.createResponseListEmpty();
 		}
 		finally {			     
-					//sqlSession1.flushStatements();          			        
+					//sqlSession1.flushStatements();  
+			
 		}
 		 
 		//PrintUtil.print(null, null, null, "$", PrintUtil.queryString(query, "R", result == null ? 0 : result.size()), null, false, true, true, debugOn);
-		return sqlSession.selectList(query.trim(), param);
+		return result;
 		
 	}
 	public List<Map<String,Object>> procMapList(String query, List<Map<String,Object>> param) {
@@ -285,8 +287,8 @@ public class MomDao {
 	}
 	@Transactional
 	public List<Map<String, Object>> upsertMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomDao", "upsertMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		//PrintUtil.print("MomDao", "upsertMapList", "#", "$", "query", query, true, true, false, debugOn);
+		//PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
@@ -314,10 +316,11 @@ public class MomDao {
         	          //System.out.println("1000개단위 쿼리실행수="+upsertCount);
         	          //System.out.println("1000개단위 잔여개수="+upsertRemainCount);
         	          //System.out.println("누적 스플릿 카운트="+splitCount);
-        	    	  List<Map<String,Object>> splitParam = null;
+        	    	  List<Map<String,Object>> splitParam = new ArrayList<>();
         	    	  
         	    	  for(int i=0;i<upsertCount;i++) {                     
-        	    		  splitParam = new ArrayList<>();
+        	    		  //splitParam = new ArrayList<>();
+        	    		  splitParam.clear();
         	    		  for(int j=splitCount;j<=splitCount+1000;j++) {
         	    			  splitParam.add(param.get(j));
         	    		  }
@@ -331,14 +334,16 @@ public class MomDao {
         	    	
         	    	  if(upsertRemainCount>0) {
         	    		  for(int k=(upsertCount*1000)+1;k<paramSize;k++) {
-            	    		  splitParam = new ArrayList<>();
+            	    		  //splitParam = new ArrayList<>();
+        	    			  splitParam.clear();
             	    		  splitParam.add(param.get(k));
             	    		  
-            	    		  splitCount  += upsertRemainCount;
+            	    		  //splitCount  += upsertRemainCount;
             	    		  for (Map<String, Object> param2 : splitParam) {
                 	    	  sqlSession1.insert(query, param2);
             	    		  }
-            	    		  ProgressInfo.successCount = resultCount+=upsertRemainCount;
+            	    		  //ProgressInfo.successCount += resultCount+upsertRemainCount;
+            	    		  ProgressInfo.successCount = paramSize;
                 	    	
                 	      }     
         	    	  }
@@ -350,11 +355,11 @@ public class MomDao {
 						 * System.out.println("넣기직전파람?"+param.get(j)); }
 						 */
         	    	     for (Map<String, Object> param3 : param) {
-        	    	    	 resultCount += sqlSession1.insert(query, param3);
+        	    	    	  sqlSession1.insert(query, param3);
         	    	 
         	    	     
         	    	     }
-        	    	    
+        	    	     resultCount = param.size();
         	      }
     			
     			  //System.out.println("성공 카운트="+resultCount);
@@ -385,6 +390,8 @@ public class MomDao {
             	sqlSession1.rollback();
             	//dataSourceTransactionManager.rollback(transactionStatus);
             	//CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
+            	
+            	System.out.println("에러사유="+e.getMessage());
             	return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
         		//throw cdae;
         		

@@ -45,7 +45,7 @@ var momWidget = {
 		  var that = this;	 
 		  index--;
 		  var fileUpPop = that.createFileUploadPop.excelUp(index,'파일업로드');
-		  var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
+		 // var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
 		  var changePwPop = that.createChangePop.password(index,'비밀번호변경');
 		  
 		  if(index == 0){
@@ -53,7 +53,7 @@ var momWidget = {
 			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
 
 			  $('body').append(fileUpPop);
-			  $('body').append(fileUpProgressBar);
+			  //$('body').append(fileUpProgressBar);
 			  $('body').append(changePwPop);
 			 
 			  //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');			  
@@ -1606,6 +1606,11 @@ var momWidget = {
 			            '<div class="modal-body">'+
 			                '<div class="excel-input-box">'+ 
 			                  '<input type="file" class = "excel-input-text" accept=".xls, .xlsx, .csv" id="excelFile'+(index+1)+'">'+
+			                    '<div class="progress">'+
+			                      '<div class="bar"></div>'+
+			                        '<div class="percent">0%</div>'+
+			                      '</div>'+
+			                        '<div id="status"></div>'+
 			                  '</div>'+
 			                '<div class="excel-grid-box">'+
 			                  '<div id ="excelUpGrid1" class="excel-up-grid">'+
@@ -4014,7 +4019,7 @@ var momWidget = {
 			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삭제실패!'});
 				      return;							     
 		      		}					       			
-        mom_ajax('C', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
+        mom_ajax('CU', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
 				   if(result2 != 'SUCCESS') {
 			    	  momWidget.splashHide();
 			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
@@ -4030,7 +4035,7 @@ var momWidget = {
 			});
 			
 			$(document).on('click','#'+saveExUpBtnId, function(e) {
-			     $('#excelUpPop'+(index+1)).momModal('hide');	
+			    // $('#excelUpPop'+(index+1)).momModal('hide');	
 				 that.splashShow();
 				
 				 var bar = $('.bar');
@@ -4055,7 +4060,7 @@ var momWidget = {
 				    }
 					if(param.length>=1000){
 						that.splashHide();
-						 $("#pleaseWaitDialog").momModal('show');
+						 //$("#pleaseWaitDialog").momModal('show');
 					
 					}
 					else{
@@ -4076,9 +4081,9 @@ var momWidget = {
 					
 						// $("#pleaseWaitDialog").modal('show');
 						 mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
-							   bar.width('0%');
-					           percent.text('0%');  
-							
+							   bar.width('100%');
+					           percent.text('100%'+' '+param.length+'/'+param.length);  
+							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
 					            if(data[0]['p_err_code']=='E') {
 									  $("#pleaseWaitDialog").momModal('hide');
 					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
@@ -4093,7 +4098,7 @@ var momWidget = {
 					        	  //$('#excelUpPop'+(index+1)).momModal('hide');
 					        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
 								  momWidget.splashHide();
-								  $("#pleaseWaitDialog").momModal('hide');
+								  //$("#pleaseWaitDialog").momModal('hide');
 							      return;
 				          }, undefined, index, this, true);
 					}, 500);
@@ -4102,7 +4107,11 @@ var momWidget = {
 			});
 			$(document).on('change','#'+excelFile, function(e) {
 				that.splashShow();
-			
+				 var bar = $('.bar');
+				 var percent = $('.percent');
+				 var status = $('#status');
+			   bar.width('0%');
+			   percent.text('0%');  
 			
 				
 				setTimeout(function() {
@@ -4113,8 +4122,8 @@ var momWidget = {
 							setTimeout(function() {
 
 						that.splashHide();
-							}, 1000);
-							}, 1000);
+							}, 500);
+							}, 500);
 			
 		//AUIGrid.showToastMessage(that.excelUpGrid[index], 2, 0, "Y/N만 입력가능!");
 			});
@@ -4129,6 +4138,11 @@ var momWidget = {
 			$(document).on('click', '#' + excelUpBtnId, function() {
 				$('#excelFile1').val('')
 				AUIGrid.clearGridData(that.excelUpGrid[index]);
+					 var bar = $('.bar');
+				 var percent = $('.percent');
+				 var status = $('#status');
+			   bar.width('0%');
+			   percent.text('0%');  
 				var gridPros = {
 						
 						// 페이징 사용		
@@ -4164,6 +4178,7 @@ var momWidget = {
 					};
 					that.excelUpGridProperty[index] = gridPros;
 					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
+					
 					$('#' +'excelUpPop'+(index+1)).momModal('show');
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});

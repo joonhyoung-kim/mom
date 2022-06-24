@@ -13,6 +13,8 @@ var preCombo2 = undefined;
 var tmpCombo1 = undefined;
 var tmpCombo2 = undefined;
 var initPageLoad = true;
+var searchComboItems = [];
+var preComboItems = [];
 var addBtn  = '<a id="addBtn" href="#" class="w-inline-block btntool widget-btn1"><div tmpTabId="five" class="w-icon fa fa-copy icon widget-btn1-icon"></div><div multi-lang="" class="textblock widget-btn1-text">행추가</div></a>';
 var delBtn  = '<a id="delBtn" href="#" class="w-inline-block btntool widget-btn1"><div tmpTabId="five" class="w-icon fa fa-trash-o icon widget-btn1-icon"></div><div multi-lang="" class="textblock widget-btn1-text">삭제</div></a>';
 var saveBtn = '<a id="saveBtn" href="#" class="w-inline-block btntool widget-btn1"><div tmpTabId="five" class="w-icon fa fa-pencil icon widget-btn1-icon"></div><div multi-lang="" class="textblock widget-btn1-text">저장</div></a>';
@@ -33,6 +35,7 @@ var XUSM3030 = {
 	searchParam		:  [['menuId','gridId']],
 	init: function() {			
 		var that = this;
+		 searchComboItems[0] = {};
 	     $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#eeb55e;font-weight:bold:color:#22741C;}</style>');
 	     $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
 		that.removeAllBtn();
@@ -81,7 +84,7 @@ var XUSM3030 = {
 			      return;
 			      momWidget.splashHide();
 		      }
-	    	  
+	    	
 	    	  var gridValidString = '';					      
 		      for(var i=0 ;i<data2.length;i++){					    	  
 		    	   if(data2[i].validValue != undefined && data2[i].validValue !='' && data2[i].validValue.length > 4 && data2[i].validValue.substring(1,3) == '[{'){
@@ -1068,7 +1071,7 @@ var XUSM3030 = {
 	buttonGrid: function(queryId) {
 		var that = this;
 		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"}];
-		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"등록&수정"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
+		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CV","value":"등록(검사)"},{"code":"CP","value":"복사"},{"code":"CPV","value":"복사(검사)"},{"code":"U","value":"수정"},{"code":"UV","value":"수정(검사)"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"EV","value":"엑셀업로드(검사)"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
@@ -1327,10 +1330,8 @@ var XUSM3030 = {
 		var that = this;	
 	
 	
-		$(document).on('change', '#menuId', function(e) {
-			 /*if ($("#menuId").jqxComboBox('isOpened')){
-				return;
-			}*/
+		$(document).on('select', '#menuId', function(e) {
+		
 			  if($('#gridId').val()!=''){
 				  momWidget.splashShow();
 				    var gridId = '1';
@@ -1338,6 +1339,7 @@ var XUSM3030 = {
 					var queryId = 'gridProp';
 					
 					if(chooseTab == 'grid'){
+						
 						queryId = 'gridInfo';
 					}
 					else if(chooseTab == 'column'){
@@ -1363,10 +1365,7 @@ var XUSM3030 = {
 							}
 							else if(chooseTab == 'column'){
 								that.columnGrid('columnInfo');
-							/*	AUIGrid.setGridData('#grid1', columnProp);
-								for(var i=0,max=gridProp.length;i<max;i++){		
-									AUIGrid.setCellValue('#grid1', i, "validValue", gridProp[i]['propertyValue']);
-								}*/
+			
 							} 
 							else if(chooseTab == 'search'){
 								that.searchGrid('searchInfo');
@@ -1382,7 +1381,7 @@ var XUSM3030 = {
 								that.gridGrid('gridInfo');
 							}
 
-					  	 // AUIGrid.clearGridData('#grid1');
+					  	
 						  mom_ajax('R', 'DD.DD00006', {menuId:$("#menuId").val()}, function(result5, data5) {
 						      if(result5 != 'SUCCESS') {
 						    	  momWidget.splashHide();
@@ -1397,15 +1396,14 @@ var XUSM3030 = {
 								   $('#gridId').jqxComboBox('source',data5);	
 								   $("#gridId").jqxComboBox('selectItem', gridId);
 								   $("#gridId").jqxComboBox({ disabled: false }); 
-								   $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').label+'-'+gridId);
+								   $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').name+'-'+gridId);
 							 }
 							 if(gridId>data5.length){
 								 AUIGrid.clearGridData('#grid1');
-								 $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').label);
+								 $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').name);
 							 }
 
-								//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
-								//momWidget.splashHide();
+							
 							    return;
 
 					}, undefined, undefined, this, false,'Y','crud');
@@ -1429,8 +1427,12 @@ var XUSM3030 = {
 									
 					$("#gridId").jqxComboBox({ disabled: false }); 
 					$("#gridId").jqxComboBox('selectIndex', 0 );
-					//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
-					//momWidget.splashHide();
+					const menuIdStr =  $("#menuId").jqxComboBox('getItemByValue', $('#menuId').val().trim()); 
+				    $('#menuId').jqxComboBox('clearSelection'); 
+				      setTimeout(function() {
+	                   $('#menuId').val(menuIdStr.label);
+    					},300);
+				    
 				    return;
 
 		}, undefined, undefined, this, false,'Y','crud');
@@ -1494,7 +1496,7 @@ var XUSM3030 = {
 					else {
 						that.gridGrid('gridInfo');
 					}
-			      	$('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').label+'-'+$('#gridId').val());
+			      	$('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').name+'-'+$('#gridId').val());
 			      	momWidget.splashHide();
 		
 	
@@ -1636,6 +1638,30 @@ var XUSM3030 = {
 				      	momWidget.splashHide();
 			     	
 			
+		});
+		$(document).on('click', '#excelDownBtn', function() {
+			//momWidget.splashShow();
+			
+			    var excelDownOpt = {fileName: "위젯관리-"+chooseTab ,
+						    		    progressBar: true,
+						    		    showRowNumColumn:false,
+						    		    footers: undefined,
+						    		    exportWithStyle: true
+				    		            };
+				    
+				    excelDownOpt.afterRequestCallback = function() { // 엑셀 만들고 호출되는 콜백함수
+					$('.aui-grid-export-progress-modal').remove();
+					// AUIGrid.GridData(that.excelGrid[index]);
+					
+					//$('#excelArea' + (index + 1)).remove();
+					//AUIGrid.destroy(that.excelDownGrid[index]);
+					//that.exceldownGrid[index] = undefined;
+				}
+					  AUIGrid.exportToXlsx("#grid1", excelDownOpt);
+					  $('.aui-grid-export-progress-modal').height('100%');
+				$('#grid1').children().append($('.aui-grid-export-progress-modal'));
+				//momWidget.splashShow();
+		
 		});
 		$(document).on('click', '#saveBtn', function() {
 			momWidget.splashShow();
@@ -1934,18 +1960,76 @@ var XUSM3030 = {
 	
 	},
 	setComboBox: function() {
-		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'containsignorecase',remoteAutoComplete: false});	
+		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'none',remoteAutoComplete: false});	
 		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
-		
+			      	$('#menuId').on('keyup', function (e) {
+				
+				        if(e.keyCode==16){
+					
+					  			//$('#menuId').jqxComboBox('clearSelection'); 						  				  
+      					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
+      					   if($('#'+e.currentTarget.id).val() =='' ||searchComboItems[0][e.currentTarget.id] == undefined || searchComboItems[0][e.currentTarget.id] == ''){
+							$('#'+e.currentTarget.id).jqxComboBox('source',preComboItems);	
+			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
+	          				return;
+						} 
+							
+						//$('#'+e.currentTarget.id).val('');
+						let searchStr = $('#'+e.currentTarget.id).val();
+						//$('#'+e.currentTarget.id).jqxComboBox('clear');
+      					let oldItems = searchComboItems[0][e.currentTarget.id];
+      					if(preComboItems.length==0){
+	 						preComboItems = oldItems;
+						}
+      					    
+      					let newItems = [];
+              			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					
+				 			if(oldItems[i]['name'].toUpperCase().indexOf($('#'+e.currentTarget.id).val().toUpperCase()) >=0){
+								//$("#jqxComboBox").jqxComboBox('removeItem', "List Item" ); 
+								 newItems.push(oldItems[i]);
+								//$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']}); 
+							}
+							else{
+								//$('#'+e.currentTarget.id).jqxComboBox('removeItem', oldItems[i]['code']);
+							}
+
+			  		   }
+			  		      
+	               			//$('#'+e.currentTarget.id).val(searchStr);
+    					
+			  		  
+			  		   if(newItems.length ==0 ){
+				 		   
+			  		       $('#'+e.currentTarget.id).jqxComboBox('source',oldItems);	
+			  		       $('#'+e.currentTarget.id).jqxComboBox('open');
+			  		  
+						}
+						else{
+							
+			  		    	$('#'+e.currentTarget.id).jqxComboBox('source',newItems);	
+			  		    	$('#'+e.currentTarget.id).jqxComboBox('open');
+			  		    	
+			  		    	 $('#'+e.currentTarget.id).val(searchStr);
+						}
+			  		    	const menuIdStr =  $("#menuId").jqxComboBox('getItemByValue', $('#menuId').val().trim()); 
+				        $('#menuId').jqxComboBox('clearSelection'); 
+				        setTimeout(function() {
+	                    $('#menuId').val(menuIdStr.label);
+    					},300);
+     					
+}
+				    	
+			      });
 		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {
 		      if(result != 'SUCCESS') {
 		    	  momWidget.splashHide();
 			      return;							     
 		      }					       
 			  	 $('#menuId').jqxComboBox("clear");			
+			  	 searchComboItems[0]['menuId'] = data;
 			  	 $('#menuId').jqxComboBox("source",data);	
-			 	 $("#menuId").jqxComboBox('selectIndex', 0 ); 
-			 	$('#gridId').val('1');
+			 	 //$("#menuId").jqxComboBox('selectIndex', 0 ); 
+			 	 //$('#gridId').val('1');
 				//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
 				//momWidget.splashHide();
 			    return;

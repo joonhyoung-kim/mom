@@ -42,7 +42,7 @@
       AND (UPPER(MWC.WORK_CENTER_NM) LIKE '%' || UPPER(#{workCenterNm, jdbcType=VARCHAR}) || '%' )
 	  </if>
 	  <if test="workCenterType != null and workCenterType != ''">
-      AND MWC.WORK_CENTER_TYPE IN (${workCenterType})
+      AND MWC.WORK_CENTER_TYPE = #{workCenterType, jdbcType=VARCHAR}
 	  </if>
       <if test="useYn != null and useYn != ''">
       AND MWC.USE_YN = #{useYn, jdbcType=VARCHAR}
