@@ -4444,12 +4444,12 @@ var momWidget = {
 		    
 		
 				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your);
-				if(callInitResult['result'] != 'SUCCESS') {
+					if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
 				      return;
-				}	
-				  param = callInitResult['param'];	
+					}	
+				  	param = callInitResult['param'];	
 				 //your  = callInitResult['your'];
 				
 				//that.popUpSizeSet(index);		
@@ -7564,7 +7564,7 @@ var momWidget = {
 		if(action == 'GS' && your.saveCallInit != undefined) {
 				your.saveCallInit(index,your,action,btnId,param,result);			
 		} 
-		if((action == 'C' || action == 'U' || action == 'P') && your.saveCallInit != undefined) {
+		if((action == 'C' || action == 'U' || action == 'P' || action == 'CP') && your.saveCallInit != undefined) {
 			 your.saveCallInit(index,your,action,btnId,param,result);			
 	    } 
 		if(action == 'D'  && your.delCallInit != undefined) {		
@@ -7606,7 +7606,7 @@ var momWidget = {
 		if(action == 'GS' && your.saveCallBack != undefined) {
 				your.saveCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		if((action == 'C' || action == 'U' || action == 'P') && your.saveCallBack != undefined) {
+		if((action == 'C' || action == 'U' || action == 'P'|| action == 'CP') && your.saveCallBack != undefined) {
 			your.saveCallBack(index,your,action,btnId,param,result,data);		
 	} 
 		if(action == 'D'  && your.delCallBack != undefined) {		

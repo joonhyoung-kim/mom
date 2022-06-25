@@ -5,6 +5,7 @@ var gridProp = [];
 var columnProp = [];
 var searchProp = [];
 var popupProp = [];
+var prevMenuId = '';
 var buttonProp = [];
 var tmpComboItem  = undefined;
 var chooseTab = 'grid';
@@ -35,6 +36,7 @@ var XUSM3030 = {
 	searchParam		:  [['menuId','gridId']],
 	init: function() {			
 		var that = this;
+		 $("#gridId").jqxComboBox({ disabled: true }); 
 		 searchComboItems[0] = {};
 	     $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#eeb55e;font-weight:bold:color:#22741C;}</style>');
 	     $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
@@ -79,7 +81,10 @@ var XUSM3030 = {
 	
 	gridGrid: function(queryId) {
 		var that = this;
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val()}, function(result2, data2) {
+		if(prevMenuId==''){
+				prevMenuId = $('#menuId').val();
+		}
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val()}, function(result2, data2) {
 	    	  if(result2 != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -102,6 +107,10 @@ var XUSM3030 = {
 				    	  
 		      }	
 	    	var columnProperty = [{
+	  			  dataField 	: 'category' 
+	  			, headerText 	: '카테고리'
+	  			, width			: 100
+	  		},{
 	  			  dataField 	: 'propertyName' 
 	  			, headerText 	: '속성명'
 	  			, width			: 200
@@ -113,13 +122,12 @@ var XUSM3030 = {
 	  		},{
 	  			  dataField 	: 'defaultValue' 
 	  			, headerText 	: '기본값'
-	  			, width			: 200
-	  			, style			: 'left-column'
+	  			, width			: 100
 	  		},
 	  		{
 	  			  dataField 	: 'dataType' 
 	  			, headerText 	: '자료형'
-	  			, width			: 150
+	  			, width			: 100
 	  		},
   		    {
 	  			  dataField 	: 'validValue' 
@@ -212,6 +220,15 @@ var XUSM3030 = {
 					, 'selectionMode': 'multipleRows'
 					, 'copySingleCellOnRowMode': true
 					, 'softRemoveRowMode': false
+					// 그룹핑 후 셀 병합 실행
+					, enableCellMerge : true			
+					// 브랜치에 해당되는 행을 출력 여부
+					, showBranchOnGrouping : false
+					// 그룹핑 패널 사용
+					, useGroupingPanel : false		
+					// 차례로 country, product 순으로 그룹핑을 합니다.
+					, groupingFields : ["category"]
+			
 				};
 			
 			 AUIGrid.destroy('#grid1', columnProperty, gridProperty);	
@@ -230,7 +247,7 @@ var XUSM3030 = {
 		var dataTypeList  = [{"code":"string","value":"문자"},{"code":"numeric","value":"숫자"},{"code":"date","value":"날짜"},{"code":"boolean","value":"참/거짓"}];
 		var columnTypeList  = [{"code":"T","value":"텍스트"},{"code":"S","value":"싱글-드롭다운"},{"code":"M","value":"멀티-드롭다운"},{"code":"CK","value":"체크박스"},{"code":"C","value":"캘린더"},{"code":"G","value":"그룹핑"}];
 		var sortMethod    = [{"code":"ASC","value":"오름차순"},{"code":"DESC","value":"내림차순"},{"code":"NONE","value":"사용안함"}];
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -581,7 +598,7 @@ var XUSM3030 = {
 		var that = this;
 		var searchTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"},{"code":"CP","value":"캘린더(기간)"}];
 		var headerTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"}];
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -846,7 +863,7 @@ var XUSM3030 = {
 	popupGrid: function(queryId) {
 		var that = this;
 		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"C","value":"캘린더"},{"code":"C-HM","value":"시분"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"},{"code":"DG","value":"드롭다운그리드"},{"code":"DS","value":"비고"}];
-		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -1072,7 +1089,7 @@ var XUSM3030 = {
 		var that = this;
 		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CV","value":"등록(검사)"},{"code":"CP","value":"복사"},{"code":"CPV","value":"복사(검사)"},{"code":"U","value":"수정"},{"code":"UV","value":"수정(검사)"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"EV","value":"엑셀업로드(검사)"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
-		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -1334,8 +1351,9 @@ var XUSM3030 = {
 		
 			  if($('#gridId').val()!=''){
 				  momWidget.splashShow();
+				   prevMenuId = $('#menuId').val().trim();
 				    var gridId = '1';
-				    gridId = $('#gridId').val();
+				    //gridId = $('#gridId').val() == '' ? '1':$('#gridId').val();
 					var queryId = 'gridProp';
 					
 					if(chooseTab == 'grid'){
@@ -1357,8 +1375,9 @@ var XUSM3030 = {
 					else{
 						
 					}
-					      	if(chooseTab == 'grid'){
-					      		that.gridGrid('gridInfo');
+					 if(chooseTab == 'grid'){
+						                  that.gridGrid('gridInfo');
+					    					
 								for(var i=0,max=gridProp.length;i<max;i++){		
 									AUIGrid.setCellValue('#grid1', i, "validValue", gridProp[i]['propertyValue']);
 								}
@@ -1382,37 +1401,50 @@ var XUSM3030 = {
 							}
 
 					  	
-						  mom_ajax('R', 'DD.DD00006', {menuId:$("#menuId").val()}, function(result5, data5) {
+						
+					      	
+					      
+			  }
+			  if($('#menuId').jqxComboBox('getSelectedItem')!=null && $('#menuId').jqxComboBox('getSelectedItem')!=''){
+				  mom_ajax('R', 'DD.DD00006', {menuId:$("#menuId").val()}, function(result5, data5) {
 						      if(result5 != 'SUCCESS') {
 						    	  momWidget.splashHide();
 							      return;							     
-						      }									       
+						      }	 		
+						    					       
 							  	$('#gridId').jqxComboBox("clear");	
 							 if(data5.length == 0){
-								   $('#gridId').jqxComboBox('source',[{code:'1',name:'1'}]);
+										momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '그리드등록필수!'});
+										//momWidget.splashHide();
+										return;
+								   //$('#gridId').jqxComboBox('source',[{code:'1',name:'1'}]);
 								  
 							 }
 							 else{
 								   $('#gridId').jqxComboBox('source',data5);	
-								   $("#gridId").jqxComboBox('selectItem', gridId);
+								   $("#gridId").jqxComboBox('selectItem', '1');
 								   $("#gridId").jqxComboBox({ disabled: false }); 
-								   $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').name+'-'+gridId);
+								   $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').label+'-'+$("#gridId").val());
+								   	const menuIdStr =  $("#menuId").jqxComboBox('getItemByValue', $('#menuId').val().trim()); 
+								   	prevMenuId = menuIdStr.value;
+									    $('#menuId').jqxComboBox('clearSelection'); 
+									      setTimeout(function() {
+						                   $('#menuId').val(menuIdStr.label);
+					    					},300);
 							 }
-							 if(gridId>data5.length){
+							/* if(gridId>data5.length){
 								 AUIGrid.clearGridData('#grid1');
-								 $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').name);
-							 }
+								 $('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').label);
+							 }*/
 
-							
+							momWidget.splashHide();
 							    return;
 
 					}, undefined, undefined, this, false,'Y','crud');
-					      	
-					      	momWidget.splashHide();
-					      	return;
-			  }
-			  AUIGrid.clearGridData('#grid1');
-			  mom_ajax('R', 'XUSM3030.gridList', {menuId:$("#menuId").val()}, function(result5, data5) {
+			}
+			  
+			  //AUIGrid.clearGridData('#grid1');
+			/*  mom_ajax('R', 'XUSM3030.gridList', {menuId:$("#menuId").val()}, function(result5, data5) {
 			      if(result5 != 'SUCCESS') {
 			    	  momWidget.splashHide();
 				      return;							     
@@ -1435,7 +1467,7 @@ var XUSM3030 = {
 				    
 				    return;
 
-		}, undefined, undefined, this, false,'Y','crud');
+		}, undefined, undefined, this, false,'Y','crud');*/
 	
 	});
 		$(document).on('change', '#gridId', function() {
@@ -1451,7 +1483,7 @@ var XUSM3030 = {
 			}
 			momWidget.splashShow();
 			var queryId = 'gridProp';
-			
+		
 			if(chooseTab == 'grid'){
 				queryId = 'gridInfo';
 			}
@@ -1496,7 +1528,8 @@ var XUSM3030 = {
 					else {
 						that.gridGrid('gridInfo');
 					}
-			      	$('#widgetTitle').text($('#menuId').jqxComboBox('getSelectedItem').name+'-'+$('#gridId').val());
+					
+			      	$('#widgetTitle').text($('#menuId').val()+'-'+$('#gridId').val());
 			      	momWidget.splashHide();
 		
 	
@@ -1673,7 +1706,7 @@ var XUSM3030 = {
 			for(var i=0,max=checkedItems.length;i<max;i++){	
 				//mapList[i] = checkedItems[i]['item'];
 				mapList[i] = checkedItems[i];
-				mapList[i].menuId       = $('#menuId').val();
+				mapList[i].menuId       = prevMenuId;
 				mapList[i].gridId       = $('#gridId').val();
 				mapList[i].actionType   ='CU';
 				
@@ -1745,7 +1778,7 @@ var XUSM3030 = {
 			var queryId2 = 'gridInfo';
 			for(var i=0,max=checkedItems.length;i<max;i++){	
 				mapList[i] = checkedItems[i]['item'];
-				mapList[i].menuId       = $('#menuId').val();
+				mapList[i].menuId       = prevMenuId;
 				mapList[i].gridId       = $('#gridId').val();
 				mapList[i].actionType   ='D';
 			}
@@ -2008,18 +2041,24 @@ var XUSM3030 = {
 							
 			  		    	$('#'+e.currentTarget.id).jqxComboBox('source',newItems);	
 			  		    	$('#'+e.currentTarget.id).jqxComboBox('open');
-			  		    	
+			  		    	//prevMenuId =  $('#menuId').val();
 			  		    	 $('#'+e.currentTarget.id).val(searchStr);
 						}
-			  		    	const menuIdStr =  $("#menuId").jqxComboBox('getItemByValue', $('#menuId').val().trim()); 
-				        $('#menuId').jqxComboBox('clearSelection'); 
+			
+			  		    	//const menuIdStr =  $("#menuId").jqxComboBox('getItemByValue', $('#menuId').val().trim()); 
+				     /*   $('#menuId').jqxComboBox('clearSelection'); 
 				        setTimeout(function() {
 	                    $('#menuId').val(menuIdStr.label);
-    					},300);
+    					},300);*/
      					
 }
 				    	
 			      });
+			      	$('#gridId').on('keydown', function (e) {
+				 		$("#gridId").jqxComboBox({ disabled: true }); 
+						// momWidget.messageBox({type:'danger', width:'400', height: '145', html: '포커스!'});	
+				         // return;
+				    });
 		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {
 		      if(result != 'SUCCESS') {
 		    	  momWidget.splashHide();

@@ -99,7 +99,8 @@
        FROM    MOM_GRID_PROPERTY_DOC MGPD 		
     </select>    
     <select id="get_gridInfo" parameterType="java.util.HashMap" resultMap="get_defaultInfo_result">
-       SELECT  MGPD.PROPERTY_NAME
+       SELECT  MGPD.CATEGORY
+             , MGPD.PROPERTY_NAME
              , MGP.PROPERTY_VALUE
              , MGPD.DEFAULT_VALUE
              , MGPD.VALID_VALUE
@@ -111,7 +112,8 @@
 	    AND    MGP.COMPANY_CD(+)  = #{companyCd, jdbcType=VARCHAR}
 		AND    MGP.DIVISION_CD(+) = #{divisionCd, jdbcType=VARCHAR}  
         AND    MGP.MENU_ID(+)     = #{menuId, jdbcType=VARCHAR}
-		AND    MGP.GRID_ID(+)     = #{gridId, jdbcType=VARCHAR}  		
+		AND    MGP.GRID_ID(+)     = #{gridId, jdbcType=VARCHAR}  
+		ORDER BY CATEGORY,PROPERTY_VALUE		
      </select>        
      <select id="get_searchInfo" parameterType="java.util.HashMap" resultMap="get_defaultInfo_result">
        SELECT   SEARCH_SEQ

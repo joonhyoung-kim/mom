@@ -75,8 +75,8 @@ var VIEW= {
 	     if(index ==0 && btnId =='saveBtnDP'){		           
 					    var gridItems = AUIGrid.getGridData(widget.grid[1]);
 				        for(var i=0;i<gridItems.length;i++){
-					         gridItems[i]['msgType']     = $("#msgType2").val();
-					         gridItems[i]['msgCd']       = $("#msgCd2").val();					         
+					         gridItems[i]['msgType']     = $("#msgType2SP2").val();
+					         gridItems[i]['msgCd']       = $("#msgCd2SP2").val();					         
 					        
 					    }
 			             result.param = gridItems;
@@ -94,7 +94,16 @@ var VIEW= {
 					
 		}
 
-	}		
+	}/*,	
+	delCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==0 && btnId =='delBtn'){	
+			 result.param['langCd2'] = data[0]['pivotLang']; 
+
+					
+		}
+
+	}	*/
+	
 };
 
 $(document).ready(function(event){	
