@@ -387,30 +387,42 @@ public class FrameworkUtil {
 		 * Object>)FrameworkUtil.multiLanguage.get(companyCd + divisionCd + locale +
 		 * "XML"); }
 		 */
-		System.out.println("시작총개수?"+list.size());
+		List<Map<String, Object>> listMapParam = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		for (int i = 0; i < list.size(); i++) { 
-		
-			Map<String, Object> map = list.get(i);
-			 if(map.get("pwEncode")!=null) {	
-				if (map.get("pwEncode").toString().equals("Y")) {
-					if(map.get("password")== null || map.get("password").equals("")) {
-						map.put("encodePw", "1234");	
-					}
-					else {
-						map.put("encodePw", passwordEncode(map.get("password").toString()));	
-					}
-					
-					list.remove(i);
-			
-						//System.out.println("맵은?"+map);
-					
-					
-					list.add(map);
-				} 
-			 }
-			 else {
+			//System.out.println("파람사이즈?"+list.size());
+			//Map<String, Object> map = list.get(i);
+			map = list.get(i);
+			/*
+			 * if(map.get("pwEncode")!=null) { if
+			 * (map.get("pwEncode").toString().equals("Y")) { if(map.get("password")== null
+			 * || map.get("password").equals("")) { map.put("encodePw", "1234"); } else {
+			 * map.put("encodePw", passwordEncode(map.get("password").toString())); }
+			 * 
+			 * list.remove(i);
+			 * 
+			 * //System.out.println("맵은?"+map);
+			 * 
+			 * 
+			 * list.add(map); } }
+			 */
+	
+						if(map.get("password")== null || map.get("password").equals("")) {
+							map.put("encodePw", "1234");	
+							//System.out.println("null인코딩실행");
+						}
+						else {
+							map.put("encodePw", passwordEncode(map.get("password").toString()));	
+							//System.out.println("정상인코딩실행");
+						}
+						
+						    //list.remove(i);
 				
-			 }
+							//System.out.println("맵은?"+map);
+						
+						
+						listMapParam.add(map);
+									 			
 			if (map == null || map.isEmpty()) {
 				if (i == 0) {
 					return new ArrayList<Map<String, Object>>();
@@ -422,8 +434,8 @@ public class FrameworkUtil {
 			// FrameworkUtil.createParam(map, crud, multiMap, userId, divisionCd, companyCd,
 			// locale);
 		}
-		System.out.println("마지막총개수?"+list.size());
-		return list;
+		//System.out.println("마지막총개수?"+list.size());
+		return listMapParam;
 	}
 
 	public static Map<String, Object> json2Map(String json) {

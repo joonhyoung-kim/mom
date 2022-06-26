@@ -14,7 +14,9 @@ var index = {
 	pwValFlag: undefined,
 	init: function() {		
 		multiLang.transAll();
-		if(sessionStorage.length == 0){
+		if(sessionStorage.length == 0 || JSON.parse(sessionStorage.loginMenuList).length==0){
+			//momWidget.messageBox({type:'warning', width:'400', height: '145', html: '1개 이상의 메뉴를 권한에 등록해주세요!'});			
+			alert('1개 이상의 메뉴를 권한에 등록해주세요!');
 			top.location.href = mCommon.contextPath() + "/login.html";
 		}
 		

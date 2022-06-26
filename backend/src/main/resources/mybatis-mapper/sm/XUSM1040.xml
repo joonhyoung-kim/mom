@@ -117,39 +117,56 @@
              </foreach>
             </where>  
       </delete>
-  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+  <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap">
       MERGE INTO MOM_USER 
-            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            #{item.userNo, jdbcType=VARCHAR} as userNo,
-                            #{item.userNm, jdbcType=VARCHAR} as userNm,
-                            #{item.userNmEng, jdbcType=VARCHAR} as userNmEng,
-                             '$2a$12$IXT9LU0ClgO7x27zPXXoeOF9qGCloK7pwGNnDqdpahq6iBNSvv3.y' as password,
-                            #{item.position, jdbcType=VARCHAR} as position,
-                            #{item.email, jdbcType=VARCHAR} as email,
-                            #{item.phoneNo, jdbcType=VARCHAR} as phoneNo,
-                            #{item.telNo, jdbcType=VARCHAR} as telNo,
-                            #{item.faxNo, jdbcType=VARCHAR} as faxNo,
-                            #{item.deptCd, jdbcType=VARCHAR} as deptCd,
-                            #{item.authGroupCd, jdbcType=VARCHAR} as authGroupCd,
-                            #{item.vendorCd, jdbcType=VARCHAR} as vendorCd,
-                            #{item.defaultLanguage, jdbcType=VARCHAR} as defaultLanguage,
-                            #{item.mapAddress, jdbcType=VARCHAR} as mapAddress,
-                            #{item.ipAddress, jdbcType=VARCHAR} as ipAddress,
-                            #{item.useYn, jdbcType=VARCHAR} as useYn,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+            USING( 
+                         SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{userNo, jdbcType=VARCHAR} as userNo,
+                            #{userNm, jdbcType=VARCHAR} as userNm,
+                            #{userNmEng, jdbcType=VARCHAR} as userNmEng,
+                            #{encodePw, jdbcType=VARCHAR} as password,
+                            #{position, jdbcType=VARCHAR} as position,
+                            #{email, jdbcType=VARCHAR} as email,
+                            #{phoneNo, jdbcType=VARCHAR} as phoneNo,
+                            #{telNo, jdbcType=VARCHAR} as telNo,
+                            #{faxNo, jdbcType=VARCHAR} as faxNo,
+                            #{deptCd, jdbcType=VARCHAR} as deptCd,
+                            #{authGroupCd, jdbcType=VARCHAR} as authGroupCd,
+                            #{vendorCd, jdbcType=VARCHAR} as vendorCd,
+                            #{defaultLanguage, jdbcType=VARCHAR} as defaultLanguage,
+                            #{mapAddress, jdbcType=VARCHAR} as mapAddress,
+                            #{ipAddress, jdbcType=VARCHAR} as ipAddress,
+                            #{useYn, jdbcType=VARCHAR} as useYn,
+                            #{description, jdbcType=VARCHAR} as description,
+                            #{userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
                      FROM DUAL
-                   </foreach> ) PARAM
+                   ) PARAM
             ON ( COMPANY_CD = PARAM.companyCd AND
                  DIVISION_CD = PARAM.divisionCd AND
                  USER_NO = PARAM.userNo )
             WHEN MATCHED THEN 
-                  UPDATE SET USER_NM = USER_NM
+                     UPDATE SET USER_NM = PARAM.userNm
+                          , USER_NM_ENG = PARAM.userNmEng
+                          , PASSWORD = PARAM.password
+                          , POSITION = PARAM.position
+                          , EMAIL = PARAM.email
+                          , PHONE_NO = PARAM.phoneNo
+                          , TEL_NO = PARAM.telNo
+                          , FAX_NO = PARAM.faxNo
+                          , DEPT_CD = PARAM.deptCd
+                          , AUTH_GROUP_CD = PARAM.authGroupCd
+                          , VENDOR_CD = PARAM.vendorCd
+                          , DEFAULT_LANGUAGE = PARAM.defaultLanguage
+                          , MAP_ADDRESS = PARAM.mapAddress
+                          , IP_ADDRESS = PARAM.ipAddress
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description                
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
                         
             WHEN NOT MATCHED THEN
                      INSERT ( COMPANY_CD

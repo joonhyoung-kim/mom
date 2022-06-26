@@ -3903,7 +3903,7 @@ var momWidget = {
 				});
 				$(document).on('click','#'+changePwSaveBtn, function() {
 					momWidget.splashShow();
-					var param = {loginId:$('#userNoDP'+(index+1)).val(),nowPass:$('#nowPassword'+(index+1)).val()};
+					let param = {loginId:$('#userNoDP'+(index+1)).val(),nowPass:$('#nowPassword'+(index+1)).val()};
 					$.ajax({
     				url:mCommon.contextPath() + '/passwordChange',
     				method: "get",
@@ -3917,12 +3917,14 @@ var momWidget = {
     				success: function(data){	                
 	                    
 	                    if(data.result == 'Y'){
-		                    momWidget.messageBox({type:'success', width:'400', height: '145', html: '변경성공!'});
+							$('#changePwPop'+(index+1)).momModal('hide');
+		                    momWidget.messageBox({type:'success', width:'400', height: '145', html: '저장시에 최종 반영됩니다!'});
 						    momWidget.splashHide();
 						    $('#passwordDP'+(index+1)).val($('#changePassword'+(index+1)).val().trim());						    
 					        return;
 						}
 						else{
+							$('#changePwPop'+(index+1)).momModal('hide');
 							momWidget.messageBox({type:'danger', width:'400', height: '145', html: '현재비밀번호 불일치!'});
 						    momWidget.splashHide();
 					        return;
