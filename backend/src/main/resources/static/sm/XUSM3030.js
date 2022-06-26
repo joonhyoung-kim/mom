@@ -14,6 +14,11 @@ var preCombo2 = undefined;
 var tmpCombo1 = undefined;
 var tmpCombo2 = undefined;
 var initPageLoad = true;
+var searchComboQueryId = "XUSM3030.multiLangList";	
+let maxItemWidth = undefined;
+let	maxItemWidthArry = undefined;
+let	maxItemWidthNum = undefined;				
+var searchComboMinLength = 1;
 var searchComboItems = [];
 var preComboItems = [];
 var addBtn  = '<a id="addBtn" href="#" class="w-inline-block btntool widget-btn1"><div tmpTabId="five" class="w-icon fa fa-copy icon widget-btn1-icon"></div><div multi-lang="" class="textblock widget-btn1-text">행추가</div></a>';
@@ -47,7 +52,7 @@ var XUSM3030 = {
 		$('.widget-box3').append(excelUpBtn);
 		
 	
-		$('#gridBtn1').css('background'  ,'#0753a1');
+		$('#gridBtn1').css('background'  ,'rgb(93 152 52)');
 		$('#columnBtn1').css('background','#666666');
 		$('#searchBtn1').css('background','#666666');
 		$('#popupBtn1').css('background' ,'#666666');
@@ -56,7 +61,7 @@ var XUSM3030 = {
 		that.gridGrid('gridInfo');		
 		that.event();
 		that.gridEvent();
-		$('#gridBtn1').css('background'  ,'#0753a1');
+		$('#gridBtn1').css('background'  ,'rgb(93 152 52)');
 		$('#columnBtn1').css('background','#666666');
 		$('#searchBtn1').css('background','#666666');
 		$('#popupBtn1').css('background' ,'#666666');
@@ -131,7 +136,7 @@ var XUSM3030 = {
 	  		},
   		    {
 	  			  dataField 	: 'validValue' 
-	  			, headerText 	: '유효값'
+	  			, headerText 	: '설정값'
 	  			, width			: 180			
 	  			, style: "my-column-style-edit"		
 	  		    ,'editable': true
@@ -212,7 +217,7 @@ var XUSM3030 = {
 					, 'showSelectionBorder': false
 					, 'editable': true			
 					, 'enableSorting': true	
-					, 'showRowCheckColumn': true
+					, 'showRowCheckColumn': false
 					//, 'rowCheckToRadio': true
 					, 'enableFilter': true
 					, 'filterLayoutWidth': 200
@@ -1544,7 +1549,7 @@ var XUSM3030 = {
 			$('.widget-box3').append(excelDownBtn);
 			$('.widget-box3').append(excelUpBtn);
 			
-			$('#gridBtn1').css('background'  ,'#0753a1');
+			$('#gridBtn1').css('background'  ,'rgb(93 152 52)');
 			$('#columnBtn1').css('background','#666666');
 			$('#searchBtn1').css('background','#666666');
 			$('#popupBtn1').css('background' ,'#666666');
@@ -1560,7 +1565,7 @@ var XUSM3030 = {
 			
 			
 			$('#gridBtn1').css('background'  ,'#666666');
-			$('#columnBtn1').css('background','#0753a1');
+			$('#columnBtn1').css('background','rgb(93 152 52)');
 			$('#searchBtn1').css('background','#666666');
 			$('#popupBtn1').css('background' ,'#666666');
 			$('#buttonBtn1').css('background','#666666');
@@ -1574,7 +1579,7 @@ var XUSM3030 = {
 
 			$('#gridBtn1').css('background'  ,'#666666');
 			$('#columnBtn1').css('background','#666666');
-			$('#searchBtn1').css('background','#0753a1');
+			$('#searchBtn1').css('background','rgb(93 152 52)');
 			$('#popupBtn1').css('background' ,'#666666');
 			$('#buttonBtn1').css('background','#666666');
 			that.searchGrid('searchInfo');
@@ -1588,7 +1593,7 @@ var XUSM3030 = {
 			$('#gridBtn1').css('background'  ,'#666666');
 			$('#columnBtn1').css('background','#666666');
 			$('#searchBtn1').css('background','#666666');
-			$('#popupBtn1').css('background' ,'#0753a1');
+			$('#popupBtn1').css('background' ,'rgb(93 152 52)');
 			$('#buttonBtn1').css('background','#666666');
 			that.popupGrid('popupInfo');
 		});
@@ -1600,7 +1605,7 @@ var XUSM3030 = {
 			$('#columnBtn1').css('background','#666666');
 			$('#searchBtn1').css('background','#666666');
 			$('#popupBtn1').css('background' ,'#666666');
-			$('#buttonBtn1').css('background','#0753a1');
+			$('#buttonBtn1').css('background','rgb(93 152 52)');
 			that.buttonGrid('buttonInfo');
 		});
 		// 조회 버튼
@@ -1994,9 +1999,68 @@ var XUSM3030 = {
 	},
 	setComboBox: function() {
 		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'none',remoteAutoComplete: false});	
-		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
-			      	$('#menuId').on('keyup', function (e) {
+		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});							 
+	    //searchComboQueryId['multiLangCd'] = "XUSM3030.multiLangList";		
+		//searchComboMinLength['multiLangCd'] = 1;
+		$('#multiLangCd').jqxComboBox({ displayMember: "label", valueMember: "code", width: 300, height: 20,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: '다국어명을 입력하세요(1글자이상) ',minLength: searchComboMinLength,remoteAutoComplete: false});
+		 $('#'+'multiLangCd').on('bindingComplete', function (e) {				  
+				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+				   maxItemWidthArry = maxItemWidth.split('px');
+				   maxItemWidthNum = Number(maxItemWidthArry[0]);
+				  if(maxItemWidthNum<160){
+					 maxItemWidth = '160px';
+				 }
+				 else{
+					maxItemWidth = maxItemWidthNum+30+'px'
+				 }
+				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });
+		     $('#'+'multiLangCd').on('close', function (e) {
+				     let tmpCd = e.target.children[1].value; 
+				            if(tmpCd ==''){
+								$('#'+e.target.id).jqxComboBox('clear');
+								return;
+							}
+							 
+							 //$('#'+e.target.id).val(tmpCd);
+			      });		
+			$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
+			if(e.keyCode == 13){ //엔터
+			//var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
+			var minLength = searchComboMinLength;
+			var queryId = searchComboQueryId;
+			if(searchString.length < minLength)	{
+						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+						return;
+			}
+			else{
+				mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
+						      if(result != 'SUCCESS') {
+						    	  momWidget.splashHide();
+							      return;							     
+						      }	
+						      if(data.length==0){
+							   momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '등록된 다국어 없음'});
+							 }
+							 else{
+								    $('#'+'multiLangCd').jqxComboBox({source: data});
+						      
+						   		setTimeout(function() {
+	                				$('#'+'multiLangCd').jqxComboBox('open' ); 
+    							},500);
+							 }
+						  
+						      		}, undefined, undefined, this, false);
+			}
 				
+
+			} 
+			
+			
+
+		});
+			      	$('#menuId').on('keyup', function (e) {				
 				        if(e.keyCode==16){
 					
 					  			//$('#menuId').jqxComboBox('clearSelection'); 						  				  

@@ -4019,13 +4019,21 @@ var momWidget = {
 			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삭제실패!'});
 				      return;							     
 		      		}					       			
-        mom_ajax('CU', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
-				   if(result2 != 'SUCCESS') {
-			    	  momWidget.splashHide();
-			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
-				      return;							     
-		      		}
+        				mom_ajax('CU', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
+				  			if(result2 != 'SUCCESS') {
+					    	  momWidget.splashHide();
+					    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
+						      return;							     
+				      		}
+			      			   mom_ajax('P', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
+						   		if(result3 != 'SUCCESS') {
+							    	  momWidget.splashHide();
+							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
+								      return;							     
+			      				}
 		      				
+	    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
+	    }, undefined, undefined, this, false);			
 	    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
 	    }, undefined, undefined, this, false);	
    

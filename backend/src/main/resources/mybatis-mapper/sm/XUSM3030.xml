@@ -10,7 +10,31 @@
 	<result property="POPUP_PROPERTY"  column="POPUP_PROPERTY"  jdbcType="CLOB" javaType="java.lang.String"/>
 	<result property="BUTTON_PROPERTY" column="BUTTON_PROPERTY"/>
 	</resultMap>
-
+    <select id="get_multiLangList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+     SELECT   A.MSG_CD AS CODE 
+		    , A.MSG_CD || '(' || MIN(DECODE(A.LANG_CD, 'KR', A.MSG_NM, ''))  || '/' || MIN(DECODE(A.LANG_CD, 'EN', A.MSG_NM, '')) || ')'AS LABEL
+      FROM  (SELECT MM.LANG_CD
+                  , MM.MSG_TYPE      
+                  , MM.MSG_CD
+                  , MM.MSG_NM
+             FROM   MOM_COM_DIV_V MCD
+                  , MOM_MESSAGE  MM  
+             WHERE  MCD.COMPANY_CD   = MM.COMPANY_CD
+             AND    MCD.DIVISION_CD  = MM.DIVISION_CD
+             AND    MM.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+             AND    MM.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+		     AND    MM.MSG_TYPE = 'WIDGET'
+		     AND    MM.MSG_CD IN ( SELECT MMS.MSG_CD 
+		                             FROM   MOM_MESSAGE MMS
+		                             WHERE  MMS.COMPANY_CD  = MM.COMPANY_CD
+		                             AND    MMS.DIVISION_CD = MMS.DIVISION_CD
+		                             AND    TRIM(UPPER(MMS.MSG_NM)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' )
+		        
+              ) A
+			GROUP BY A.MSG_TYPE
+			       , A.MSG_CD
+			ORDER BY LABEL
+	</select>
 	<select id="get_dropDown" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	SELECT  CODE
          ,  CODE_NM AS LABEL
