@@ -194,6 +194,9 @@
 .searchRowBox.h02{
     height:50%;
 }
+.searchRowBox.h03{
+    height:30%;
+}
 .grid-box1{
 	/* height: 63rem; */
 	/* height: 95.5%; */
@@ -592,7 +595,7 @@
 	margin: 0;
 	border: 1px solid #bbbcbd;
     background: #d8dce3;
-    height: 9.5rem;
+    height: 12.5rem;
     position: relative;
     padding-top: 0.3rem;
     padding-left: 5px;
@@ -1838,6 +1841,20 @@ border-color: #d8dce3 !important;
 }
 .labelbox.w40 {}
 .searchInputField {
+    display: inline-block;
+    width: 21rem;
+    height: 2.9rem;
+    font-family: "Malgun Gothic", sans-serif;
+    font-size: 1.3rem;
+    line-height: 1rem;
+    float:left;
+    border-radius: 0.5rem;
+   /*  background-color: #fff !important; */
+    background-clip: padding-box !important;
+    /* color: #4d5875 !important; */
+  
+}
+.popupInputField {
     display: inline-block;
     width: 16rem;
     height: 2.9rem;

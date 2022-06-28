@@ -282,6 +282,7 @@ var momWidget = {
 		    		         labelBoxClass:'labelbox-col3'	 ,
 		    		         index:index+1
 		              }
+		             var searchAreaHtml  = that.createSearchArea.h03(classItem,searchItem,searchBtn);	  
 			    	 
 			     }
 			     
@@ -305,11 +306,11 @@ var momWidget = {
 		    			   
 			    	  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='C'){
-		    			  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input searchInputField" date-format="date"></input>';
+		    			  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
 		    			  
 		    		  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='C-HM'){
-		    			  labelField  = '<input  id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input searchInputField"></input>';
+		    			  labelField  = '<input  id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
 		    			  
 		    		  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='P'){
@@ -324,7 +325,7 @@ var momWidget = {
 			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-pop searchSelectField"></select>';
 			    	  }
 			    	  else {
-			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
+			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
 			    	  }
 			    
 		    		  			    	  
@@ -1056,7 +1057,7 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput({ width: '210px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full' });
 				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput('setDate', calendar);
 				
 			}
@@ -1310,7 +1311,7 @@ var momWidget = {
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
 			
-				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '120px', height: '25px',formatString: "yyyy-MM-dd" });
 				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput('setDate', calendar);
 			}
 			else{
@@ -1410,6 +1411,88 @@ var momWidget = {
 		botHtml2  = '</ul>'
 		        + '</div>';
 		        return searchHtml+ topHtml2+midHtml2+botHtml2;
+		  // +'<ul id="ul" class="w-list-unstyled w-clearfix b1">';
+	    
+			
+			
+		},
+		h03 : function(classItem,searchItem,searchBtn) {
+		var topHtml  = '';
+		var midHtml  = '';
+	    var botHtml = '';
+	    var topHtml2  = '';
+		var midHtml2  = '';
+	    var botHtml2 = '';
+	    var topHtml3  = '';
+		var midHtml3  = '';
+	    var botHtml3 = '';
+	    var searchHtml = '';
+	    var searchHtml2 = '';
+	    topHtml =	'<div id="searchArea" class='+classItem[0].searchAreaClass+'>'
+	                  +'<ul id="ul" class="searchRowBox h03">';
+		  for(var i=0;i<3;i++){	    
+		    	   midHtml +=  '<li class='+classItem[0].searchItemClass+'>' 
+					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'        <div class='+searchItem[i].circelClass+'></div>'
+					+        searchItem[i].headerField
+					+'       </div>'
+					+        searchItem[i].labelField
+					+      '</li>';		       					
+		}
+	           botHtml  = '</ul>'
+	           
+	           
+	        	   // + '</div>';
+			searchHtml = topHtml + midHtml + botHtml;
+			
+		topHtml2 =	'<ul id="ul" class="searchRowBox h03" style="padding-top: 1.2rem;">';
+		
+		for(var k=3;k<6;k++){	    
+		    	   midHtml2 +=  '<li class='+classItem[0].searchItemClass+'>' 
+					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'        <div class='+searchItem[k].circelClass+'></div>'
+					+        searchItem[k].headerField
+					+'       </div>'
+					+        searchItem[k].labelField
+					+      '</li>';		       					
+		}
+	           botHtml2  = '</ul>'
+	           
+	           
+	        	   // + '</div>';
+			searchHtml2 = topHtml2 + midHtml2 + botHtml2;
+		
+				topHtml3 =	'<ul id="ul" class="searchRowBox h03" style="padding-top: 1.2rem;">';
+			
+			
+			  for(var j=6;j<searchItem.length;j++){	    
+		       if(j==(searchItem.length-1)){
+			       midHtml3 +=  '<li class='+classItem[0].searchItemClass+' style="width:auto;">' 
+					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'        <div class='+searchItem[j].circelClass+'></div>'
+					+        searchItem[j].headerField
+					+'       </div>'
+					+        searchItem[j].labelField		        
+		            + '</li>'
+		            + searchBtn;
+
+		           
+		           
+		       }
+		       else{
+		    	   midHtml3 +=  '<li class='+classItem[0].searchItemClass+'>' 
+					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'        <div class='+searchItem[j].circelClass+'></div>'
+					+        searchItem[j].headerField
+					+'       </div>'
+					+        searchItem[j].labelField
+					+      '</li>';
+		       }
+					
+		}
+		botHtml3  = '</ul>'
+		        + '</div>';
+		        return searchHtml+ searchHtml2 +topHtml3+midHtml3+botHtml3;
 		  // +'<ul id="ul" class="w-list-unstyled w-clearfix b1">';
 	    
 			
@@ -2954,7 +3037,7 @@ var momWidget = {
 				        }
 				        else{
 				        	if(searchType == 'M'){
-				        		$('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
+				        		$('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '210px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
 				        		$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {
 				  
 				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
@@ -2985,7 +3068,7 @@ var momWidget = {
 						}
 					that.searchComboQueryId[index] = searchComboItem;
 					that.searchComboMinLength[index] = searchComboMinLength; 		    
-						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label",checkboxes: true, valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label",checkboxes: true, valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
 		  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
 				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
 				   maxItemWidthArry = maxItemWidth.split('px');
@@ -3014,7 +3097,7 @@ var momWidget = {
 						}
 					that.searchComboQueryId[index] = searchComboItem;
 					that.searchComboMinLength[index] = searchComboMinLength; 		    
-						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
 		  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
 				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
 				   maxItemWidthArry = maxItemWidth.split('px');
@@ -3040,7 +3123,7 @@ var momWidget = {
 			     
 				}
 				else if(searchType == 'S'){
-				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'none'});
+				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '210px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'none'});
 				    	$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {	
 					if($("#innerListBox" + e.owner.id + " div[role=option] span")[0]==undefined){
 						 
@@ -3364,6 +3447,7 @@ var momWidget = {
 			var that = momWidget;
 			var findBtnId        = 'findBtn'+(index + 1);			
 			var createBtnId      = 'createBtn'+(index + 1);	
+			var createBtnIdV     = 'createBtnV'+(index + 1);	
             var customBtnId1     = 'customBtnA'+(index + 1);	
             var customBtnId2     = 'customBtnB'+(index + 1);	
             var customBtnId3     = 'customBtnC'+(index + 1);
@@ -3371,16 +3455,20 @@ var momWidget = {
             var customBtnId5     = 'customBtnE'+(index + 1);
             var customBtnId6     = 'customBtnF'+(index + 1);
 			var copyBtnId        = 'copyBtn'+(index + 1);
+			var copyBtnIdV       = 'copyBtnV'+(index + 1);
 			var editBtnId        = 'editBtn'+(index + 1);	
+			var editBtnIdV       = 'editBtnV'+(index + 1);	
 			var cancelBtnId      = 'cancelBtn'+'DP'+(index + 1);	
 			var gridPopCancelBtnId  = 'cancelBtn'+'DG'+(index + 1);	
 			var excelDownBtnId   = 'excelDownBtn'+(index + 1);
 			var excelTmpBtnId    = 'excelTmpBtn'+(index + 1);
 			var excelUpBtnId     = 'excelUpBtn'+(index + 1);
+			var excelUpBtnIdV    = 'excelUpBtnV'+(index + 1);
 			var excelUpCancelBtnId = 'cancelBtnExUp'+(index + 1);
 			var saveBtnId        = 'saveBtn'+(index + 1);
+			var saveBtnIdV       = 'saveBtnV'+(index + 1);
 			var savePopBtnId     = 'saveBtn'+'DP'+(index + 1);
-			var dropdownGridId     = 'saveBtn'+'DG'+(index + 1);
+			var dropdownGridId   = 'saveBtn'+'DG'+(index + 1);
 			var delBtnId         = 'delBtn'+(index + 1);
 			var addBtnId         = 'addBtn'+(index + 1);
 			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
@@ -4021,22 +4109,28 @@ var momWidget = {
 			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삭제실패!'});
 				      return;							     
 		      		}					       			
-        				mom_ajax('CU', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
+        				mom_ajax('C', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
 				  			if(result2 != 'SUCCESS') {
 					    	  momWidget.splashHide();
 					    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
 						      return;							     
 				      		}
-			      			   mom_ajax('P', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), uploadItems, function(result2, data2) {
+			      			   mom_ajax('P', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), [], function(result3, data3) {
 						   		if(result3 != 'SUCCESS') {
 							    	  momWidget.splashHide();
-							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
+							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '프로시저 호출실패!'});
 								      return;							     
 			      				}
+			      				 if(data3[0]['p_err_code']=='E') {
+								
+					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+									  momWidget.splashHide();
+						              return;
+					            }    
 		      				
-	    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
-	    }, undefined, undefined, this, false);			
-	    momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
+	    							  momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
+	   	 					}, undefined, undefined, this, false,undefined,'EV');			
+
 	    }, undefined, undefined, this, false);	
    
 	}, undefined, undefined, this, false);	

@@ -87,17 +87,17 @@
 	            , #{item.parentItemId,       jdbcType=VARCHAR}
                 , #{item.childItemId,        jdbcType=VARCHAR}
                 , #{item.reqQty,             jdbcType=NUMERIC}
-                , #{item.startDate,          jdbcType=VARCHAR}
-                , #{item.endDate,            jdbcType=VARCHAR}
+                , TO_DATE(#{item.startDate,  jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.endDate,    jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.phantomFlag,        jdbcType=VARCHAR}
                 , #{item.mrpFlag,            jdbcType=VARCHAR}
                 , #{item.issueType,          jdbcType=VARCHAR}
                 , #{item.sortNo,             jdbcType=NUMERIC}
                 , #{item.useYn,              jdbcType=VARCHAR}
                 , #{item.description,        jdbcType=VARCHAR}    
-                , TRIM(#{item.userId,        jdbcType=VARCHAR})
+                , #{item.userId,        jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , TRIM(#{item.userId,   jdbcType=VARCHAR})
+                , #{item.userId,   jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) 
 	            )		             
 	           </foreach>			               
@@ -109,7 +109,7 @@
 				  , START_DATE           = #{item.startDate,          jdbcType=VARCHAR}
 				  , END_DATE             = #{item.endDate,            jdbcType=VARCHAR}
 				  , SORT_NO              = #{item.sortNo,             jdbcType=VARCHAR}
-				  , MRP_FLAG             = #{item.flag,               jdbcType=VARCHAR}
+				  , MRP_FLAG             = #{item.mrpFlag,               jdbcType=VARCHAR}
 				  , ISSUE_TYPE           = #{item.issueType,          jdbcType=VARCHAR}
 	              , PHANTOM_FLAG         = #{item.phantomFlag,        jdbcType=VARCHAR}	         
 	              , USE_YN               = #{item.useYn,   		      jdbcType=VARCHAR}  

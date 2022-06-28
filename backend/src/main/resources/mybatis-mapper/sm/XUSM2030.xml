@@ -154,23 +154,23 @@
 		END
      </foreach>
     </delete>
-	 <insert id="upsert_defaultInfo2" parameterType="java.util.List">
+    <insert id="upsert_defaultInfo2" parameterType="java.util.List">
 	    MERGE INTO MOM_AUTH_MENU MAM
 	    USING (
-	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
-	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
-	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd, 
-	                              TRIM(#{item.authGroupCd, jdbcType=VARCHAR}) 																   as authGroupCd,                               						       
-	                              TRIM(#{item.menuId, jdbcType=VARCHAR}) 																	   as menuId,           														   
-					              TRIM(#{item.authRoleCd, jdbcType=VARCHAR})																   as roleCd,             															   
-					              TRIM(#{item.useYn, jdbcType=VARCHAR})																	       as useYn,
-					              TRIM(#{item.description, jdbcType=VARCHAR})																   as description,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})       															       as createBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})                                                                       as updateBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
+	  
+	             SELECT           TRIM(#{companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
+	                              TRIM(#{divisionCd, jdbcType=VARCHAR}) 																   as divisionCd, 
+	                              TRIM(#{authGroupCd, jdbcType=VARCHAR}) 																   as authGroupCd,                               						       
+	                              TRIM(#{menuId, jdbcType=VARCHAR}) 																	   as menuId,           														   
+					              TRIM(#{authRoleCd, jdbcType=VARCHAR})																   as roleCd,             															   
+					              TRIM(#{useYn, jdbcType=VARCHAR})																	       as useYn,
+					              TRIM(#{description, jdbcType=VARCHAR})																   as description,
+					              TRIM(#{userId, jdbcType=VARCHAR})       															       as createBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as createDate,
+					              TRIM(#{userId, jdbcType=VARCHAR})                                                                       as updateBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as updateDate
 	             FROM DUAL
-	        </foreach>
+	  
 	    ) PARAM 
 	    ON ( MAM.COMPANY_CD    = PARAM.companyCd
 	    AND  MAM.DIVISION_CD   = PARAM.divisionCd

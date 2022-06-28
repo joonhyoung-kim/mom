@@ -159,44 +159,16 @@
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{borId, jdbcType=VARCHAR, mode=IN}
-															  , #{itemId, jdbcType=VARCHAR, mode=IN}
-															  , #{routingId, jdbcType=VARCHAR, mode=IN}
-															  , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
-															  , #{tactTime, jdbcType=NUMERIC, mode=IN}
-															  , #{tactTimeUom, jdbcType=VARCHAR, mode=IN}
-															  , #{processLt, jdbcType=NUMERIC, mode=IN}
-															  , #{processLtUom, jdbcType=VARCHAR, mode=IN}
-															  , #{priority, jdbcType=NUMERIC, mode=IN}
-															  , #{yield, jdbcType=NUMERIC, mode=IN}
-															  , #{consumeLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{goodLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{defectLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{useYn, jdbcType=VARCHAR, mode=IN}
-															  , #{description, jdbcType=VARCHAR, mode=IN}															  
-					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
+					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}												  
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
    <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{borId, jdbcType=VARCHAR, mode=IN}
-															  , #{itemId, jdbcType=VARCHAR, mode=IN}
-															  , #{routingId, jdbcType=VARCHAR, mode=IN}
-															  , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
-															  , #{tactTime, jdbcType=NUMERIC, mode=IN}
-															  , #{tactTimeUom, jdbcType=VARCHAR, mode=IN}
-															  , #{processLt, jdbcType=NUMERIC, mode=IN}
-															  , #{processLtUom, jdbcType=VARCHAR, mode=IN}
-															  , #{priority, jdbcType=NUMERIC, mode=IN}
-															  , #{yield, jdbcType=NUMERIC, mode=IN}
-															  , #{consumeLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{goodLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{defectLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{useYn, jdbcType=VARCHAR, mode=IN}
-															  , #{description, jdbcType=VARCHAR, mode=IN}															  
-					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
+					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}												  
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	          
   </select>  
   <delete id="remove_validateEx1" parameterType="java.util.List">
       DELETE FROM MOM_PROC_BOR
@@ -257,26 +229,12 @@
            
   </insert>
    <select id="proc_validateEx1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+           { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{borId, jdbcType=VARCHAR, mode=IN}
-															  , #{itemId, jdbcType=VARCHAR, mode=IN}
-															  , #{routingId, jdbcType=VARCHAR, mode=IN}
-															  , #{workCenterCd, jdbcType=VARCHAR, mode=IN}
-															  , #{tactTime, jdbcType=NUMERIC, mode=IN}
-															  , #{tactTimeUom, jdbcType=VARCHAR, mode=IN}
-															  , #{processLt, jdbcType=NUMERIC, mode=IN}
-															  , #{processLtUom, jdbcType=VARCHAR, mode=IN}
-															  , #{priority, jdbcType=NUMERIC, mode=IN}
-															  , #{yield, jdbcType=NUMERIC, mode=IN}
-															  , #{consumeLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{goodLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{defectLocationCd, jdbcType=VARCHAR, mode=IN}
-															  , #{useYn, jdbcType=VARCHAR, mode=IN}
-															  , #{description, jdbcType=VARCHAR, mode=IN}															  
-					                                          , #{userId,  jdbcType=VARCHAR, mode=IN} )}    	              
+					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}												  
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
   </select>   
   <update id="modify_defaultInfo1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">

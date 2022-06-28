@@ -1371,7 +1371,7 @@ leftMenuAuth: function(el,params) {
 
 
 
-function mom_ajax(type, url, param, call_back, call_back_param, index_info, your, async,commitYn,requestType) {	
+function mom_ajax(type, url, param, call_back, call_back_param, index_info, your, async,commitYn,actionMode) {	
 	var siteInfo = JSON.parse(sessionStorage.getItem('siteInfo'));	
 	var userInfo = undefined;
 	var jsonString = JSON.stringify(param);
@@ -1386,8 +1386,8 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	   
     }
 
-	if(requestType == undefined || requestType == ''){
-		requestType = 'crud';
+	if(actionMode == undefined || actionMode == ''){
+		actionMode = type;
 	}
 	if(type == 'R'){
 		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
@@ -1404,7 +1404,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[0].langCd     = siteInfo.languageCd;
 				param[0].p_err_code  = '';
 				param[0].p_err_msg   = '';
-				param[0].requestType   = requestType;
+				param[0].actionMode  = actionMode;
 				param  = param[0];
 			
 			
@@ -1414,7 +1414,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			param.companyCd   = siteInfo.companyCd;
 			param.langCd      = siteInfo.languageCd;
 			param.userId      = param.userId == undefined ? userInfo.userNo: param.userId;
-			param.requestType = requestType;
+			param.actionMode  = actionMode;
 			param.p_err_code  = '';
 			param.p_err_msg   = '';
 		}
@@ -1426,24 +1426,39 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		type = 'POST';	
 		excelUpYn = param[0] == undefined ? 'N':param[0].excelUpYn;
 		sessionId = param[0] == undefined ? '':param[0].sessionId;
-		if(param.length==0){
-				param.push({divisionCd:siteInfo.divisionCd,companyCd:siteInfo.companyCd,langCd:siteInfo.languageCd,userId:userInfo.userNo,commitYn:commitYn,p_err_code:'',p_err_msg:'',requestType:requestType});
+	
+		if(jsonString.indexOf('[')>=0){
+					if(param.length==0){
+				param.push({divisionCd:siteInfo.divisionCd,companyCd:siteInfo.companyCd,langCd:siteInfo.languageCd,userId:userInfo.userNo,commitYn:commitYn,p_err_code:'',p_err_msg:'',actionMode:actionMode});
 			    param = JSON.stringify(param);
+		}
+				else{
+						for(var i = 0;i<param.length;i++){
+							param[i].divisionCd  = siteInfo.divisionCd;
+							param[i].companyCd   = siteInfo.companyCd;
+							param[i].langCd      = siteInfo.languageCd;
+							param[i].userId      = userInfo.userNo;
+							param[i].commitYn    = commitYn == undefined ? 'Y':commitYn;
+							param[i].actionMode  = actionMode;
+							param[i].p_err_code  = '';
+							param[i].p_err_msg   = '';
+							
+						}
+						    param = JSON.stringify(param);
+				}
+			
+			
 		}
 		else{
-			for(var i = 0;i<param.length;i++){
-				param[i].divisionCd  = siteInfo.divisionCd;
-				param[i].companyCd   = siteInfo.companyCd;
-				param[i].langCd      = siteInfo.languageCd;
-				param[i].userId      = userInfo.userNo;
-				param[i].commitYn    = commitYn == undefined ? 'Y':commitYn;
-				param[i].requestType = requestType;
-				param[i].p_err_code  = '';
-				param[i].p_err_msg   = '';
-				
-			}
-			    param = JSON.stringify(param);
+			param.divisionCd  = siteInfo.divisionCd;
+			param.companyCd   = siteInfo.companyCd;
+			param.langCd      = siteInfo.languageCd;
+			param.userId      = param.userId == undefined ? userInfo.userNo: param.userId;
+			param.actionMode  = actionMode;
+			param.p_err_code  = '';
+			param.p_err_msg   = '';
 		}
+	
 			
 		/*if(param.userId == '' || param.userId == undefined){
 			param.userId = siteInfo.userId;
@@ -1468,7 +1483,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[i].langCd      = siteInfo.languageCd;
 				param[i].userId      = userInfo.userNo;
 				param[i].commitYn    = commitYn == undefined ? 'Y':commitYn;
-				param[i].requestType = requestType;
+				param[i].actionMode = actionMode;
 				param[i].p_err_code  = '';
 				param[i].p_err_msg   = '';
 				if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
@@ -1495,11 +1510,11 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		    param = JSON.stringify(param);
 	  }else{
 			for(var i = 0;i<param.length;i++){
-				param[i].divisionCd = siteInfo.divisionCd;
-				param[i].companyCd  = siteInfo.companyCd;
-				param[i].langCd     = siteInfo.languageCd;
-				param[i].userId     = userInfo.userNo;
-				param[i].requestType   = requestType;
+				param[i].divisionCd  = siteInfo.divisionCd;
+				param[i].companyCd   = siteInfo.companyCd;
+				param[i].langCd      = siteInfo.languageCd;
+				param[i].userId      = userInfo.userNo;
+				param[i].actionMode  = actionMode;
 				param[i].p_err_code  = '';
 				param[i].p_err_msg   = '';
 					if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
@@ -1524,11 +1539,11 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		    param = JSON.stringify(param);
 	  }else{
 			for(var i = 0;i<param.length;i++){
-				param[i].divisionCd = siteInfo.divisionCd;
-				param[i].companyCd  = siteInfo.companyCd;
-				param[i].langCd     = siteInfo.languageCd;
-				param[i].userId     = userInfo.userNo;
-				param[i].requestType   = requestType;
+				param[i].divisionCd  = siteInfo.divisionCd;
+				param[i].companyCd   = siteInfo.companyCd;
+				param[i].langCd      = siteInfo.languageCd;
+				param[i].userId      = userInfo.userNo;
+				param[i].actionMode  = actionMode;
 				param[i].p_err_code  = '';
 				param[i].p_err_msg   = '';
 				if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){

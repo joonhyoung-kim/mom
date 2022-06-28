@@ -1092,8 +1092,8 @@ var XUSM3030 = {
 	}, 
 	buttonGrid: function(queryId) {
 		var that = this;
-		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"}];
-		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CV","value":"등록(검사)"},{"code":"CP","value":"복사"},{"code":"CPV","value":"복사(검사)"},{"code":"U","value":"수정"},{"code":"UV","value":"수정(검사)"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"EV","value":"엑셀업로드(검사)"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
+		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"createBtnV","value":"등록(검사)"},{"code":"editBtn","value":"수정"},{"code":"editBtnV","value":"수정(검사)"},{"code":"copyBtn","value":"복사"},{"code":"copyBtnV","value":"복사(검사)"},{"code":"delBtn","value":"삭제"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"}];
+		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
@@ -1999,7 +1999,8 @@ var XUSM3030 = {
 	},
 	setComboBox: function() {
 		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'none',remoteAutoComplete: false});	
-		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});							 
+		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
+		$('#gridId').val('1');						 
 	    //searchComboQueryId['multiLangCd'] = "XUSM3030.multiLangList";		
 		//searchComboMinLength['multiLangCd'] = 1;
 		$('#multiLangCd').jqxComboBox({ displayMember: "label", valueMember: "code", width: 300, height: 20,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: '다국어명을 입력하세요(1글자이상) ',minLength: searchComboMinLength,remoteAutoComplete: false});

@@ -56,10 +56,11 @@ var XUSM2020 = {
 				 }
 				 
 			}
+		    gridItem[k]['sortNo'] = 10*(k+1);	
 		
-		
-			result.param = gridItem;
+			
 		  }
+		  result.param = gridItem;
 		}
 		else if(index == 1){
 			for(var j=0;j<param.length;j++){
