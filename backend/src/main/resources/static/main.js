@@ -568,12 +568,12 @@ var index = {
 					}
 				},
 				error: function(data){
-					console.log(data);
+					//console.log(data);
 					momWidget.messageBox({type:"danger", width:"400", height: "145",   html:"Notice Error."});
 					return;
 				},
 				fail : function(data){
-					console.log(data);
+					//console.log(data);
 					momWidget.messageBox({type:"danger", width:"400", height: "145",   html:"Notice Fail."});
 					return;
 				}

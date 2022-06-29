@@ -4,7 +4,7 @@ var index = {
 	},
 	loginCheck: function() {
 		$.get(tuCommon.contextPath() + "/system/loginCheck", function (result) {
-			console.log(result);
+			//console.log(result);
 			if (!result) {
 				top.location.href = tuCommon.contextPath() + "/login.html";
 			} else {

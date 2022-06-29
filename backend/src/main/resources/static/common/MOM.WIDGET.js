@@ -5,6 +5,8 @@ var momWidget = {
 	backWork:               [],
 	excelDownGrid:          [],
 	excelDownGridData:      [],
+	excelValidateGrid:  	[],
+	excelValidateGridData:  [],
 	totalRowCount:          [],
     excelTmpGrid:           [],
 	pageProperty: 		    [],
@@ -34,6 +36,7 @@ var momWidget = {
 	preComboItems:          [],
 	INFINITE: 			    100000000,	
 	uploadFlag: 		    0,
+	popupInitLength: 		undefined,
 	downSequence:		    100,	
 	isInitSearch:		    false,
 	firstPageFlag:          true,
@@ -1699,7 +1702,7 @@ var momWidget = {
 			                  '<div id ="excelUpGrid1" class="excel-up-grid">'+
 			                '</div>'+
 			            '</div>'+
-			            '<div class="modal-footer"><div class="excel-up-footer"><button class="btn excel-up-pop-btn " type="button" id="exUpCheck'+(index+1)+'"><i class="mdi mdi-file-find"></i>검사</button>  <button class="btn excel-up-pop-btn " type="button" id="exUpCheckDown'+(index+1)+'"><i class="mdi mdi-cloud-download"></i>검사결과</button>  <button class="btn excel-up-pop-btn " type="button" id="saveBtnExUp'+(index+1)+'"><i class="mdi mdi-file-upload-outline"></i>업로드</button> <button class="btn excel-up-pop-btn" type="button" id="cancelBtnExUp'+(index+1)+'"><i class="mdi mdi-window-close"></i>'+multiLang.transText('MESSAGE','MSG0005')+'</button></div</div>'+
+			            '<div class="modal-footer"><div class="excel-up-footer"><button class="btn excel-up-pop-btn " type="button" id="exUpCheck'+(index+1)+'"><i class="mdi mdi-file-find"></i>검사</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="exUpCheckDown'+(index+1)+'" "><i class="mdi mdi-cloud-download"></i>검사결과</button>  <button class="btn excel-up-pop-btn " type="button" id="saveBtnExUp'+(index+1)+'"><i class="mdi mdi-file-upload-outline"></i>업로드</button> <button class="btn excel-up-pop-btn" type="button" id="cancelBtnExUp'+(index+1)+'"><i class="mdi mdi-window-close"></i>'+multiLang.transText('MESSAGE','MSG0005')+'</button></div</div>'+
 			        '</div>'+
 			    '</div>'+
 			'</div>';
@@ -2213,7 +2216,6 @@ var momWidget = {
 	
 	// 검색버튼을 누른 효과
 	findBtnClicked: function(index, param, splash, btnId, menuId, your, callBackFunc,event) { 	//momWidget.findBtnClicked(1, [], true, 'findBtn1', 'PGIDXX002', MOMXX000, function(result, data)
-	    
 	    var callInitResult = undefined;
 	    var callBackResult = undefined; 
 	    var checkSearchParam = {};
@@ -2221,6 +2223,7 @@ var momWidget = {
         var totalParam = {};
         var queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.defaultInfo'+(index+1) : menuId+'.defaultInfo'+(index+1);
 		var that= this;	
+	
 		var menuParam = that.pageProperty[index] == undefined ? []: that.pageProperty[index]['param'] == undefined ? undefined:JSON.parse(that.pageProperty[index]['param']);
 		   if(splash==true){
 			that.splashShow();
@@ -2231,8 +2234,8 @@ var momWidget = {
 	        checkSearchParam = that.checkSearchParam(index,param,your); //search param 설정시 세팅
 	        
 	         if(menuParam != undefined){
-			   totalParam = Object.assign(menuParam, checkSearchParam);   	 
-	           totalParam = Object.assign(totalParam,initParam,param);  
+			    totalParam = Object.assign(menuParam, checkSearchParam);   	 
+	            totalParam = Object.assign(totalParam,initParam,param);  
 		    }
 	        else{
 				 totalParam = Object.assign(checkSearchParam,totalParam,initParam,param);   	 
@@ -2259,7 +2262,7 @@ var momWidget = {
               if(btnId=='TOTAL'){
 	  				//queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.totalCount'+(index+1) : menuId+'.totalCount'+(index+1);
 			  }
-              setTimeout(function() {
+             // setTimeout(function() {
             	  //that.splashShow();
 	              mom_ajax('R', queryId, totalParam, function(result, data) {
     				            if(result != 'SUCCESS') {
@@ -2305,10 +2308,80 @@ var momWidget = {
 							
 								} 
 								else if(that.gridProperty[index][0]['pageRowCount'] > that.totalRowCount[index]){
+								var pageTotalNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']);
+								var pagingBtnHtml = '';
+								var pagingInfoHtml =  '<span class ="aui-grid-paging-info-text">'+'>'+'</span>';
+								var rightNextBtnHtml  = '<span class ="aui-grid-paging-number aui-grid-paging-next">'+'>'+'</span>';
+								var rightLastBtnHtml = '<span class ="aui-grid-paging-number aui-grid-paging-last">'+'>'+'</span>'; 
+								var startPage= 1;
+				 				var endPage = 1; 
+				 				
+				 				if(pageTotalNum<=10){
+										for(var i = 1, max = pageTotalNum; i<= max; i++){
+														pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';
+														if(i==pagingBtnHtml){
+															break;
+														}
+														
+													   }
+													    $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty();
+								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);
+							       $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingInfoHtml); 
+								}
+				 			
+								  
+								else if ( 10< pageTotalNum){
+										for(var i = 1, max = 10; i<= max; i++){
+									pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';
+									if(i==pagingBtnHtml){
+										break;
+									}
+									
+								   }
+								  	    $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty();
+								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);
+							       $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingInfoHtml); 
+								   $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightNextBtnHtml);
+					               $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightLastBtnHtml);
+					           
+									/*	$('.aui-grid-paging-panel').append(pagingBtnHtml);
+										$('.aui-grid-paging-panel').append(rightNextBtnHtml);
+										$('.aui-grid-paging-panel').append(rightLastBtnHtml);*/
+									
+								}
+							
+							
+										startPage = data[0]['id'];
+				 					endPage = data[data.length-1]['id'];
 									AUIGrid.setGridData(that.grid[index], data); 
-										 if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
+								
+								    if(that.sortingInfo[index]!= undefined && that.sortingInfo[index].length >0 ){
 											AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);	
 									} 
+									for(var j=0,max2=data.length;j<max2;j++){		
+										AUIGrid.updateRow(that.grid[index], {id:startPage+j}, j,false);			
+									}
+								
+												$('#grid'+(index+1)).find('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + '1' + " / 전체페이징 : " + pageTotalNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
+									
+							
+									for(var k=0,max3=data.length;k<max3;k++){
+										if($('.aui-grid-paging-panel')[0].children[k].innerText =='1'){
+											$('.aui-grid-paging-panel')[0].children[k].classList.add('aui-grid-paging-number-selected');											
+											break;
+										}
+									}
+									$('#grid'+(index+1)).find('.aui-grid-paging-number.aui-grid-paging-number-selected')[0].setAttribute('id','click');
+								
+								
+								    //AUIGR//뒤에 버튼추가해야함
+								    
+									//AUIGrid.addRow(that.grid[index], data, "first"); 
+								
+								
+									   
+							
+									 
 								}
 								else{
 								var pageTotalNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']);
@@ -2415,7 +2488,7 @@ var momWidget = {
     					           $('td').removeClass('aui-grid-default-column');
     					             that.splashHide();
     			}, undefined, undefined, this, true);
-	          }, 500);
+	         // }, 500);
         		   
         	 
         }
@@ -2914,7 +2987,7 @@ var momWidget = {
 	setKeyEvent: function(index, your) {
 		var that =  this;	
 		$(document).on('keydown', '.searchInputField, .searchSelectField', function(e) {
-			if(e.keyCode == 13){ //엔터
+			if(e.keyCode == 113){ //엔터
 				$('#findBtn'+(index+1)).click();
 			} 
 			else if(e.keyCode == 8 || e.keyCode == 46){
@@ -2924,7 +2997,7 @@ var momWidget = {
 			}
 		});
 		$(document).on('keydown','.searchSelectField.jqx-datetimeinput', function(e) {
-			if(e.keyCode == 13){ //엔터
+			if(e.keyCode == 113){ //엔터
 				$('#findBtn'+(index+1)).click();
 			} 
 			else if(e.keyCode == 8 || e.keyCode == 46){
@@ -3143,9 +3216,20 @@ var momWidget = {
 				 }
 				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });
+			          $('#'+searchId+'SP'+(index+1)).on('close', function (e) {
+				     var tmpCd = e.target.children[1].value; 
+				         /*   if(tmpCd ==''){
+								$('#'+e.target.id).jqxComboBox('clear');
+								return;
+							}*/
+							$('#'+searchId+'SP'+(index+1)).jqxComboBox('clear'); 
+							 //$('#'+e.target.id).val(tmpCd);
+			      });	
 			      	$('#'+searchId+'SP'+(index+1)).on('keyup', function (e) {
-				        if(e.keyCode==16){
-					  
+				        if(e.keyCode==13){
+					  if($('#'+e.currentTarget.id).jqxComboBox('isOpened') == true){
+						  return;
+					  } 
 										  				  
       					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
       					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[index][e.currentTarget.id] == undefined || that.searchComboItems[index][e.currentTarget.id] == ''){
@@ -3237,14 +3321,34 @@ var momWidget = {
 							 }
 							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });		
+			   /*    	$('#'+popupId).on('open', function (e) {
+				    that.popupOpenYn = 'N';
+				 });*/	
+				    $('#'+popupId).on('close', function (e) {
+				     var tmpCd = e.target.children[1].value; 
+				           /* if(tmpCd ==''){
+								$('#'+e.target.id).jqxComboBox('clear');
+								return;
+							}*/
+							//that.popupOpenYn = 'N';
+						
+
+							
+			      });	
 			      	      	$('#'+popupId).on('keyup', function (e) {
-				        if(e.keyCode==16){
-					  
-										  				  
+				        if(e.keyCode==13){
+					 	   if(that.popupInitLength == undefined){
+							that.popupInitLength = $('#'+e.currentTarget.id).jqxComboBox('getItems').length;
+						}
+	                     	 if($('#'+e.currentTarget.id).val()!=''&&$('#'+e.currentTarget.id).jqxComboBox('getItems').length < that.popupInitLength){
+						      return;
+					     } 
+														  
       					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
       					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[index][e.currentTarget.id] == undefined || that.searchComboItems[index][e.currentTarget.id] == ''){
 							$('#'+e.currentTarget.id).jqxComboBox('source',that.preComboItems);	
 			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
+			  		        //that.popupOpenYn = 'Y'; 
 	          				return;
 						} 
 						//$('#'+e.currentTarget.id).val('');
@@ -3284,9 +3388,11 @@ var momWidget = {
 			  		    	
 			  		    	 $('#'+e.currentTarget.id).val(searchStr);
 						}
+    				
+					 
 			  		    
      					
-}
+						}
 				    	
 			      });
 				
@@ -3360,7 +3466,7 @@ var momWidget = {
 								$('#'+e.target.id).jqxComboBox('clear');
 								return;
 							}
-							 
+							
 							 //$('#'+e.target.id).val(tmpCd);
 			      });			
 				}
@@ -4118,16 +4224,18 @@ var momWidget = {
 			      			   mom_ajax('P', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), [], function(result3, data3) {
 						   		if(result3 != 'SUCCESS') {
 							    	  momWidget.splashHide();
-							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '프로시저 호출실패!'});
+							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '프로시저 호출실패!'});							    	  
 								      return;							     
 			      				}
 			      				 if(data3[0]['p_err_code']=='E') {
 								
 					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
 									  momWidget.splashHide();
+									  $("#exUpCheckDown"+(index+1)).prop("disabled", false);
 						              return;
 					            }    
-		      				
+		      				    	$("#exUpCheckDown"+(index+1)).prop("disabled", false);
+
 	    							  momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
 	   	 					}, undefined, undefined, this, false,undefined,'EV');			
 
@@ -4220,7 +4328,7 @@ var momWidget = {
 				
 				setTimeout(function() {
 						excelUploadGrid(e.target, that.excelUpGrid[index]);
-
+                        
 				$('#'+excelFile).val('');
 				//AUIGrid.update(that.excelUpGrid[index]);
 							setTimeout(function() {

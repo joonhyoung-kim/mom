@@ -180,7 +180,7 @@
         )
        </foreach>
       </where>
-   </delete>
+   </delete>  
    <insert id="create_validateEx1"  parameterType="java.util.List" >    
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
        INTO MOM_PROC_BOR (

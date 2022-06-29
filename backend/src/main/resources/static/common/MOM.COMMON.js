@@ -1589,7 +1589,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	            if(excelUpYn =='Y'&&param.length>=1000){
 	            	 bar.width('0%');
                      percent.html('0%');
-                      console.log("프로그래스최초");
+                      //console.log("프로그래스최초");
 	            	 // progress Modal 열기
 	            	   interval = setInterval(function() {
 	            			$.ajax({
@@ -1599,10 +1599,10 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	            				data : {sessionId:sessionId,type:'excelUpload'},
 	            				success: function(data){
 		                            if(data.percent==0){
-			                               console.log("프로그래스0=");
+			                               //console.log("프로그래스0=");
 			                               return;
 									}
-	            					console.log("프로그래스리턴="+data.percent);
+	            					//console.log("프로그래스리턴="+data.percent);
 	            					var percentComplete = Math.floor((data.percent / paramSize) * 100);
 	  	            		            
 		                        
@@ -1619,7 +1619,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	            					else{
 		                                  bar.width('0%');
 		                                  percent.text('0%');  
-		                                  console.log("프로그래스에러");
+		                                  //console.log("프로그래스에러");
 	            						  momWidget.splashHide();
 	            						  return;
 	            					}
@@ -1853,6 +1853,7 @@ function excelUploadGrid(file, grid) {
         if(refreshFlag) {
         	AUIGrid.setGridData(grid, excelData);
         	AUIGrid.updateRowBlockToValue(grid, 0, excelData.length, "validateYn", "N");
+        	$("#exUpCheckDown"+(index+1)).prop("disabled", true);
         	
         } else {
         	AUIGrid.addRow(grid, excelData, 'last') //20210305 / pyj /웹 엑셀 업로드시 초기화 아닌 기존 row에 대한 add
