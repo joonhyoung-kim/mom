@@ -5,8 +5,6 @@ var momWidget = {
 	backWork:               [],
 	excelDownGrid:          [],
 	excelDownGridData:      [],
-	excelValidateGrid:  	[],
-	excelValidateGridData:  [],
 	totalRowCount:          [],
     excelTmpGrid:           [],
 	pageProperty: 		    [],
@@ -36,7 +34,8 @@ var momWidget = {
 	preComboItems:          [],
 	INFINITE: 			    100000000,	
 	uploadFlag: 		    0,
-	popupInitLength: 		undefined,
+	popupPrevItem:          [],
+	searchPrevItem:         [],
 	downSequence:		    100,	
 	isInitSearch:		    false,
 	firstPageFlag:          true,
@@ -47,7 +46,8 @@ var momWidget = {
 	init: function(index, menuId, your, customFlag) {		  
 		  var that = this;	 
 		  index--;
-		  var fileUpPop = that.createFileUploadPop.excelUp(index,'파일업로드');
+		  let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
+	
 		 // var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
 		  var changePwPop = that.createChangePop.password(index,'비밀번호변경');
 		  
@@ -55,7 +55,7 @@ var momWidget = {
 			  $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
 			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
 
-			  $('body').append(fileUpPop);
+			  $('body').append(uploadPop);
 			  //$('body').append(fileUpProgressBar);
 			  $('body').append(changePwPop);
 			 
@@ -97,6 +97,7 @@ var momWidget = {
 		      var buttonString = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
 		      var popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
 		      that.searchComboItems[index] = {};
+		     // that.preComboItems[index] = {};
 		      if(gridString=='[]'){
 			  
 			  }
@@ -516,6 +517,18 @@ var momWidget = {
 						}
 			    	
 	                    if(excelUploadShow){
+		 			/*	if(excelUploadProp.length==0){
+				      		excelUploadProp.push({
+										    	      dataField 	: 'valMsg' 
+										  			, headerText 	: 'Result'
+										  			, headerStyle   : "my-header-style-default"
+											   		, dataType      : "string"
+													, formatString  : ""
+						    	                    , editable      : false
+										  			, style			: 'aui-grid-default-column-left'
+										  		    , visible       : false
+						                     }); 
+								}*/
 							   excelUploadProp.push({
 										    	      dataField 	: columnId 
 										  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
@@ -530,7 +543,8 @@ var momWidget = {
 				
 			    	         if(widthUse == 'Y'){			    		  
 			    		     excelUploadProp[excelUploadProp.length - 1].width = that.columnProperty[index][i]['columnWidth'];
-			    	   }       
+			    	   }
+			    	         
 						}
 			    	 
 			    	   if(widthUse == 'Y'){
@@ -3218,22 +3232,32 @@ var momWidget = {
 			      });
 			          $('#'+searchId+'SP'+(index+1)).on('close', function (e) {
 				     var tmpCd = e.target.children[1].value; 
-				         /*   if(tmpCd ==''){
+				            if(tmpCd ==''){
 								$('#'+e.target.id).jqxComboBox('clear');
 								return;
-							}*/
-							$('#'+searchId+'SP'+(index+1)).jqxComboBox('clear'); 
+							}
+							//$('#'+searchId+'SP'+(index+1)).jqxComboBox('clear'); 
 							 //$('#'+e.target.id).val(tmpCd);
 			      });	
 			      	$('#'+searchId+'SP'+(index+1)).on('keyup', function (e) {
 				        if(e.keyCode==13){
-					  if($('#'+e.currentTarget.id).jqxComboBox('isOpened') == true){
-						  return;
-					  } 
+						    let passCount = 0;				 	  
+							that.searchPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
+					       if(that.searchPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
+		             		for(var i=0,max1=that.searchPrevItem.length; i<max1;i++){
+								if(that.searchPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
+								passCount ++;	
+							}
+						    
+					     } 
+					     if(passCount >=1 ){
+						     return;
+						 }
+							}	
 										  				  
       					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
       					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[index][e.currentTarget.id] == undefined || that.searchComboItems[index][e.currentTarget.id] == ''){
-							$('#'+e.currentTarget.id).jqxComboBox('source',that.preComboItems);	
+							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[index][e.currentTarget.id]);	
 			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
 	          				return;
 						} 
@@ -3241,9 +3265,9 @@ var momWidget = {
 						let searchStr = $('#'+e.currentTarget.id).val();
 						//$('#'+e.currentTarget.id).jqxComboBox('clear');
       					let oldItems = that.searchComboItems[index][e.currentTarget.id];
-      					if(that.preComboItems.length==0){
-	 						that.preComboItems = oldItems;
-						}
+      				/*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
+	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
+						}*/
       					    
       					let newItems = [];
               			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					
@@ -3336,17 +3360,24 @@ var momWidget = {
 							
 			      });	
 			      	      	$('#'+popupId).on('keyup', function (e) {
-				        if(e.keyCode==13){
-					 	   if(that.popupInitLength == undefined){
-							that.popupInitLength = $('#'+e.currentTarget.id).jqxComboBox('getItems').length;
-						}
-	                     	 if($('#'+e.currentTarget.id).val()!=''&&$('#'+e.currentTarget.id).jqxComboBox('getItems').length < that.popupInitLength){
-						      return;
+				        if(e.keyCode==13){	
+					        let passCount = 0;				 	  
+							that.popupPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
+						
+	                     if(that.popupPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
+		             		for(var i=0,max1=that.popupPrevItem.length; i<max1;i++){
+								if(that.popupPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
+								passCount ++;	
+							}
+						    
 					     } 
-														  
+					     if(passCount>=1){
+						     return;
+						 }
+							}							  
       					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
       					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[index][e.currentTarget.id] == undefined || that.searchComboItems[index][e.currentTarget.id] == ''){
-							$('#'+e.currentTarget.id).jqxComboBox('source',that.preComboItems);	
+							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[index][e.currentTarget.id]);	
 			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
 			  		        //that.popupOpenYn = 'Y'; 
 	          				return;
@@ -3355,9 +3386,9 @@ var momWidget = {
 						let searchStr = $('#'+e.currentTarget.id).val();
 						//$('#'+e.currentTarget.id).jqxComboBox('clear');
       					let oldItems = that.searchComboItems[index][e.currentTarget.id];
-      					if(that.preComboItems.length==0){
-	 						that.preComboItems = oldItems;
-						}
+      				/*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
+	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
+						}*/
       					    
       					let newItems = [];
               			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					
@@ -4180,7 +4211,21 @@ var momWidget = {
 			
 			$(document).on('click','#'+exUpCheckDownBtnId, function() {
 				/*	var excelData = AUIGrid.getGridData(that.excelUpGrid[index]); 
-					AUIGrid.setGridData(that.excelDownGrid[index], excelData);		*/										
+					AUIGrid.setGridData(that.excelDownGrid[index], excelData);		*/		
+					 
+					 
+					 mom_ajax('R', momWidget.pageProperty[0]['programId']+'.validateEx'+(index+1), [], function(result1, data1) {
+						   		if(result1 != 'SUCCESS') {
+							    	  momWidget.splashHide();
+							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '프로시저 호출실패!'});							    	  
+								      return;							     
+			      				}
+			      				let rowIndexes = [];
+			      			for(var i=1,max1=data1.length; i<=max1;i++){
+								rowIndexes.push(i);
+							}
+							AUIGrid.updateRows(that.excelUpGrid[index], data1, rowIndexes); 
+			      				//AUIGrid.setGridData(that.excelUpGrid[index], data1);	
 					var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd')+'_검사결과';
 				    var excelDownOpt = {fileName: fileName ,
 						    		    progressBar: true,
@@ -4199,10 +4244,16 @@ var momWidget = {
 				}
 				//option.footers = footerProperty;
 				    //that.excelDownGrid[index]
+				      AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], "valMsg", {visible : true});
 					  AUIGrid.exportToXlsx(that.excelUpGrid[index], excelDownOpt);
-					  				
+					  //AUIGrid.setColumnProp( that.excelUpGrid[index], 0, { visible : false} );				
 				$('.aui-grid-export-progress-modal').height('100%');
 				$('#excelUpGrid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
+				AUIGrid.removeColumn(that.excelUpGrid[index], 'first');
+	   	 					}, undefined, undefined, this, false,undefined,'R');
+	   	 					
+	   	 														
+			
 				});
 					$(document).on('click','#'+exUpCheckBtnId, function() {	
 					let uploadItems = AUIGrid.getGridData(momWidget.excelUpGrid);
@@ -4229,7 +4280,7 @@ var momWidget = {
 			      				}
 			      				 if(data3[0]['p_err_code']=='E') {
 								
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '검사 불합격! 검사 결과를 다운 받으세요'});
 									  momWidget.splashHide();
 									  $("#exUpCheckDown"+(index+1)).prop("disabled", false);
 						              return;
@@ -4348,6 +4399,7 @@ var momWidget = {
 				
 			});
 			$(document).on('click', '#' + excelUpBtnId, function() {
+			     $("#exUpCheckDown"+(index+1)).prop("disabled", true);
 				$('#excelFile1').val('')
 				AUIGrid.clearGridData(that.excelUpGrid[index]);
 					 var bar = $('.bar');
@@ -4390,7 +4442,18 @@ var momWidget = {
 					};
 					that.excelUpGridProperty[index] = gridPros;
 					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-					
+						validateCol = { dataField 	: 'valMsg' 
+				  			  , headerText 	: 'Result'
+				  			  , headerStyle   : "my-header-style-default"
+					   		  , dataType      : "string"
+							  , formatString  : ""
+    	                      , editable      : false
+				  			  , style			: 'aui-grid-default-column-left'
+				  		      , visible       : false
+				  		      , width         : 350
+						                     };				
+				    AUIGrid.addColumn(that.excelUpGrid[index], validateCol, 'first'); 
+				   // AUIGrid.hideColumnByDataField(that.excelUpGrid[index], ["valMsg"] ); 
 					$('#' +'excelUpPop'+(index+1)).momModal('show');
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});

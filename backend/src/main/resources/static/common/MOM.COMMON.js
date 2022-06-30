@@ -1399,11 +1399,15 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		}
 		type = 'GET';
 		if(jsonString.indexOf('[')>=0){
+			    if(param.length==0){
+				   param[0] = {};
+			    }
 				param[0].divisionCd = siteInfo.divisionCd;
 				param[0].companyCd  = siteInfo.companyCd;
 				param[0].langCd     = siteInfo.languageCd;
 				param[0].p_err_code  = '';
 				param[0].p_err_msg   = '';
+				param[0].userId      = param[0].userId == undefined ? userInfo.userNo: param.userId;
 				param[0].actionMode  = actionMode;
 				param  = param[0];
 			
