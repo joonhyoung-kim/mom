@@ -1789,7 +1789,7 @@ function excel_upload(file_id, url, page, grid, param, call_back, callBackParam,
     //event.preventDefault();
 }
 //엑셀파일을 서버에 전송하지 않고, 그리드에 넣기
-function excelUploadGrid(file, grid) {
+function excelUploadGrid(file, index,grid) {
 	var excelData = [];
 	var reader = new FileReader();
     reader.onload = function() {
@@ -1846,7 +1846,7 @@ function excelUploadGrid(file, grid) {
         }
         
         var refreshFlag = true;
-        var index = Number(grid.replace('#grid', '')) - 1;
+        //var index = Number(grid.replace('#grid', '')) - 1;
         if(momWidget.your[index] != undefined) {   	 
         	if(momWidget.your[index].initParam != undefined) {
         		if(momWidget.your[index].initParam.refreshFlag != undefined && !momWidget.your[index].initParam.refreshFlag) {
@@ -1858,6 +1858,7 @@ function excelUploadGrid(file, grid) {
         	AUIGrid.setGridData(grid, excelData);
         	AUIGrid.updateRowBlockToValue(grid, 0, excelData.length, "validateYn", "N");
         	$("#exUpCheckDown"+(index+1)).prop("disabled", true);
+        	$("#saveBtnExUp"+(index+1)).prop("disabled", true);
         	
         } else {
         	AUIGrid.addRow(grid, excelData, 'last') //20210305 / pyj /웹 엑셀 업로드시 초기화 아닌 기존 row에 대한 add

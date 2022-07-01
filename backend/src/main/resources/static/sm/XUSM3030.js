@@ -7,6 +7,7 @@ var searchProp = [];
 var popupProp = [];
 var prevMenuId = '';
 var buttonProp = [];
+var searchPrevItem =[];
 var tmpComboItem  = undefined;
 var chooseTab = 'grid';
 var preCombo  = [];
@@ -1342,6 +1343,10 @@ var XUSM3030 = {
 					buttonNmText ='업로드';
 				    buttonEvent  = 'CU';
 				 }
+				  else if(e.value == 'excelUpBtnV'){
+					buttonNmText ='업로드(검사)';
+				    buttonEvent  = 'P';
+				 }
 				  AUIGrid.setCellValue('#grid1', e.rowIndex, "buttonNm", buttonNmText);
 				  AUIGrid.setCellValue('#grid1', e.rowIndex, "eventType", buttonEvent);
 			}
@@ -2062,8 +2067,19 @@ var XUSM3030 = {
 
 		});
 			      	$('#menuId').on('keyup', function (e) {				
-				        if(e.keyCode==16){
-					
+				        if(e.keyCode==13){
+						    let passCount = 0;				 	  
+							searchPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
+					       if(searchPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
+		             		for(var i=0,max1=searchPrevItem.length; i<max1;i++){
+								if(searchPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
+								passCount ++;	
+							}						    
+					       } 
+					     if(passCount >=1 ){
+						     return;
+						 }
+							}	
 					  			//$('#menuId').jqxComboBox('clearSelection'); 						  				  
       					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
       					   if($('#'+e.currentTarget.id).val() =='' ||searchComboItems[0][e.currentTarget.id] == undefined || searchComboItems[0][e.currentTarget.id] == ''){
@@ -2076,9 +2092,9 @@ var XUSM3030 = {
 						let searchStr = $('#'+e.currentTarget.id).val();
 						//$('#'+e.currentTarget.id).jqxComboBox('clear');
       					let oldItems = searchComboItems[0][e.currentTarget.id];
-      					if(preComboItems.length==0){
+      				/*	if(preComboItems.length==0){
 	 						preComboItems = oldItems;
-						}
+						}*/
       					    
       					let newItems = [];
               			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					

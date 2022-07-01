@@ -3,7 +3,7 @@
 <mapper namespace="com.mom.XUMD1090">
 
   <select id="get_validateEx1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-      SELECT VAL_MSG
+      SELECT NVL(VAL_MSG,'PASS') AS VAL_MSG
            , MULTI_MSG      
      FROM    MOM_PROC_BOR
      WHERE   COMPANY_CD  = #{companyCd , jdbcType=VARCHAR}

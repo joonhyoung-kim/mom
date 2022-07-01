@@ -52,6 +52,8 @@ var momWidget = {
 		  var changePwPop = that.createChangePop.password(index,'비밀번호변경');
 		  
 		  if(index == 0){
+			  $('head').append('<script  src="/mom/content/jqwidgets/jqxtooltip.js"></script>');
+			  $('head').append('<script  src="/mom/content/jqwidgets/globalization/globalize.js"></script>');
 			  $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
 			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
 
@@ -950,7 +952,7 @@ var momWidget = {
 					   
 			}, undefined, undefined, this, false);
 			}
-			else if(searchType == 'C'  ){
+			else if(searchType == 'C' ){
 					var today = new Date();  
 					var year  = undefined; // 년도
 				    var month = undefined;;  // 월
@@ -1074,9 +1076,12 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput({ width: '210px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full' });
+				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput({ width: '210px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
 				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput('setDate', calendar);
-				
+				   
+       //input을 datepicker로 선언
+              
+  
 			}
 			else if(searchType == 'CP'){
 					var today = new Date();  
@@ -1204,7 +1209,7 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput({ width: '120px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
 				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput('setDate', calendar);
 			
 				
@@ -1328,7 +1333,7 @@ var momWidget = {
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
 			
-				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '120px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '120px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
 				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput('setDate', calendar);
 			}
 			else{
@@ -1716,7 +1721,7 @@ var momWidget = {
 			                  '<div id ="excelUpGrid1" class="excel-up-grid">'+
 			                '</div>'+
 			            '</div>'+
-			            '<div class="modal-footer"><div class="excel-up-footer"><button class="btn excel-up-pop-btn " type="button" id="exUpCheck'+(index+1)+'"><i class="mdi mdi-file-find"></i>검사</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="exUpCheckDown'+(index+1)+'" "><i class="mdi mdi-cloud-download"></i>검사결과</button>  <button class="btn excel-up-pop-btn " type="button" id="saveBtnExUp'+(index+1)+'"><i class="mdi mdi-file-upload-outline"></i>업로드</button> <button class="btn excel-up-pop-btn" type="button" id="cancelBtnExUp'+(index+1)+'"><i class="mdi mdi-window-close"></i>'+multiLang.transText('MESSAGE','MSG0005')+'</button></div</div>'+
+			            '<div class="modal-footer"><div class="excel-up-footer"><button class="btn excel-up-pop-btn " disabled="disabled" type="button" id="exUpCheck'+(index+1)+'"><i class="mdi mdi-file-find"></i>검사</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="exUpCheckDown'+(index+1)+'" "><i class="mdi mdi-cloud-download"></i>검사결과</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="saveBtnExUp'+(index+1)+'"><i class="mdi mdi-file-upload-outline"></i>업로드</button> <button class="btn excel-up-pop-btn" type="button" id="cancelBtnExUp'+(index+1)+'"><i class="mdi mdi-window-close"></i>'+multiLang.transText('MESSAGE','MSG0005')+'</button></div</div>'+
 			        '</div>'+
 			    '</div>'+
 			'</div>';
@@ -3249,7 +3254,7 @@ var momWidget = {
 								passCount ++;	
 							}
 						    
-					     } 
+					       } 
 					     if(passCount >=1 ){
 						     return;
 						 }
@@ -3274,6 +3279,7 @@ var momWidget = {
 				 			if(oldItems[i]['label'].toUpperCase().indexOf($('#'+e.currentTarget.id).val().toUpperCase()) >=0){
 								//$("#jqxComboBox").jqxComboBox('removeItem', "List Item" ); 
 								 newItems.push(oldItems[i]);
+							     
 								//$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']}); 
 							}
 							else{
@@ -3611,7 +3617,7 @@ var momWidget = {
 			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
 			var excelFile          = 'excelFile'+(index + 1);  
 			var isExpanded         = true;
-			var saveExUpBtnId   = 'saveBtnExUp'+(index + 1);
+			var saveExUpBtnId      = 'saveBtnExUp'+(index + 1);
 			var exUpCheckBtnId     = 'exUpCheck'+(index + 1);
 			var exUpCheckDownBtnId = 'exUpCheckDown'+(index + 1);
 			var reportBtnId        = 'reportBtn'+(index + 1);
@@ -4221,7 +4227,7 @@ var momWidget = {
 								      return;							     
 			      				}
 			      				let rowIndexes = [];
-			      			for(var i=1,max1=data1.length; i<=max1;i++){
+			      			for(var i=0,max1=data1.length; i<max1;i++){
 								rowIndexes.push(i);
 							}
 							AUIGrid.updateRows(that.excelUpGrid[index], data1, rowIndexes); 
@@ -4244,12 +4250,34 @@ var momWidget = {
 				}
 				//option.footers = footerProperty;
 				    //that.excelDownGrid[index]
-				      AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], "valMsg", {visible : true});
-					  AUIGrid.exportToXlsx(that.excelUpGrid[index], excelDownOpt);
+				    //  AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], "valMsg", {visible : true});
+				   // that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
+						validateCol = { dataField 	: 'valMsg' 
+				  			  , headerText 	: 'Result'
+				  			  , headerStyle   : "my-header-style-default"
+					   		  , dataType      : "string"
+							  , formatString  : ""
+    	                      , editable      : false
+				  			  , style			: 'aui-grid-default-column-left'
+				  		      , visible       : true
+				  		      , width         : 350
+						                     };			
+					 // let backupGridData = AUIGrid.getGridData('#excelUpGrid'+(index+1));	
+				      AUIGrid.addColumn(that.excelUpGrid[index], validateCol, 'first'); 
+				      $('.aui-grid-export-progress-modal').height('100%');
+				      $('#excelUpGrid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
+				      AUIGrid.exportToXlsx(that.excelUpGrid[index], excelDownOpt);
+				     // AUIGrid.removeColumn(that.excelUpGrid[index],0); 
+				     	setTimeout(function() {
+					     AUIGrid.removeColumn(that.excelUpGrid[index],0); 
+					   //AUIGrid.destroy(that.excelUpGrid[index]);
+				      // AUIGrid.create(that.excelUpGrid[index], that.excelUploadProperty[index], that.excelUpGridProperty[index]);	
+					   //AUIGrid.setGridData(that.excelUpGrid[index], backupGridData);
+				}, 400);
+				
 					  //AUIGrid.setColumnProp( that.excelUpGrid[index], 0, { visible : false} );				
-				$('.aui-grid-export-progress-modal').height('100%');
-				$('#excelUpGrid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
-				AUIGrid.removeColumn(that.excelUpGrid[index], 'first');
+			
+				//AUIGrid.removeColumn(that.excelUpGrid[index], 'first');
 	   	 					}, undefined, undefined, this, false,undefined,'R');
 	   	 					
 	   	 														
@@ -4285,9 +4313,9 @@ var momWidget = {
 									  $("#exUpCheckDown"+(index+1)).prop("disabled", false);
 						              return;
 					            }    
-		      				    	$("#exUpCheckDown"+(index+1)).prop("disabled", false);
+		      				    	$("#saveBtnExUp"+(index+1)).prop("disabled", false);
 
-	    							  momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사완료'});
+	    							  momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사통과!'});
 	   	 					}, undefined, undefined, this, false,undefined,'EV');			
 
 	    }, undefined, undefined, this, false);	
@@ -4313,7 +4341,7 @@ var momWidget = {
                 percent.html(percentVal);*/
 				var param = [];					
 			    var checkedItems = AUIGrid.getGridData(that.excelUpGrid[index]);
-			      if(checkedItems.length == 0){
+			    if(checkedItems.length == 0){
 					momWidget.messageBox({type:'warning', width:'400', height: '145', html:'데이터가 없습니다!'});
 			        momWidget.splashHide();
 			        return;
@@ -4335,15 +4363,15 @@ var momWidget = {
 				      return;
 				}	
 					 				
-				  var actionType = 'CU';	
-				  
+				    var actionType = $('#excelUpPop1').attr('actiontype') == undefined ? 'CU' : $('#excelUpPop1').attr('actiontype');
+				    let queryId    = actionType == 'CU' ? that.pageProperty[index]['programId']+'.defaultInfo'+(index+1) : that.pageProperty[index]['programId']+'.validateEx'+(index+1);
 					setTimeout(function() {
-						
-						 param[0].excelUpYn = 'Y';
-						 param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
+						if(actionType=='P'){
+							 param[0].excelUpYn = 'Y';
+						     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
 					
 						// $("#pleaseWaitDialog").modal('show');
-						 mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+						 mom_ajax(actionType, queryId,[], function(result, data) {
 							   bar.width('100%');
 					           percent.text('100%'+' '+param.length+'/'+param.length);  
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
@@ -4363,7 +4391,37 @@ var momWidget = {
 								  momWidget.splashHide();
 								  //$("#pleaseWaitDialog").momModal('hide');
 							      return;
-				          }, undefined, index, this, true);
+				          }, undefined, index, this, false,undefined,'EA');
+						}
+						else{
+							 param[0].excelUpYn = 'Y';
+						 param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
+					
+						// $("#pleaseWaitDialog").modal('show');
+						 mom_ajax(actionType, queryId,param, function(result, data) {
+							   bar.width('100%');
+					           percent.text('100%'+' '+param.length+'/'+param.length);  
+							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
+					            if(data[0]['p_err_code']=='E') {
+									  $("#pleaseWaitDialog").momModal('hide');
+					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+									  momWidget.splashHide();
+						              return;
+					            }    				                         							  						
+					        	if(that.checkActionCallBack(index, 'GS', param, 'createBtn'+index, your)['result'] != 'SUCCESS'){
+									  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
+									  momWidget.splashHide();
+								      return;
+								} momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1),momWidget.pageProperty[index]['programId'],your,[]);	
+					        	  //$('#excelUpPop'+(index+1)).momModal('hide');
+					        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0006')});
+								  momWidget.splashHide();
+								  //$("#pleaseWaitDialog").momModal('hide');
+							      return;
+				          }, undefined, index, this, false,undefined,'EA');
+						}
+						
+				    
 					}, 500);
 				 
 				
@@ -4378,7 +4436,7 @@ var momWidget = {
 			
 				
 				setTimeout(function() {
-						excelUploadGrid(e.target, that.excelUpGrid[index]);
+						excelUploadGrid(e.target,index, that.excelUpGrid[index]);
                         
 				$('#'+excelFile).val('');
 				//AUIGrid.update(that.excelUpGrid[index]);
@@ -4399,7 +4457,10 @@ var momWidget = {
 				
 			});
 			$(document).on('click', '#' + excelUpBtnId, function() {
-			     $("#exUpCheckDown"+(index+1)).prop("disabled", true);
+				 //$("#exUpCheck"+(index+1)).prop("disabled", false);				 
+				  $("#saveBtnExUp"+(index+1)).prop("disabled", false);
+				  $('#excelUpPop'+(index+1)).attr('actionType', 'CU');
+			     //$("#exUpCheckDown"+(index+1)).prop("disabled", true);
 				$('#excelFile1').val('')
 				AUIGrid.clearGridData(that.excelUpGrid[index]);
 					 var bar = $('.bar');
@@ -4442,18 +4503,58 @@ var momWidget = {
 					};
 					that.excelUpGridProperty[index] = gridPros;
 					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-						validateCol = { dataField 	: 'valMsg' 
-				  			  , headerText 	: 'Result'
-				  			  , headerStyle   : "my-header-style-default"
-					   		  , dataType      : "string"
-							  , formatString  : ""
-    	                      , editable      : false
-				  			  , style			: 'aui-grid-default-column-left'
-				  		      , visible       : false
-				  		      , width         : 350
-						                     };				
-				    AUIGrid.addColumn(that.excelUpGrid[index], validateCol, 'first'); 
+						
 				   // AUIGrid.hideColumnByDataField(that.excelUpGrid[index], ["valMsg"] ); 
+					$('#' +'excelUpPop'+(index+1)).momModal('show');
+					AUIGrid.resize('#excelUpGrid'+(index+1));
+			});
+			$(document).on('click', '#' + excelUpBtnIdV, function() {
+				 $("#exUpCheck"+(index+1)).prop("disabled", false);
+			     $("#exUpCheckDown"+(index+1)).prop("disabled", true);
+			     $('#excelUpPop'+(index+1)).attr('actionType', 'P');
+				 $('#excelFile1').val('')
+				AUIGrid.clearGridData(that.excelUpGrid[index]);
+					 var bar = $('.bar');
+				 var percent = $('.percent');
+				 var status = $('#status');
+			   bar.width('0%');
+			   percent.text('0%');  
+				var gridPros = {
+						
+						// 페이징 사용		
+						usePaging : true,
+						
+						// 한 화면 페이징 버턴 개수 5개로 지정
+						showPageButtonCount : 10,
+						
+						// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
+						showPageRowSelect : true,
+						
+						// 한 화면에 출력되는 행 개수 30개로 지정
+						// pageRowCount 의 크기가 너무 크면 퍼포먼스가 낮아집니다.
+						// 그리드 페이징은 해당 행 수만큼 DOM을 만들기 때문입니다.
+						pageRowCount : 100,
+						showRowNumColumn: true,
+						// 페이징 하단에 출력되는 페이징 정보 텍스트 변경 함수
+						// 파라메터 설명 
+						// currentPage : 현재 페이지, 
+						// totalPageCount : 총 페이지 수, 
+						// currentTopNumber : 최 상단의 행 번호, 
+						// currentBottomNumber : 최 하단 행 번호,
+						// dataLen : 전체 데이터 수
+						// 리턴 : 리턴되는 스트링이 출력됩니다.
+						pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber, currentBottomNumber, dataLen) {
+							return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + dataLen + " 개 )";
+						},
+						
+						// 그룹핑 패널 사용
+					/*	useGroupingPanel : true,
+					
+						groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."*/
+					};
+					that.excelUpGridProperty[index] = gridPros;
+					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
+
 					$('#' +'excelUpPop'+(index+1)).momModal('show');
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
@@ -6102,7 +6203,7 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+popupId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd" });
+				$('#'+popupId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
 				$('#'+popupId).jqxDateTimeInput('setDate', calendar);
 				}
 				else if (popupType == 'C-HM'){

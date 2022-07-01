@@ -2,51 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD2020">
    <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-   	<choose>
- 	  <when test='deploymentType.equals("T")'>
-  	  	SELECT  
-	       MB.PARENT_ITEM_ID
-	     , MB.CHILD_ITEM_ID     
-	     , MB.PARENT_ITEM_ID || '_' || MB.CHILD_ITEM_ID  AS KEY_ID
-	     , MB.REQ_QTY 
-	     , MB.PHANTOM_FLAG  
-	     , MB.MRP_FLAG
-	     , MB.ISSUE_TYPE
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0006', MI.ISSUE_TYPE, 'KR') FROM DUAL) AS ISSUE_TYPE_NM  
-	     , TO_CHAR(MB.START_DATE,'YYYY-MM-DD') AS START_DATE
-	     , TO_CHAR(MB.END_DATE,'YYYY-MM-DD') AS END_DATE          
-	     , MB.SORT_NO  
-	     , MB.UPDATE_BY  
-	     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
-	     , TO_CHAR(MB.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-	     , MI.ITEM_NM AS CHILD_ITEM_NM    
-	     , MI.ITEM_SPEC
-	     , MI.ITEM_TYPE
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL) AS ITEM_TYPE_NM     
-	     , MI.UNIT
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.UNIT, 'KR') FROM DUAL) AS UNIT_NM 
-	     , MI.IN_LOCATION_CD
-	     , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MI.COMPANY_CD,MI.DIVISION_CD,MI.IN_LOCATION_CD) FROM DUAL) AS IN_LOCATION_NM
-	     , MCD.COMPANY_CD
-	     , MCD.COMPANY_NM
-	     , MCD.DIVISION_CD
-	     , MCD.DIVISION_NM
-	     , MB.USE_YN 
-	FROM   MOM_COM_DIV_V MCD
-	     , MOM_BOM MB
-	     , MOM_ITEM MI
-	WHERE  MCD.COMPANY_CD   = MB.COMPANY_CD
-	AND    MCD.DIVISION_CD  = MB.DIVISION_CD
-	AND    MB.COMPANY_CD    = MI.COMPANY_CD
-	AND    MB.DIVISION_CD   = MI.DIVISION_CD
-	AND    MB.CHILD_ITEM_ID = MI.ITEM_ID 
-    AND    MB.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
-    AND    MB.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 	
-	AND    MB.USE_YN      = #{useYn, jdbcType=VARCHAR}           
-	AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE    
-    ORDER BY PARENT_ITEM_ID , CHILD_ITEM_ID
-  	  </when>  	 
-  	  <otherwise>
   	   SELECT LPAD(LEVEL, DECODE(LEVEL,1,1,(LEVEL*2)-1),'.') AS BOM_LEVEL
 	     , LEVEL   
 	     , MB.PARENT_ITEM_ID
@@ -90,24 +45,35 @@
 	AND    MB.CHILD_ITEM_ID = MI.ITEM_ID 
     AND    MB.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
     AND    MB.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  	
-	AND    MB.USE_YN      = #{useYn, jdbcType=VARCHAR}      
-	AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	AND    MB.USE_YN      = #{useYn, jdbcType=VARCHAR}    
+	 <if test="basicDate != null and basicDate != ''">  
+	 AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	 </if>
 	<choose>
  	  <when test='deploymentType.equals("E")'>
   	  	START WITH MB.PARENT_ITEM_ID = #{childItemId, jdbcType=VARCHAR}   
 	    CONNECT BY PRIOR MB.CHILD_ITEM_ID = MB.PARENT_ITEM_ID  
+	    <if test="basicDate != null and basicDate != ''">
+	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	    </if>
   	  </when>  
  	  <when test='deploymentType.equals("I")'>
   	  	START WITH MB.CHILD_ITEM_ID  = #{childItemId, jdbcType=VARCHAR}  
-	    CONNECT BY PRIOR MB.PARENT_ITEM_ID = MB.CHILD_ITEM_ID    
+	    CONNECT BY PRIOR MB.PARENT_ITEM_ID = MB.CHILD_ITEM_ID 
+	    <if test="basicDate != null and basicDate != ''">
+	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	    </if>   
   	  </when>    
   	  <otherwise>
   	    START WITH MB.PARENT_ITEM_ID = #{childItemId, jdbcType=VARCHAR}   
-	    CONNECT BY PRIOR MB.CHILD_ITEM_ID = MB.PARENT_ITEM_ID  
+	    CONNECT BY PRIOR MB.CHILD_ITEM_ID = MB.PARENT_ITEM_ID
+	    <if test="basicDate != null and basicDate != ''">
+	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	    </if>  
   	  </otherwise>
     </choose>						
-  	  </otherwise>
-    </choose>	
+  
+
 	
 	</select>
     <insert id="create_defaultInfo1" parameterType="java.util.List">  
