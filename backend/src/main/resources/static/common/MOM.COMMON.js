@@ -1857,8 +1857,10 @@ function excelUploadGrid(file, index,grid) {
         if(refreshFlag) {
         	AUIGrid.setGridData(grid, excelData);
         	AUIGrid.updateRowBlockToValue(grid, 0, excelData.length, "validateYn", "N");
+        /*	$("#exUpCheckDown"+(index+1)).prop("disabled", true);
+        	$("#saveBtnExUp"+(index+1)).prop("disabled", true);*/
         	$("#exUpCheckDown"+(index+1)).prop("disabled", true);
-        	$("#saveBtnExUp"+(index+1)).prop("disabled", true);
+        	$("#saveBtnExUp"+(index+1)).prop("disabled", false);
         	
         } else {
         	AUIGrid.addRow(grid, excelData, 'last') //20210305 / pyj /웹 엑셀 업로드시 초기화 아닌 기존 row에 대한 add

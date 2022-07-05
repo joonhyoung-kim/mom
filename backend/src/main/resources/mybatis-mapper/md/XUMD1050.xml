@@ -33,7 +33,7 @@
 	  AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	  AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  		
 	  <if test="workGroupCd != null and workGroupCd != ''">
-      AND MWC.WORK_GROUP_CD IN (${workGroupCd})
+      AND MWC.WORK_GROUP_CD = #{workGroupCd, jdbcType=VARCHAR}
 	  </if>
 	  <if test="workCenterCd != null and workCenterCd != ''">
       AND (UPPER(MWC.WORK_CENTER_CD) LIKE '%' || UPPER(#{workCenterCd, jdbcType=VARCHAR}) || '%' )

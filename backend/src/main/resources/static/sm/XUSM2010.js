@@ -379,7 +379,7 @@ var XUSM2010 = {
 						                 }	
 						       		var comboBoxOpt1  = {local: [{'value':'Y','label':'사용'},{'value':'N','label':'미사용'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
 		var comboBoxOpt2  = {local: [{'value':'U','label':'수정'},{'value':'C','label':'신규등록'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
-		var comboBoxOpt3  = {local: [{'value':'P','label':'프로그램'},{'value':'M','label':'메뉴'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
+		var comboBoxOpt3  = {local: [{'value':'P','label':'프로그램'},{'value':'M','label':'메뉴'},{'value':'D','label':'드롭다운그리드'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
 		var comboBoxOpt4  = {local: data3,textName : "label", valueName : "code", readonly : false, selectedIndex : 0};
 		momWidget.setComboBox.set("#useYn-popUp"  , {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt1);
 		momWidget.setComboBox.set("#actType-popUp", {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt2);

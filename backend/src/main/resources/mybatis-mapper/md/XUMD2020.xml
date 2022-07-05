@@ -46,12 +46,15 @@
     AND    MB.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
     AND    MB.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  	
 	AND    MB.USE_YN      = #{useYn, jdbcType=VARCHAR}    
-	 <if test="basicDate != null and basicDate != ''">  
+<!-- 	 <if test="basicDate != null and basicDate != ''">  
 	 AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
-	 </if>
+	 </if> -->
 	<choose>
  	  <when test='deploymentType.equals("E")'>
   	  	START WITH MB.PARENT_ITEM_ID = #{childItemId, jdbcType=VARCHAR}   
+  	  	<if test="basicDate != null and basicDate != ''">
+	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	    </if>
 	    CONNECT BY PRIOR MB.CHILD_ITEM_ID = MB.PARENT_ITEM_ID  
 	    <if test="basicDate != null and basicDate != ''">
 	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
@@ -59,6 +62,9 @@
   	  </when>  
  	  <when test='deploymentType.equals("I")'>
   	  	START WITH MB.CHILD_ITEM_ID  = #{childItemId, jdbcType=VARCHAR}  
+  	  	<if test="basicDate != null and basicDate != ''">
+	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	    </if>
 	    CONNECT BY PRIOR MB.PARENT_ITEM_ID = MB.CHILD_ITEM_ID 
 	    <if test="basicDate != null and basicDate != ''">
 	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
@@ -66,6 +72,9 @@
   	  </when>    
   	  <otherwise>
   	    START WITH MB.PARENT_ITEM_ID = #{childItemId, jdbcType=VARCHAR}   
+  	    <if test="basicDate != null and basicDate != ''">
+	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE
+	    </if>
 	    CONNECT BY PRIOR MB.CHILD_ITEM_ID = MB.PARENT_ITEM_ID
 	    <if test="basicDate != null and basicDate != ''">
 	    AND    TO_DATE(#{basicDate, jdbcType=VARCHAR} , 'YYYY-MM-DD') BETWEEN MB.START_DATE AND MB.END_DATE

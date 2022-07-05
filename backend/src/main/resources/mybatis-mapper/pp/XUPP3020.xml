@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUPP3020">
+	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+        SELECT MWO.COMPANY_CD
+		     , MWO.DIVISION_CD
+		     , MWO.WORK_ORDER_ID   
+		     , MWO.WO_TYPE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0002', MWO.WO_TYPE, 'KR') FROM DUAL)  AS WO_TYPE_NM
+		     , MWO.ITEM_ID
+		     , MI.ITEM_NM
+		     , MI.ITEM_TYPE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM
+		     , MI.ITEM_SPEC
+		     , MWG.WORK_GROUP_CD
+		     , MWG.WORK_GROUP_NM
+		     , MWO.WORK_CENTER_CD
+		     , MWC.WORK_CENTER_NM
+		     , MWO.CONSUME_LOCATION_CD
+		     , (SELECT MOM_COMMON_PKG.fn_get_location_name(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.CONSUME_LOCATION_CD) FROM DUAL) AS CONSUME_LOCATION_NM  
+		     , MWO.GOOD_LOCATION_CD
+		     , (SELECT MOM_COMMON_PKG.fn_get_location_name(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.GOOD_LOCATION_CD) FROM DUAL) AS GOOD_LOCATION_NM
+		     , MWO.DEFECT_LOCATION_CD
+		     , (SELECT MOM_COMMON_PKG.fn_get_location_name(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.DEFECT_LOCATION_CD) FROM DUAL) AS DEFECT_LOCATION_NM
+		     , MWO.ROUTING_ID
+		     , (SELECT MOM_COMMON_PKG.FN_GET_ROUTING_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.ROUTING_ID) FROM DUAL) AS ROUTING_NM
+		     , MWO.WO_STATE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0003', MWO.WO_STATE, 'KR') FROM DUAL)  AS WO_STATE_NM
+		     , MWO.WO_QTY
+		     , MWO.GOOD_QTY
+		     , MWO.DEFECT_QTY 
+		     , MWO.CANCEL_QTY
+		     , MWO.WO_QTY + NVL(MWO.GOOD_QTY, 0) + NVL(MWO.DEFECT_QTY, 0) + NVL(MWO.CANCEL_QTY,0) AS REMAIN_QTY
+		     , TO_CHAR(MWO.PLAN_DATE  ,'YYYY-MM-DD')      AS PLAN_DATE
+		     , TO_CHAR(MWO.WO_START_TIME  ,'YYYY-MM-DD')  AS WO_START_TIME
+		     , TO_CHAR(MWO.WO_END_TIME  ,'YYYY-MM-DD')    AS WO_END_TIME
+		     , MWO.PRIORITY
+		     , MWO.DEMAND_ID
+		     , MWO.PARENT_WO_ID
+		     , MWO.CLOSE_YN
+		     , MWO.OUTSOURCING_YN
+		     , MWO.MANUAL_YN
+		     , MWO.BOR_ID
+		     , MWO.REASON_CD
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0005', MWO.REASON_CD, 'KR') FROM DUAL)  AS REASON_NM
+		     , MWO.DESCRIPTION
+		     , MWO.UPDATE_BY
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+		     , TO_CHAR(MWO.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		FROM   MOM_WORK_ORDER MWO
+		     , MOM_ITEM MI
+		     , MOM_WORK_CENTER MWC
+		     , MOM_WORK_GROUP  MWG
+		WHERE  MWO.COMPANY_CD      = MI.COMPANY_CD
+		AND    MWO.DIVISION_CD     = MI.DIVISION_CD
+		AND    MWO.ITEM_ID         = MI.ITEM_ID  
+		AND    MWO.COMPANY_CD      = MWC.COMPANY_CD
+		AND    MWO.DIVISION_CD     = MWC.DIVISION_CD
+		AND    MWO.WORK_CENTER_CD  = MWC.WORK_CENTER_CD     
+		AND    MWC.COMPANY_CD      = MWG.COMPANY_CD
+		AND    MWC.DIVISION_CD     = MWG.DIVISION_CD
+		AND    MWC.WORK_GROUP_CD   = MWG.WORK_GROUP_CD  
+		AND    MWO.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}
+		AND    MWO.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}
+	    AND    MWO.WO_START_TIME BETWEEN TO_DATE(#{woStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{woStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+	    AND   (UPPER(MWO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+		<if test="workOrderId != null and workOrderId != ''">
+		AND (UPPER(MWO.WORK_ORDER_ID ) LIKE '%' || UPPER(#{workOrderId, jdbcType=VARCHAR}) || '%')	  
+		</if>
+	    <if test="workGroupCd != null and workGroupCd != ''">
+		AND MWG.WORK_GROUP_CD IN (${workGroupCd})`
+		</if>	
+		<if test="workCenterCd != null and workCenterCd != ''">
+		AND MPO.WORK_CENTER_CD IN (${workCenterCd})
+		</if>	
+		<if test="woState != null and woState != ''">
+		AND MWO.WO_STATE IN (${woState})
+		</if>
+		<if test="outsourcingYn != null and outsourcingYn != ''">
+		AND MPO.OUTSOURCING_YN =  #{outsourcingYn, jdbcType=VARCHAR}
+		</if>	
+		<if test="woType != null and woType != ''">
+		AND MWO.WO_TYPE =  #{woType, jdbcType=VARCHAR}
+		</if>	
+		<if test="manualYn != null and manualYn != ''">
+		AND MWO.MANUAL_YN =  #{manualYn, jdbcType=VARCHAR}
+		</if>	
+ORDER BY MWG.WORK_GROUP_NM
+      , MWC.WORK_CENTER_NM
+      , MWO.WO_START_TIME
+      , MWO.PRIORITY
+      , MWO.ITEM_ID
+
+	</select>
+	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	SELECT MBP.OPERATION_SEQ
+	     , MBP.OPERATION_ID
+	     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
+	     , MBP.WORK_STATION_CD
+	     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
+	     , MBP.INSPECTION_YN
+	     , MBP.FINAL_OPERATION_YN
+	     , MBP.MILESTONE
+	FROM   MOM_BOR_PATH MBP
+	WHERE  MBP.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR}
+	AND    MBP.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR}	 
+	AND    MBP.BOR_ID       =  #{borId, jdbcType=VARCHAR}	 
+ORDER BY MBP.OPERATION_SEQ
+
+	</select>
+	
+</mapper>

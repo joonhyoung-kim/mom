@@ -409,6 +409,12 @@
     border: none;
 /*     width: 160.8rem; */
 }
+.gridArea-tm1st-h03-01{
+	background: #f0f0f5;
+    height: 88%;
+    border: none;
+/*     width: 160.8rem; */
+}
 .gridArea-tm1st-h02-01-footer{
 	background: #f0f0f5;
     height: 98.5%;
@@ -495,15 +501,16 @@
     top: -0.7rem;
     margin-left: 1rem;
     margin-right: 1rem;
-    left: -6.5rem;
+   /*  left: -6.5rem; */
+    left: -5rem;
 }
 .fromDateField{
     position: relative;
-    left: -7rem;
+    left: -5rem;
 }
 .toDateField{
    position: relative;
-   left: -6rem;
+   left: -5rem;
 }
 
 .gridArea-tm4vvh-h01-03{
