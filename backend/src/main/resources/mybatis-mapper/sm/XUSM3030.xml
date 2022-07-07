@@ -54,6 +54,15 @@
 		AND     USE_YN         = 'Y'
 		ORDER BY CODE
 	</select>
+    <select id="get_dropDownGridList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+		SELECT PROGRAM_ID AS CODE
+	         , PROGRAM_NM AS LABEL
+		FROM   MOM_PROGRAM MP
+		     , MOM_DROP_DOWN MD
+		WHERE  1=1
+		AND    MP.PROGRAM_ID  = MD.DROPDWON_ID
+		ORDER BY PROGRAM_NM
+	</select>
     <select id="get_dropDownDetailList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
     		    
         SELECT  DETAIL_ID AS CODE
@@ -67,16 +76,24 @@
 		ORDER BY DROPDWON_ID, DETAIL_ID
 	</select>
 	<select id="get_menuList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
-        SELECT  MM.MENU_ID  AS CODE
-             ,  MM.MENU_ID ||'('|| MM.MENU_NM ||')'  AS NAME
-		FROM    MOM_DIVISION_MENU MDM
-		     ,  MOM_MENU   MM 
-		WHERE   MDM.MENU_ID      = MM.MENU_ID
-		AND     MDM.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
-	    AND     MDM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}  
-        AND     MDM.MENU_ID  <![CDATA[ <> 'root' ]]>
-        AND     MM.MENU_TYPE = 'P'       
-        ORDER BY MM.SORT_NO 
+        SELECT A.MENU_ID  AS CODE
+   	         , A.MENU_ID ||'('|| A.MENU_NM ||')'  AS NAME
+        FROM   (SELECT MM.MENU_ID  
+                     , MM.MENU_NM
+                FROM   MOM_DIVISION_MENU MDM
+                     , MOM_MENU   MM 
+		        WHERE  MDM.MENU_ID      = MM.MENU_ID
+		        AND    MDM.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR}
+		        AND    MDM.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR} 
+		        AND     MDM.MENU_ID  <![CDATA[ <> 'root' ]]>
+		        AND    MM.MENU_TYPE = 'P'       
+        UNION ALL        
+		        SELECT MM.MENU_ID 
+		             , MM.MENU_NM
+		        FROM   MOM_MENU MM 
+		        where  MM.MENU_ID     <![CDATA[ <> 'XUDG' ]]> 
+		        AND    MM.MENU_TYPE = 'D' ) A
+		ORDER BY A.MENU_ID,A.MENU_NM 
 	</select>
     <select id="get_gridList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	   SELECT  GRID_ID AS CODE

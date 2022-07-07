@@ -106,7 +106,7 @@ var XUSM3030 = {
 		    							    	 					    	   			          
 		      }					
 	           gridProp   = data2;
-	     	  var gridValidString = '';					      
+	     	//  var gridValidString = '';					      
 		      for(var i=0 ;i<data2.length;i++){	
 		    	          data2[i].validItem   = data2[i].validValue;
 				    	  data2[i].validValue  =  data2[i].propertyValue;	
@@ -251,7 +251,7 @@ var XUSM3030 = {
 		var that = this;
 		var cellAlignList = [{"code":"LEFT","value":"좌측"},{"code":"CENTER","value":"중앙"},{"code":"RIGHT","value":"우측"}];
 		var dataTypeList  = [{"code":"string","value":"문자"},{"code":"numeric","value":"숫자"},{"code":"date","value":"날짜"},{"code":"boolean","value":"참/거짓"}];
-		var columnTypeList  = [{"code":"T","value":"텍스트"},{"code":"S","value":"싱글-드롭다운"},{"code":"M","value":"멀티-드롭다운"},{"code":"CK","value":"체크박스"},{"code":"C","value":"캘린더"},{"code":"G","value":"그룹핑"}];
+		var columnTypeList  = [{"code":"T","value":"텍스트"},{"code":"S","value":"싱글-드롭다운"},{"code":"M","value":"멀티-드롭다운"},{"code":"CK","value":"체크박스"},{"code":"C","value":"캘린더"},{"code":"G","value":"그룹핑"},{"code":"DG","value":"드롭다운그리드"}];
 		var sortMethod    = [{"code":"ASC","value":"오름차순"},{"code":"DESC","value":"내림차순"},{"code":"NONE","value":"사용안함"}];
 		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
@@ -259,6 +259,8 @@ var XUSM3030 = {
 			      momWidget.splashHide();
 		      } 
 		   mom_ajax('R', 'XUSM3030.dropDownList', {}, function(result1, data1) {
+			 mom_ajax('R', 'XUSM3030.dropDownGridList', {}, function(result2, data2) {
+				let comboList =[];
 		var columnProperty = [{
 			  dataField 	: 'columnId'
 			, headerText 	: '컬럼아이디'
@@ -417,7 +419,15 @@ var XUSM3030 = {
 			, style         : 'my-column-style-edit'
 			, labelFunction: function(rowIndex, columnIndex, value, item) { 
 	            	var retStr = "";
-	            	var comboList = data1;
+	            	
+	            	if(item.columnType == 'DG'){
+						 comboList = data2;
+					}
+					else{
+						 comboList = data1;
+					}
+					
+	            	
 	    			for(var i=0,len=comboList.length; i<len; i++) { 
 	    					  if(comboList[i]["code"] == value) {
 	        					  retStr = comboList[i]["label"];
@@ -432,9 +442,18 @@ var XUSM3030 = {
 					matchFromFirst : false, //  처음부터 매치가 아닌 단순 포함되는 자동완성
 					autoEasyMode : true,    //  자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 					showEditorBtnOver: true,  
-					list: data1, 
+					//list: comboList, 
 					keyField:   'code', 
-					valueField: 'label'
+					valueField: 'label',
+					listFunction : function(rowIndex, columnIndex, item, dataField) {
+					if(item.columnType == 'DG'){
+						 comboList = data2;
+					}
+					else{
+						 comboList = data1;
+					}
+						return comboList; 
+					}
 				}
 				
 				
@@ -594,6 +613,7 @@ var XUSM3030 = {
 		 that.gridEvent();
 		 AUIGrid.setGridData('#grid1', columnProp);
 		 momWidget.splashHide();
+		  }, undefined, undefined, this, false,'Y');	
 		   }, undefined, undefined, this, false,'Y');	
 		  }, undefined, undefined, this, false,'Y');	
 		 
@@ -1351,6 +1371,11 @@ var XUSM3030 = {
 				  AUIGrid.setCellValue('#grid1', e.rowIndex, "eventType", buttonEvent);
 			}
 		});
+		/*	AUIGrid.bind('#grid1', "cellEditBegin", function(e) {
+                  if(e.item.columnType == 'DG'){
+	                   
+				  }
+			});*/
 	
 	},
 	event: function() {

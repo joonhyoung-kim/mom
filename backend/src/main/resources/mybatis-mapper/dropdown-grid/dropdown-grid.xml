@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.DG">	
-<select id="get_DD00001" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
-	SELECT  CODE
-         ,  NVL((SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR},#{langCd, jdbcType=VARCHAR},'CODE',#{groupCd, jdbcType=VARCHAR}|| '_' ||CODE)
-	             FROM   DUAL ),CODE_NM) AS LABEL
-	FROM    MOM_CODE
-	WHERE   DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
-	AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
-	AND     GROUP_CD    = #{groupCd, jdbcType=VARCHAR}
-	AND     USE_YN      = 'Y'
-	ORDER BY SORT_NO,LABEL
-  </select> 
+<select id="get_XXDG0010" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
+	SELECT PROGRAM_ID AS CODE
+	     , PROGRAM_NM AS LABEL
+	FROM   MOM_PROGRAM MP
+	     , MOM_DROP_DOWN MD
+	WHERE  1=1
+	AND    MP.PROGRAM_ID  = MD.DROPDWON_ID
+	ORDER BY PROGRAM_NM
+ </select> 
  
 </mapper>

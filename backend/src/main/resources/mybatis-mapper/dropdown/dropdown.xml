@@ -26,16 +26,24 @@
   </select> 
 
   <select id="get_DD00005" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
-        SELECT  MM.MENU_ID  AS CODE
-             ,  MM.MENU_ID ||'('|| MM.MENU_NM ||')'  AS LABEL
-		FROM    MOM_DIVISION_MENU MDM
-		     ,  MOM_MENU   MM 
-		WHERE   MDM.MENU_ID      = MM.MENU_ID
-		AND     MDM.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
-	    AND     MDM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}  
-        AND     MDM.MENU_ID  <![CDATA[ <> 'root' ]]>
-        AND     MM.MENU_TYPE = 'P'       
-        ORDER BY LABEL 
+          SELECT A.MENU_ID  AS CODE
+   	         , A.MENU_ID ||'('|| A.MENU_NM ||')'  AS LABEL
+        FROM   (SELECT MM.MENU_ID  
+                     , MM.MENU_NM
+                FROM   MOM_DIVISION_MENU MDM
+                     , MOM_MENU   MM 
+		        WHERE  MDM.MENU_ID      = MM.MENU_ID
+		        AND    MDM.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR}
+		        AND    MDM.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR} 
+		        AND     MDM.MENU_ID  <![CDATA[ <> 'root' ]]>
+		        AND    MM.MENU_TYPE = 'P'       
+        UNION ALL        
+		        SELECT MM.MENU_ID 
+		             , MM.MENU_NM
+		        FROM   MOM_MENU MM 
+		        where  MM.MENU_ID     <![CDATA[ <> 'XUDG' ]]> 
+		        AND    MM.MENU_TYPE = 'D' ) A
+		ORDER BY A.MENU_ID,A.MENU_NM 
   </select>
   <select id="get_DD00006" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT GRID_ID        AS CODE 

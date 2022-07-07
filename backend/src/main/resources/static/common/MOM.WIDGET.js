@@ -2597,14 +2597,23 @@ var momWidget = {
 				 }
 				
 			 }
-			 if (searchType =='CP'){
+			 else if (searchType =='CP'){
 				param[searchId+'SD'] = $('#'+searchId+'SD'+(index+1)).val();
 				param[searchId+'ED'] = $('#'+searchId+'ED'+(index+1)).val();
 			}
 			 
-			 else{
+			 else if(searchType =='C'){
 				 param[searchId] = $('#'+searchId+'SP'+(index+1)).val();
 			 }
+			 else if(searchType =='S' || searchType =='SS'){
+				param[searchId] = $('#'+searchId+'SP'+(index+1)).val();
+			}
+			 else if(searchType =='T' ){
+				param[searchId] = $('#'+searchId+'SP'+(index+1)).val();
+			}
+			else{
+				
+			}
 			
 		}
 		}
@@ -2920,7 +2929,7 @@ var momWidget = {
 			//alert('스크롤바있음');
 		   }
 		});
-		AUIGrid.bind(that.grid[index], "cellEditEnd", function( e ) {
+		AUIGrid.bind(that.grid[index], "cellEditEnd", function(e) {
 			if(that.columnProperty[index][e.columnIndex]['columnType'] == 'S'){
 					for(var i=0, len=that.columnDropdown[index][e.dataField].length; i<len; i++) { // keyValueList 있는 값만..
 									if(that.columnDropdown[index][e.dataField][i]["code"] == e.value) {
@@ -2949,14 +2958,24 @@ var momWidget = {
 		return event.value; // 원래값
 	});*/
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
-			var item = e.item;
-			var rowIdField;
-			var rowId;
-			var rowIdValue = [] ;
-			var selectionMode = momWidget.gridProperty[index][0]['selectionMode'];
+			let item = e.item;
+			let rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); 
+			let rowId = item[rowIdField];
+			let rowIdValue = [] ;
+			let dropdownGridYn = 'N';
+			let selectionMode = momWidget.gridProperty[index][0]['selectionMode'];
+			 for(let i=0,max1=that.columnProperty[index].length; i<max1;i++){
+				if(that.columnProperty[index][i].columnType == 'DG' && that.columnProperty[index][i].columnId == e.dataField){					
+						dropdownGridYn = 'Y';
+					    break;				
+				}
+			 }
 			
-			rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); // rowIdField 얻기
-			rowId = item[rowIdField];
+			if(dropdownGridYn == 'Y'){
+				
+			}
+			else{
+				
 			rowIdValue.push(e.rowIdValue);
 			if(selectionMode =='singleCell' || selectionMode == 'singleRow'){
 				if(AUIGrid.isCheckedRowById(e.pid, rowId)) {
@@ -2980,6 +2999,9 @@ var momWidget = {
 			if(your != undefined && your.cellClickCallBack != undefined) {
 			     your.cellClickCallBack(index,e);
 			}
+			}
+		
+			
 		});	
 		AUIGrid.bind(that.grid[index], "rowCheckClick", function(e) {
 			
@@ -3249,18 +3271,18 @@ var momWidget = {
 				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
 			      });
 			          $('#'+searchId+'SP'+(index+1)).on('close', function (e) {
-				     var tmpCd = e.target.children[1].value; 
+				/*     var tmpCd = e.target.children[1].value; 
 				            if(tmpCd ==''){
 								$('#'+e.target.id).jqxComboBox('clear');
 								return;
-							}
+							}*/
 							//$('#'+searchId+'SP'+(index+1)).jqxComboBox('clear'); 
 							 //$('#'+e.target.id).val(tmpCd);
 			      });	
 			      	$('#'+searchId+'SP'+(index+1)).on('keyup', function (e) {
 				        if(e.keyCode==13){
 						    let passCount = 0;				 	  
-							that.searchPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
+							that.searchPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems') == undefined ? 0:$('#'+e.currentTarget.id).jqxComboBox('getItems');
 					       if(that.searchPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
 		             		for(var i=0,max1=that.searchPrevItem.length; i<max1;i++){
 								if(that.searchPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
@@ -4444,12 +4466,13 @@ var momWidget = {
 				 var bar = $('.bar');
 				 var percent = $('.percent');
 				 var status = $('#status');
+				 let validateYn = $('#excelUpPop'+(index+1)).attr('actiontype') == 'CU' ? 'N':'Y';
 			   bar.width('0%');
 			   percent.text('0%');  
 			
 				
 				setTimeout(function() {
-						excelUploadGrid(e.target,index, that.excelUpGrid[index]);
+						excelUploadGrid(e.target,index, that.excelUpGrid[index],validateYn);
                         
 				$('#'+excelFile).val('');
 				//AUIGrid.update(that.excelUpGrid[index]);
