@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.DG">	
-<select id="get_XXDG0010" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
+<select id="get_XUSM8010" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
 	SELECT PROGRAM_ID AS CODE
 	     , PROGRAM_NM AS LABEL
 	FROM   MOM_PROGRAM MP
@@ -10,5 +10,13 @@
 	AND    MP.PROGRAM_ID  = MD.DROPDWON_ID
 	ORDER BY PROGRAM_NM
  </select> 
- 
+ <select id="get_XUSM8020" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
+	SELECT PROGRAM_ID AS CODE
+	     , PROGRAM_NM AS LABEL
+	FROM   MOM_PROGRAM MP
+	     , MOM_DROP_DOWN MD
+	WHERE  1=1
+	AND    MP.PROGRAM_ID  = MD.DROPDWON_ID
+	ORDER BY PROGRAM_NM
+ </select> 
 </mapper>

@@ -28,10 +28,10 @@ public class CustomDataAccessException extends DataAccessException {
         
 
         if(errCode==1) {
-        	setMsg("MSG0020");
+        	setMsg("MSG00044");
         }
         else {
-        	setMsg("일반 에러입니다!");
+        	setMsg("MSG00045");
         }
     }
     public CustomDataAccessException(String msg, Throwable cause, String query){

@@ -420,7 +420,7 @@ var XUSM3030 = {
 			, labelFunction: function(rowIndex, columnIndex, value, item) { 
 	            	var retStr = "";
 	            	
-	            	if(item.columnType == 'DG'){
+	            	if(AUIGrid.getItemByRowIndex('#grid1',rowIndex)['columnType'] == 'DG'){
 						 comboList = data2;
 					}
 					else{
@@ -507,8 +507,20 @@ var XUSM3030 = {
 			, style			: 'my-column-style-edit2'	
 		},
 		{
+			  dataField 	: 'columnCreate' 
+			, headerText 	: '등록'
+			, style			: 'my-column-style-edit'
+			, width			: 80
+			, renderer 		: {
+				  type 		: 'CheckBoxEditRenderer'
+				, editable	: true
+				,checkValue : 'Y' 
+				,unCheckValue : 'N'
+			}
+		},
+		{
 			  dataField 	: 'columnEditable' 
-			, headerText 	: '셀편집'
+			, headerText 	: '수정'
 			, style			: 'my-column-style-edit'
 			, width			: 80
 			, renderer 		: {
@@ -1898,7 +1910,8 @@ var XUSM3030 = {
 			else if (chooseTab=='column'){
 				 item = {   columnAlign: "",
 							columnColor: "",
-							columnEditable: 'Y',
+							columnCreate: 'N',
+							columnEditable: 'N',
 							columnHeight: "24",
 							columnId: "",
 							columnNm: "컬럼명",

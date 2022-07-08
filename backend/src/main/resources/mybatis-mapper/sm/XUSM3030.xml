@@ -55,13 +55,14 @@
 		ORDER BY CODE
 	</select>
     <select id="get_dropDownGridList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-		SELECT PROGRAM_ID AS CODE
-	         , PROGRAM_NM AS LABEL
-		FROM   MOM_PROGRAM MP
-		     , MOM_DROP_DOWN MD
-		WHERE  1=1
-		AND    MP.PROGRAM_ID  = MD.DROPDWON_ID
-		ORDER BY PROGRAM_NM
+	SELECT MENU_ID AS CODE
+	     , MENU_NM || '(' || MENU_ID || ')'  AS LABEL
+	FROM   MOM_PROGRAM MP	  
+         , MOM_MENU  MM
+	WHERE  1=1
+	AND    MP.PROGRAM_ID  = MM.PROGRAM_ID
+    AND    MENU_TYPE = 'D'
+	ORDER BY MENU_NM
 	</select>
     <select id="get_dropDownDetailList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
     		    
@@ -185,6 +186,7 @@
 		 	  ,	SORT_NO
 			  ,	SORT_METHOD
 			  ,	COLUMN_WIDTH
+			  , COLUMN_CREATE
 			  ,	COLUMN_EDITABLE
 		  	  ,	COLUMN_SHOW
 			  ,	EXCEL_SHOW
@@ -508,6 +510,7 @@
 							 ,SORT_NO
 							 ,SORT_METHOD
 							 ,COLUMN_WIDTH
+							 ,COLUMN_CREATE
 							 ,COLUMN_EDITABLE
 							 ,COLUMN_SHOW 
 							 ,EXCEL_SHOW 
@@ -537,6 +540,7 @@
 				             , NVL(#{item.sortNo,        jdbcType=INTEGER},0)
 				             , #{item.sortMethod,        jdbcType=VARCHAR}
 				             , NVL(#{item.columnWidth,       jdbcType=VARCHAR},0)
+				             , NVL(#{item.columnCreate,      jdbcType=VARCHAR},'N')
 				             , NVL(#{item.columnEditable,    jdbcType=VARCHAR},'N')
 				             , NVL(#{item.columnShow,        jdbcType=VARCHAR},'N')
 				             , NVL(#{item.excelShow,         jdbcType=VARCHAR},'N')
