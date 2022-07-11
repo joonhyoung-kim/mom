@@ -7,7 +7,7 @@ var XUSM1020 = {
 	init: function() {
      that = this;		
 	},
-	cellClickCallBack: function(index,e) {
+	cellClickCallBack: function(index,rowIndex,e) {
 		if(index==0){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
 			that.paramTmp = e.item;

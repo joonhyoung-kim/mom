@@ -2,21 +2,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.DG">	
 <select id="get_XUSM8010" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
-	SELECT PROGRAM_ID AS CODE
-	     , PROGRAM_NM AS LABEL
-	FROM   MOM_PROGRAM MP
-	     , MOM_DROP_DOWN MD
-	WHERE  1=1
-	AND    MP.PROGRAM_ID  = MD.DROPDWON_ID
-	ORDER BY PROGRAM_NM
+	SELECT MB.ITEM_ID 
+	     , MI.ITEM_NM
+	     , MB.WORK_CENTER_CD
+	     , MWC.WORK_CENTER_NM      
+	     , MB.ROUTING_ID
+	     , MR.ROUTING_NM
+	     , MB.PRIORITY
+	     , MB.BOR_ID  
+	FROM   MOM_BOR MB
+	     , MOM_ITEM MI
+	     , MOM_WORK_CENTER MWC
+	     , MOM_ROUTING MR   
+	WHERE  MB.COMPANY_CD     = MI.COMPANY_CD
+	AND    MB.DIVISION_CD    = MI.DIVISION_CD
+	AND    MB.ITEM_ID        = MI.ITEM_ID
+	AND    MB.COMPANY_CD     = MWC.COMPANY_CD
+	AND    MB.DIVISION_CD    = MWC.DIVISION_CD
+	AND    MB.WORK_CENTER_CD = MWC.WORK_CENTER_CD
+	AND    MB.COMPANY_CD     = MR.COMPANY_CD
+	AND    MB.DIVISION_CD    = MR.DIVISION_CD
+	AND    MB.ROUTING_ID     = MR.ROUTING_ID 
+	AND    MB.COMPANY_CD     =   #{companyCd, jdbcType=VARCHAR}
+	AND    MB.DIVISION_CD    =   #{divisionCd, jdbcType=VARCHAR}
+	AND    MB.ITEM_ID        =   #{itemId, jdbcType=VARCHAR}
+	AND    MB.USE_YN       = 'Y'
+	ORDER BY MB.PRIORITY,MI.ITEM_NM
+
  </select> 
  <select id="get_XUSM8020" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
-	SELECT PROGRAM_ID AS CODE
-	     , PROGRAM_NM AS LABEL
-	FROM   MOM_PROGRAM MP
-	     , MOM_DROP_DOWN MD
-	WHERE  1=1
-	AND    MP.PROGRAM_ID  = MD.DROPDWON_ID
-	ORDER BY PROGRAM_NM
+		SELECT MB.ITEM_ID 
+	     , MI.ITEM_NM
+	     , MB.WORK_CENTER_CD
+	     , MWC.WORK_CENTER_NM      
+	     , MB.ROUTING_ID
+	     , MR.ROUTING_NM
+	     , MB.PRIORITY
+	     , MB.BOR_ID  
+	FROM   MOM_BOR MB
+	     , MOM_ITEM MI
+	     , MOM_WORK_CENTER MWC
+	     , MOM_ROUTING MR   
+	WHERE  MB.COMPANY_CD     = MI.COMPANY_CD
+	AND    MB.DIVISION_CD    = MI.DIVISION_CD
+	AND    MB.ITEM_ID        = MI.ITEM_ID
+	AND    MB.COMPANY_CD     = MWC.COMPANY_CD
+	AND    MB.DIVISION_CD    = MWC.DIVISION_CD
+	AND    MB.WORK_CENTER_CD = MWC.WORK_CENTER_CD
+	AND    MB.COMPANY_CD     = MR.COMPANY_CD
+	AND    MB.DIVISION_CD    = MR.DIVISION_CD
+	AND    MB.ROUTING_ID     = MR.ROUTING_ID 
+	AND    MB.COMPANY_CD     =   #{companyCd, jdbcType=VARCHAR}
+	AND    MB.DIVISION_CD    =   #{divisionCd, jdbcType=VARCHAR}
+	AND    MB.ITEM_ID        =   #{itemId, jdbcType=VARCHAR}
+	AND    MB.USE_YN       = 'Y'
+	ORDER BY MB.PRIORITY,MI.ITEM_NM
  </select> 
 </mapper>

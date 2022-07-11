@@ -36,6 +36,7 @@ var momWidget = {
 	uploadFlag: 		    0,
 	popupPrevItem:          [],
 	searchPrevItem:         [],
+	editItem:               [],
 	downSequence:		    100,	
 	isInitSearch:		    false,
 	firstPageFlag:          true,
@@ -100,6 +101,7 @@ var momWidget = {
 		      var buttonString = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
 		      var popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
 		      that.searchComboItems[index] = {};
+		      that.editItem[index] = {};
 		     // that.preComboItems[index] = {};
 		      if(gridString=='[]'){
 			  
@@ -2101,8 +2103,8 @@ var momWidget = {
     	    +    '</div>';
 			   return topHtml+botHtml;
 		},
-			dropDownGridPop : function(index,colNum,rowNum,popupTitle,target){
-			var topHtml =	'<div target="'+target+'" id="dropDownGridPop'+index+'" class="dropDownGrid modal gridPop-C'+colNum+'-R'+rowNum+'">'
+			dropDownGridPop : function(index,colNum,rowNum,popupTitle,target,rowIndex){
+			var topHtml =	'<div rowIndex ="'+rowIndex+'" target="'+target+'" id="dropDownGridPop'+index+'" class="dropDownGrid modal gridPop-C'+colNum+'-R'+rowNum+'">'
 	        +    '<div class = "searcharea-gridPop-C'+colNum+'-R'+rowNum+'">'
 			+     '<div class="popup_main">'
 			+      '<div class = "grid" id="grid'+index+'">'
@@ -2283,7 +2285,7 @@ var momWidget = {
         }
         else{ //검색조건 밸리데이션 성공시    
         callInitResult = that.checkActionCallInit(index, 'R',  totalParam, btnId, your);     	
-        	  if(callInitResult['result'] != 'SUCCESS') {
+        	  if(callInitResult['result'] != 'SUCCESS') { 
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
 						      return;
@@ -2918,15 +2920,12 @@ var momWidget = {
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	setGridEvent: function(index, your) {
 		var that =  this;	
-	/*	$(document).on('focus', '.slide', function() {
-			$('.slide').css('background','red !important');
-				alert('감지!');
-		});*/
+
 		AUIGrid.bind(momWidget.grid[index], "ready", function(e) {
 			let scrollbar = $(e.pid).find('.aui-hscrollbar');
 		   if(scrollbar[0]!=undefined && scrollbar.css('display') !='none'){
 		
-			//alert('스크롤바있음');
+		
 		   }
 		});
 		AUIGrid.bind(that.grid[index], "cellEditEnd", function(e) {
@@ -2940,6 +2939,9 @@ var momWidget = {
 										that.messageBox({type: 'warning', width: '400', height: '145', html: '리스트에 없는 데이터입니다!'});
 									}
 								}
+			}
+			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'DG'){
+				//that.editItem[index].push();
 			}			
 							
 							
@@ -2958,12 +2960,16 @@ var momWidget = {
 		return event.value; // 원래값
 	});*/
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
+			if(your != undefined && your.cellClickCallInit != undefined) {
+				your.cellClickCallInit(index,rowIndex,e);
+			}
 			let item = e.item;
 			let rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); 
 			let rowId = item[rowIdField];
 			let rowIdValue = [] ;
 			let dropdownGridYn = 'N';
 			let dropDownGridIndex = 0;
+		    let rowIndex = $('#dropDownGridPop'+(index+1)).length == 0 ?  0: Number($('#dropDownGridPop'+(index+1)).attr('rowIndex'));
 			let selectionMode = momWidget.gridProperty[index][0]['selectionMode'];
 			 for(let i=0,max1=that.columnProperty[index].length; i<max1;i++){
 				if(that.columnProperty[index][i].columnType == 'DG' && that.columnProperty[index][i].columnId == e.dataField){					
@@ -2976,6 +2982,8 @@ var momWidget = {
 			if(dropdownGridYn == 'Y'){
 				var columnProp = [];	
 				var targetId =  e.dataField;
+				let totalParam = [];
+				let rowIndex = e.rowIndex;
 			/*	var clickedElment = e.target.parentElement.parentElement.parentElement.parentElement.id; 
 					
 				if(clickedElment =='' || clickedElment.indexOf('DP') == -1){
@@ -2983,11 +2991,11 @@ var momWidget = {
 				}*/
 				
 				var fieldValue = e.value; //셁밧
-				var activeTop = e.orgEvent.y;//
-				var activeLeft = e.orgEvent.x;
-  	            var dropdownGridId =1;
-	
-			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:that.columnProperty[index][dropDownGridIndex]['dropdownId'],gridId:dropdownGridId}, function(result1, data1) { 
+				var activeTop = e.orgEvent.currentTarget.offsetTop;//
+				var activeLeft = e.orgEvent.currentTarget.offsetLeft;
+  	            var dropdownGridId =10;
+	            let dropdownGridQueryId = that.columnProperty[index][dropDownGridIndex]['dropdownId'];
+			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
 		         if(result1 != 'SUCCESS' || data1.length == 0) {
 		    	  momWidget.splashHide();
 			      return;							     
@@ -3007,7 +3015,8 @@ var momWidget = {
 			      that.gridExtraProperty[dropdownGridId] = gridExtraProp;
 			     var popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
 			    var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
-			    var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId);
+			    var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId,rowIndex);
+			    
                 var menuId = that.pageProperty[index]['programId'];
                     var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
                     if(isShow == 'block'){
@@ -3072,10 +3081,24 @@ var momWidget = {
 				     $('#dropDownGridPop'+(dropdownGridId+1)).css('z-index','9999');
 				     $('#dropDownGridPop'+(dropdownGridId+1)).css('display','block');
 				     
-				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+29, left : activeLeft});
+				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+206, left : activeLeft+67});
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-				  			 
+				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  item, 'CELLCLICK', your);     	
+			  if(callInitResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			 }
+			 totalParam = callInitResult['param'];
+				  mom_ajax('R', 'DG.'+dropdownGridQueryId, totalParam, function(result1, data1) {
+					if(result1 != 'SUCCESS') {
+						    	  momWidget.splashHide();
+							      return;							     
+					}
+						 AUIGrid.setGridData(that.grid[dropdownGridId], data1); 
+						   						   	
+				}, undefined, undefined, that, false);
 		    	/* that.findBtnClicked(dropdownGridId, [{keyId1:fieldValue}], true, 'INIT',menuId,your,function(callBackResult, callBackData) {
 						                 if(callBackResult != 'SUCCESS' || callBackData.length==0) {
 						    	            momWidget.splashHide();
@@ -3089,7 +3112,8 @@ var momWidget = {
 				}, undefined, undefined, this, false);
 				
 				//}
-				e.stopImmediatePropagation();
+				e.orgEvent.stopImmediatePropagation();
+				return;
 			}
 			else{
 				
@@ -3114,7 +3138,7 @@ var momWidget = {
 				
 			}
 			if(your != undefined && your.cellClickCallBack != undefined) {
-			     your.cellClickCallBack(index,e);
+			     your.cellClickCallBack(index,rowIndex,e);
 			}
 			}
 		
@@ -8562,7 +8586,7 @@ var momWidget = {
 								}
 
 								if (your != undefined && your.cellClickCallBack != undefined) {
-									your.cellClickCallBack(index, e);
+									your.cellClickCallBack(index,rowIndex,e);
 								}
 							}, 400);
 						}
@@ -8628,7 +8652,7 @@ var momWidget = {
 						 */
 						/* start 20191115_001 */
 						if(your != undefined && your.cellClickCallBack != undefined) {
-							your.cellClickCallBack(index, e);
+							your.cellClickCallBack(index,rowIndex,e);
 						}
 						/* end 20191115_001 */
 					});
@@ -8666,7 +8690,7 @@ var momWidget = {
 								}
 
 								if (your != undefined && your.cellClickCallBack != undefined) {
-									your.cellClickCallBack(index, e);
+									your.cellClickCallBack(index,rowIndex,e);
 								}
 							}, 400);
 						}
@@ -8733,7 +8757,7 @@ var momWidget = {
 						 */
 						/* start 20191115_001 */
 						if(your != undefined && your.cellClickCallBack != undefined) {
-							your.cellClickCallBack(index, e);
+							your.cellClickCallBack(index,rowIndex,e);
 						}
 						/* end 20191115_001 */
 					});

@@ -10,7 +10,35 @@ var VIEW= {
 	},
 	event: function(e) {
 	
-	}
+	},
+	   cellClickCallInit: function(index,rowIndex,e,) {
+		if(index == 0){
+			var item = e.item;		
+            if(item.state =='C'){
+	             
+			}
+         
+		}
+	
+	},	
+	   cellClickCallBack: function(index,rowIndex,e,) {
+		if(index == 10){
+			var item = e.item;		
+            AUIGrid.setCellValue(widget.grid[0], rowIndex, "workCenterCd", item['workCenterCd']);
+           // $('#dropDownGridPop'+(index+1)).remove();
+			//momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080,[]);
+			 //$('#dropDownGridPop'+(index+1)).remove();
+		}
+	
+	}	
+/*	searchCallInit: function(index,your,action,btnId,param,result) {
+		if(index==0 && btnId== "CELLCLICK"){
+			result.param = {itemId:that.paramTmp.authGroupCd};
+			
+		}
+
+		
+	},*/
 
 	
 	

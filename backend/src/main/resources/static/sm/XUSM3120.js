@@ -12,7 +12,7 @@ var VIEW= {
 
 	},
 	
-		cellClickCallBack: function(index,e) {
+		cellClickCallBack: function(index,rowIndex,e) {
 		if(index==0){
 			var item = e.item;	
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);

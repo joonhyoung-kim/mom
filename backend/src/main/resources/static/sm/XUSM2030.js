@@ -26,7 +26,7 @@ var XUSM2030 = {
 			}
 		});
 	},
-	cellClickCallBack: function(index,e) {
+	cellClickCallBack: function(index,rowIndex,e) {
 		if(index==0){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
 			momWidget.findBtnClicked(2, e.item, true, 'CELLCLICK',menuId,XUSM2030);

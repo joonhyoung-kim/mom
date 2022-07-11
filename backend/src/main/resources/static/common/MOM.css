@@ -441,6 +441,11 @@
     height: 79.2%;
     border: none;
 }
+.gridArea-tm2h-h03-01{
+	background: #f0f0f5;
+    height: 78.5%;
+    border: none;
+}
 .gridArea-tm3vh-h00-01{
 	background: #f0f0f5;
     height:calc(100% - 0.22rem);
@@ -1308,29 +1313,34 @@ border-color: #d8dce3 !important;
 	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
 }
 .searcharea-gridPop-C10-R8 {
-	padding-left: 1.8rem;
 	border: none;
-	padding-top: 0.3rem;
-	padding-bottom: 15px;
+	background-color: white;
+    width: 100%;
+    height:98%;
+    position: relative;
+	background-image: none;
+	background-position: left top;
+	background-size: auto;
+	background-repeat: repeat;
+}
+.xmlText{
+	    height: 100%;
+        width: 100%;
+}
+.searcharea-gridPop-C8-R6 {
+	border: none;
 	background-color: white;
     width: 98%;
-   /*  height: 23.6rem !important; */
-    height:100%;
+    height: 98% !important;
     margin-left: 0.2rem;
     position: relative;
-	margin-bottom: 8px;
 	background-color: #f8f9fa;
 	background-image: none;
 	background-position: left top;
 	background-size: auto;
 	background-repeat: repeat;
 	background-attachment: scroll;
-	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
-    margin-top: 0.8rem;
-}
-.xmlText{
-	    height: 100%;
-        width: 100%;
+	background:  white;
 }
 .searcharea-gridPop-C6-R4 {
 	padding-left: 1.8rem;
@@ -3538,6 +3548,18 @@ input:focus{
     height: 15.5rem !important;
     border: 1px solid rgb(77, 77, 78) !important;
 }
+.gridPop-C8-R6 {
+    z-index: 1050;
+    border-radius: 0.5rem;
+    float: none !important;
+    width: 90rem !important;
+    position: relative !important;
+    margin-left: 40rem !important;
+    margin-top: -21rem !important;
+    background: white !important;
+    height: 22.8rem !important;
+   /*  border: 1px solid rgb(77, 77, 78) !important; */
+}
 .gridPop-C10-R8 {
     z-index: 1050;
     border-radius: 0.5rem;
@@ -3548,7 +3570,7 @@ input:focus{
     margin-top: -21rem !important;
     background: white !important;
     height: 22.8rem !important;
-    border: 1px solid rgb(77, 77, 78) !important;
+   /*  border: 1px solid rgb(77, 77, 78) !important; */
 }
 .side-menu__item {
     position: relative;
