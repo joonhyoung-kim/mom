@@ -11,7 +11,7 @@ var XUSM1020 = {
 		if(index==0){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
 			that.paramTmp = e.item;
-			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,XUSM1020,[]);
+			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,XUSM1020,undefined,e);
 		}
 	
 	},

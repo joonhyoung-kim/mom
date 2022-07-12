@@ -236,6 +236,7 @@
 			  ,	BUTTON_PARAMETER
 			  ,	BUTTON_ICON 
 			  , REFIND_FLAG
+			  , TEMP_USE_YN
 			  , CHECK_TYPE
 	   FROM     MOM_BUTTON_PROPERTY		   	  
        WHERE    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
@@ -687,6 +688,7 @@
 							   , BUTTON_PARAMETER
 							   , BUTTON_ICON 
 							   , REFIND_FLAG
+							   , TEMP_USE_YN
 							   , CHECK_TYPE
 							   , POPUP_GRID_ID
 							   , CREATE_BY
@@ -703,6 +705,7 @@
 				             , #{item.buttonParameter,   jdbcType=VARCHAR} 
 				             , #{item.buttonIcon,        jdbcType=VARCHAR}
 				             , NVL(#{item.refindFlag,    jdbcType=VARCHAR},'N')
+				             , NVL(#{item.tempUseYn,    jdbcType=VARCHAR},'N')
 				             , #{item.checkType,         jdbcType=VARCHAR}
 				             , #{item.popupGridId,       jdbcType=VARCHAR}
 				             , #{item.userId,            jdbcType=VARCHAR} 

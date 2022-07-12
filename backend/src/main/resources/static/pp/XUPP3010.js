@@ -13,18 +13,24 @@ var VIEW= {
 	},
 	   cellClickCallInit: function(index,rowIndex,e,) {
 		if(index == 0){
-			var item = e.item;		
-            if(item.state =='C'){
-	             
+			let item = e.item;		
+            if(item.state =='C' && e.dataField=='workCenterCd'){
+	             widget.messageBox({type: 'warning', width: '400', height: '145', html: multiLang.transText('MESSAGE','MSG00046')});
+	             return 'FAIL';
 			}
          
 		}
 	
 	},	
 	   cellClickCallBack: function(index,rowIndex,e,) {
-		if(index == 10){
+		if(index == 0 && e.dataField != 'workCenterCd'){
+			 momWidget.findBtnClicked(1, {borId:e.item['borId']}, true, 'CELLCLICK',menuId,VIEW);
+		}
+		else if(index == 10){
 			var item = e.item;		
             AUIGrid.setCellValue(widget.grid[0], rowIndex, "workCenterCd", item['workCenterCd']);
+            AUIGrid.setCellValue(widget.grid[0], rowIndex, "borId", item['borId']);
+            AUIGrid.setCellValue(widget.grid[0], rowIndex, "routingId", item['routingId']);
            // $('#dropDownGridPop'+(index+1)).remove();
 			//momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080,[]);
 			 //$('#dropDownGridPop'+(index+1)).remove();

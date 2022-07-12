@@ -1125,7 +1125,7 @@ var XUSM3030 = {
 	}, 
 	buttonGrid: function(queryId) {
 		var that = this;
-		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"createBtnV","value":"등록(검사)"},{"code":"editBtn","value":"수정"},{"code":"editBtnV","value":"수정(검사)"},{"code":"copyBtn","value":"복사"},{"code":"copyBtnV","value":"복사(검사)"},{"code":"delBtn","value":"삭제"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"}];
+		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"procBtn","value":"프로시저호출"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"},{"code":"customBtnA","value":"커스텀버튼1"},{"code":"customBtnB","value":"커스텀버튼2"},{"code":"customBtnC","value":"커스텀버튼3"},{"code":"customBtnD","value":"커스텀버튼4"},{"code":"customBtnE","value":"커스텀버튼5"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
@@ -1171,7 +1171,8 @@ var XUSM3030 = {
 				, headerText 	: '버튼명'
 				, width			:  150
 				, style			: 'my-column-style-edit2'	
-			},{
+			},
+			{
 				  dataField 	: 'eventType' 
 				, headerText 	: '이벤트유형'
 				, width			: 150
@@ -1225,9 +1226,26 @@ var XUSM3030 = {
 				, style			: 'my-column-style-edit'	
 			},
 			{
+				  dataField 	: 'tempUseYn' 
+				, headerText 	: 'TMP TABLE 사용'
+				, style			: 'my-column-style-edit'	
+				, renderer 		: {
+						  type 		 : 'CheckBoxEditRenderer'
+						, editable	 : true
+						, checkValue : 'Y' 
+						, unCheckValue : 'N'
+				}
+			},	
+			{
 				  dataField 	: 'refindFlag' 
 				, headerText 	: '재조회'
 				, style			: 'my-column-style-edit'	
+				, renderer 		: {
+						  type 		: 'CheckBoxEditRenderer'
+						, editable	: true
+						, checkValue : 'Y' 
+						, unCheckValue : 'N'
+				}
 			},	
 			{
 				  dataField 	: 'checkType' 

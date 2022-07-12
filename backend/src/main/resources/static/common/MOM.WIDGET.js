@@ -2920,7 +2920,8 @@ var momWidget = {
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	setGridEvent: function(index, your) {
 		var that =  this;	
-
+        let result = 'SUCCESS';
+       
 		AUIGrid.bind(momWidget.grid[index], "ready", function(e) {
 			let scrollbar = $(e.pid).find('.aui-hscrollbar');
 		   if(scrollbar[0]!=undefined && scrollbar.css('display') !='none'){
@@ -2960,9 +2961,7 @@ var momWidget = {
 		return event.value; // 원래값
 	});*/
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
-			if(your != undefined && your.cellClickCallInit != undefined) {
-				your.cellClickCallInit(index,rowIndex,e);
-			}
+		
 			let item = e.item;
 			let rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); 
 			let rowId = item[rowIdField];
@@ -2971,6 +2970,16 @@ var momWidget = {
 			let dropDownGridIndex = 0;
 		    let rowIndex = $('#dropDownGridPop'+(index+1)).length == 0 ?  0: Number($('#dropDownGridPop'+(index+1)).attr('rowIndex'));
 			let selectionMode = momWidget.gridProperty[index][0]['selectionMode'];
+				if(your != undefined && your.cellClickCallInit != undefined) {
+				result = your.cellClickCallInit(index,rowIndex,e) ;
+				if (result == undefined){
+					result = 'SUCCESS';
+				}
+				if(result != 'SUCCESS'){
+					e.orgEvent.stopImmediatePropagation();
+					return;
+				}
+			}
 			 for(let i=0,max1=that.columnProperty[index].length; i<max1;i++){
 				if(that.columnProperty[index][i].columnType == 'DG' && that.columnProperty[index][i].columnId == e.dataField){					
 						dropdownGridYn = 'Y';
@@ -3786,6 +3795,7 @@ var momWidget = {
 			var excelUpCancelBtnId = 'cancelBtnExUp'+(index + 1);
 			var saveBtnId        = 'saveBtn'+(index + 1);
 			var saveBtnIdV       = 'saveBtnV'+(index + 1);
+			let procBtnId        = 'procBtn'+(index + 1);
 			var savePopBtnId     = 'saveBtn'+'DP'+(index + 1);
 			var dropdownGridId   = 'saveBtn'+'DG'+(index + 1);
 			var delBtnId         = 'delBtn'+(index + 1);
@@ -4872,6 +4882,68 @@ var momWidget = {
 				}						
 				
 			});	
+			$(document).on('click', '#' + procBtnId, function(e) {
+				let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
+				var checkedItems = [];
+				var param = [];
+				let actionType = 'P';	
+				if(isCheckCol == true){
+					    param = that.getCheckedRowItems(that.grid[index]);
+					if (param.length == 0){
+						  checkedItems = AUIGrid.getGridData(that.grid[index]);
+						  for(var i=0,max=checkedItems.length;i<max;i++){	
+						     param.push(checkedItems[i]); 														
+				          }
+						/*  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+					      return;	*/
+					}				
+									
+				}
+				else{					
+					    checkedItems = AUIGrid.getGridData(that.grid[index]);
+					for(var i=0,max=checkedItems.length;i<max;i++){	
+						  param.push(checkedItems[i]); 														
+				    }
+				}
+		
+				callInitResult = that.checkActionCallInit(index, 'P', param, 'procBtn', your);
+				if(callInitResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    }
+			    	
+			     
+				 param = callInitResult['param'];
+				
+				 for(var i=0;i<that.buttonProperty[index].length;i++){
+					if(that.buttonProperty[index][i]['buttonId'] == 'saveBtn'){
+						actionType = that.buttonProperty[index][i]['eventType'];
+					}					
+				 }
+						 
+				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+			            if(data[0]['p_err_code']=='E') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
+							  momWidget.splashHide();
+				              return;
+			            }    				                         							  						
+			        	callBackResult = that.checkActionCallBack(index, 'GS', param, 'saveBtn', your);
+						if(callBackResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    		}
+									 
+			        	  momWidget.findBtnClicked(index, {}, true, 'procBtn',momWidget.pageProperty[index]['programId'],your);			        	  
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, undefined, this, false);
+				  
+					
+				
+			});
 			$(document).on('click', '#' + saveBtnId, function(e) {
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn']
 				var checkedItems = [];
@@ -4879,8 +4951,12 @@ var momWidget = {
 				if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[index]);
 					if (param.length == 0){
-						  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0012')});
-					      return;	
+						  checkedItems = AUIGrid.getGridData(that.grid[index]);
+						  for(var i=0,max=checkedItems.length;i<max;i++){	
+						     param.push(checkedItems[i]); 														
+				          }
+						/*  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+					      return;	*/
 					}				
 									
 				}
@@ -4888,7 +4964,7 @@ var momWidget = {
 					
 					    checkedItems = AUIGrid.getGridData(that.grid[index]);
 					for(var i=0,max=checkedItems.length;i<max;i++){	
-						param.push(checkedItems[i]); 														
+						  param.push(checkedItems[i]); 														
 				    }
 				}
 		
@@ -4922,7 +4998,8 @@ var momWidget = {
 			    		}
 			
 						 
-			        	  momWidget.findBtnClicked(index, param, true, 'saveBtn',momWidget.pageProperty[index]['programId'],your);
+			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['programId'],your);
+			        	  
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
 					      return;
@@ -6116,22 +6193,25 @@ var momWidget = {
 
 				for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']+(index+1)== btnId){
-						actionType  = that.buttonProperty[index][i]['eventType'] == 'P' ? 'P':that.buttonProperty[index][i]['eventType'];
+						actionType  = that.buttonProperty[index][i]['eventType'] ;
 						customIndex = Number(that.buttonProperty[index][i]['popupGridId'])-1;
 						if(that.buttonProperty[index][i]['buttonParameter'] != undefined && that.buttonProperty[index][i]['buttonParameter'] != ''){
 							buttonParam = JSON.parse(that.buttonProperty[index][i]['buttonParameter'].replace(/\'/gi, '"'));
 						    param = buttonParam;
 						}
+						if($('#defaultPop'+(customIndex+1)).length >0){
+							$('#defaultPop'+(customIndex+1)).attr('btnId', that.buttonProperty[index][i]['buttonId']);
+							$('#defaultPop'+(customIndex+1)).attr('btnIndex', index);
+							  indexItems['parent'] = index;
+						     indexItems['child'] = customIndex;
+							 that.setPopup(indexItems,actionType);	
+						}
 						
-						$('#defaultPop'+(customIndex+1)).attr('btnId', that.buttonProperty[index][i]['buttonId']);
-						$('#defaultPop'+(customIndex+1)).attr('btnIndex', index);
 						break;
 					}
 				}	
 				
-			     indexItems['parent'] = index;
-			     indexItems['child'] = customIndex;
-				 that.setPopup(indexItems,actionType);	
+			   
 			/*	 if(that.setPopup(indexItems,actionType) == 'FAIL'){
 					return;
 				}*/
