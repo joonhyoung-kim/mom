@@ -1316,7 +1316,8 @@ border-color: #d8dce3 !important;
 	border: none;
 	background-color: white;
     width: 100%;
-    height:98%;
+   /*  height:98%; */
+    height:100%;
     position: relative;
 	background-image: none;
 	background-position: left top;
@@ -1330,9 +1331,10 @@ border-color: #d8dce3 !important;
 .searcharea-gridPop-C8-R6 {
 	border: none;
 	background-color: white;
-    width: 98%;
-    height: 98% !important;
-    margin-left: 0.2rem;
+    width: 100%;
+   /*  height: 98% !important; */
+    height: 100% !important;
+   /*  margin-left: 0.2rem; */
     position: relative;
 	background-color: #f8f9fa;
 	background-image: none;
@@ -1348,7 +1350,7 @@ border-color: #d8dce3 !important;
 	padding-top: 0.3rem;
 	padding-bottom: 15px;
 	background-color: white;
-    width: 98%;
+    width: 100%;
     height: 23.6rem !important;
     margin-left: 0.2rem;
     position: relative;
@@ -1417,7 +1419,7 @@ border-color: #d8dce3 !important;
     height: 38rem;
 }
 .searcharea-pop.R5-remark-out {
-    height: 33rem;
+    height: 38.2rem;
 }
 .searcharea-pop.R6-remark-in {
 	padding-left: 3.4rem !important; 
@@ -3044,7 +3046,7 @@ border-color: #d8dce3 !important;
     margin-left: 35% !important;
     margin-top: -36% !important;
     background: white !important; 
-    height: 41.7rem !important;
+    height: 47rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
    
@@ -3552,7 +3554,7 @@ input:focus{
     z-index: 1050;
     border-radius: 0.5rem;
     float: none !important;
-    width: 90rem !important;
+    width: 90.4rem !important;
     position: relative !important;
     margin-left: 40rem !important;
     margin-top: -21rem !important;
@@ -4278,7 +4280,8 @@ input:focus{
 	 background:#f0f0f5;
 }
 .popup_main {
-	height: 97%;
+	/* height: 97%; */
+	height: 100%;
 	background-color: #d8dce3;
 	 background:#f0f0f5;
 }

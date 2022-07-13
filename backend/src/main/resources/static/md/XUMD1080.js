@@ -44,7 +44,7 @@ var XUMD1080= {
 	    }
 
 	},		
-    cellClickCallBack: function(index,rowIndex,e) {
+    cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index == 0){
 			var item = e.item;		
 			momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080);

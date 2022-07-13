@@ -22,7 +22,7 @@ var VIEW= {
 		}
 	
 	},	
-	   cellClickCallBack: function(index,rowIndex,e,) {
+	   cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index == 0 && e.dataField != 'workCenterCd'){
 			 momWidget.findBtnClicked(1, {borId:e.item['borId']}, true, 'CELLCLICK',menuId,VIEW);
 		}

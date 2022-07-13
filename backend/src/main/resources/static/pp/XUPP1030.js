@@ -18,7 +18,7 @@ var VIEW= {
 			}
 		});
 	},
-	  cellClickCallBack: function(index,rowIndex,e) {
+	  cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index == 1){
 			var item = e.item;	
 			$('#itemId'+'DP1').val(item['itemId']);

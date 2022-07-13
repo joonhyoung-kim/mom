@@ -25,7 +25,9 @@
 	AND    MB.ROUTING_ID     = MR.ROUTING_ID 
 	AND    MB.COMPANY_CD     =   #{companyCd, jdbcType=VARCHAR}
 	AND    MB.DIVISION_CD    =   #{divisionCd, jdbcType=VARCHAR}
+	<if test="itemId != null and itemId != ''">
 	AND    MB.ITEM_ID        =   #{itemId, jdbcType=VARCHAR}
+	</if>
 	AND    MB.USE_YN       = 'Y'
 	ORDER BY MB.PRIORITY,MI.ITEM_NM
 
@@ -54,7 +56,9 @@
 	AND    MB.ROUTING_ID     = MR.ROUTING_ID 
 	AND    MB.COMPANY_CD     =   #{companyCd, jdbcType=VARCHAR}
 	AND    MB.DIVISION_CD    =   #{divisionCd, jdbcType=VARCHAR}
+	<if test="itemId != null and itemId != ''">
 	AND    MB.ITEM_ID        =   #{itemId, jdbcType=VARCHAR}
+	</if>
 	AND    MB.USE_YN       = 'Y'
 	ORDER BY MB.PRIORITY,MI.ITEM_NM
  </select> 

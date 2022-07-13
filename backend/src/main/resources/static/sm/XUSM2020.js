@@ -24,7 +24,7 @@ var XUSM2020 = {
 			}
 		});
 	},
-	cellClickCallBack: function(index,rowIndex,e) {
+	cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index==0){
 			var item = e.item;		
 			var rowIdField;
