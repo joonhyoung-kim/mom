@@ -110,7 +110,7 @@ ORDER BY MBP.OPERATION_SEQ
       AND    PRODUCT_ORDER_ID = #{item.workOrderId, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <insert id="create_tmpInfo1" parameterType="java.util.List">
+  <insert id="create_procBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_PROC_WORK_ORDER (
                   COMPANY_CD
@@ -149,7 +149,7 @@ ORDER BY MBP.OPERATION_SEQ
               )
    </foreach>
   </insert>
-   <delete id="remove_tmpInfo1" parameterType="java.util.List">
+   <delete id="remove_procBtn1" parameterType="java.util.List">
       DELETE FROM MOM_PROC_WORK_ORDER
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -160,7 +160,7 @@ ORDER BY MBP.OPERATION_SEQ
        </foreach>
       </where>
    </delete> 
-   <select id="proc_tmpInfo1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_procBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
            { CALL MOM_WO_PKG.sp_confirm_work_order(             #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}

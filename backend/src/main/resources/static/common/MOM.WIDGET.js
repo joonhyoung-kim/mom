@@ -4941,25 +4941,25 @@ var momWidget = {
 					}					
 				 }
 		       if(tmpYn =='Y'){
-			        mom_ajax('D', that.pageProperty[index]['programId']+'.tmpInfo'+(index+1),[], function(result1, data1) {
+			        mom_ajax('D', that.pageProperty[index]['programId']+'.procBtn'+(index+1),[], function(result1, data1) {
 			            if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
 							  momWidget.splashHide();
 				              return;
 			            }    	
-			             mom_ajax('C', that.pageProperty[index]['programId']+'.tmpInfo'+(index+1),param, function(result2, data2) {                                                                                                      
+			             mom_ajax('C', that.pageProperty[index]['programId']+'.procBtn'+(index+1),param, function(result2, data2) {                                                                                                      
 				 		  if(result2!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
 							  momWidget.splashHide();
 				              return;
 			              }    	
-			                 mom_ajax('P', that.pageProperty[index]['programId']+'.tmpInfo'+(index+1),[], function(result3, data3) {
-							 if(result3!='SUCCESS') {
-						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
+			                 mom_ajax('P', that.pageProperty[index]['programId']+'.procBtn'+(index+1),[], function(result3, data3) {
+							    if(data[0]['p_err_code']=='E') {
+						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_code'])});
 										  momWidget.splashHide();
 							              return;
-						              }    	
-			                 }, undefined, undefined, this, false); 
+						         }    	
+			                 }, undefined, undefined, this, false,undefined,'C'); 
 			                    
 						 }, undefined, undefined, this, false);    
 						                      							  						
@@ -4978,7 +4978,7 @@ var momWidget = {
 			      
 			   }
 			   else{
-				             mom_ajax(actionType, that.pageProperty[index]['programId']+'.tmpInfo'+(index+1),param, function(result1, data1) {
+				             mom_ajax(actionType, that.pageProperty[index]['programId']+'.procBtn'+(index+1),param, function(result1, data1) {
 								  if(result1!='SUCCESS') {
 							            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
 											  momWidget.splashHide();
@@ -5063,7 +5063,8 @@ var momWidget = {
 				var initParam ={};
 		        let searchResult = true;
 		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
-		        let buttonId = $('#defaultPop'+(index+1)).attr('btnId');
+		        let tmpYn = 'N';
+		        let buttonId = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
 				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
 				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
@@ -5074,17 +5075,36 @@ var momWidget = {
 				var buttonParam = [];
 				var extraParam = {};
 				var validateCheck = true;
-				if(actionType == 'P'){
-				/*	if(buttonId.indexOf('createBtn') >= 0 || buttonId.indexOf('copyBtn') >= 0) {
- 
+				let actionMode = 'C';
+				
+				
+					if(buttonId.indexOf('createBtn') >= 0) {
+ 				        actionMode = 'C';
+					}
+					else if(buttonId.indexOf('copyBtn') >= 0){
+								actionMode = 'C';
+					}
+					else if(buttonId.indexOf('editBtn') >= 0){
+							actionMode = 'U';
+					}
+					else if(buttonId.indexOf('delBtn') >= 0){
+							actionMode = 'D';
+					}
+					else if(buttonId.indexOf('procBtn') >= 0){
+							actionMode = 'P';
 					}
 					else{
-						queryId = that.pageProperty[index]['programId']+'.'+buttonId;
-					}*/
+						actionMode = 'C';
+					}
 					queryId = that.pageProperty[index]['programId']+'.'+buttonId;
-				}
 				
-					
+				
+			       for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+						
+					}					
+				 }
 				//if(btnIndex != undefined && btnPopYn == 'Y'){
 					if(btnIndex != undefined && btnPopYn =='Y'){
 					for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
@@ -5137,7 +5157,7 @@ var momWidget = {
 				}
 				else{
 					for(var i=0,max2=popupCount;i<max2;i++){
-					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
+					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val() == undefined ? '':$('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
 					let fieldValues = [];
 					
 					if(actionType == 'C' ){		
@@ -5446,7 +5466,7 @@ var momWidget = {
 					}
 					}
 					else if (actionType == 'P' ){
-						  if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
+					if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
 							 momWidget.splashHide();
 				             return;
@@ -5560,11 +5580,51 @@ var momWidget = {
 				}
 				}
 			
-				
+				if(tmpYn=='Y'){
+					 mom_ajax('D', queryId,[], function(result1, data1) {
+						 if(result1!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
+							  momWidget.splashHide();
+				              return;
+			            }    	
+						  mom_ajax('C', queryId,param, function(result2, data2) {
+							 if(result2!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
+							  momWidget.splashHide();
+				              return;
+			            }   
+							 mom_ajax('P', queryId,[], function(result3, data3) {
+			            	     if(data3[0]['p_err_code']=='E') {
+						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
+			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
+							  momWidget.splashHide();
+				              return;
+			            } 
+			                callBackResult = that.checkActionCallBack(index, actionType, {}, buttonId, your);   				                         							  						
+				        	if(callBackResult['result'] != 'SUCCESS') {
+								  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+								  momWidget.splashHide();
+							      return;
+							}
+						if(your.initParam != undefined && your.initParam != ''){
+				              initParam = your.initParam;
+			             }
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, index, this, false,undefined,actionMode);
+							
+							
+							 }, undefined, index, this, false,undefined,actionMode);
+						 }, undefined, index, this, false,undefined,actionMode);
 					
-						 mom_ajax(actionType, queryId,param, function(result, data) {
-			            if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
+				}
+				else{
+					 mom_ajax(actionType, queryId,param, function(result, data) {
+			             if(result!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00033')});
 							  momWidget.splashHide();
 				              return;
 			            } 
@@ -5583,6 +5643,9 @@ var momWidget = {
 						  momWidget.splashHide();
 					      return;
 		          }, undefined, index, this, false);
+				}
+					
+						
 							 
 				 },500);
 				  
@@ -6406,7 +6469,14 @@ var momWidget = {
 											// $('#'+popupId).jqxComboBox({selectedIndex: 0 });
 							         }
 						        		
-						        	 }							        	 
+						        	 }
+						        	 else if(popupType =='DG'){
+										 $('#'+popupId).jqxComboBox({disabled: true});
+										 $('#'+popupId).css('background','#ededed');
+									}
+									else{
+										
+									}							        	 
 						        	// $('#'+popupId).jqxComboBox('focus');
 					}, undefined, undefined, that, false);
 					}

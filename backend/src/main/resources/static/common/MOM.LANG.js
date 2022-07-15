@@ -21,17 +21,51 @@ var multiLang = {
  
 		
 	},
-	transText: function(msgType,text) {
+	transText: function(msgType,text) { //단문 변환 
 		var that = this;
+		let transText = '';
 		multiLang.multiLangInfo  = JSON.parse(sessionStorage.multiLangList);
-	   	for(var i = 0, max = multiLang.multiLangInfo.length; i < max; i++) {
+		if(text.indexOf('+')>=0 && text.indexOf('#')>=0){
+			let dbMsg = text.split('#');
+			let multiLangText = dbMsg[0].split('+');
+					
+			for(let i = 0, max = multiLangText.length; i < max; i++) {
+				 for(let j = 0, max2 = multiLang.multiLangInfo.length; j < max2; j++) {
+					 if(multiLang['multiLangInfo'][j]['msgCd'] == multiLangText[i]){
+			     	     transText += multiLang['multiLangInfo'][j]['msgNm'];
+			     	     break;
+		             }
+				 }
+				transText += multiLangText[i];
+				
+			}
+			 return transText;
+		}
+		else if(text.indexOf('+')>=0 && text.indexOf('#')== -1){
+			for(let i = 0, max = multiLangText.length; i < max; i++) {
+				 for(let j = 0, max2 = multiLang.multiLangInfo.length; j < max2; j++) {
+					 if(multiLang['multiLangInfo'][j]['msgCd'] == multiLangText[i]){
+			     	     transText += multiLang['multiLangInfo'][j]['msgNm'];
+			     	     break;
+		             }
+				 }
+				transText += multiLangText[i];
+				
+			}
+			 return transText;
+		}
+		else{
+			 for(let i = 0, max = multiLang.multiLangInfo.length; i < max; i++) {
 		     if(multiLang['multiLangInfo'][i]['msgCd'] == text){
 			     return multiLang['multiLangInfo'][i]['msgNm'];
 		     }
 	    }
-	    return text;
+	     return text;
+		}
+	  
+	   
 	},
-	transAll: function() { //전체 다국어 변환
+	transAll: function() { //UI 전체 다국어 변환
 		var that = this;
 		multiLang.multiLangInfo  = JSON.parse(sessionStorage.multiLangList);
 		var target = $('[multi-lang]');

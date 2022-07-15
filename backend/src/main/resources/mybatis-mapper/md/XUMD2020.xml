@@ -31,6 +31,7 @@
 	     , MCD.COMPANY_NM
 	     , MCD.DIVISION_CD
 	     , MCD.DIVISION_NM
+	     , MB.DESCRIPTION
 	     , CONNECT_BY_ROOT(MB.CHILD_ITEM_ID)             AS BOM_ROOT
 	     , SYS_CONNECT_BY_PATH(MB.CHILD_ITEM_ID, ' -> ') AS BOM_PATH
 	     , CONNECT_BY_ISLEAF                             AS BOM_LEAF

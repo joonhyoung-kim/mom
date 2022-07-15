@@ -621,6 +621,7 @@
     background-repeat: repeat;
     background-attachment: scroll;
     box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    width:99.9%;
 }
 .searchArea {
     position: relative;
@@ -1427,7 +1428,7 @@ border-color: #d8dce3 !important;
 }
 .searcharea-pop.R6-remark-out {
 	padding-left: 3.4rem !important; 
-    height: 44.4rem;
+    height: 38rem;
 }
 .searcharea-pop.R7-remark-in {
     height: 38rem;
@@ -3094,7 +3095,7 @@ border-color: #d8dce3 !important;
     margin-left: 35% !important;
     margin-top: -36% !important;
     background: white !important; 
-    height: 36rem !important;
+    height: 46.8rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
    
