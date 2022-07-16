@@ -4,7 +4,7 @@ var that = undefined;
 var VIEW= {
 	initParam		: undefined, 
 	  
-	init: function() {	B
+	init: function() {	
 		that = this;	
 		that.event();
 	},

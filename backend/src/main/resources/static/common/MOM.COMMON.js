@@ -632,13 +632,18 @@ leftMenuAuth: function(el,params) {
 			var menuId    = $('#'+e.target.id).attr("href").slice(1);
 			var dataParam = $('#'+e.target.id).attr("data-param");
 			var url       = $('#'+e.target.id).attr("data-path");
-			
+			//var src       = $('#'+menuId).attr("src");
+			var src       = $('#'+e.target.id)[0].href;
 			   $('.tabpane').hide();
 			   $(".main-tab").removeClass('active'); 
 			   $('#'+e.target.id).addClass('active');
 			   window.location.hash = '#'+ menuId;
 			   $("#"+menuId).attr('src',url+".html?" + dataParam); 
 			   $('#tabContentID_'+menuId).show();
+			   //$('#'+menuId).attr('src', src);
+			   //$('#'+menuId, parent.document).get(0).contentDocument.location.reload(); 
+               parent[menuId].location.reload(true);
+
 			/* if($('#'+e.target.id).hasClass("active") === true){		 
 				 
 			 }
@@ -728,7 +733,7 @@ leftMenuAuth: function(el,params) {
 							    '</li>';
 							
 			var tabContent = '<div id="tabContentID_#{id}" data-w-tab="Tab#{id}" class="w-tab-pane w--tab-active tabpane">'
-				+'<iframe id ='+menuId+' src="#{url}" style="width:100%; height:100%; border:0px;"></iframe>'
+				+'<iframe name ='+menuId+' id ='+menuId+' src="#{url}" style="width:100%; height:100%; border:0px;"></iframe>'
 				+'</div>';
 			
 			var name     = $(this).attr("name");
@@ -770,8 +775,9 @@ leftMenuAuth: function(el,params) {
 				
 		
 					$("#mainPageContent").append(tabContent.replace(/#{id}/gi, id).replace(/#{url}/gi, href+".html "));
-					 if(($('#mainPageTab').width() - $('#mainPageTabContent').width())<20){
+					 if(($('#mainPageTab').width() - $('#mainPageTabContent').width())<10){
 						$('#mainPageTabContent').children().first().remove();
+						$('#mainPageContent').children().first().remove();    
 					}
 					$("[id='tabContentID_" + id + "'] iframe").on("load", function(){
 						$($("[id='tabContentID_" + id + "'] iframe")[0].contentDocument).find("body").css("background", "inherit");
@@ -780,8 +786,8 @@ leftMenuAuth: function(el,params) {
 				
 			/*		 $("iframe").attr('src',href+".html?" + dataParam); //경로리로드
 */			}
-			else{ //텝있으면
-				 if($("[id='tabID_" + id + "']").hasClass("active") === true){
+					else{ //텝있으면
+				 		if($("[id='tabID_" + id + "']").hasClass("active") === true){
 						// $("#btnTabReset").removeClass('active');  
 						 //$('#mainPageContent').children().remove();		
 					     //$('#tabContentID_'+menuId).show();
