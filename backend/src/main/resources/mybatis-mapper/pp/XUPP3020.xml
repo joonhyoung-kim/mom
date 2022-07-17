@@ -63,10 +63,13 @@
 		AND    MWO.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}
 		AND    MWO.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}
 	    AND    MWO.WO_START_TIME BETWEEN TO_DATE(#{woStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{woStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
-	    AND   (UPPER(MWO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+	    AND   (UPPER(MWO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	
+	    <if test="itemIdNm != null and itemIdNm != ''">
+		AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm , jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm , jdbcType=VARCHAR}))
+		</if>   
 		<if test="workOrderId != null and workOrderId != ''">
 		AND (UPPER(MWO.WORK_ORDER_ID ) LIKE '%' || UPPER(#{workOrderId, jdbcType=VARCHAR}) || '%')	  
-		</if>
+		</if>		
 	    <if test="workGroupCd != null and workGroupCd != ''">
 		AND MWG.WORK_GROUP_CD IN (${workGroupCd})`
 		</if>	

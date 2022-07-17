@@ -5,6 +5,7 @@
         SELECT MWO.COMPANY_CD
 		     , MWO.DIVISION_CD
 		     , MWO.WORK_ORDER_ID   
+		     , MWO.WORK_ORDER_ID  AS KEY_ID
 		     , MWO.WO_TYPE
 		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0002', MWO.WO_TYPE, 'KR') FROM DUAL)  AS WO_TYPE_NM
 		     , MWO.ITEM_ID
@@ -63,7 +64,10 @@
 		AND    MWO.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}
 		AND    MWO.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}
 	    AND    MWO.WO_START_TIME BETWEEN TO_DATE(#{woStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{woStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
-	    AND   (UPPER(MWO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+	    AND   (UPPER(MWO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	 
+	    <if test="itemIdNm != null and itemIdNm != ''">
+		AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm , jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm , jdbcType=VARCHAR}))
+		</if> 
 		<if test="workOrderId != null and workOrderId != ''">
 		AND (UPPER(MWO.WORK_ORDER_ID ) LIKE '%' || UPPER(#{workOrderId, jdbcType=VARCHAR}) || '%')	  
 		</if>
@@ -93,193 +97,30 @@ ORDER BY MWG.WORK_GROUP_NM
 
 	</select>
 	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	SELECT MBP.OPERATION_SEQ
-	     , MBP.OPERATION_ID
-	     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
-	     , MBP.WORK_STATION_CD
-	     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
-	     , MBP.INSPECTION_YN
-	     , MBP.FINAL_OPERATION_YN
-	     , MBP.MILESTONE
-	FROM   MOM_BOR_PATH MBP
-	WHERE  MBP.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR}
-	AND    MBP.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR}	 
-	AND    MBP.BOR_ID       =  #{borId, jdbcType=VARCHAR}	 
-    ORDER BY MBP.OPERATION_SEQ
+	  SELECT   MWP.COMPANY_CD
+		     , MWP.DIVISION_CD
+		     , MWP.WORK_ORDER_ID
+		     , MWO.WORK_CENTER_CD
+		     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(MWP.COMPANY_CD, MWP.DIVISION_CD, MWO.WORK_CENTER_CD) FROM DUAL) AS WORK_CENTER_NM
+		     , MWP.OPERATION_SEQ
+		     , MWP.OPERATION_ID
+		     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MWP.COMPANY_CD, MWP.DIVISION_CD, MWP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
+		     , MWP.WORK_STATION_CD
+		     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MWP.COMPANY_CD, MWP.DIVISION_CD, MWP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
+		     , MWP.INSPECTION_YN
+		     , MWP.FINAL_OPERATION_YN
+		     , MWP.MILESTONE
+		     , MWP.DESCRIPTION
+	FROM    MOM_WO_OPERATION_PATH  MWP
+		  , MOM_WORK_ORDER MWO
+	WHERE  MWP.COMPANY_CD    = MWO.COMPANY_CD
+	AND    MWP.DIVISION_CD   = MWO.DIVISION_CD
+	AND    MWP.WORK_ORDER_ID = MWO.WORK_ORDER_ID
+	AND    MWP.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
+	AND    MWP.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}
+	AND    MWP.WORK_ORDER_ID = #{workOrderId, jdbcType=VARCHAR}
+	ORDER BY MWP.OPERATION_SEQ
 
 	</select>
-	<insert id="create_createBtn1" parameterType="java.util.List">
-     <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_PROC_WORK_ORDER (
-                  COMPANY_CD
-                , DIVISION_CD
-                , WORK_ORDER_ID
-                , WO_TYPE
-                , BOR_ID
-                , WO_QTY
-                , WO_START_TIME
-                , WO_END_TIME
-                , PRIORITY
-                , REASON_CD
-                , MANUAL_YN
-                , DESCRIPTION
-                , VAL_MSG
-                , MULTI_MSG
-                , CREATE_BY
-                , CREATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.workOrderId, jdbcType=VARCHAR}
-                , #{item.woType, jdbcType=VARCHAR}
-                , #{item.borId, jdbcType=VARCHAR}
-                , #{item.woQty, jdbcType=NUMERIC}
-                , TO_DATE(#{item.woStartDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , TO_DATE(#{item.woEndDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , #{item.priority, jdbcType=NUMERIC}
-                , #{item.reasonCd, jdbcType=VARCHAR}
-                , 'Y'
-                , #{item.description, jdbcType=VARCHAR}
-                , NVL(#{item.valMsg, jdbcType=VARCHAR},'')
-                , NVL(#{item.multiMsg, jdbcType=VARCHAR},'')
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              )
-   </foreach>
-  </insert>
-   <delete id="remove_createBtn1" parameterType="java.util.List">
-      DELETE FROM MOM_PROC_WORK_ORDER
-      <where>
-       <foreach collection="list" item="item" open="" close="" separator="OR">
-        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
-           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
-        )
-       </foreach>
-      </where>
-   </delete> 
-   	<insert id="create_delBtn1" parameterType="java.util.List">
-     <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_PROC_WORK_ORDER (
-                  COMPANY_CD
-                , DIVISION_CD
-                , WORK_ORDER_ID
-                , WO_TYPE
-                , BOR_ID
-                , WO_QTY
-                , WO_START_TIME
-                , WO_END_TIME
-                , PRIORITY
-                , REASON_CD
-                , MANUAL_YN
-                , DESCRIPTION
-                , VAL_MSG
-                , MULTI_MSG
-                , CREATE_BY
-                , CREATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.workOrderId, jdbcType=VARCHAR}
-                , #{item.woType, jdbcType=VARCHAR}
-                , #{item.borId, jdbcType=VARCHAR}
-                , #{item.confirmQty, jdbcType=NUMERIC}
-                , TO_DATE(#{item.woStartDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , TO_DATE(#{item.woEndDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , #{item.priority, jdbcType=NUMERIC}
-                , #{item.reasonCd, jdbcType=VARCHAR}
-                , #{item.manualYn, jdbcType=VARCHAR}
-                , #{item.description, jdbcType=VARCHAR}
-                , #{item.valMsg, jdbcType=VARCHAR}
-                , #{item.multiMsg, jdbcType=VARCHAR}
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              )
-   </foreach>
-  </insert>
-   <delete id="remove_delBtn1" parameterType="java.util.List">
-      DELETE FROM MOM_PROC_WORK_ORDER
-      <where>
-       <foreach collection="list" item="item" open="" close="" separator="OR">
-        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
-           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
-        )
-       </foreach>
-      </where>
-   </delete> 
-   	<insert id="create_copyBtn1" parameterType="java.util.List">
-     <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_PROC_WORK_ORDER (
-                  COMPANY_CD
-                , DIVISION_CD
-                , WORK_ORDER_ID
-                , WO_TYPE
-                , BOR_ID
-                , WO_QTY
-                , WO_START_TIME
-                , WO_END_TIME
-                , PRIORITY
-                , REASON_CD
-                , MANUAL_YN
-                , DESCRIPTION
-                , VAL_MSG
-                , MULTI_MSG
-                , CREATE_BY
-                , CREATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.workOrderId, jdbcType=VARCHAR}
-                , #{item.woType, jdbcType=VARCHAR}
-                , #{item.borId, jdbcType=VARCHAR}
-                , #{item.confirmQty, jdbcType=NUMERIC}
-                , TO_DATE(#{item.woStartDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , TO_DATE(#{item.woEndDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , #{item.priority, jdbcType=NUMERIC}
-                , #{item.reasonCd, jdbcType=VARCHAR}
-                , #{item.manualYn, jdbcType=VARCHAR}
-                , #{item.description, jdbcType=VARCHAR}
-                , #{item.valMsg, jdbcType=VARCHAR}
-                , #{item.multiMsg, jdbcType=VARCHAR}
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              )
-   </foreach>
-  </insert>
-   <delete id="remove_copyBtn1" parameterType="java.util.List">
-      DELETE FROM MOM_PROC_WORK_ORDER
-      <where>
-       <foreach collection="list" item="item" open="" close="" separator="OR">
-        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
-           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
-        )
-       </foreach>
-      </where>
-   </delete> 
-	<select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-           { CALL MOM_WO_PKG.sp_create_manual_work_order(       #{p_err_code, jdbcType=VARCHAR, mode=OUT}
-					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
-					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}	
-					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}											  
-					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
-  </select>   
-  	<select id="proc_editBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-           { CALL MOM_WO_PKG.sp_create_manual_work_order(       #{p_err_code, jdbcType=VARCHAR, mode=OUT}
-					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
-					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}		
-					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}										  
-					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
-  </select>   
-  <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-           { CALL MOM_WO_PKG.sp_create_manual_work_order(       #{p_err_code, jdbcType=VARCHAR, mode=OUT}
-					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
-					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}		
-					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}										  
-					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
-  </select>    
+	
 </mapper>

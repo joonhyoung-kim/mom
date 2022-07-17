@@ -1224,7 +1224,7 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput({ width: '120px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
+				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput({ width: '115px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
 				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput('setDate', calendar);
 			
 				
@@ -1348,7 +1348,7 @@ var momWidget = {
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
 			
-				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '120px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
+				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '115px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
 				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput('setDate', calendar);
 			}
 			else{
