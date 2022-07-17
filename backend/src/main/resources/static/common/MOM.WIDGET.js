@@ -584,15 +584,26 @@ var momWidget = {
 			    			};*/
 			    	   }
 			    	   if(isDropDown =='Y'){
-			    		   var dropDownQueryId = that.columnProperty[index][i]['dropdownId'];		    		   
+			    		   let dropDownQueryId = that.columnProperty[index][i]['dropdownId'];		    		   
 			    		   //var nameSpace = 'DD' + that.pageProperty[index]['programId'].substr(2,2);
-			    		   var nameSpace = 'DD';
-			    		   var param = {};
-			    		   //var dropdownTmp = {};
-			    		   if(dropDownQueryId == 'DD00001'){
-			    			   dropDownQueryId = 'DD.DD00001';
-			    			   var dropdownParamArry = that.columnProperty[index][i]['dropdownParam'].split('=');
-			    			   param.groupCd = dropdownParamArry[1];
+			    		   let nameSpace = 'DD';
+			    		   let param = {};
+			    		   let dropdownParamArry =[];
+			    		   let dropdownParamText = that.columnProperty[index][i]['dropdownParam'];
+			    		   //var dropdownTmp = {};			    		 
+			    		   	   if(dropdownParamText.indexOf(',')){
+				                  dropdownParamArry = dropdownParamText.split(',');
+				                  for(let i=0;i<dropdownParamArry.length;i++){
+										param[dropdownParamArry[i].split('=')[0]]=dropdownParamArry[i].split('=')[1];
+							     }
+							   }
+							   else{
+								    dropdownParamArry = dropdownParamText.split('=');
+								    param.groupCd = dropdownParamArry[1];
+							   }
+							     if(dropDownQueryId == 'DD00001'){
+			    			          dropDownQueryId = 'DD.DD00001';
+
 			    		   }
 			    		   else{			    			  
 			    			   dropDownQueryId = nameSpace +'.'+dropDownQueryId;

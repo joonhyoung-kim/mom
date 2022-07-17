@@ -159,6 +159,9 @@
    FROM   MOM_LOCATION   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   <if test="locationType != null and locationType != ''">
+   AND    LOCATION_TYPE = #{locationType, jdbcType=VARCHAR} 
+   </if>
    AND    USE_YN      = 'Y'
    ORDER BY LABEL 
 </select>

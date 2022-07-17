@@ -1345,9 +1345,10 @@ var XUSM3030 = {
 			var buttonNmText = '';
 			var buttonEvent  = '';
 			if(e.dataField == 'dropdownDetail') {
-				var dropDownParam ='';
+				let dropDownParam = '';
 				if(e.item['dropdownId']=='DD00001'){
-					dropDownParam = 'groupCd='+	e.item['dropdownDetail'];			
+					dropDownParam = 'groupCd='+e.item['dropdownDetail'];		
+					//dropDownParam = "'[{'"+'"groupCd":'+e.item['dropdownDetail']+"'}]'";		
 				}
 				else{
 					dropDownParam = e.item['dropdownDetail'];		
