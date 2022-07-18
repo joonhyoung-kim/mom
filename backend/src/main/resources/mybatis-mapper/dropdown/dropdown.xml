@@ -206,6 +206,9 @@
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
+   <if test="workCenterType != null and workCenterType != ''">
+   AND WORK_CENTER_TYPE = #{workCenterType, jdbcType=VARCHAR} 
+   </if>
    <if test="searchKey != null and searchKey != ''">
    AND (WORK_CENTER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR WORK_CENTER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
    </if>

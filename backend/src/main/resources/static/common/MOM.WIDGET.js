@@ -57,7 +57,7 @@ var momWidget = {
 			  $('head').append('<script  src="/mom/content/jqwidgets/globalization/globalize.js"></script>');
 			  $('head').append('<script src="/mom/content/time/moment.js"></script>');
 			  $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
-			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
+			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd !important;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
 
 			  $('body').append(uploadPop);
 			  //$('body').append(fileUpProgressBar);
@@ -591,16 +591,12 @@ var momWidget = {
 			    		   let dropdownParamArry =[];
 			    		   let dropdownParamText = that.columnProperty[index][i]['dropdownParam'];
 			    		   //var dropdownTmp = {};			    		 
-			    		   	   if(dropdownParamText.indexOf(',')){
+			    		   	
 				                  dropdownParamArry = dropdownParamText.split(',');
 				                  for(let i=0;i<dropdownParamArry.length;i++){
 										param[dropdownParamArry[i].split('=')[0]]=dropdownParamArry[i].split('=')[1];
 							     }
-							   }
-							   else{
-								    dropdownParamArry = dropdownParamText.split('=');
-								    param.groupCd = dropdownParamArry[1];
-							   }
+							   							
 							     if(dropDownQueryId == 'DD00001'){
 			    			          dropDownQueryId = 'DD.DD00001';
 
@@ -914,7 +910,7 @@ var momWidget = {
 				searchType =  that.searchProperty[index][i]['searchType'];*/
 				if(dropdownId != '' && dropdownId != undefined){
 					 queryId = dropdownId;
-					 splitArray1 = dropdownParam.split('&');					 
+					 splitArray1 = dropdownParam.split(',');					 
 					 for(var j=0,max2=splitArray1.length;j<max2;j++){
 						  splitArray2 = splitArray1[j].split('=');
 						  paramMap.push(JSON.parse('{"'+splitArray2[0] +'"'+':'+'"'+splitArray2[1]+'"}'));
@@ -2337,7 +2333,7 @@ var momWidget = {
 				}
 				//option.footers = footerProperty;
 				    //that.excelDownGrid[index]
-					  AUIGrid.exportToXlsx("#excelGrid"+(index+1), excelDownOpt);
+					 // AUIGrid.exportToXlsx("#excelGrid"+(index+1), excelDownOpt);
 					  				
 				$('.aui-grid-export-progress-modal').height('100%');
 				$('#grid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
@@ -4590,7 +4586,7 @@ var momWidget = {
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
 					            if(data[0]['p_err_code']=='E') {
 									  $("#pleaseWaitDialog").momModal('hide');
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00033')});
 									  momWidget.splashHide();
 						              return;
 					            }    				                         							  						
@@ -4617,7 +4613,7 @@ var momWidget = {
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
 					            if(data[0]['p_err_code']=='E') {
 									  $("#pleaseWaitDialog").momModal('hide');
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00033')});
 									  momWidget.splashHide();
 						              return;
 					            }    				                         							  						
@@ -4773,16 +4769,25 @@ var momWidget = {
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
 			$(document).on('click', '#' + addBtnId, function() {	
-				var columnLayout = AUIGrid.getColumnLayout(that.grid[index])
-				var item = {};
-				 for(var i=0,max1=totalItem.length; i<max1;i++){
-					 if(totalItem[i]['columnShow'] =='Y'){
-						 item[totalItem[i]['columnId']] = '';
+				//var columnLayout = AUIGrid.getColumnLayout(that.grid[index])
+				let columnProp = that.columnProperty[index];
+				let item = {};
+				 for(var i=0,max1=columnProp.length; i<max1;i++){
+					 if(columnProp[i]['columnShow'] =='Y'){
+						 item[columnProp[i]['columnId']] ='';
 					 }
 				}
-				
-				AUIGrid.addRow(that.grid[index], item, "last");
-				
+				item.addItem = 'Y';
+				AUIGrid.addRow(that.grid[index], item, "first");
+			    let callBackResult 	= that.checkActionCallBack(index, 'GA', item, 'addBtn', your,[]);	
+				if(callBackResult['result']  != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+					  momWidget.splashHide();
+				      return;
+				}	
+			/*	if(your != undefined && your.addRowCallBack != undefined) {
+			     your.addRowCallBack(index,rowIndex,target,e);
+			   }*/
 				
 			});
 			$(document).on('click', '#' + showLv1Btn, function(e) {	
@@ -5107,7 +5112,10 @@ var momWidget = {
 					else{
 						actionMode = 'C';
 					}
-					queryId = that.pageProperty[index]['programId']+'.'+buttonId;
+					if(actionType=='P'){
+							queryId = that.pageProperty[index]['programId']+'.'+buttonId;
+					}
+				
 				
 				
 			       for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
@@ -5736,7 +5744,7 @@ var momWidget = {
 				  param = callInitResult['param'];	
 				  mom_ajax('D', that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
 			            if(result != 'SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG0007')});
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00033')});
 							  momWidget.splashHide();
 				              return;
 			            }    				                         							  						
@@ -5748,7 +5756,7 @@ var momWidget = {
 						      return;
 						}	
 						  callBackParam = callBackResult['param'];	
-			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn' + (index + 1),momWidget.pageProperty[index]['programId'],your);
+			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn',momWidget.pageProperty[index]['programId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
 					      return;
@@ -6448,7 +6456,7 @@ var momWidget = {
 					if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG'){
 						if(dropdownId != '' && dropdownId != undefined){
 							 queryId = dropdownId;
-							 splitArray1 = dropdownParam.split('&');					 
+							 splitArray1 = dropdownParam.split(',');					 
 							 for(var j=0,max2=splitArray1.length;j<max2;j++){
 								  splitArray2 = splitArray1[j].split('=');
 								  paramMap.push(JSON.parse('{"'+splitArray2[0] +'"'+':'+'"'+splitArray2[1]+'"}'));
@@ -8325,6 +8333,9 @@ var momWidget = {
 		if(action == 'GS' && your.saveCallInit != undefined) {
 				your.saveCallInit(index,your,action,btnId,param,result);			
 		} 
+		if(action == 'GA' && your.addRowCallInit != undefined) {
+				your.addRowCallInit(index,your,action,btnId,param,result);			
+		} 
 		if((action == 'C' || action == 'U' || action == 'P' || action == 'CP') && your.saveCallInit != undefined) {
 			 your.saveCallInit(index,your,action,btnId,param,result);			
 	    } 
@@ -8367,12 +8378,16 @@ var momWidget = {
 		if(action == 'GS' && your.saveCallBack != undefined) {
 				your.saveCallBack(index,your,action,btnId,param,result,data);				
 		} 
+		if(action == 'GA' && your.addRowCallBack != undefined) {
+				your.addRowCallBack(index,your,action,btnId,param,result,data);				
+		} 
 		if((action == 'C' || action == 'U' || action == 'P'|| action == 'CP') && your.saveCallBack != undefined) {
 			your.saveCallBack(index,your,action,btnId,param,result,data);		
 	} 
 		if(action == 'D'  && your.delCallBack != undefined) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
+		
 /*		if(action == 'U' && your.editCallBack != undefined) {
 			     your.editCallBack(index,your,action,btnId,param,result,data);	
 		}*/

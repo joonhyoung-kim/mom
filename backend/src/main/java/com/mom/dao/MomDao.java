@@ -305,7 +305,7 @@ public class MomDao {
         	try {
         	      sqlSession1 = sqlSessionFactory.openSession(ExecutorType.BATCH); 		
         	      //sqlSession1 = SqlSessionFactorys.setSqlSession();
-        	      //System.out.println("총데이터="+paramSize);
+        	      System.out.println("총데이터="+paramSize);
         	      if(paramSize>=1000) {
         	    	  ProgressInfo.useYn = true;
         	    	  // 데이터가 1000 건이상일떄         	    	  

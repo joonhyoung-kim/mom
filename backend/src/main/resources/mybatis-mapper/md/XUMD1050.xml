@@ -120,27 +120,27 @@
         </foreach>
        </where>
   </delete>  
-  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+     <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_WORK_CENTER 
-            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            #{item.workGroupCd, jdbcType=VARCHAR} as workGroupCd,
-                            #{item.workCenterCd, jdbcType=VARCHAR} as workCenterCd,
-                            #{item.workCenterNm, jdbcType=VARCHAR} as workCenterNm,
-                            #{item.routingId, jdbcType=VARCHAR} as routingId,
-                            #{item.workCenterType, jdbcType=VARCHAR} as workCenterType,
-                            #{item.consumeLocationCd, jdbcType=VARCHAR} as consumeLocationCd,
-                            #{item.goodLocationCd, jdbcType=VARCHAR} as goodLocationCd,
-                            #{item.defectLocationCd, jdbcType=VARCHAR} as defectLocationCd,
-                            #{item.useYn, jdbcType=VARCHAR} as useYn,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+            USING( 
+                     SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{workGroupCd, jdbcType=VARCHAR} as workGroupCd,
+                            #{workCenterCd, jdbcType=VARCHAR} as workCenterCd,
+                            #{workCenterNm, jdbcType=VARCHAR} as workCenterNm,
+                            #{routingId, jdbcType=VARCHAR} as routingId,
+                            #{workCenterType, jdbcType=VARCHAR} as workCenterType,
+                            #{consumeLocationCd, jdbcType=VARCHAR} as consumeLocationCd,
+                            #{goodLocationCd, jdbcType=VARCHAR} as goodLocationCd,
+                            #{defectLocationCd, jdbcType=VARCHAR} as defectLocationCd,
+                            #{useYn, jdbcType=VARCHAR} as useYn,
+                            #{description, jdbcType=VARCHAR} as description,
+                            #{userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
                      FROM DUAL
-                   </foreach> ) PARAM
+                    ) PARAM
             ON ( COMPANY_CD = PARAM.companyCd AND
                  DIVISION_CD = PARAM.divisionCd AND
                  WORK_CENTER_CD = PARAM.workCenterCd )

@@ -23,7 +23,7 @@ var XUMD1080= {
 	
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1){	
+		if(index == 1 && btnId=='findBtn'){	
 			var item = param;
 			var checkedItems =AUIGrid.getSelectedItems(momWidget.grid[0])[0];
 				if (checkedItems==undefined){

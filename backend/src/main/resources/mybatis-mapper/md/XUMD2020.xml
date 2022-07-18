@@ -162,7 +162,7 @@
         </foreach>
        </where>
    </delete>
-    <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap">
+    <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_BOM 
             USING( 
                      SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,

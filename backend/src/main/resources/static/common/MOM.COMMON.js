@@ -116,7 +116,7 @@ leftMenuAuth: function(el,params) {
 		'<div class="app-sidebar__overlay active" data-bs-toggle="sidebar"></div>'+
 		  '<div class="app-sidebar  open">'+
 			'<div class="side-header">'+
-				'<a class="header-brand1" href="index.html"> <img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">'+
+				'<a class="header-brand1" href="main.html"> <img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo.png" class="header-brand-img desktop-logo" alt="logo">'+
 				  '<img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo-1.png" class="header-brand-img toggle-logo" alt="logo">'+
 		          '<img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo-2.png" class="header-brand-img light-logo" alt="logo">'+
 		          '<img src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/logo-3.png" class="header-brand-img light-logo1" alt="logo">'+
