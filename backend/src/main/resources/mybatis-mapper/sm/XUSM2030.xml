@@ -154,7 +154,7 @@
 		END
      </foreach>
     </delete>
-    <insert id="upsert_defaultInfo2" parameterType="java.util.List">
+    <insert id="upsert_defaultInfo2" parameterType="java.util.HashMap" flushCache="true">
 	    MERGE INTO MOM_AUTH_MENU MAM
 	    USING (
 	  

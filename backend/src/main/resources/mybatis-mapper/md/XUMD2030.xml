@@ -114,21 +114,21 @@
         </foreach>
        </where>
    </delete>
-  <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+   <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_CUSTOMER_ITEM_MAPPING 
             USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            #{item.customerCd, jdbcType=VARCHAR} as customerCd,
-                            #{item.customerItemId, jdbcType=VARCHAR} as customerItemId,
-                            #{item.itemId, jdbcType=VARCHAR} as itemId,
-                            #{item.reqQty, jdbcType=NUMERIC} as reqQty,
-                            #{item.useYn, jdbcType=VARCHAR} as useYn,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{customerCd, jdbcType=VARCHAR} as customerCd,
+                            #{customerItemId, jdbcType=VARCHAR} as customerItemId,
+                            #{itemId, jdbcType=VARCHAR} as itemId,
+                            #{reqQty, jdbcType=NUMERIC} as reqQty,
+                            #{useYn, jdbcType=VARCHAR} as useYn,
+                            #{description, jdbcType=VARCHAR} as description,
+                            #{userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
                      FROM DUAL
                    </foreach> ) PARAM
             ON ( COMPANY_CD = PARAM.companyCd AND

@@ -35,29 +35,29 @@
                 CONNECT BY PRIOR A.MENU_ID = A.PARENT_MENU_ID 
                 ORDER SIBLINGS BY A.SORT_NO, A.MENU_ID        
     </select>
-    <update id="upsert_menu" parameterType="java.util.List">
+    <update id="upsert_menu" parameterType="java.util.HashMap" flushCache="true">
     MERGE INTO MOM_MENU MM
     USING (
-        <foreach collection="list" item="item" open="" close="" index="index" separator="UNION">
+       
              SELECT
-                          TRIM(#{item.menuId, jdbcType=VARCHAR})           																   as menuId
-				             , #{item.menuNm, jdbcType=VARCHAR}             															   as menuNm
-                             , TRIM(#{item.menuType, jdbcType=VARCHAR}) 																   as menuType
-				             , TRIM(#{item.parentMenuId, jdbcType=VARCHAR}) 													           as parentMenuId
-				             , TRIM(#{item.sortNo, jdbcType=INTEGER})      												                   as menuSeq
-				             , TRIM(#{item.url, jdbcType=VARCHAR})         													               as url
-				             , TRIM(#{item.icon, jdbcType=VARCHAR})         														       as icon
-				             , TRIM(#{item.useYn, jdbcType=VARCHAR})        															   as useYn
-				             , TRIM(#{item.description, jdbcType=VARCHAR}) 																   as description   
-				             , TRIM(#{item.userId, jdbcType=VARCHAR})       															   as createBy
-				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR}) as createDate
-				             , TRIM(#{item.userId, jdbcType=VARCHAR})                                                                      as updateBy
-				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR}) as updateDate
+                          TRIM(#{menuId, jdbcType=VARCHAR})           																   as menuId
+				             , #{menuNm, jdbcType=VARCHAR}             															   as menuNm
+                             , TRIM(#{menuType, jdbcType=VARCHAR}) 																   as menuType
+				             , TRIM(#{parentMenuId, jdbcType=VARCHAR}) 													           as parentMenuId
+				             , TRIM(#{sortNo, jdbcType=INTEGER})      												                   as menuSeq
+				             , TRIM(#{url, jdbcType=VARCHAR})         													               as url
+				             , TRIM(#{icon, jdbcType=VARCHAR})         														       as icon
+				             , TRIM(#{useYn, jdbcType=VARCHAR})        															   as useYn
+				             , TRIM(#{description, jdbcType=VARCHAR}) 																   as description   
+				             , TRIM(#{userId, jdbcType=VARCHAR})       															   as createBy
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR}) as createDate
+				             , TRIM(#{userId, jdbcType=VARCHAR})                                                                      as updateBy
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR}) as updateDate
 				             , 'Y'           																							   as standardFlag
-				             , TRIM(#{item.param, jdbcType=VARCHAR})                                                                       as param
-				             , TRIM(#{item.programId, jdbcType=VARCHAR})                                                                   as programId
+				             , TRIM(#{param, jdbcType=VARCHAR})                                                                       as param
+				             , TRIM(#{programId, jdbcType=VARCHAR})                                                                   as programId
              FROM DUAL
-        </foreach>
+       
     ) PARAM 
     ON (MM.menu_ID = PARAM.menuId)
     WHEN MATCHED THEN

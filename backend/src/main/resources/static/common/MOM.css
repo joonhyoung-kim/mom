@@ -7570,12 +7570,12 @@ input:focus{
 .bg-color-red {
     background-color: #a90329;
 }
-.ui-datepicker {
+/* .ui-datepicker {
     width: 17em;
     padding: .2em .2em 0;
     display: none;
     font-size:50px;
-}
+} */
 .btnpop2 {
     display: inline-block;
     margin-right: 3px;

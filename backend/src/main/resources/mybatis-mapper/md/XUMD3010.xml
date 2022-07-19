@@ -193,35 +193,35 @@ FROM   (SELECT MCD.COMPANY_CD
        </foreach>
       </where>
   </delete>
-    <insert id="upsert_defaultInfo1" parameterType="java.util.List">
+     <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_UNIT_PRICE 
-            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            <if test='item.priceCategory != null and item.priceCategory.equals("P")'>
-					         #{item.vendorCd, jdbcType=VARCHAR} as partnerCd,
+            USING( 
+                     SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            <if test='priceCategory != null and priceCategory.equals("P")'>
+					         #{vendorCd, jdbcType=VARCHAR} as partnerCd,
 					         'P' as priceCategory,
 						    </if>
-						    <if test='item.priceCategory != null and item.priceCategory.equals("S")'>
-					         #{item.customerCd, jdbcType=VARCHAR} as partnerCd,
+						    <if test='priceCategory != null and priceCategory.equals("S")'>
+					         #{customerCd, jdbcType=VARCHAR} as partnerCd,
 					         'S' as priceCategory,
 						    </if>
-                            #{item.itemId, jdbcType=VARCHAR} as itemId,
-                            #{item.currencyCd, jdbcType=VARCHAR} as currencyCd,
-                            #{item.prevUnitPrice, jdbcType=NUMERIC} as prevUnitPrice,
-                            #{item.unitPrice, jdbcType=NUMERIC} as unitPrice,
-                            #{item.startDate, jdbcType=VARCHAR} as startDate,
-                            #{item.endDate, jdbcType=VARCHAR} as endDate,
-                            NVL(#{item.priceType, jdbcType=VARCHAR},'F') as priceType,
-                            NVL(#{item.mainPartnerYn, jdbcType=VARCHAR},'Y') as mainPartnerYn,
-                            #{item.useYn, jdbcType=VARCHAR} as useYn,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                            #{itemId, jdbcType=VARCHAR} as itemId,
+                            #{currencyCd, jdbcType=VARCHAR} as currencyCd,
+                            #{prevUnitPrice, jdbcType=NUMERIC} as prevUnitPrice,
+                            #{unitPrice, jdbcType=NUMERIC} as unitPrice,
+                            #{startDate, jdbcType=VARCHAR} as startDate,
+                            #{endDate, jdbcType=VARCHAR} as endDate,
+                            NVL(#{priceType, jdbcType=VARCHAR},'F') as priceType,
+                            NVL(#{mainPartnerYn, jdbcType=VARCHAR},'Y') as mainPartnerYn,
+                            #{useYn, jdbcType=VARCHAR} as useYn,
+                            #{description, jdbcType=VARCHAR} as description,
+                            #{userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
                      FROM DUAL
-                   </foreach> ) PARAM
+                   ) PARAM
             ON ( COMPANY_CD = PARAM.companyCd AND
                  DIVISION_CD = PARAM.divisionCd AND
                  PRICE_CATEGORY = PARAM.priceCategory AND

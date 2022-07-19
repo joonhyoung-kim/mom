@@ -642,7 +642,7 @@ leftMenuAuth: function(el,params) {
 			   $('#tabContentID_'+menuId).show();
 			   //$('#'+menuId).attr('src', src);
 			   //$('#'+menuId, parent.document).get(0).contentDocument.location.reload(); 
-               parent[menuId].location.reload(true);
+              // parent[menuId].location.reload(true);
 
 			/* if($('#'+e.target.id).hasClass("active") === true){		 
 				 

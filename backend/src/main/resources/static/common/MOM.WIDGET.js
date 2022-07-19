@@ -487,10 +487,12 @@ var momWidget = {
 			    	   excelUploadShow = that.columnProperty[index][i]['excelTemplateShow'] == 'Y' ? true: false;
 			    	   isCheckBox = that.columnProperty[index][i]['columnType'] == 'CK' ? 'Y': 'N';
 			    	   isDropDown = that.columnProperty[index][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
+			    	   isCalendar = that.columnProperty[index][i]['columnType'] == 'C' ? 'Y': 'N';
 			    	   columnId = that.columnProperty[index][i]['columnId'];
 			    	   isRequire = that.columnProperty[index][i]['columnRequire'] == 'Y' ? 'Y': 'N';
 			    	   sortType = that.columnProperty[index][i]['sortMethod'] == 'ASC' ? 1: -1;
 			    	   sortNo   = that.columnProperty[index][i]['sortNo'] == '' ? 0: that.columnProperty[index][i]['sortNo'];
+			    	 
 			    	  // groupHeader  = that.columnProperty[index][i]['columnType'] == 'G' ? 'Y': 'N';
 			    	   
 			    	   if(sortNo > 0){
@@ -503,8 +505,9 @@ var momWidget = {
 								    	      dataField 	: columnId 
 								  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
 									   		, dataType      : that.columnProperty[index][i]['dataType'] 
-											, formatString  : that.columnProperty[index][i]['dataFormat']
-				    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
+											, formatString  : that.columnProperty[index][i]['dataFormat']											
+				    	                   // , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
+				    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : that.columnProperty[index][i]['columnCreate']  == 'Y' ? true : false
 								  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
 								  			, visible       : gridShow  
 								  			, filter : {
@@ -655,6 +658,47 @@ var momWidget = {
 			    		   }, undefined, undefined, this, false,'Y');
 			    	
 			    	   }
+			    	   else if(isCalendar =='Y'){
+				 				columnProp[i].dateInputFormat = "yyymmdd"; // 실제 데이터의 형식 지정
+				 				columnProp[i].formatString = "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
+				 				columnProp[i].dateType = 'date';
+				 				columnProp[i].width = 160;
+				 				columnProp[i].renderer = {
+																type : "IconRenderer",
+																iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+																iconHeight : 16,
+																iconPosition : "aisleRight",
+																iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+																	"default" : "../content/icon/calendar-icon.png" // default
+																}
+																/*onClick : function(event) {
+																	// 달력 아이콘 클릭하면 실제로 달력을 띄움.
+																	// 즉, 수정으로 진입함.
+																	AUIGrid.openInputer(event.pid);
+															    }*/
+
+								};
+								columnProp[i].editRenderer = {
+																	type : "JQCalendarRenderer", // jquery-datepicker 달력 렌더러 사용
+																	defaultFormat : "yyyymmdd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+																	uncheckDateValue : "-", // Clear 버턴 클릭 시 적용될 값.
+																	showEditorBtn : false,
+																	showEditorBtnOver : false,
+																	onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+																	openDirectly : true, // 에디팅 진입 시 바로 달력 열기
+																	// jquery-datepicker 속성을 여기에 설정하십시오.
+																	// API : https://api.jqueryui.com/datepicker/#option-appendText
+																	jqOpts : {
+																		changeMonth: true,
+																		changeYear: true,
+																		selectOtherMonths : true,
+																		showOtherMonths: true,
+																		dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+																		monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
+																	} // end of jqOpts
+							   };
+								
+					   }
 			    	   
 			    /*	  if(groupHeader =='Y'){
 				          var childrenTmp =[];
@@ -2936,6 +2980,14 @@ var momWidget = {
 		
 		   }
 		});
+			AUIGrid.bind(that.grid[index], "cellEditBegin", function(e) {	
+			 for(let i=0,max=that.columnProperty[index].length; i<max;i++){
+				if(that.columnProperty[index][i]['columnEditable'] =='N' && that.columnProperty[index][i]['columnCreate'] =='Y' && e.item.addItem == undefined && e.dataField == that.columnProperty[index][i]['columnId']){
+						return false;
+			    }
+			 }			
+	
+			});
 		AUIGrid.bind(that.grid[index], "cellEditEnd", function(e) {
 			if(that.columnProperty[index][e.columnIndex]['columnType'] == 'S'){
 					for(var i=0, len=that.columnDropdown[index][e.dataField].length; i<len; i++) { // keyValueList 있는 값만..
@@ -4772,6 +4824,7 @@ var momWidget = {
 				//var columnLayout = AUIGrid.getColumnLayout(that.grid[index])
 				let columnProp = that.columnProperty[index];
 				let item = {};
+				let columnEdit =false;
 				 for(var i=0,max1=columnProp.length; i<max1;i++){
 					 if(columnProp[i]['columnShow'] =='Y'){
 						 item[columnProp[i]['columnId']] ='';
@@ -4779,17 +4832,35 @@ var momWidget = {
 				}
 				item.addItem = 'Y';
 				AUIGrid.addRow(that.grid[index], item, "first");
+				// row Styling 함수를 다른 함수로 변경
+		
+				//let colStyle = "aui-grid-default-column-left";			
+			
+				for(let i=0;i<columnProp.length;i++){
+				    AUIGrid.setColumnPropByDataField(widget.grid[index], columnProp[i]['columnId'], { 		    	
+						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						  if(item.addItem == 'Y' && columnProp[i]['columnCreate'] =='Y'){
+							   
+							    return 'aui-grid-edit-column-left';
+						  }
+						  else {
+							  
+							     return '';
+						  }
+							
+						},
+					
+				   });
 			    let callBackResult 	= that.checkActionCallBack(index, 'GA', item, 'addBtn', your,[]);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
 				      return;
 				}	
-			/*	if(your != undefined && your.addRowCallBack != undefined) {
-			     your.addRowCallBack(index,rowIndex,target,e);
-			   }*/
-				
+	
+				}
 			});
+			
 			$(document).on('click', '#' + showLv1Btn, function(e) {	
 				if (!isExpanded) {
 					AUIGrid.expandAll(that.grid[index]);
@@ -5008,14 +5079,25 @@ var momWidget = {
 				
 			});
 			$(document).on('click', '#' + saveBtnId, function(e) {
-				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn']
-				var checkedItems = [];
-				var param = [];
+				let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn']
+				let checkedItems = [];
+				let param = [];
+				let tmpYn = 'N';
+				let actionType = 'CU';		
+				let queryId = that.pageProperty[index]['programId']+'.defaultInfo'+(index+1);
+				for(let i=0;i<that.buttonProperty[index].length;i++){
+					if(that.buttonProperty[index][i]['buttonId'] == 'procBtn'){
+						//actionType = that.buttonProperty[index][i]['eventType'];
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+						
+					}					
+				 }
+				 
 				if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[index]);
 					if (param.length == 0){
 						  checkedItems = AUIGrid.getGridData(that.grid[index]);
-						  for(var i=0,max=checkedItems.length;i<max;i++){	
+						  for(let i=0,max=checkedItems.length;i<max;i++){	
 						     param.push(checkedItems[i]); 														
 				          }
 						/*  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
@@ -5037,17 +5119,65 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 			    }
-			     var actionType = 'CU';		
+			   
 			     
 				 param = callInitResult['param'];
 				
 				 for(var i=0;i<that.buttonProperty[index].length;i++){
 					if(that.buttonProperty[index][i]['buttonId'] == 'saveBtn'){
 						actionType = that.buttonProperty[index][i]['eventType'];
-					}					
+					}
+					else if(that.buttonProperty[index][i]['buttonId'] == 'procBtn'){
+						actionType = that.buttonProperty[index][i]['eventType'];
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+						queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
+					}									 
+					else{
+						actionType = that.buttonProperty[index][i]['eventType'];
+					}
+				 }	 
+				 if(tmpYn =='Y'){
+						 mom_ajax('D', queryId,[], function(result1, data1) {
+						 if(result1!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
+							  momWidget.splashHide();
+				              return;
+			            }    	
+						  mom_ajax('C', queryId,param, function(result2, data2) {
+							 if(result2!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
+							  momWidget.splashHide();
+				              return;
+			            }   
+							 mom_ajax('P', queryId,[], function(result3, data3) {
+			            	     if(data3[0]['p_err_code']=='E') {
+						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
+			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
+							  momWidget.splashHide();
+				              return;
+			            } 
+			                callBackResult = that.checkActionCallBack(index, actionType, {}, buttonId, your);   				                         							  						
+				        	if(callBackResult['result'] != 'SUCCESS') {
+								  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+								  momWidget.splashHide();
+							      return;
+							}
+						if(your.initParam != undefined && your.initParam != ''){
+				              initParam = your.initParam;
+			             }
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, index, this, false,undefined,actionMode);
+							
+							
+							 }, undefined, index, this, false,undefined,actionMode);
+				   }, undefined, index, this, false,undefined,actionMode);
 				 }
-						 
-				  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+				 else{
+					  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
@@ -5067,6 +5197,8 @@ var momWidget = {
 						  momWidget.splashHide();
 					      return;
 		          }, undefined, undefined, this, false);
+				}
+				
 				  
 					
 				
@@ -5637,7 +5769,7 @@ var momWidget = {
 							
 							
 							 }, undefined, index, this, false,undefined,actionMode);
-						 }, undefined, index, this, false,undefined,actionMode);
+				   }, undefined, index, this, false,undefined,actionMode);
 					
 				}
 				else{

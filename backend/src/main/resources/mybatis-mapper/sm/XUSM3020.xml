@@ -319,23 +319,23 @@
 	AND    MC.USE_YN      = 'Y'
 	ORDER BY MC.COMPANY_CD, MC.DIVISION_CD, MC.SORT_NO
 	</select>
-    <insert id="upsert_defaultInfo4" parameterType="java.util.List">
+    <insert id="upsert_defaultInfo4"  parameterType="java.util.HashMap" flushCache="true" >
 	    MERGE INTO MOM_MESSAGE MM
 	    USING (
-	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
-	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
-	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,       
-	                              TRIM(#{item.languageCd, jdbcType=VARCHAR})                          						                   as langCd,
-	                              TRIM(#{item.code, jdbcType=VARCHAR}) 																	       as msgCd,      														   
-					              #{item.codeNm, jdbcType=VARCHAR} 																			   as msgNm,             															   
-					              TRIM(#{item.msgType, jdbcType=VARCHAR}) 																       as msgType, 													           
-					              TRIM(#{item.useYnFlag, jdbcType=VARCHAR})																	   as useYn,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})       															       as createBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})                                                                       as updateBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
+	     
+	             SELECT           TRIM(#{companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
+	                              TRIM(#{divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,       
+	                              TRIM(#{languageCd, jdbcType=VARCHAR})                          						                   as langCd,
+	                              TRIM(#{code, jdbcType=VARCHAR}) 																	       as msgCd,      														   
+					              #{codeNm, jdbcType=VARCHAR} 																			   as msgNm,             															   
+					              TRIM(#{msgType, jdbcType=VARCHAR}) 																       as msgType, 													           
+					              TRIM(#{useYnFlag, jdbcType=VARCHAR})																	   as useYn,
+					              TRIM(#{userId, jdbcType=VARCHAR})       															       as createBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as createDate,
+					              TRIM(#{userId, jdbcType=VARCHAR})                                                                       as updateBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as updateDate
 	             FROM DUAL
-	        </foreach>
+	      
 	    ) PARAM 
 	    ON ( MM.COMPANY_CD  = PARAM.companyCd
 	    AND  MM.DIVISION_CD = PARAM.divisionCd

@@ -123,25 +123,25 @@
         </foreach>
        </where>
    </delete>
-   <insert id="upsert_defaultInfo1" parameterType="java.util.List" >
+   <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true" >
 	    MERGE INTO MOM_PROGRAM MP
 	    USING (
-	        <foreach collection="list" item="item" open="" close="" index="i" separator="UNION">
+	       
 	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
-	                              TRIM(#{item.divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
-	                              TRIM(#{item.programId, jdbcType=VARCHAR})                                                                    as programId,
-					              #{item.programNm, jdbcType=VARCHAR}           															   as programNm,
-					              TRIM(#{item.programType, jdbcType=VARCHAR})    															   as programType,
-					              TRIM(#{item.templateId, jdbcType=INTEGER})     															   as templateId,
-					              TRIM(#{item.logYn, jdbcType=VARCHAR})          															   as logYn,
-					              TRIM(#{item.useYn, jdbcType=VARCHAR})         															   as useYn,
-					              TRIM(#{item.description, jdbcType=VARCHAR})    															   as description,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as createBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as createDate,
-					              TRIM(#{item.userId, jdbcType=VARCHAR})         															   as updateBy,
-					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  as updateDate
+	                              TRIM(#{divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
+	                              TRIM(#{programId, jdbcType=VARCHAR})                                                                    as programId,
+					              #{programNm, jdbcType=VARCHAR}           															   as programNm,
+					              TRIM(#{programType, jdbcType=VARCHAR})    															   as programType,
+					              TRIM(#{templateId, jdbcType=INTEGER})     															   as templateId,
+					              TRIM(#{logYn, jdbcType=VARCHAR})          															   as logYn,
+					              TRIM(#{useYn, jdbcType=VARCHAR})         															   as useYn,
+					              TRIM(#{description, jdbcType=VARCHAR})    															   as description,
+					              TRIM(#{userId, jdbcType=VARCHAR})         															   as createBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as createDate,
+					              TRIM(#{userId, jdbcType=VARCHAR})         															   as updateBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as updateDate
 	             FROM DUAL
-	        </foreach>
+	       
 	    ) PARAM 
 	    ON (  PROGRAM_ID    = PARAM.programId  )
 	    WHEN MATCHED THEN
