@@ -62,4 +62,42 @@
 	AND    MB.USE_YN       = 'Y'
 	ORDER BY MB.PRIORITY,MI.ITEM_NM
  </select> 
+ <select id="get_XUSM8030" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT A.UNIT_CATEGORY_NM          -- 단위유형명    
+     , A.UNIT_NM                                      -- 기준단위명                                        
+     , A.CONVERSION_UNIT_NM            -- 변환단위명
+     , A.UNIT_QTY                                      -- 기준계수
+     , A.CONVERSION_UNIT_QTY           -- 변환계수
+     , A.UNIT_CATEGORY                          -- 단위유형 
+     , A.UNIT                                                -- 기준단위
+     , A.CONVERSION_UNIT                     -- 변환단위
+     , A.KEY_ID 
+FROM   (SELECT (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MC.COMPANY_CD,MC.DIVISION_CD, 'SM0016', MUP.UNIT_CATEGORY, 'KR') FROM DUAL) AS UNIT_CATEGORY_NM 
+             , MUP.UNIT_NM         
+             , MUC.UNIT_NM             AS CONVERSION_UNIT_NM  
+             , MC.UNIT_QTY                               
+             , MC.CONVERSION_UNIT_QTY                    
+             , MUP.UNIT_CATEGORY                         
+             , MC.UNIT                                   
+             , MC.CONVERSION_UNIT         
+             , MUP.UNIT_CATEGORY || '_'|| MC.UNIT || '_' || MC.CONVERSION_UNIT AS KEY_ID                
+        FROM   MOM_UNIT_CONVERSION MC
+             , MOM_UNIT MUP
+             , MOM_UNIT MUC
+        WHERE  MC.COMPANY_CD       = MUP.COMPANY_CD
+        AND    MC.DIVISION_CD      = MUP.DIVISION_CD
+        AND    MC.UNIT             = MUP.UNIT
+        AND    MC.COMPANY_CD       = MUC.COMPANY_CD
+        AND    MC.DIVISION_CD      = MUC.DIVISION_CD
+        AND    MC.COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}
+	    AND    MC.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
+        <if test="keyId1 != null and keyId1 != ''">
+	    AND    MUP.UNIT_CATEGORY = #{keyId1, jdbcType=VARCHAR}
+	    </if>
+        AND    MC.CONVERSION_UNIT  = MUC.UNIT  ) A
+ORDER BY A.UNIT_CATEGORY_NM        
+       , A.UNIT_NM
+       , A.CONVERSION_UNIT_NM
+
+</select>
 </mapper>

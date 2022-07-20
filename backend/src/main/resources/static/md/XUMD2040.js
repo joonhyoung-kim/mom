@@ -21,7 +21,7 @@ var view= {
 		});
 	},
      cellClickCallBack: function(index,rowIndex,target,e) {
-		if(index == 1){
+		if(index == 10){
 			var item = e.item;	
 			$('#unitCategory'+'DP1').val(item['unitCategory']);
 			$('#unit'+'DP1').val(item['unit']);

@@ -13,7 +13,45 @@
     font-weight: bold;
     margin: 0;
 }
-
+.calendar-pop-footer{
+	position:relative;
+}
+.ui-datepicker .ui-datepicker-next{
+	right: 0.9rem;
+    top: 0.4rem;
+}
+.ui-datepicker .ui-datepicker-prev{
+    left: 0.5rem;
+    top: 0.45rem;
+}
+.calendar-pop-button{
+	position: relative;
+    width: 40%;
+    margin-top: 2%;
+}
+.calendar-pop-button.left{
+	left: 6%;
+}
+.calendar-pop-button.right{
+	left: 11%;
+}
+.calendar-pop{
+	display: none;
+    background: #fafafa; 
+    padding-left: 0.5rem;
+    padding-top: 0.6rem; 
+    border: 1px solid #dcdcdc;
+    width: 22rem;
+    height: 6.3rem;
+    position:relative;
+    margin-top: -50rem;
+    margin-left: 70rem;
+    border-color: #bdbdbd !important;
+}
+.calendar-pop-time-input{
+	 position:relative;
+	width: 97.5%; 
+} 
 .modal-header {
     /* min-height: 16.43px; */
     padding: 15px;

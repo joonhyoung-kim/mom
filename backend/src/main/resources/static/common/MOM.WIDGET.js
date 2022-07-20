@@ -47,10 +47,11 @@ var momWidget = {
 	init: function(index, menuId, your, customFlag) {		  
 		  var that = this;	 
 		  index--;
-		  let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
-	
+		 
+		 
+    	
 		 // var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
-		  var changePwPop = that.createChangePop.password(index,'비밀번호변경');
+		  
 		  
 		  if(index == 0){
 			  $('head').append('<script  src="/mom/content/jqwidgets/jqxtooltip.js"></script>');
@@ -58,10 +59,13 @@ var momWidget = {
 			  $('head').append('<script src="/mom/content/time/moment.js"></script>');
 			  $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
 			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd !important;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
-
+ 			  let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
 			  $('body').append(uploadPop);
 			  //$('body').append(fileUpProgressBar);
+			  var changePwPop = that.createChangePop.password(index,'비밀번호변경');
 			  $('body').append(changePwPop);
+			  let calendarPop = that.createPopup.calendarPop(index+1,'grid');
+			  $('body').append(calendarPop);
 			 
 			  //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');			  
 		  }
@@ -659,7 +663,7 @@ var momWidget = {
 			    	
 			    	   }
 			    	   else if(isCalendar =='Y'){
-				 				columnProp[i].dateInputFormat = "yyymmdd"; // 실제 데이터의 형식 지정
+				 				/*columnProp[i].dateInputFormat = "yyymmdd"; // 실제 데이터의 형식 지정
 				 				columnProp[i].formatString = "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
 				 				columnProp[i].dateType = 'date';
 				 				columnProp[i].width = 160;
@@ -670,12 +674,12 @@ var momWidget = {
 																iconPosition : "aisleRight",
 																iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
 																	"default" : "../content/icon/calendar-icon.png" // default
-																}
-																/*onClick : function(event) {
+																},
+																onClick : function(event) {
 																	// 달력 아이콘 클릭하면 실제로 달력을 띄움.
 																	// 즉, 수정으로 진입함.
 																	AUIGrid.openInputer(event.pid);
-															    }*/
+															    }
 
 								};
 								columnProp[i].editRenderer = {
@@ -686,8 +690,7 @@ var momWidget = {
 																	showEditorBtnOver : false,
 																	onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
 																	openDirectly : true, // 에디팅 진입 시 바로 달력 열기
-																	// jquery-datepicker 속성을 여기에 설정하십시오.
-																	// API : https://api.jqueryui.com/datepicker/#option-appendText
+																	
 																	jqOpts : {
 																		changeMonth: true,
 																		changeYear: true,
@@ -695,8 +698,8 @@ var momWidget = {
 																		showOtherMonths: true,
 																		dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
 																		monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
-																	} // end of jqOpts
-							   };
+																	} 
+							   };*/
 								
 					   }
 			    	   
@@ -2163,6 +2166,17 @@ var momWidget = {
 			botHtml  =     '</div>';
 			   return topHtml+botHtml;
 		},
+			calendarPop : function(index,target){
+				let html='<div id="calendar-pop" class="calendar-pop">'
+						/*+'<div id="calendar-main"></div>'*/
+						+'<input type="datetime-local" class = "calendar-pop-time-input" id="time-main"></input>'
+						+'<div class = "calendar-pop-footer" id="calendar-pop-footer">'
+						+'<button class = "calendar-pop-button left" id="saveBtnDp">'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
+						+'<button class = "calendar-pop-button right" id="closeBtnDp">'+multiLang.transText('MESSAGE','MSG00036')+'</button>'
+						+'</div>'
+						+'</div>';
+					   return html;
+		    },
 
 	},
 	design: function(index, idx, color, align) {
@@ -3003,7 +3017,7 @@ var momWidget = {
 			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'DG'){
 				//that.editItem[index].push();
 			}			
-							
+					
 							
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
 			});
@@ -3020,7 +3034,45 @@ var momWidget = {
 		return event.value; // 원래값
 	});*/
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
-		
+			for(let i=0,max=that.columnProperty[index].length; i<max;i++){
+				 if( that.columnProperty[index][i]['columnType']=='C' && that.columnProperty[index][i]['columnId'] == e.dataField){
+			/*	  $('#calendar-main').datepicker({
+					changeMonth: true,
+					changeYear: true,
+					selectOtherMonths : true,
+					showOtherMonths: true,
+					autoSize: true,
+					dateFormat: 'dd-mm-yy',
+					dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+					monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]});*/
+					if(e.value != '' && e.value !=undefined){
+						let cellValue = e.value.split(' ');
+						//let setDateText = cellValue[0].split('-');
+						//setDateText =  setDateText[2]+'-'+ setDateText[1]+'-' +setDateText[0];
+						//$( "#calendar-main" ).datepicker( "setDate", setDateText);
+						$( "#time-main" ).val(cellValue[0]+'T'+cellValue[1]);
+						//$('#time-main').val('2017-06-01T08:30')
+						 //$('#time-main').timepicker();
+					
+						
+					}
+					
+			
+			      $('#calendar-pop').css('display','block');
+			        let td = AUIGrid.getCellElementByIndex(that.grid[index], e.rowIndex,e.columnIndex); // 0, 0 번째 TD 얻기
+		       	    let offset = $(td).offset();
+					let activeTop = offset.top;//
+					let activeLeft = offset.left;	
+			      $('#calendar-pop').offset({top : activeTop, left : activeLeft});		
+			    }
+			}
+			  
+			  		
+			   
+				//let scrollbar = $('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset() == undefined ? {top:0,left:0}:$('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset();			
+				
+								
+		        	    
 			let item = e.item;
 			let rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); 
 			let rowId = item[rowIdField];
@@ -3053,15 +3105,15 @@ var momWidget = {
 				var targetId =  e.dataField;
 				let totalParam = [];
 				let rowIndex = e.rowIndex;
-			/*	var clickedElment = e.target.parentElement.parentElement.parentElement.parentElement.id; 
-					
-				if(clickedElment =='' || clickedElment.indexOf('DP') == -1){
-					return;
-				}*/
+
 				
-				var fieldValue = e.value; //셁밧
-				var activeTop = e.orgEvent.currentTarget.offsetTop;//
-				var activeLeft = e.orgEvent.currentTarget.offsetLeft;
+				
+				    let td = AUIGrid.getCellElementByIndex(that.grid[index], e.rowIndex,e.columnIndex); // 0, 0 번째 TD 얻기
+		       	    let offset = $(td).offset();
+					let activeTop = offset.top;//
+					let activeLeft = offset.left;	
+				// activeTop = e.orgEvent.currentTarget.offsetTop;//
+				 //activeLeft = e.orgEvent.currentTarget.offsetLeft;
   	            var dropdownGridId =10;
 	            let dropdownGridQueryId = that.columnProperty[index][dropDownGridIndex]['dropdownId'];
 			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
@@ -3276,7 +3328,7 @@ var momWidget = {
 			var minLength = that.searchComboMinLength[index][searchId] ;
 			var queryId = that.searchComboQueryId[index][searchId];
 			if(searchString.length < minLength)	{
-						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
 						return;
 			}
 			else{
@@ -3305,7 +3357,7 @@ var momWidget = {
 			var minLength = that.popupComboMinLength[index][popupId] ;
 			var queryId = that.popupComboQueryId[index][popupId];
 			if(searchString.length < minLength)	{
-						that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+						that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
 						return;
 			}
 			else{
@@ -3877,12 +3929,20 @@ var momWidget = {
 			var paginLastBtnClass  = 'aui-grid-paging-last';
 			var paginPrevBtnClass  = 'aui-grid-paging-prev';
 			var paginNextBtnClass  = 'aui-grid-paging-next';
+			let calendarPopSaveBtnId = 'saveBtnDp';
+			let calendarPopCloseBtnId = 'closeBtnDp';
 			
 		/*	var isExist = document.getElementById(findBtnId);
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
-
+ 			$(document).on('click', '#' + calendarPopSaveBtnId, function(e) {
+	
+			$('#calendar-pop').css('display','none');
+			});
+			$(document).on('click', '#' + calendarPopCloseBtnId, function(e) {	
+			$('#calendar-pop').css('display','none');
+			});
 			 $(document).on('click', '.' + paginFirstBtnClass, function(e) {
 				if(e.target.closest('#grid'+(index+1))==null){
 					 return;
@@ -5365,7 +5425,7 @@ var momWidget = {
 							var minLength = that.popupComboMinLength[index][popupId] ;
 							var queryId2 = that.popupComboQueryId[index][popupId];
 				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
 										return;
 							}
 							
@@ -5464,7 +5524,7 @@ var momWidget = {
 							var minLength = that.popupComboMinLength[index][popupId] ;
 							var queryId2 = that.popupComboQueryId[index][popupId];
 				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
 										return;
 							}
 							
@@ -5566,7 +5626,7 @@ var momWidget = {
 							var minLength = that.popupComboMinLength[index][popupId] ;
 							var queryId2 = that.popupComboQueryId[index][popupId];
 				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
 										return;
 							}
 							
@@ -5668,7 +5728,7 @@ var momWidget = {
 							var minLength = that.popupComboMinLength[index][popupId] ;
 							var queryId2 = that.popupComboQueryId[index][popupId];
 				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG0019')});
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
 										return;
 							}
 							
@@ -5811,7 +5871,7 @@ var momWidget = {
 				var buttonId = targetArray[0];
 				var actionType = 'U';
 		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
-					if(that.buttonProperty[index][k]['buttonId'] == buttonId){
+					if(that.buttonProperty[index][k]['buttonId']+(index+1) == buttonId){
 						actionType = that.buttonProperty[index][k]['eventType'];
 						
 					}
@@ -5833,7 +5893,7 @@ var momWidget = {
 				if($('#changePwBtn'+(index+1)).length){
 					 $('#changePwBtn'+(index+1)).css('display','block');
 				}
-				that.setPopup(index,actionType);	
+				that.setPopup(index,'U');	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
 		
@@ -6808,7 +6868,7 @@ var momWidget = {
 				var checkedItems = this.getCheckedRowItems(this.grid[index],true);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
 					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');		
+						 $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');		
 						 if(this.popupProperty[index][j]['popupId'] == undefined || this.popupProperty[index][j]['popupId'] == ''){	
 							 continue;
 						 }
@@ -6831,9 +6891,10 @@ var momWidget = {
 				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {									
 					if(this.popupProperty[index][i]['updateEditFlag'] == 'N') { // 읽기전용
 						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS' ) { //콤보박스							
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
+							
+							 	 //$('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							 
+							  $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
 						}					
 						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
