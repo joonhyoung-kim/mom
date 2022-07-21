@@ -2171,8 +2171,8 @@ var momWidget = {
 						/*+'<div id="calendar-main"></div>'*/
 						+'<input type="datetime-local" class = "calendar-pop-time-input" id="time-main"></input>'
 						+'<div class = "calendar-pop-footer" id="calendar-pop-footer">'
-						+'<button class = "calendar-pop-button left" id="saveBtnDp">'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
-						+'<button class = "calendar-pop-button right" id="closeBtnDp">'+multiLang.transText('MESSAGE','MSG00036')+'</button>'
+						+'<button class = "calendar-pop-button left" id="saveBtnDT">'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
+						+'<button class = "calendar-pop-button right" id="closeBtnDT">'+multiLang.transText('MESSAGE','MSG00036')+'</button>'
 						+'</div>'
 						+'</div>';
 					   return html;
@@ -3052,12 +3052,13 @@ var momWidget = {
 						//$( "#calendar-main" ).datepicker( "setDate", setDateText);
 						$( "#time-main" ).val(cellValue[0]+'T'+cellValue[1]);
 						//$('#time-main').val('2017-06-01T08:30')
-						 //$('#time-main').timepicker();
+						//$('#time-main').timepicker();
 					
 						
 					}
 					
-			
+			      $('#calendar-pop').attr('rowIndex',e.rowIndex);
+			      $('#calendar-pop').attr('columnIndex',e.columnIndex);
 			      $('#calendar-pop').css('display','block');
 			        let td = AUIGrid.getCellElementByIndex(that.grid[index], e.rowIndex,e.columnIndex); // 0, 0 번째 TD 얻기
 		       	    let offset = $(td).offset();
@@ -3929,16 +3930,18 @@ var momWidget = {
 			var paginLastBtnClass  = 'aui-grid-paging-last';
 			var paginPrevBtnClass  = 'aui-grid-paging-prev';
 			var paginNextBtnClass  = 'aui-grid-paging-next';
-			let calendarPopSaveBtnId = 'saveBtnDp';
-			let calendarPopCloseBtnId = 'closeBtnDp';
+			let calendarPopSaveBtnId = 'saveBtnDT';
+			let calendarPopCloseBtnId = 'closeBtnDT';
 			
 		/*	var isExist = document.getElementById(findBtnId);
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
  			$(document).on('click', '#' + calendarPopSaveBtnId, function(e) {
-	
+	        let nowTime = $( "#time-main" ).val().replace('T',' ');
+	        
 			$('#calendar-pop').css('display','none');
+			AUIGrid.setCellValue(that.grid[index],Number($('#calendar-pop').attr('rowIndex')), Number($('#calendar-pop').attr('columnIndex')), nowTime);
 			});
 			$(document).on('click', '#' + calendarPopCloseBtnId, function(e) {	
 			$('#calendar-pop').css('display','none');
@@ -5186,14 +5189,18 @@ var momWidget = {
 				 for(var i=0;i<that.buttonProperty[index].length;i++){
 					if(that.buttonProperty[index][i]['buttonId'] == 'saveBtn'){
 						actionType = that.buttonProperty[index][i]['eventType'];
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+						break;
 					}
 					else if(that.buttonProperty[index][i]['buttonId'] == 'procBtn'){
 						actionType = that.buttonProperty[index][i]['eventType'];
 						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
 						queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
+						break;
 					}									 
 					else{
 						actionType = that.buttonProperty[index][i]['eventType'];
+						break;
 					}
 				 }	 
 				 if(tmpYn =='Y'){

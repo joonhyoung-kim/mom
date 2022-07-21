@@ -4,7 +4,7 @@
 <select id="get_DD00001" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
 	SELECT  CODE
          ,  NVL((SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR},#{langCd, jdbcType=VARCHAR},'CODE',#{groupCd, jdbcType=VARCHAR}|| '_' ||CODE)
-	             FROM   DUAL ),CODE_NM) AS LABEL
+	             FROM   DUAL ),CODE ||'('|| CODE_NM ||')') AS LABEL
 	FROM    MOM_CODE
 	WHERE   DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
 	AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
