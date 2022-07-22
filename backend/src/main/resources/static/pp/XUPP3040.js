@@ -11,7 +11,7 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-		cellClickCallBack: function(index,rowIndex,target,e) {
+	cellClickCallBack: function(index,rowIndex,target,e) {
 		var item = e.item;	
 		 if(index == 0){
 		     widget.findBtnClicked(1, {workOrderId:item.workOrderId}, true, 'INIT',menuId,VIEW,undefined);
@@ -20,15 +20,11 @@ var VIEW= {
 	},
 	addRowCallBack(index,your,action,btnId,param,result,data){
 		if(index==1){
-			
-			
+						
 		}
-			
-		
-		}
-	
+				
+	}
 
-	
 	
 };
 

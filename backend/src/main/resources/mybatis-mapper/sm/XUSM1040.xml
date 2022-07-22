@@ -64,7 +64,7 @@
 						             , #{item.phoneNo,           jdbcType=VARCHAR}
 						             , #{item.telNo,             jdbcType=VARCHAR}
 						             , #{item.faxNo,          	 jdbcType=VARCHAR}
-						             , #{item.deptNm,    		 jdbcType=VARCHAR}
+						             , #{item.deptCd,    		 jdbcType=VARCHAR}
 						             , #{item.authGroupCd, 	     jdbcType=VARCHAR}
 						             , #{item.vendorCd,          jdbcType=VARCHAR}
 						             , #{item.defaultLanguuage,  jdbcType=VARCHAR}
@@ -94,7 +94,7 @@
 			 , EMAIL                  = #{item.email,               jdbcType=VARCHAR}
 			 , MAP_ADDRESS            = #{item.mapAddress,          jdbcType=VARCHAR}
 			 , IP_ADDRESS             = #{item.ipAddress,           jdbcType=VARCHAR}
-			 , VENDOR_CD              = #{item.vendorNm,            jdbcType=VARCHAR}
+			 , VENDOR_CD              = #{item.vendorCd,            jdbcType=VARCHAR}
 			 , USE_YN                 = #{item.useYn,               jdbcType=VARCHAR}
 			 , DESCRIPTION            = #{item.description,         jdbcType=VARCHAR}
 		     , UPDATE_BY              = #{item.userId,              jdbcType=VARCHAR}

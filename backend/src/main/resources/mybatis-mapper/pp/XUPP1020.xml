@@ -32,6 +32,10 @@
 		AND MD.ALLOCATE_FLAG = 'N'
 	    AND MD.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
 	    AND MD.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}	  
+	    AND MD.DUE_DATE BETWEEN TO_DATE(#{dueStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{dueStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+		<if test="demandId != null and demandId != ''">
+		AND (UPPER(MD.DEMAND_ID) LIKE '%' || UPPER(#{demandId , jdbcType=VARCHAR}) || '%' )
+		</if>
 		ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MD.DUE_DATE, MD.ITEM_ID, MD.DEMAND_ID
 	</select>
 	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
@@ -58,7 +62,8 @@
 		AND    MDSR.DIVISION_CD     = MSD.DIVISION_CD   
 		AND    MDSR.SALES_ORDER_ID  = MSD.SALES_ORDER_ID
 		AND    MDSR.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}
-	    AND    MDSR.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}	  
+	    AND    MDSR.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}	
+	      
 		ORDER BY MCD.COMPANY_NM , MCD.DIVISION_NM, MSD.SO_NO , MSD.SO_SEQ
 	</select>
 	<select id="get_defaultInfo3" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">

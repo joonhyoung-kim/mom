@@ -105,9 +105,16 @@ ORDER BY MWG.WORK_GROUP_NM
 	     , MBP.FINAL_OPERATION_YN
 	     , MBP.MILESTONE
 	FROM   MOM_BOR_PATH MBP
-	WHERE  MBP.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR}
-	AND    MBP.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR}	 
-	AND    MBP.BOR_ID       =  #{borId, jdbcType=VARCHAR}	 
+	   ,   MOM_BOR MB
+	WHERE   MBP.COMPANY_CD  = MB.COMPANY_CD 
+	AND     MBP.DIVISION_CD = MB.DIVISION_CD 
+	AND     MBP.BOR_ID      = MB.BOR_ID 
+	AND     MBP.COMPANY_CD  =  #{companyCd, jdbcType=VARCHAR}
+	AND     MBP.DIVISION_CD =  #{divisionCd, jdbcType=VARCHAR}		 	
+	AND     MBP.BOR_ID       =  #{borId, jdbcType=VARCHAR}	 
+	<if test="itemId != null and itemId != ''">
+	AND     MB.ITEM_ID      =  #{itemId, jdbcType=VARCHAR}	
+	</if>
     ORDER BY MBP.OPERATION_SEQ
 
 	</select>

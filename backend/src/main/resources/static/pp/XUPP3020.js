@@ -16,9 +16,11 @@ var VIEW= {
 		 if(index == 10){
 			if(target=='itemId'){
 				$('#itemId'+'DP1').val(item['itemId']);
+				$('#borId'+'DP1').val(item['borId']);
 			}
 			else if(target=='workCenterCd'){
 				$('#workCenterCd'+'DP1').val(item['workCenterCd']);
+				$('#borId'+'DP1').val(item['borId']);
 			}
 			else{
 				
@@ -32,7 +34,14 @@ var VIEW= {
 			 //$('#dropDownGridPop'+(index+1)).remove();
 		}
 	
-	}	
+	},
+		searchCallInit: function(index,your,action,btnId,param,result) {		
+		if(index==10 &&  btnId == 'POPUPCLICK'){
+			param.itemId  = $('#itemId'+'DP1').val();
+	
+		}
+		
+	},		
 
 	
 	

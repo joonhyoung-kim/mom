@@ -1,5 +1,6 @@
 var menuId = 'XUSM1020';
 var that   = undefined;
+var widget = momWidget;
 var XUSM1020 = {
 	initParam		:  undefined,
 	paramTmp	    : undefined,
@@ -7,11 +8,26 @@ var XUSM1020 = {
 	init: function() {
      that = this;		
 	},
+	createCallInit:function(index,your,action,btnId,param,result){	
+		  if(index ==1 && btnId =='createBtn'){	
+            checkedItem = widget.getCheckedRowItems(widget.grid[0]);
+            if(checkedItem.length ==0){
+	          result.result='FAIL';
+	          result.msg='회사코드 선택해주세요!';
+	          return;
+            }
+		    //$("#codeCategoryDP2").val(checkedItem[0]['categoryCd']);
+				
+		  }
+
+	 
+
+	},
 	cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index==0){
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
 			that.paramTmp = e.item;
-			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,XUSM1020,undefined,e);
+			momWidget.findBtnClicked(1, e.item, true, 'CELLCLICK',menuId,XUSM1020);
 		}
 	
 	},
@@ -38,7 +54,7 @@ var XUSM1020 = {
 	}
 	else if(index == 1){		
 			param[0].companyCode = that.paramTmp.companyCode;
-			result = 'SUCCESS';			
+				
 		}
 	
 		

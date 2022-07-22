@@ -24,7 +24,7 @@ var VIEW= {
 			  	}, undefined, undefined, this, false);
 		});
 	},
-		cellClickCallBack: function(index,rowIndex,e) {
+		cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index==0){
 			var item = e.item;	
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);

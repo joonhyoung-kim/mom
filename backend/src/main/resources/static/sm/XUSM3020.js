@@ -50,19 +50,23 @@ var VIEW= {
 			param[0] = that.paramTmp;
 			result = 'SUCCESS';
 		}*/
-	createCallBack: function(index,your,action,btnId,param,result,data) {
-		if(index ==1 && btnId =='createBtn'){	
+		createCallInit:function(index,your,action,btnId,param,result){	
+		  if(index ==1 && btnId =='createBtn'){	
             checkedItem = widget.getCheckedRowItems(widget.grid[0]);
             if(checkedItem.length ==0){
-	          $(defaultPop2).momModal('hide');
+	          result.result='FAIL';
+	          result.msg='공통구분코드 선택해주세요!';
+	          return;
             }
 		    $("#codeCategoryDP2").val(checkedItem[0]['categoryCd']);
 				
-		}
+		  }
 		else if(index ==2 && btnId =='createBtn'){	
             checkedItem = widget.getCheckedRowItems(widget.grid[1]);
             if(checkedItem.length ==0){
-	          $(defaultPop3).momModal('hide');
+	          result.result='FAIL';
+	          result.msg='그룹코드 선택해주세요!';
+	          return;
             }
 		    $("#groupCdDP3").val(checkedItem[0]['groupCd']);
 				

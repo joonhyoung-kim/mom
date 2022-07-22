@@ -104,7 +104,7 @@ public class MomController {
 			}
 			else {
 				result = momService.createMapList(query, param);
-				System.out.println("결과1?"+result);
+				//System.out.println("결과1?"+result);
 			}
 			
 		}
@@ -114,7 +114,7 @@ public class MomController {
 			System.out.println(result);
 			
 		}
-		System.out.println("결과2?"+result);
+		//System.out.println("결과2?"+result);
 		return result ;
 	}
 	
@@ -139,11 +139,22 @@ public class MomController {
 	public List<Map<String,Object>> removeMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
-		
+		List<Map<String,Object>> result =  new ArrayList<>();
 		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		try {			
+				result = momService.removeMapList(query, param);
+
+		}
+		catch (CustomDataAccessException e) {
+			System.out.println(e.getMsg());
+			result = FrameworkUtil.createResponseMap(false,e.getMsg());
+			System.out.println(result);
+			
+		}
+	
+		return result ;
 		
-		return momService.removeMapList(query, param);
 	}
 	
 	//@DeleteMapping("/request/{query}/{action}/{param}")

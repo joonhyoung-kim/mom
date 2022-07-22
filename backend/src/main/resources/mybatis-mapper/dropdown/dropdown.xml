@@ -174,7 +174,7 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
    <if test="searchKey != null and searchKey != ''">
-   AND (PARTNER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR PARTNER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   AND (TRIM(UPPER(PARTNER_CD)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR TRIM(UPPER(PARTNER_NM)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
    </if>
    ORDER BY LABEL
 </select>

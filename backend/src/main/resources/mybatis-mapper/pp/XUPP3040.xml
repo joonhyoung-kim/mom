@@ -111,7 +111,8 @@ ORDER BY MWG.WORK_GROUP_NM
 		     , TO_CHAR(MWI.REQUEST_DATE ,'YYYY-MM-DD HH24:MI:SS') AS REQUEST_DATE
 		     , MWI.REQ_QTY
 		     , MWI.ORIGIN_REQUEST_QTY
-		     , MWI.ISSUE_REQUEST_QTY
+		     , MWI.ISSUE_REQUEST_QTY 
+		     , MWI.ISSUE_REQUEST_QTY AS REQUEST_QTY
 		     , MWI.ISSUE_QTY
 		     , MWI.CANCEL_QTY
 		     , MWI.ISSUE_REQUEST_QTY - NVL(MWI.ISSUE_QTY,0)- NVL(MWI.CANCEL_QTY,0) AS REMAIN_QTY
@@ -135,7 +136,7 @@ ORDER BY MWG.WORK_GROUP_NM
 		ORDER BY MI.ITEM_ID
 
 	</select>
-	   <delete id="remove_saveBtn1" parameterType="java.util.List">
+	   <delete id="remove_saveBtn2" parameterType="java.util.List">
         DELETE FROM MOM_PROC_WO_ISSUE_REQ_LIST
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -146,7 +147,7 @@ ORDER BY MWG.WORK_GROUP_NM
        </foreach>
       </where>
    </delete>  
-    <insert id="create_saveBtn1" parameterType="java.util.List">
+    <insert id="create_saveBtn2" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_PROC_WO_ISSUE_REQ_LIST (
                   COMPANY_CD
@@ -176,7 +177,7 @@ ORDER BY MWG.WORK_GROUP_NM
                 , #{item.issueLocationCd, jdbcType=VARCHAR}
                 , #{item.requestLocationCd, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , #{item.issueRequestQty, jdbcType=NUMERIC}
+                , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.reqQty, jdbcType=NUMERIC}
                 , #{item.reasonCd, jdbcType=VARCHAR}
                 , #{item.issueRequestType, jdbcType=VARCHAR}
@@ -189,12 +190,11 @@ ORDER BY MWG.WORK_GROUP_NM
               )
    </foreach>
   </insert>
-  <select id="proc_saveBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_WO_PKG..sp_xupp3040_cu_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+  <select id="proc_saveBtn2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_WO_PKG.sp_xupp3040_cu_proc(     		    #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}												  
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
 </mapper>

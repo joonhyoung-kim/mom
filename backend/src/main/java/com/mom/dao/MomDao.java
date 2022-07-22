@@ -440,6 +440,8 @@ public class MomDao {
         } catch(Exception e) {
         	System.out.println("에러="+resultCount);
         	dataSourceTransactionManager.rollback(transactionStatus);
+        	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
+    		throw cdae;
         } finally {
         	sqlSession1.close();  
         	long endTime = System.currentTimeMillis();

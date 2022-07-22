@@ -75,8 +75,7 @@
       </foreach>
    </update> 
    <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
-	   DELETE
-	   FROM     MOM_PLANT
+	   DELETE FROM     MOM_PLANT
        <where> 
         <foreach collection="list" item="item" open="" close="" separator="OR"> 
           (   

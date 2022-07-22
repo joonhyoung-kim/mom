@@ -52,6 +52,13 @@
 	 position:relative;
 	width: 97.5%; 
 } 
+.aui-grid-drop-list-ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    z-index : 9999; /* z-index 다시 조정 */
+}
+
 .modal-header {
     /* min-height: 16.43px; */
     padding: 15px;

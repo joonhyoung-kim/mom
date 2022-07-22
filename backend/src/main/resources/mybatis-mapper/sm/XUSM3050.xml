@@ -82,9 +82,9 @@
       DELETE FROM MOM_UNIT
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
-        (       COMPANY_CD = #{item.companyCd
-           AND  DIVISION_CD = #{item.divisionCd
-           AND  UNIT_CATEGORY = #{item.unitCategory
+        (       COMPANY_CD = #{item.companyCd}
+           AND  DIVISION_CD = #{item.divisionCd}
+           AND  UNIT = #{item.unit}
         )
        </foreach>
       </where>

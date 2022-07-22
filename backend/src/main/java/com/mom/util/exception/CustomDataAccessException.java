@@ -21,14 +21,19 @@ public class CustomDataAccessException extends DataAccessException {
         super(msg,cause);
         SQLException se = (SQLException) cause;
         int errCode = se.getErrorCode();
+        
       
     
         System.out.println("에러3"+msg);
+        System.out.println("에러Code"+errCode);
         System.out.println("에러cause="+cause.getMessage());
         
 
         if(errCode==1) {
         	setMsg("MSG00044");
+        }
+        else if(errCode==2292) {
+        	setMsg("MSG00051");
         }
         else {
         	setMsg("MSG00045");

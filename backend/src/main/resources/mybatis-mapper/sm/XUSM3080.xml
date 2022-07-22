@@ -21,10 +21,10 @@
 	  WHERE  MCD.COMPANY_CD   = MOC.COMPANY_CD
 	  AND    MCD.DIVISION_CD = MOC.DIVISION_CD
 	  <if test="ilType != null and ilType != ''">
-	  AND MOC.IL_TYPE IN (${ilType})
+	  AND MOC.IL_TYPE = #{ilType, jdbcType=VARCHAR})
 	  </if>
 	  <if test="ioType != null and ioType!= ''">
-	  AND MOC.IO_TYPE  IN (${ioType})
+	  AND MOC.IO_TYPE  = #{ioType, jdbcType=VARCHAR}
 	  </if>
 	  <if test="useYn != null and useYn != ''">
 	  AND MOC.USE_YN = #{useYn, jdbcType=VARCHAR}

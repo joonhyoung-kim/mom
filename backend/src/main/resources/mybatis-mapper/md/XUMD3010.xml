@@ -73,7 +73,7 @@ FROM   (SELECT MCD.COMPANY_CD
 	   AND (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm, jdbcType=VARCHAR}) || '%' )
 	   </if>
 	   <if test="useYn != null and useYn != ''">
-	   AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
+	   AND MUP.USE_YN IN (${useYn})
 	   </if>  
 	   <if test="basicDate != null and basicDate != ''">     
 	     <![CDATA[           
