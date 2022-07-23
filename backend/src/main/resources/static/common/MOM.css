@@ -3368,6 +3368,22 @@ border-color: #d8dce3 !important;
     border: 1px solid #4d4d4e !important;
    
 }
+.gridPop-C6-R4 {
+    z-index: 1050;
+/* 	display: none ; */
+	float: none !important;
+/* 	background-color: rgba(0, 0, 0, 0.1); */
+	overflow: hidden !important; 
+    width: 110rem !important;
+    position: relative !important;
+    margin-left: 20rem !important;
+    margin-top: -72rem !important;
+    background: white !important; 
+    height: 32rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+   
+}
 .defaultPop-C6-R4 {
     z-index: 1050;
 /* 	display: none ; */
