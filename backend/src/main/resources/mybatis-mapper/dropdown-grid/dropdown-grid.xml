@@ -63,14 +63,14 @@
 	ORDER BY MB.PRIORITY,MI.ITEM_NM
  </select> 
  <select id="get_XUSM8030" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
-   SELECT A.UNIT_CATEGORY_NM          -- 단위유형명    
-     , A.UNIT_NM                                      -- 기준단위명                                        
-     , A.CONVERSION_UNIT_NM            -- 변환단위명
-     , A.UNIT_QTY                                      -- 기준계수
-     , A.CONVERSION_UNIT_QTY           -- 변환계수
-     , A.UNIT_CATEGORY                          -- 단위유형 
-     , A.UNIT                                                -- 기준단위
-     , A.CONVERSION_UNIT                     -- 변환단위
+   SELECT A.UNIT_CATEGORY_NM          
+     , A.UNIT_NM                                                                          
+     , A.CONVERSION_UNIT_NM            
+     , A.UNIT_QTY                                      
+     , A.CONVERSION_UNIT_QTY           
+     , A.UNIT_CATEGORY                        
+     , A.UNIT                                               
+     , A.CONVERSION_UNIT                     
      , A.KEY_ID 
 FROM   (SELECT (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MC.COMPANY_CD,MC.DIVISION_CD, 'SM0016', MUP.UNIT_CATEGORY, 'KR') FROM DUAL) AS UNIT_CATEGORY_NM 
              , MUP.UNIT_NM         
@@ -98,6 +98,13 @@ FROM   (SELECT (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MC.COMPANY_CD,MC.DIVISION
 ORDER BY A.UNIT_CATEGORY_NM        
        , A.UNIT_NM
        , A.CONVERSION_UNIT_NM
-
-</select>
+ </select>
+ <select id="get_XUSM8040" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	  SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG
+	  FROM   MOM_CODE MC
+	  WHERE  MC.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR} 
+	  AND    MC.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	  AND    MC.GROUP_CD     = #{groupCd, jdbcType=VARCHAR}
+	  AND    MC.USE_YN = 'Y'
+ </select>
 </mapper>

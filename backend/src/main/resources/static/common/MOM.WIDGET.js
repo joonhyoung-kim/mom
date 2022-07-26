@@ -1680,7 +1680,13 @@ var momWidget = {
                +     '<div multi-lang="" class="textblock gridRightTab">'+btnItem[i].buttonNm+'</div>'
         	   +     '</a>';		*/
         	   if(btnItem[i]['popupGridId']!='' && btnItem[i]['popupGridId']!=undefined){
-	                midHtml += '<button type="button" class="custom-btn btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+					if(btnItem[i].buttonId.indexOf('customBtn')>=0){
+						 midHtml += '<button type="button" class="custom-btn btn btn-info" id='+ btnItem[i].buttonId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+					}
+					else{
+						 midHtml += '<button type="button" class="custom-btn btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+					}
+	               
                }
                else{
 	                   midHtml += '<button type="button" class="btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
@@ -6528,7 +6534,47 @@ var momWidget = {
 			},
 			setCustomGridPopBtn: function(index,popupIndex,btnId,your) {
 				let that = momWidget;
-				$('#' +'gridPop'+popupIndex).momModal('show');
+				let queryId = 'DG.'+that.buttonProperty[index][0]['popupGridId'];
+				mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
+		         if(result1 != 'SUCCESS' || data1.length == 0) {
+		    	  momWidget.splashHide();
+			      return;							     
+		        }
+		          let gridWidget   = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty']; //그리드 속성
+		          let columnWidget = data1[0]['columnProperty'] == undefined ? '[]':data1[0]['columnProperty']; // 컬럼속성
+		          let searchWidget = data1[0]['searchProperty'] == undefined ? '[]':data1[0]['searchProperty']; // 컬럼속성
+		          gridWidget       = gridWidget.substr(1,  gridProp.length-2);  
+			      columnProp       = columnProp.substr(1,  columnProp.length-2);
+			      searchProp       = searchProp.substr(1,  searchProp.length-2);
+		          let gridProperty   =  JSON.parse(gridWidget);
+		          let columnProperty =  JSON.parse(columnWidget);
+		          let searchProperty =  JSON.parse(searchWidget);
+		          let gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+		          let gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};	
+			          for(let i=0,max=gridExceptList.length; i<max;i++){
+				    	   gridExtraProp[gridExceptList[i]] = gridProperty[gridExceptList[i]];			    	  
+				    	   delete gridProperty[gridExceptList[i]];
+				      }
+			      let gridExtraProperty = gridExtraProp;
+			      let popupColNum = gridExtraProperty['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty['popupColNum']);
+			      let popupRowNum = that.gridExtraProperty['popupRowNum'] == undefined ? 3:Number(gridExtraProperty['popupRowNum']);
+			      let popupHtml = that.createPopup.gridPop(1,popupColNum,popupRowNum,'popup');
+			   
+                  let menuId = that.pageProperty[index]['programId'];
+                    var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
+                    if(isShow == 'block'){
+	                
+	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
+					 return;
+				}	
+			   
+			    $('body').append(popupHtml);
+		        $('#' +'gridPop'+popupIndex).momModal('show');
+			      
+		        
+		        }, undefined, undefined, this, false);
+		        	
+				
 		           
 			},
 		/*	setCustomBtn: function(index,btnId,your) {

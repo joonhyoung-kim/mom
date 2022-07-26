@@ -1125,7 +1125,7 @@ var XUSM3030 = {
 	}, 
 	buttonGrid: function(queryId) {
 		var that = this;
-		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"procBtn","value":"프로시저호출"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"},{"code":"customBtnA","value":"커스텀버튼1"},{"code":"customBtnB","value":"커스텀버튼2"},{"code":"customBtnC","value":"커스텀버튼3"},{"code":"customBtnD","value":"커스텀버튼4"},{"code":"customBtnE","value":"커스텀버튼5"}];
+		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"procBtn","value":"프로시저호출"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"},{"code":"customBtn","value":"커스텀버튼"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
@@ -1151,7 +1151,20 @@ var XUSM3030 = {
 		    					  if(comboList[i]["code"] == value) {
 		        					  retStr = comboList[i]["value"];
 		        					  break;
-		        				  } 				    				
+		        				  }
+		        				  else{
+										if(value.indexOf('customBtn')>=0 && value.length>9 ){
+											retStr = '커스텀버튼'+value.split('-')[1];
+											break;
+										}
+										 if(value=='customBtn'){
+											 retStr = '커스텀버튼(신규)';
+		        					         break;
+										}
+											
+										
+			
+								  } 				    				
 		    			}
 		    			
 		    			return retStr == "" ? value : retStr;	               
@@ -1769,7 +1782,34 @@ var XUSM3030 = {
 			var mapList = [];
 			var queryId = 'gridProp';
 			var queryId2 = 'gridInfo';
-			for(var i=0,max=checkedItems.length;i<max;i++){	
+			let customCnt = 0;
+			if(chooseTab == 'button'){
+				for(var i=0,max=checkedItems.length;i<max;i++){	
+			    mapList[i] = checkedItems[i];
+				if(mapList[i].buttonId.indexOf('customBtn')>=0){
+					customCnt ++;		
+					
+				}
+
+			}
+				for(var i=0,max=checkedItems.length;i<max;i++){	
+				//mapList[i] = checkedItems[i]['item'];
+				mapList[i] = checkedItems[i];
+				mapList[i].menuId       = prevMenuId;
+				mapList[i].gridId       = $('#gridId').val();
+				mapList[i].actionType   ='CU';
+			   if(mapList[i].buttonId=='customBtn'){
+					mapList[i].buttonId = 'customBtn' + $('#gridId').val() + '-'+ customCnt;
+					
+				}
+				
+				
+				
+				
+			}
+			}
+			else{
+					for(var i=0,max=checkedItems.length;i<max;i++){	
 				//mapList[i] = checkedItems[i]['item'];
 				mapList[i] = checkedItems[i];
 				mapList[i].menuId       = prevMenuId;
@@ -1777,7 +1817,10 @@ var XUSM3030 = {
 				mapList[i].actionType   ='CU';
 				
 				
+				
 			}
+			}
+		
 			if(chooseTab == 'grid'){
 				queryId = 'gridProp';
 				queryId2 = 'gridInfo';
