@@ -51,6 +51,7 @@ var momWidget = {
 	//background: #6c5ffc !important;
 	init: function(index, menuId, your, customFlag) {		  
 		  var that = this;	 
+		  let gridId = index;
 		  index--;
 		 
 		 
@@ -74,7 +75,9 @@ var momWidget = {
 			 
 			  //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');			  
 		  }
-		  
+		  else if(index>0 && index % 10 == 0 ){
+			gridId = 1;
+		  }
 		  
 		  //$('body').css('background','#f0f0f5 !important;')
 	      
@@ -84,7 +87,7 @@ var momWidget = {
 	      * 위젯 전역변수에 위젯정보 세팅 
 		  ----------------------------------------------------------------------------------------------------------------------------------
 		  */
-		  mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:index+1}, function(result1, data1) { //해당 페이지의 위젯정보 조회
+		  mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:gridId}, function(result1, data1) { //해당 페이지의 위젯정보 조회
 		      if(result1 != 'SUCCESS' || data1.length == 0) {
 		    	  momWidget.splashHide();
 			      return;							     
@@ -178,7 +181,7 @@ var momWidget = {
 			    	   delete that.gridProperty[index][0][gridExceptList[i]];
 			      }
 			      that.gridExtraProperty[index] = gridExtraProp;
-			      if(index>0&&that.popupProperty[index-1].length !=0){
+			      if(index>0&&that.popupProperty[index].length >0){
 			
 				
 				      searchBtn = '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button>';
@@ -203,12 +206,12 @@ var momWidget = {
 			      var searchStyle   = 'h00';
 			      var remarkYn      = 'N'
 			      var remarkInline  = 'Y';
-			      var popupTotalNum      = that.popupProperty[index].length;
+			      var popupTotalNum   = that.popupProperty[index].length;
 			      var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
 			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
-			     if(popupTotalNum % popupColNum == 1 ){
+			      if(popupTotalNum % popupColNum == 1 ){
 				     remarkInline  = 'N';
-			     }
+			      }
 
 			      for(var i=0,max=searchRowcnt; i<max;i++){	
 		    		  if(that.searchProperty[index][i]['headerType']=='S'){
@@ -419,9 +422,8 @@ var momWidget = {
 			      var isRequire = 'N';
 			      var sortTmp   = [];
 		          var groupHeader = 'N';
-
-			    	 if(index == 0 ){
-				    
+			      var popupAreaHtml = '';
+			      if(index == 0 ){				    
 			    		 var createFrontArea ={};  
 			    			createFrontArea["tm1st"] = that.tm1st;
 			    			createFrontArea["tm2h"]  = that.tm2h;
@@ -432,13 +434,31 @@ var momWidget = {
 			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',".front_main");
 			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
 			    	 }
+			    	  else if(index == 10 || index == 20){				    
+			    		 var createFrontArea ={};  
+			    			createFrontArea["tm1st"] = that.tm1st;
+			    			createFrontArea["tm2h"]  = that.tm2h;
+			    			createFrontArea["tm2v"]  = that.tm2v;  
+			    			createFrontArea["tm3vh"]  = that.tm3vh; 
+			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
+			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
+			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',".popup_main");
+			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
+			    	 }
 			    		    				    	
 				     
 			    	 if(that.popupProperty[index].length > 0){	
-					var popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn,remarkInline);		    		 
+					      popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn,remarkInline);		    		 
 			    		  $('body').append(popupAreaHtml);
-			    	 }   	
-
+			    	 }  
+			    		
+                     for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+						if(that.buttonProperty[index][i]['popupGridId'] != undefined && that.buttonProperty[index][i]['popupGridId'] != '' && that.buttonProperty[index][i]['popupGridId'] != 'NONE'){
+							 popupAreaHtml = that.createPopup.gridPop(index+1,popupColNum,popupRowNum,that.gridExtraProperty[index]['popupTitle']);
+								    		 
+			    		    $('body').append(popupAreaHtml);
+						}
+					 }
 					 $('#contentArea'+(index+1)).append(gridAreaHtml); 
 				            
 			        // $('#contentArea'+(index+1)).append(gridAreaHtml); 	
@@ -807,8 +827,31 @@ var momWidget = {
 		    }
 		    else{//페이징 미사용
 				if(that.gridExtraProperty[index]['initSearch']=='Y'){
-		    	 that.findBtnClicked(index, {}, true, 'INIT',momWidget.pageProperty[0]['programId'],your);
-		    }
+					if(index>0 && index%10 == 0){
+						  let totalParam = [];
+						  let queryId = that.pageProperty[index]['menuId'];
+						  let callInitResult = that.checkActionCallInit(index, 'R',  totalParam, 'CELLCLICK', your);     	
+			  			  if(callInitResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			 			 }
+			 	    totalParam = callInitResult['param'];
+				    mom_ajax('R', 'DG.'+queryId, totalParam, function(result1, data1) {
+					if(result1 != 'SUCCESS') {
+						    	  momWidget.splashHide();
+							      return;							     
+					}
+						 AUIGrid.setGridData(that.grid[index], data1); 
+						   						   	
+					}, undefined, undefined, that, false);
+						
+					}
+					else{
+						that.findBtnClicked(index, {}, true, 'INIT',momWidget.pageProperty[0]['programId'],your);
+					}
+		    	    
+		        }
 			}
 		  
 		    
@@ -2108,7 +2151,8 @@ var momWidget = {
 		
 			
 		gridPop : function(index,colNum,rowNum,popupTitle) {
-			var topHtml =	'<div id="gridPop'+index+'" gridPopIndex="'+(index+1)+'" class="modal gridPop-C'+colNum+'-R'+rowNum+'">'
+			let gridPopIndex = ($('.gridPop').length +1)*10 +1;
+			var topHtml =	'<div id="gridPop'+gridPopIndex+'" gridPopIndex="'+(index+1)+'" class="modal grid-pop gridPop-C'+colNum+'-R'+rowNum+'">'
 	        +    '<div class="panelheader-gridPop">' 
 	        +     '<div class="modal-header-title-gridPop">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -3088,7 +3132,7 @@ var momWidget = {
 					let activeLeft = offset.left;	
 				// activeTop = e.orgEvent.currentTarget.offsetTop;//
 				 //activeLeft = e.orgEvent.currentTarget.offsetLeft;
-  	            var dropdownGridId =10;
+  	            var dropdownGridId =90;
 	            let dropdownGridQueryId = that.columnProperty[index][dropDownGridIndex]['dropdownId'];
 			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
 		         if(result1 != 'SUCCESS' || data1.length == 0) {
@@ -3860,28 +3904,28 @@ var momWidget = {
 	// 등록버튼 이벤트 핸들러
 	setBtnEvent: function(index, your) {
 			var that = momWidget;
-			for(let i=0,max=that.buttonProperty[index]; i<=max;i++){ //커스텀 버튼 이벤트 핸들러 추가
-				let customSeq = 1;
+			for(let i=0,max=that.buttonProperty[index].length; i<max;i++){ //커스텀 버튼 이벤트 핸들러 추가
+				
 				if(that.buttonProperty[index].length==0){
 					break;
 				}
-				if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn') && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']!='NONE'){				   	
-				   	 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'] + (index+1) + '-' + customSeq, function(e) {		//커스텀 그리드랍업			     
+				if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']!='NONE'){				   	
+				   	 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {		//커스텀 그리드랍업			     
 					     that.setCustomGridPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your);				
 			         });	
-					customSeq++;
+					
 				}
-				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn') && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']=='NONE'){
-					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'] + (index+1) + '-' + customSeq, function(e) {	 //커스텀 랍업				     
+				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']=='NONE'){
+					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	 //커스텀 랍업				     
 					     that.setCustomPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your);				
 			         });	
-					customSeq++;
+					
 				}
-				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn') && that.buttonProperty[index][i]['popupGridId']==''){
-					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'] + (index+1) + '-' + customSeq, function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
+				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']==''){
+					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
 					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your);				
 			         });	
-					customSeq++;
+					
 				}
 			}
 			var findBtnId        = 'findBtn'+(index + 1);			
@@ -6534,45 +6578,14 @@ var momWidget = {
 			},
 			setCustomGridPopBtn: function(index,popupIndex,btnId,your) {
 				let that = momWidget;
-				let queryId = 'DG.'+that.buttonProperty[index][0]['popupGridId'];
-				mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
-		         if(result1 != 'SUCCESS' || data1.length == 0) {
-		    	  momWidget.splashHide();
-			      return;							     
-		        }
-		          let gridWidget   = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty']; //그리드 속성
-		          let columnWidget = data1[0]['columnProperty'] == undefined ? '[]':data1[0]['columnProperty']; // 컬럼속성
-		          let searchWidget = data1[0]['searchProperty'] == undefined ? '[]':data1[0]['searchProperty']; // 컬럼속성
-		          gridWidget       = gridWidget.substr(1,  gridProp.length-2);  
-			      columnProp       = columnProp.substr(1,  columnProp.length-2);
-			      searchProp       = searchProp.substr(1,  searchProp.length-2);
-		          let gridProperty   =  JSON.parse(gridWidget);
-		          let columnProperty =  JSON.parse(columnWidget);
-		          let searchProperty =  JSON.parse(searchWidget);
-		          let gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
-		          let gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};	
-			          for(let i=0,max=gridExceptList.length; i<max;i++){
-				    	   gridExtraProp[gridExceptList[i]] = gridProperty[gridExceptList[i]];			    	  
-				    	   delete gridProperty[gridExceptList[i]];
-				      }
-			      let gridExtraProperty = gridExtraProp;
-			      let popupColNum = gridExtraProperty['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty['popupColNum']);
-			      let popupRowNum = that.gridExtraProperty['popupRowNum'] == undefined ? 3:Number(gridExtraProperty['popupRowNum']);
-			      let popupHtml = that.createPopup.gridPop(1,popupColNum,popupRowNum,'popup');
+				let queryId = that.buttonProperty[index][0]['popupGridId'];
+				
 			   
-                  let menuId = that.pageProperty[index]['programId'];
-                    var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
-                    if(isShow == 'block'){
-	                
-	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
-					 return;
-				}	
-			   
-			    $('body').append(popupHtml);
+			  
 		        $('#' +'gridPop'+popupIndex).momModal('show');
 			      
 		        
-		        }, undefined, undefined, this, false);
+		      
 		        	
 				
 		           

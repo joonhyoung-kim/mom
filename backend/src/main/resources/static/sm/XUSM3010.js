@@ -10,6 +10,6 @@ var XUSM3010 = {
 };
 
 $(document).ready(function(event){	
-	momWidget.init(1, menuId, XUSM3010);
+	momWidget.init(1, menuId, XUSM3010);	
 	XUSM3010.init();
 });
