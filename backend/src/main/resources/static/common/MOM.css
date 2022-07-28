@@ -242,6 +242,36 @@
 .searchRowBox.h03{
     height:30%;
 }
+.grid-box11-h01{
+	/* height: 63rem; */
+	/* height: 95.5%; */
+     width:calc(100% - 0.3rem); 
+  /*    height:calc(100% - 6rem);   */
+     height:82%;
+	/* position: absolute;  */
+	position:relative;
+	margin-top: 0.6rem;
+}
+.grid-box21-h01{
+	/* height: 63rem; */
+	/* height: 95.5%; */
+     width:calc(100% - 0.3rem); 
+  /*    height:calc(100% - 6rem);   */
+     height:82%;
+	/* position: absolute;  */
+	position:relative;
+	margin-top: 0.6rem;
+}
+.grid-box31-h01{
+	/* height: 63rem; */
+	/* height: 95.5%; */
+     width:calc(100% - 0.3rem); 
+  /*    height:calc(100% - 6rem);   */
+     height:82%;
+	/* position: absolute;  */
+	position:relative;
+	margin-top: 0.6rem;
+}
 .grid-box1{
 	/* height: 63rem; */
 	/* height: 95.5%; */
@@ -428,6 +458,30 @@
     width:100%;
 	position: absolute; 
 }
+.gridTab11 {
+    border-bottom: 1px solid #bdbdbd;
+    background-color: #ececf2; 
+    height: 2.5rem; 
+   /*  height: 3.5%; */
+    padding-top: 0.5rem; 
+    border-bottom: none;   
+}
+.gridTab21 {
+    border-bottom: 1px solid #bdbdbd;
+    background-color: #ececf2; 
+    height: 2.5rem; 
+   /*  height: 3.5%; */
+    padding-top: 0.5rem; 
+    border-bottom: none;   
+}
+.gridTab31 {
+    border-bottom: 1px solid #bdbdbd;
+    background-color: #ececf2; 
+    height: 2.5rem; 
+   /*  height: 3.5%; */
+    padding-top: 0.5rem; 
+    border-bottom: none;   
+}
 .gridTab1 {
     border-bottom: 1px solid #bdbdbd;
     background-color: #ececf2; 
@@ -483,6 +537,24 @@
 	background: #f0f0f5;
     height:93.6%;
     border: none;
+}
+.gridArea-tm1st-h01-011{
+	background: #f0f0f5;
+    height: 98%;
+    border: none;
+   /*  width: 160.8rem; */
+}
+.gridArea-tm1st-h01-021{
+	background: #f0f0f5;
+    height: 98%;
+    border: none;
+   /*  width: 160.8rem; */
+}
+.gridArea-tm1st-h01-031{
+	background: #f0f0f5;
+    height: 98%;
+    border: none;
+   /*  width: 160.8rem; */
 }
 .gridArea-tm1st-h01-01{
 	background: #f0f0f5;
@@ -1371,8 +1443,20 @@ border-color: #d8dce3 !important;
 .footer-pop-btn-area {
     float: right;
     margin-top: 0.5rem;
+    z-index: 999999;
 }
-
+.gridpop-panelfooter {
+	height: 4.1rem;
+	margin-top: -0.1rem;
+    text-align: center;
+    position: relative;
+    top: 0rem;
+    border-top: 1px solid rgb(188, 189, 189);
+    padding-top: 0.1rem;
+    margin-left: 0.4rem;
+    width: 99.2%;
+    border: 1px solid #bdbdbd;
+}
 .searcharea-pop {
 	padding-left: 1.8rem;
 	border: none;
@@ -1444,25 +1528,54 @@ border-color: #d8dce3 !important;
 	background:  white;
 }
 .searcharea-gridPop-C6-R4 {
-	padding-left: 1.8rem;
-	border: none;
-	padding-top: 0.3rem;
-	padding-bottom: 15px;
-	background-color: white;
+    padding-left: 0.7rem;
+    border: none;
+    padding-top: rem;
+    /* padding-bottom: 15px; */
     width: 100%;
-    height: 23.6rem !important;
-    margin-left: 0.2rem;
+    margin-left: -0.3rem;
     position: relative;
-	margin-bottom: 8px;
-	background-color: #f8f9fa;
-	background-image: none;
-	background-position: left top;
-	background-size: auto;
-	background-repeat: repeat;
-	background-attachment: scroll;
-	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
+    /* margin-bottom: 8px; */
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    height: 23.6rem !important;
 }
-
+.gridPop-XUSM8040 {
+    z-index: 1050;
+    border-radius: 0.5rem;
+    float: none !important;
+    overflow: hidden !important;
+    width: 125rem !important;
+    position: relative !important;
+    margin-left: 20rem !important;
+    margin-top: -72rem !important;
+    background: white !important;
+    height: 32rem !important;
+    border: 1px solid rgb(77, 77, 78) !important;
+}
+.gridPop-searcharea-XUSM8040 {
+    padding-left: 0.7rem;
+    border: none;
+    padding-top: rem;
+    /* padding-bottom: 15px; */
+    width: 100%;
+    margin-left: -0.3rem;
+    position: relative;
+    /* margin-bottom: 8px; */
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    height: 24rem !important;
+}
 .searcharea-pop.R1 {
     height: 38rem;
 }

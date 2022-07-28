@@ -100,7 +100,9 @@ ORDER BY A.UNIT_CATEGORY_NM
        , A.CONVERSION_UNIT_NM
  </select>
  <select id="get_XUSM8040" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-	  SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG
+	<!--   SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG -->
+	  SELECT MC.CODE AS LANG_CD2
+	        ,MC.CODE_NM AS LANG_NM
 	  FROM   MOM_CODE MC
 	  WHERE  MC.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR} 
 	  AND    MC.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
