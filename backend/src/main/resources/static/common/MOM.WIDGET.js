@@ -353,7 +353,7 @@ var momWidget = {
 		    			  remarkYn    = 'Y';
 		    		  }
 		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){			  
-			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-pop searchSelectField"></select>';
+			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
 			    	  }
 			    	  else {
 			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
@@ -1278,7 +1278,7 @@ var momWidget = {
                  calendar.setFullYear(year, month, date);
 				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput({ width: '115px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
 				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput('setDate', calendar);
-			
+			    today = new Date();
 				
 				
 				if(defaultValue2 == 'TODAY'){
@@ -1710,19 +1710,16 @@ var momWidget = {
 	    	/* midHtml +=   '<a id='+ btnItem[i].buttonId + ' class = "btntool gridTab" href="#">'
                +     '<div class ="w-icon '+btnItem[i].buttonIcon+'"></div>'
                +     '<div multi-lang="" class="textblock gridRightTab">'+btnItem[i].buttonNm+'</div>'
-        	   +     '</a>';		*/
-        	   if(btnItem[i]['popupGridId']!='' && btnItem[i]['popupGridId']!=undefined){
+        	   +     '</a>';		*/        	  
 					if(btnItem[i].buttonId.indexOf('customBtn')>=0){
 						 midHtml += '<button type="button" class="custom-btn btn btn-info" id='+ btnItem[i].buttonId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
 					}
 					else{
-						 midHtml += '<button type="button" class="custom-btn btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+						 midHtml += '<button type="button" class="btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
 					}
 	               
-               }
-               else{
-	                   midHtml += '<button type="button" class="btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
-               }
+               
+           
         	  
 	    }
 	    botHtml  = '</div>';
@@ -2144,7 +2141,7 @@ var momWidget = {
 	        +    '<div class="panelheader-gridPop">' 
 	        +     '<div class="modal-header-title-gridPop">'
 	        +       '<div class ="fa fa-edit"></div>'
-	        +       '<div multi-lang="" id="popupTitle'+index+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
+	        +       '<div id="popupTitle'+gridPopIndex+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
 	        +     '</div>'
 	        +     '<div class = "modal-header-xbtn">'
 	        +     '<a href="#" class="bntpopclose"></a>'
@@ -3208,7 +3205,7 @@ var momWidget = {
 				     $('#dropDownGridPop'+(dropdownGridId+1)).css('z-index','9999');
 				     $('#dropDownGridPop'+(dropdownGridId+1)).css('display','block');
 				     
-				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+206, left : activeLeft+67});
+				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+20, left : activeLeft+0});
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
 				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  item, 'CELLCLICK', your);     	
@@ -3276,8 +3273,8 @@ var momWidget = {
 			// AUIGrid.setAllCheckedRows(e.pid, false);
 			const rowIdField = AUIGrid.getProp(e['pid'], 'rowIdField'); 
 			const rowId = e['item'][rowIdField];
-			
-			if(selectionMode =='singleCell' || selectionMode == 'singleRow'){
+			let selectionMode = AUIGrid.getProp(that.grid[index], "selectionMode");
+			/*if(selectionMode =='singleCell' || selectionMode == 'singleRow'){
 				if(AUIGrid.isCheckedRowById(e.pid, rowId)) {
 					AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
 				} else {								
@@ -3293,7 +3290,7 @@ var momWidget = {
 			}
 			else{
 				
-			}
+			}*/
 			
 		});	
 		AUIGrid.bind(that.grid[index], "dropEnd", function(event ) {
@@ -3889,6 +3886,12 @@ var momWidget = {
     				
    			
 			},
+	wait: function(sec) {
+	    let start = Date.now(), now = start;
+	    while (now - start < sec * 1000) {
+	        now = Date.now();
+	    }
+	},
 	// 등록버튼 이벤트 핸들러
 	setBtnEvent: function(index, your) {
 			var that = momWidget;
@@ -3936,6 +3939,7 @@ var momWidget = {
 			var savePopBtnId     = 'saveBtn'+'DP'+(index + 1);
 			var dropdownGridId   = 'saveBtn'+'DG'+(index + 1);
 			var delBtnId         = 'delBtn'+(index + 1);
+			let delGridBtnId     = 'delGridBtn'+(index + 1);;
 			var addBtnId         = 'addBtn'+(index + 1);
 			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
 			var excelFile          = 'excelFile'+(index + 1);  
@@ -3967,7 +3971,8 @@ var momWidget = {
 			$(document).on('click', '#'+gridPopCancelBtnId + (index + 1) , function(e) {
 				$('.' + 'grid-pop').momModal('hide');	
 			});
-			$(document).on('click', '#'+gridPopSaveBtnId + (index + 1) , function(e) {	
+			$(document).on('click', '#'+gridPopSaveBtnId + (index + 1) , function(e) {
+				that.wait(0.5);
 				let customPopId = e.target.parentElement.parentElement.parentElement.id; //커스텀 팝업 id
 				let buttonId    = customPopId.split('customBtn')[1]; //커스텀 버튼 id
 				let gridIndex   = Number($('#'+customPopId).attr('gridindex'))-1;			
@@ -3976,7 +3981,7 @@ var momWidget = {
 				let callInitResult = [];
 				let actionType = 'C';
 				let tmpYn = 'N';
-				let queryId = that.pageProperty[index]['programId'] + '.custom'+buttonId+'-'+(gridIndex+1);
+				let queryId = that.pageProperty[index]['programId'] + '.customBtn'+buttonId+'-'+(gridIndex+1);
 			   	if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[gridIndex]);
 					if (param.length == 0){												
@@ -3992,7 +3997,7 @@ var momWidget = {
 				        }
 				}
 				
-				callInitResult = that.checkActionCallInit(index, actionType, param, 'customBtn'+buttonId, your);
+				callInitResult = that.checkActionCallInit(gridIndex, actionType, param, 'saveBtnCP', your);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -4057,7 +4062,7 @@ var momWidget = {
 							  momWidget.splashHide();
 				              return;
 			            }    				                         							  						
-			        	callBackResult = that.checkActionCallBack(index, 'GS', param, 'customBtn'+buttonId, your);
+			        	callBackResult = that.checkActionCallBack(gridIndex, actionType, param, 'saveBtnCP', your);
 						if(callBackResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -4065,7 +4070,7 @@ var momWidget = {
 			    		}
 			
 						 
-			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['programId'],your);
+			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtnCP',momWidget.pageProperty[index]['programId'],your);
 			        	  
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -4411,7 +4416,7 @@ var momWidget = {
 			
 			// e.preventDefault();
 		});
-			$(document).on('click','.grid-pop', function(e) {	
+			$(document).on('click','.grid-popup', function(e) {	
 				let columnProp = [];					
 				let activeId =  e.target.parentElement.parentElement.parentElement.parentElement.id.split('DP');
 				let targetId = 	activeId[0]; //선택자 
@@ -5023,23 +5028,42 @@ var momWidget = {
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
 			$(document).on('click', '#' + addBtnId, function() {	
-				//var columnLayout = AUIGrid.getColumnLayout(that.grid[index])
-				let columnProp = that.columnProperty[index];
+				 let param = {targetIndex:index};
+				 let targetIndex = 0;
+				 let targetItem = that.getCheckedRowItems(that.grid[index],true)[0];
+				 callInitResult = that.checkActionCallInit(index, 'GA', param, 'addBtn', your);
+				 if(callInitResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    }
+			    				     
+				 param = callInitResult['param'];
+				 targetIndex = param.targetIndex;
+				let columnProp = that.columnProperty[targetIndex];
 				let item = {};
 				let columnEdit =false;
-				 for(var i=0,max1=columnProp.length; i<max1;i++){
+				for(let i=0,max=columnProp.length;i<max;i++){					
 					 if(columnProp[i]['columnShow'] =='Y'){
-						 item[columnProp[i]['columnId']] ='';
+							if(targetItem[columnProp[i]['columnId']] != undefined && targetItem[columnProp[i]['columnId']] != ''){
+								 item[columnProp[i]['columnId']] = targetItem[columnProp[i]['columnId']];
+							}
+							else{
+								 item[columnProp[i]['columnId']] = '';
+							}
+							
+						
+						
 					 }
 				}
 				item.addItem = 'Y';
-				AUIGrid.addRow(that.grid[index], item, "first");
+				AUIGrid.addRow(that.grid[targetIndex], item, "first");
 				// row Styling 함수를 다른 함수로 변경
 		
 				//let colStyle = "aui-grid-default-column-left";			
-			
-				for(let i=0;i<columnProp.length;i++){
-				    AUIGrid.setColumnPropByDataField(widget.grid[index], columnProp[i]['columnId'], { 		    	
+			 
+				for(let i=0,max=columnProp.length;i<max;i++){
+				    AUIGrid.setColumnPropByDataField(widget.grid[targetIndex], columnProp[i]['columnId'], { 		    	
 						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						  if(item.addItem == 'Y' && columnProp[i]['columnCreate'] =='Y'){
 							   
@@ -5053,14 +5077,15 @@ var momWidget = {
 						},
 					
 				   });
-			    let callBackResult 	= that.checkActionCallBack(index, 'GA', item, 'addBtn', your,[]);	
+			 
+	
+				}
+				let callBackResult 	= that.checkActionCallBack(index, 'GA', item, 'addBtn', your,[]);	
 				if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
 				      return;
 				}	
-	
-				}
 			});
 			
 			$(document).on('click', '#' + showLv1Btn, function(e) {	
@@ -6080,6 +6105,10 @@ var momWidget = {
 					
 				
 			});
+			$(document).on('click', '#' + delGridBtnId, function(e) {	
+				that.getCheckedRowItems(that.grid[index],true);
+				AUIGrid.removeCheckedRows(that.grid[index]);
+			});
 			$(document).on('click', '#' + delBtnId, function(e) {	
 				var param = [];
 				var callBackParam = {};
@@ -6669,8 +6698,101 @@ var momWidget = {
 				
 			
 			},
-			setCustomBtn: function(index,popupIndex,btnId,your) {
+			setCustomBtn: function(index,btnIndex,btnId,your) {
 				let that = momWidget;
+				let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
+				let checkedItems = [];
+				let param = [];
+				let queryId = that.pageProperty[index]['programId']+'.customBtn'+btnIndex;
+				let actionType = 'R';	
+				let tmpYn = 'N';
+				var btnIndex = btnIndex;
+				
+				if(isCheckCol == true){
+					    param = that.getCheckedRowItems(that.grid[index],true);
+					    if(param.length==0){
+						     return;
+					    }
+					   
+														
+				}
+				else{					
+					    checkedItems = AUIGrid.getGridData(that.grid[index]);
+					    if(checkedItems.length==0){
+						momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+						return;
+					    }
+					    for(var i=0,max=checkedItems.length;i<max;i++){	
+						  param.push(checkedItems[i]); 														
+				        }
+				}
+		 			for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
+							 if(that.buttonProperty[index][i]['buttonId']=='customBtn'+btnIndex){
+								actionType = that.buttonProperty[index][i]['eventType'];
+								tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+									
+							}
+					}
+				 let callInitResult = that.checkActionCallInit(index, actionType, param, btnId, your);
+				if(callInitResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    }
+			    	
+			     
+				 param = callInitResult['param'];
+				
+				
+		       if(tmpYn =='Y'){
+			        mom_ajax('D', queryId,[], function(result1, data1) {
+			            if(result1!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
+							  momWidget.splashHide();
+				              return;
+			            }    	
+			             mom_ajax('C', queryId,param, function(result2, data2) {                                                                                                      
+				 		  if(result2!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
+							  momWidget.splashHide();
+				              return;
+			              }    	
+			                 mom_ajax('P', queryId,[], function(result3, data3) {
+							    if(data3[0]['p_err_code']=='E') {
+						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
+										  momWidget.splashHide();
+							              return;
+						         }    	
+			                 }, undefined, undefined, this, false,undefined,actionType); 
+			                    
+						 }, undefined, undefined, this, false);    
+						                      							  						
+			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'procBtn', your);
+						if(callBackResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    		}
+									 
+			        	  momWidget.findBtnClicked(index, {}, true, 'procBtn',momWidget.pageProperty[index]['programId'],your);			        	  
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, undefined, this, false);
+			      
+			   }
+			   else{
+				             mom_ajax(actionType, queryId,param, function(result1, data1) {
+								  if(result1!='SUCCESS') {
+							            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
+											  momWidget.splashHide();
+								              return;
+							      } 
+			                 }, undefined, undefined, this, false);    
+			  } 
+				
+				  
+				
 				
 		           
 			},
@@ -6679,14 +6801,28 @@ var momWidget = {
 				$('#' +'customPop'+popupIndex).momModal('show');
 		           
 			},
-			setCustomGridPopBtn: function(index,btnIndex,btnId,your) {
+			setCustomGridPopBtn: function(index,btnIndex,btnId,your) {				
 				let that = momWidget;	
+				//that.wait(0.5);
 				let totalParam = {};
 				let gridPopIndex = $('#'+'gridPop-'+btnId).attr('gridIndex') == undefined ? 10:Number($('#'+'gridPop-'+btnId).attr('gridIndex'));
+				let actionType = 'R';
+				let popupTitle = '';
 				let queryId = that.pageProperty[index]['menuId'];
 						  for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 							 if(that.buttonProperty[index][i]['buttonId']=='customBtn'+btnIndex){
 								queryId = that.buttonProperty[index][i]['popupGridId'];
+								actionType = that.buttonProperty[index][i]['eventType'];
+								if(actionType =='C'){
+									$('#popupTitle'+gridPopIndex).append('('+multiLang.transText('MESSAGE','MSG00039')+')');
+								}
+								else if(actionType =='U'){
+									$('#popupTitle'+gridPopIndex).append('('+multiLang.transText('MESSAGE','MSG00040')+')');
+								}
+								else if(actionType =='CP'){
+									$('#popupTitle'+gridPopIndex).append('('+multiLang.transText('MESSAGE','MSG00041')+')');
+								}
+									
 							}
 						  }
 						  
@@ -8754,13 +8890,13 @@ var momWidget = {
 		else if(action == 'R' && your.searchCallInit != undefined) {
 			 your.searchCallInit(index,your,action,btnId,param,result);	
 		}
-		else if(action == 'GS' && your.saveCallInit != undefined && btnId=='saveBtnDP') {
+		else if(action == 'GS' && your.saveCallInit != undefined && (btnId=='saveBtn' || btnId=='saveBtnDP')) {
 				your.saveCallInit(index,your,action,btnId,param,result);			
 		} 
 		else if(action == 'GA' && your.addRowCallInit != undefined) {
 				your.addRowCallInit(index,your,action,btnId,param,result);			
 		} 
-		else if((action == 'C' || action == 'U' || action == 'P' || action == 'CP') && your.saveCallInit != undefined && (btnId=='saveBtnDP' || btnId.indexOf('customBtn')>=0)) {
+		else if((action == 'C' || action == 'U' || action == 'P' || action == 'CP') && your.saveCallInit != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
 			 your.saveCallInit(index,your,action,btnId,param,result);			
 	    } 
 		else if(action == 'D'  && your.delCallInit != undefined) {		
@@ -8800,13 +8936,13 @@ var momWidget = {
 		else if(action == 'R' && your.searchCallBack != undefined) {
 			your.searchCallBack(index,your,action,btnId,param,result,data);	
 		}
-		else if(action == 'GS' && your.saveCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+		else if(action == 'GS' && your.saveCallBack != undefined && (btnId=='saveBtn' || btnId=='saveBtnDP')) {
 				your.saveCallBack(index,your,action,btnId,param,result,data);				
 		} 
 		else if(action == 'GA' && your.addRowCallBack != undefined) {
 				your.addRowCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if((action == 'C' || action == 'U' || action == 'P'|| action == 'CP') && your.saveCallBack != undefined && (btnId=='saveBtnDP' || btnId.indexOf('customBtn')>=0)) {
+		else if((action == 'C' || action == 'U' || action == 'P'|| action == 'CP') && your.saveCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
 			your.saveCallBack(index,your,action,btnId,param,result,data);		
 	} 
 		else if(action == 'D'  && your.delCallBack != undefined) {		

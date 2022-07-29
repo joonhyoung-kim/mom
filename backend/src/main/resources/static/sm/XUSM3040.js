@@ -75,8 +75,8 @@ var VIEW= {
 	},
 
 	saveCallInit: function(index,your,action,btnId,param,result) {
-	     if(index ==0 && btnId =='customBtn1-1'){		           
-					    var gridItems = AUIGrid.getGridData(widget.grid[10]);
+	     if(index ==10 && btnId =='saveBtnCP'){		           
+					    var gridItems = AUIGrid.getGridData(widget.grid[index]);
 				        for(var i=0;i<gridItems.length;i++){
 					         gridItems[i]['msgType']     = $("#msgType2SP11").val();
 					         gridItems[i]['msgCd']       = $("#msgCd2SP11").val();					         
@@ -85,7 +85,26 @@ var VIEW= {
 			             result.param = gridItems;
         
 	    }
-
+	    else if(index ==20 && btnId =='saveBtnCP'){	
+		    var gridItems = AUIGrid.getGridData(widget.grid[index]);
+				        for(var i=0;i<gridItems.length;i++){
+					         gridItems[i]['msgType']     = $("#msgType2SP21").val();
+					         gridItems[i]['msgCd']       = $("#msgCd2SP21").val();					         
+					        
+					    }
+			             result.param = gridItems;
+        
+	    }
+	    else if(index ==30 && btnId =='saveBtnCP'){	
+		    var gridItems = AUIGrid.getGridData(widget.grid[index]);
+				        for(var i=0;i<gridItems.length;i++){
+					         gridItems[i]['msgType']     = $("#msgType2SP31").val();
+					         gridItems[i]['msgCd']       = $("#msgCd2SP31").val();					         
+					        
+					    }
+			             result.param = gridItems;
+        
+	    }
 	},
 	createCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='customBtn1-1'){	

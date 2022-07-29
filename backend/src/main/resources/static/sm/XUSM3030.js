@@ -1125,7 +1125,7 @@ var XUSM3030 = {
 	}, 
 	buttonGrid: function(queryId) {
 		var that = this;
-		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"procBtn","value":"프로시저호출"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"},{"code":"customBtn","value":"커스텀버튼"}];
+		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"delGridBtn","value":"삭제(그리드)"},{"code":"procBtn","value":"프로시저호출"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"},{"code":"customBtn","value":"커스텀버튼"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
 			  if(result != 'SUCCESS') {
