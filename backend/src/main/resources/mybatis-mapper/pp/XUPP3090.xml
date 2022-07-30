@@ -2,169 +2,131 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUPP3090">
 	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	  SELECT   MCD.COMPANY_CD
-		     , MCD.COMPANY_NM
-		     , MCD.DIVISION_CD
-		     , MCD.DIVISION_NM
-		     , MWC.WORK_GROUP_CD
-		     , MWG.WORK_GROUP_NM
-		     , MPO.WORK_CENTER_CD
-		     , MWC.WORK_CENTER_NM
-		     , MPO.ITEM_ID
-		     , MPO.WO_TYPE
-		     , MPO.MANUAL_YN  
-		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPO.COMPANY_CD, MPO.DIVISION_CD, 'PP0002', MPO.WO_TYPE, 'KR') FROM DUAL)  AS WO_TYPE_NM
+	SELECT     MWO.COMPANY_CD
+		     , MWO.DIVISION_CD
+		     , MWO.WORK_ORDER_ID   
+		     , MWO.WORK_ORDER_ID AS KEY_ID
+		     , MWO.WO_TYPE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0002', MWO.WO_TYPE, 'KR') FROM DUAL)  AS WO_TYPE_NM
+		     , MWO.ITEM_ID
 		     , MI.ITEM_NM
+		     , MI.ITEM_TYPE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM
 		     , MI.ITEM_SPEC
-		     , MPO.WR_STATE  AS STATE
-		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPO.COMPANY_CD, MPO.DIVISION_CD, 'PP0004', MPO.WR_STATE, 'KR') FROM DUAL)  AS STATE_NM
-		     , TO_CHAR(MPO.PLAN_DATE  ,'YYYY-MM-DD') AS PLAN_DATE
-		     , TO_CHAR(MPO.PLAN_START_TIME  ,'YYYY-MM-DD') AS PLAN_START_DATE
-		     , TO_CHAR(MPO.PLAN_END_TIME  ,'YYYY-MM-DD') AS PLAN_END_DATE
-		     , MPO.PLAN_QTY
-		     , MPO.CONFIRM_QTY
-		     , MPO.PRIORITY
-		     , MPO.ROUTING_ID
-		     , (SELECT MOM_COMMON_PKG.fn_get_routing_name(MPO.COMPANY_CD, MPO.DIVISION_CD, MPO.ROUTING_ID) FROM DUAL) AS ROUTING_NM
-		     , MPO.PRODUCT_ORDER_ID  AS WORK_ORDER_ID
-		     , MPO.PRODUCT_ORDER_ID AS KEY_ID
-		     , MPO.DEMAND_ID
-		     , MPO.OUTSOURCING_YN
-		     , MPO.BOR_ID
-		     , MPO.UPDATE_BY
-		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MPO.COMPANY_CD, MPO.DIVISION_CD, MPO.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
-		     , TO_CHAR(MPO.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-	 FROM    MOM_COM_DIV_V MCD
-	      ,  MOM_PRODUCT_ORDER MPO
-	      ,  MOM_ITEM MI
-	      ,  MOM_WORK_CENTER   MWC
-	      ,  MOM_WORK_GROUP    MWG
-	 WHERE   MCD.COMPANY_CD      = MPO.COMPANY_CD
-	 AND     MCD.DIVISION_CD     = MPO.DIVISION_CD
-	 AND     MPO.COMPANY_CD      = MI.COMPANY_CD
-	 AND     MPO.DIVISION_CD     = MI.DIVISION_CD
-	 AND     MPO.ITEM_ID         = MI.ITEM_ID
-	 AND     MPO.COMPANY_CD      = MWC.COMPANY_CD
-	 AND     MPO.DIVISION_CD     = MWC.DIVISION_CD
-	 AND     MPO.WORK_CENTER_CD  = MWC.WORK_CENTER_CD
-	 AND     MWC.COMPANY_CD      = MWG.COMPANY_CD
-	 AND     MWC.DIVISION_CD     = MWG.DIVISION_CD
-	 AND     MWC.WORK_GROUP_CD   = MWG.WORK_GROUP_CD   
-	 AND     MPO.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}
-	 AND     MPO.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}	
-	 AND     MPO.PLAN_START_TIME BETWEEN TO_DATE(#{planDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{planDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
-	<if test="itemIdNm != null and itemIdNm != ''">
-	AND (UPPER(MPO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
-	</if>
-	<if test="workOrderId != null and workOrderId != ''">
-	AND (UPPER(MPO.PRODUCT_ORDER_ID) LIKE '%' || UPPER(#{workOrderId, jdbcType=VARCHAR}) || '%')	  
-	</if>
-    <if test="workGroupCd != null and workGroupCd != ''">
-	AND MWC.WORK_GROUP_CD = #{workGroupCd, jdbcType=VARCHAR}
-	</if>	
-	<if test="workCenterCd != null and workCenterCd != ''">
-	AND MPO.WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
-	</if>	
-	<if test="state != null and state != ''">
-	AND MPO.WR_STATE IN (${state})
-	</if>
-	<if test="outsourcingYn != null and outsourcingYn != ''">
-	AND MPO.OUTSOURCING_YN =  #{outsourcingYn, jdbcType=VARCHAR}
-	</if>	
+		     , MWG.WORK_GROUP_CD
+		     , MWG.WORK_GROUP_NM
+		     , MWO.WORK_CENTER_CD
+		     , MWC.WORK_CENTER_NM
+		     , MWO.CONSUME_LOCATION_CD
+		     , (SELECT MOM_COMMON_PKG.fn_get_location_name(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.CONSUME_LOCATION_CD) FROM DUAL) AS CONSUME_LOCATION_NM  
+		     , MWO.GOOD_LOCATION_CD
+		     , (SELECT MOM_COMMON_PKG.fn_get_location_name(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.GOOD_LOCATION_CD) FROM DUAL) AS GOOD_LOCATION_NM
+		     , MWO.DEFECT_LOCATION_CD
+		     , (SELECT MOM_COMMON_PKG.fn_get_location_name(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.DEFECT_LOCATION_CD) FROM DUAL) AS DEFECT_LOCATION_NM
+		     , MWO.ROUTING_ID
+		     , (SELECT MOM_COMMON_PKG.FN_GET_ROUTING_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.ROUTING_ID) FROM DUAL) AS ROUTING_NM
+		     , MWO.WO_STATE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0003', MWO.WO_STATE, 'KR') FROM DUAL)  AS WO_STATE_NM
+		     , MWO.WO_QTY
+		     , MWO.GOOD_QTY
+		     , MWO.DEFECT_QTY 
+		     , MWO.CANCEL_QTY
+		     , MWO.WO_QTY + NVL(MWO.GOOD_QTY, 0) + NVL(MWO.DEFECT_QTY, 0) + NVL(MWO.CANCEL_QTY,0) AS REMAIN_QTY
+		     , TO_CHAR(MWO.PLAN_DATE  ,'YYYY-MM-DD')      AS PLAN_DATE
+		     , TO_CHAR(MWO.WO_START_TIME  ,'YYYY-MM-DD')  AS WO_START_TIME
+		     , TO_CHAR(MWO.WO_END_TIME  ,'YYYY-MM-DD')    AS WO_END_TIME
+		     , MWO.PRIORITY
+		     , MWO.DEMAND_ID
+		     , MWO.PARENT_WO_ID
+		     , MWO.CLOSE_YN
+		     , MWO.OUTSOURCING_YN
+		     , MWO.MANUAL_YN
+		     , MWO.BOR_ID
+		     , MWO.REASON_CD
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0005', MWO.REASON_CD, 'KR') FROM DUAL)  AS REASON_NM
+		     , MWO.DESCRIPTION
+		     , MWO.UPDATE_BY
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, MWO.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+		     , TO_CHAR(MWO.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		FROM   MOM_WORK_ORDER MWO
+		     , MOM_ITEM MI
+		     , MOM_WORK_CENTER MWC
+		     , MOM_WORK_GROUP  MWG
+		WHERE  MWO.COMPANY_CD      = MI.COMPANY_CD
+		AND    MWO.DIVISION_CD     = MI.DIVISION_CD
+		AND    MWO.ITEM_ID         = MI.ITEM_ID  
+		AND    MWO.COMPANY_CD      = MWC.COMPANY_CD
+		AND    MWO.DIVISION_CD     = MWC.DIVISION_CD
+		AND    MWO.WORK_CENTER_CD  = MWC.WORK_CENTER_CD     
+		AND    MWC.COMPANY_CD      = MWG.COMPANY_CD
+		AND    MWC.DIVISION_CD     = MWG.DIVISION_CD
+		AND    MWC.WORK_GROUP_CD   = MWG.WORK_GROUP_CD  
+	    AND    MWO.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}
+	    AND    MWO.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}	
+	    AND    MWO.WO_START_TIME BETWEEN TO_DATE(#{woStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{woStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+	   <if test="itemIdNm != null and itemIdNm != ''">
+	    AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+	    </if>
+	    <if test="workOrderId != null and workOrderId != ''">
+	    AND (UPPER(MWO.WORK_ORDER_ID) LIKE '%' || UPPER(#{workOrderId, jdbcType=VARCHAR}) || '%')	  
+	    </if>
+        <if test="workGroupCd != null and workGroupCd != ''">
+	    AND MWG.WORK_GROUP_CD = #{workGroupCd, jdbcType=VARCHAR}
+	    </if>	
+	    <if test="workCenterCd != null and workCenterCd != ''">
+		AND MWC.WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
+		</if>	
+		<if test="woState != null and woState != ''">
+		AND MWO.WO_STATE IN (${woState})
+		</if>
+		<if test="outsourcingYn != null and outsourcingYn != ''">
+		AND MWO.OUTSOURCING_YN =  #{outsourcingYn, jdbcType=VARCHAR}
+		</if>	
+		<if test="woType != null and woType != ''">
+		AND MWO.WO_TYPE IN (${woType})
+		</if>
+		<if test="manualYn != null and manualYn != ''">
+		AND MWO.MANUAL_YN =  #{manualYn, jdbcType=VARCHAR}
+		</if>
 	
-ORDER BY MWG.WORK_GROUP_NM
-      , MWC.WORK_CENTER_NM
-      , MPO.PLAN_START_TIME
-      , MPO.PRIORITY
-      ,  MPO.ITEM_ID
-
+    ORDER BY    MWG.WORK_GROUP_NM
+		      , MWC.WORK_CENTER_NM
+		      , MWO.WO_START_TIME
+		      , MWO.PRIORITY
+		      , MWO.ITEM_ID
 	</select>
 	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	SELECT MBP.OPERATION_SEQ
-	     , MBP.OPERATION_ID
-	     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
-	     , MBP.WORK_STATION_CD
-	     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
-	     , MBP.INSPECTION_YN
-	     , MBP.FINAL_OPERATION_YN
-	     , MBP.MILESTONE
-	FROM   MOM_BOR_PATH MBP
-	WHERE  MBP.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR}
-	AND    MBP.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR}	 
-	AND    MBP.BOR_ID       =  #{borId, jdbcType=VARCHAR}	 
-ORDER BY MBP.OPERATION_SEQ
+		SELECT MWI.WORK_ORDER_ID
+	     , MWI.ITEM_ID
+	     , MI.ITEM_NM
+	     , MI.ITEM_SPEC
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWI.COMPANY_CD, MWI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM
+	     ,  MWI.REQUEST_LOCATION_CD  AS CONSUME_LOCATION_CD
+	     , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWI.COMPANY_CD, MWI.DIVISION_CD, MWI.REQUEST_LOCATION_CD) FROM DUAL) AS CONSUME_LOCATION_NM
+	     , (SELECT MOM_STOCK_PKG.FN_GET_ITEM_LOCATION_STOCK_QTY(MWI.COMPANY_CD, MWI.DIVISION_CD, MWI.ITEM_ID, MWI.REQUEST_LOCATION_CD) FROM DUAL) AS CURRENT_STOCK_QTY
+	     , MWI.ISSUE_REQUEST_QTY AS REQUEST_QTY
+	     , MWI.REQ_QTY
+	     , MWI.DEDUCT_QTY              AS CURRENT_DEDUCT_QTY    -- 차감된수량
+	     , ''                 AS DEDUCT_QTY          -- 차감 수량
+	     , MWI.DESCRIPTION
+	     , MWI.UPDATE_BY
+	     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWI.COMPANY_CD, MWI.DIVISION_CD, MWI.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+	     , TO_CHAR(MWI.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+	     , MWI.ISSUE_QTY
+	     , MWI.CANCEL_QTY
+	     , MWI.ISSUE_REQUEST_ID
+	     , MI.ITEM_TYPE
+	     , MWI.COMPANY_CD
+	     , MWI.DIVISION_CD
+	FROM   MOM_WO_ISSUE_REQUEST_LIST MWI
+	     , MOM_ITEM MI
+	WHERE  MWI.COMPANY_CD      = MI.COMPANY_CD
+	AND    MWI.DIVISION_CD     = MI.DIVISION_CD
+	AND    MWI.ITEM_ID         = MI.ITEM_ID  
+	AND    MWI.COMPANY_CD      =  #{companyCd, jdbcType=VARCHAR}
+	AND    MWI.DIVISION_CD     =  #{divisionCd, jdbcType=VARCHAR}
+	AND    MWI.WORK_ORDER_ID   =  #{workOrderId, jdbcType=VARCHAR} 
+	AND    MWI.DEDUCT_YN = 'M'
+	ORDER BY MI.ITEM_ID
 </select>
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
-    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-      UPDATE MOM_PRODUCT_ORDER
-      SET    WORK_CENTER_CD = #{item.workCenterCd, jdbcType=VARCHAR}
-           , ROUTING_ID = #{item.routingId, jdbcType=VARCHAR}       
-           , CONFIRM_QTY = #{item.confirmQty, jdbcType=NUMERIC}         
-           , PRIORITY = #{item.priority, jdbcType=NUMERIC}       
-           , BOR_ID = #{item.borId, jdbcType=VARCHAR}
-           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
-           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-      WHERE  1=1
-      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
-      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-      AND    PRODUCT_ORDER_ID = #{item.workOrderId, jdbcType=VARCHAR}
-    </foreach>
-  </update>
-  <insert id="create_procBtn1" parameterType="java.util.List">
-   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_PROC_WORK_ORDER (
-                  COMPANY_CD
-                , DIVISION_CD
-                , WORK_ORDER_ID
-                , WO_TYPE
-                , BOR_ID
-                , WO_QTY
-                , WO_START_TIME
-                , WO_END_TIME
-                , PRIORITY
-                , REASON_CD
-                , MANUAL_YN
-                , DESCRIPTION
-                , VAL_MSG
-                , MULTI_MSG
-                , CREATE_BY
-                , CREATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.workOrderId, jdbcType=VARCHAR}
-                , #{item.woType, jdbcType=VARCHAR}
-                , #{item.borId, jdbcType=VARCHAR}
-                , #{item.confirmQty, jdbcType=NUMERIC}
-                , TO_DATE(#{item.planStartDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , TO_DATE(#{item.planEndDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , #{item.priority, jdbcType=NUMERIC}
-                , #{item.reasonCd, jdbcType=VARCHAR}
-                , #{item.manualYn, jdbcType=VARCHAR}
-                , #{item.description, jdbcType=VARCHAR}
-                , #{item.valMsg, jdbcType=VARCHAR}
-                , #{item.multiMsg, jdbcType=VARCHAR}
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              )
-   </foreach>
-  </insert>
-   <delete id="remove_procBtn1" parameterType="java.util.List">
-      DELETE FROM MOM_PROC_WORK_ORDER
-      <where>
-       <foreach collection="list" item="item" open="" close="" separator="OR">
-        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
-           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
-        )
-       </foreach>
-      </where>
-   </delete> 
-   <select id="proc_procBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-           { CALL MOM_WO_PKG.sp_confirm_work_order(             #{p_err_code, jdbcType=VARCHAR, mode=OUT}
-					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
-					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}											  
-					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
-  </select>    
 </mapper>

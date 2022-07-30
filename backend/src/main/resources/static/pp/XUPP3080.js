@@ -10,33 +10,24 @@ var VIEW= {
 	},
 	event: function(e) {
 	
-	},
-	   cellClickCallInit: function(index,rowIndex,e,) {
-		if(index == 0){
-			let item = e.item;		
-            if(item.state =='C' && e.dataField=='workCenterCd'){
-	             widget.messageBox({type: 'warning', width: '400', height: '145', html: multiLang.transText('MESSAGE','MSG00046')});
-	             return 'FAIL';
-			}
-         
-		}
-	
 	},	
-	   cellClickCallBack: function(index,rowIndex,target,e) {
-		if(index == 0 && e.dataField != 'workCenterCd'){
-			 momWidget.findBtnClicked(1, {borId:e.item['borId']}, true, 'CELLCLICK',menuId,VIEW);
-		}
-		else if(index == 10){
-			var item = e.item;		
-            AUIGrid.setCellValue(widget.grid[0], rowIndex, "workCenterCd", item['workCenterCd']);
-            AUIGrid.setCellValue(widget.grid[0], rowIndex, "borId", item['borId']);
-            AUIGrid.setCellValue(widget.grid[0], rowIndex, "routingId", item['routingId']);
-           // $('#dropDownGridPop'+(index+1)).remove();
-			//momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080,[]);
-			 //$('#dropDownGridPop'+(index+1)).remove();
+	cellClickCallBack: function(index,rowIndex,target,e) {
+		if(index == 0){
+			 momWidget.findBtnClicked(1, {workOrderId:e.item['workOrderId']}, true, 'CELLCLICK',menuId,VIEW);
 		}
 	
-	}	
+	
+	},
+	procCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 1 || btnId == 'customBtn2-1'){
+			if(param[0].resultState = 'C'){
+				result.msg = '이미 취소된 데이터는 취소할수 없습니다.!';
+				result.result = 'FAIL';
+				return;
+			}
+	
+		}
+	},
 /*	searchCallInit: function(index,your,action,btnId,param,result) {
 		if(index==0 && btnId== "CELLCLICK"){
 			result.param = {itemId:that.paramTmp.authGroupCd};

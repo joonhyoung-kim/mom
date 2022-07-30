@@ -125,7 +125,7 @@ var VIEW= {
 	 
 
 	},
-	customCallInit: function(index,your,action,btnId,param,result) {
+	procCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 1 || index == 2){
 			var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
 			if(checkedItems == 0){

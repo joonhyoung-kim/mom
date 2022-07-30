@@ -3271,27 +3271,40 @@ var momWidget = {
 		AUIGrid.bind(that.grid[index], "rowCheckClick", function(e) {
 			
 			// AUIGrid.setAllCheckedRows(e.pid, false);
-			const rowIdField = AUIGrid.getProp(e['pid'], 'rowIdField'); 
+			const rowIdField = AUIGrid.getProp(e['pid'], 'rowIdField'); 			 
 			const rowId = e['item'][rowIdField];
-			let selectionMode = AUIGrid.getProp(that.grid[index], "selectionMode");
-			/*if(selectionMode =='singleCell' || selectionMode == 'singleRow'){
-				if(AUIGrid.isCheckedRowById(e.pid, rowId)) {
-					AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
-				} else {								
-					     AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-				}
-			}
-			else if(selectionMode =='multipleCells' || selectionMode == 'multipleRows'){
-					if(AUIGrid.isCheckedRowById(e.pid, rowId)) {
-						AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
-					} else {														
-						AUIGrid.addCheckedRowsByIds(e.pid, rowId);
+			let gridData = AUIGrid.getGridData(e['pid']);
+			let checkCount=0;
+			//let selectionMode = AUIGrid.getProp(that.grid[index], "selectionMode");
+			let checkMode = that.gridExtraProperty[index]['checkId'];
+			if(checkMode =='singleRows'){
+				for(let i=0,max=gridData.length; i<max;i++){
+					if(AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])){
+						checkCount ++;
 					}
+					
+					
+				}
+				if(checkCount>1){
+					AUIGrid.setAllCheckedRows(e.pid, false);
+					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					
+				}
+				else if(checkCount==1){
+					
+				}
+				else{
+					
+				}
+				
+			}
+			else if( checkMode == 'multipleRows'){
+				
 			}
 			else{
 				
-			}*/
-			
+			}
+	
 		});	
 		AUIGrid.bind(that.grid[index], "dropEnd", function(event ) {
 			var childColumn    = that.gridProperty[index][0]['treeIdField']
@@ -8881,8 +8894,8 @@ var momWidget = {
 		else if(action == 'CP' && your.copyCallInit != undefined) {
 			 your.copyCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(action == 'P' && your.customCallInit != undefined) {
-			 your.customCallInit(index,your,action,btnId,param,result);				 
+		else if(action == 'P' && your.procCallInit != undefined) {
+			 your.procCallInit(index,your,action,btnId,param,result);				 
 		}
 		else if(action == 'E' && your.excelCallInit != undefined) {
 			 your.excelCallInit(index,your,action,btnId,param,result);	
@@ -8927,8 +8940,8 @@ var momWidget = {
 		else if(action == 'CP' && your.copyCallBack != undefined) {
 			your.copyCallBack(index,your,action,btnId,param,result,data);	
 		}	
-		else if(action == 'P' && your.customCallBack != undefined) {
-			your.customCallBack(index,your,action,btnId,param,result,data);	
+		else if(action == 'P' && your.procCallBack != undefined) {
+			your.procCallBack(index,your,action,btnId,param,result,data);	
 		}	
 		else if(action == 'E' && your.excelCallBack != undefined) {
 			your.excelCallBack(index,your,action,btnId,param,result,data);	

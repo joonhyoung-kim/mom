@@ -117,8 +117,8 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.workOrderId, jdbcType=VARCHAR}
                 , #{item.workCenterCd, jdbcType=VARCHAR}
-                , TO_DATE(#{item.woStartTime, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , TO_DATE(#{item.woEndTime, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.woStartTime, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS')
+                , TO_DATE(#{item.woEndTime, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS')
                 , #{item.goodQty, jdbcType=NUMERIC}
                 , #{item.defectQty, jdbcType=NUMERIC}
                 , #{item.description, jdbcType=VARCHAR}
