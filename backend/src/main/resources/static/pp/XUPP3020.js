@@ -13,14 +13,16 @@ var VIEW= {
 	},
 	cellClickCallBack: function(index,rowIndex,target,e) {
 		var item = e.item;	
-		 if(index == 10){
+		 if(index == 100){
 			if(target=='itemId'){
 				$('#itemId'+'DP1').val(item['itemId']);
 				$('#borId'+'DP1').val(item['borId']);
+				$('#routingId'+'DP1').val(item['routingId']);
 			}
 			else if(target=='workCenterCd'){
 				$('#workCenterCd'+'DP1').val(item['workCenterCd']);
 				$('#borId'+'DP1').val(item['borId']);
+				$('#routingId'+'DP1').val(item['routingId']);
 			}
 			else{
 				
@@ -36,9 +38,8 @@ var VIEW= {
 	
 	},
 		searchCallInit: function(index,your,action,btnId,param,result) {		
-		if(index==10 &&  btnId == 'POPUPCLICK'){
-			param.itemId  = $('#itemId'+'DP1').val();
-	
+		if(index==100 &&  btnId == 'POPUPCLICK'){
+			result.param  = {itemId:$('#itemId'+'DP1').val()};
 		}
 		
 	},		

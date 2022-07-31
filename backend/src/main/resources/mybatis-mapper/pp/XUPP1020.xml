@@ -36,6 +36,9 @@
 		<if test="demandId != null and demandId != ''">
 		AND (UPPER(MD.DEMAND_ID) LIKE '%' || UPPER(#{demandId , jdbcType=VARCHAR}) || '%' )
 		</if>
+		<if test="itemIdNm != null and itemIdNm != ''">
+	    AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+	    </if>
 		ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MD.DUE_DATE, MD.ITEM_ID, MD.DEMAND_ID
 	</select>
 	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">

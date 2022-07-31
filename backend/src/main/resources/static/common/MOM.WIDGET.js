@@ -2161,7 +2161,7 @@ var momWidget = {
 			dropDownGridPop : function(index,colNum,rowNum,popupTitle,target,rowIndex){
 			var topHtml =	'<div rowIndex ="'+rowIndex+'" target="'+target+'" id="dropDownGridPop'+index+'" class="dropDownGrid modal gridPop-C'+colNum+'-R'+rowNum+'">'
 	        +    '<div class = "searcharea-gridPop-C'+colNum+'-R'+rowNum+'">'
-			+     '<div class="popup_main'+index+'">'
+			+     '<div class="popup_main" id="popup_main'+index+'">'
 			+      '<div class = "grid" id="grid'+index+'">'
 			+     '</div>';
 			botHtml  =     '</div>';
@@ -2332,7 +2332,24 @@ var momWidget = {
 		   // param = that.pageProperty[index]['param'];
 	        initParam = that.checkInitParam(index,param,your); //init param 설정시 세팅
 	        checkSearchParam = that.checkSearchParam(index,param,your); //search param 설정시 세팅
-	        
+	         if (!(that.checkSearchProperty(index, checkSearchParam, your))){ //파라미터 밸리데이션 체크
+        	that.splashHide();
+        	return;   
+        	}
+	       /* for(let i=0,max=that.searchProperty[index];i<max;i++){	
+		 	    if(that.searchProperty[index][i]['columnRequire']=='Y'){
+				   if(checkSearchParam[that.searchProperty[index][i]['searchId']]==undefined || checkSearchParam[that.searchProperty[index][i]['searchId']]==''){
+					   momWidget.messageBox({type:'danger', width:'400', height: '145', html: checkSearchParam[that.searchProperty[index][i]['searchNm']]+'은/는 필수항목입니다!'});
+					   momWidget.splashHide();				
+					   return;
+				   }
+				   else{
+					
+				}
+			   }
+		      
+		
+			}*/
 	         if(menuParam != undefined){
 			    totalParam = Object.assign(menuParam, checkSearchParam);   	 
 	            totalParam = Object.assign(totalParam,initParam,param);  
@@ -2345,10 +2362,10 @@ var momWidget = {
 	    if(that.checkInitMessage(index,your) == 'CLEAR'){ //init message 설정시 세팅
 	    	totalParam = {};	    	  
 	    }
-        if (!(that.checkSearchProperty(index, totalParam, your))){ //파라미터 밸리데이션 체크
+     /*   if (!(that.checkSearchProperty(index, totalParam, your))){ //파라미터 밸리데이션 체크
         	that.splashHide();
         	return;               	   
-        }
+        }*/
         else{ //검색조건 밸리데이션 성공시    
         callInitResult = that.checkActionCallInit(index, 'R',  totalParam, btnId, your);     	
         	  if(callInitResult['result'] != 'SUCCESS') { 
@@ -2639,7 +2656,7 @@ var momWidget = {
 			  return 	param;      
 		}
 		if(that.searchProperty[index]!=undefined){
-				for(var i = 0, max = that.searchProperty[index].length; i< max; i++){
+			 for(var i = 0, max = that.searchProperty[index].length; i< max; i++){
 			 searchId         = that.searchProperty[index][i]['searchId'];
 			 dropdownId       = that.searchProperty[index][i]['dropdownId'];
 			 headerDropdownId = that.searchProperty[index][i]['headerDropdownId'];
@@ -2694,10 +2711,19 @@ var momWidget = {
 		//param = (param == undefined || jQuery.isEmptyObject(param) || param == '' || param == null) == true ?   that.getSearchParam(index, '#searchArea'+(index+1),searchParam) : param;
         if(that.searchProperty[index] != undefined && jQuery.isEmptyObject(momWidget.searchProperty)==false){ 
             for(var i = 0, max = momWidget.searchProperty[index].length; i< max; i++){
-  		      if(that.searchProperty[index][i]['columnRequire'] == 'Y' && param[momWidget.searchProperty[index][i]['searchId']] != undefined && param[momWidget.searchProperty[index][i]['searchId']] ==''){
+	          if(that.searchProperty[index][i]['searchType']=='CP'){
+			      if(that.searchProperty[index][i]['columnRequire'] == 'Y' && (param[momWidget.searchProperty[index][i]['searchId']+'ED'] == undefined || param[momWidget.searchProperty[index][i]['searchId']+'ED'] == '' || param[momWidget.searchProperty[index][i]['searchId']+'SD'] == undefined || param[momWidget.searchProperty[index][i]['searchId']+'SD'] =='')){
   			      that.messageBox({type: 'warning', width: '400', height: '145', html: momWidget.searchProperty[index][i]['searchNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
   			      return false;
-  		      }										
+  		      	   }	
+			  }
+			  else{
+					if(that.searchProperty[index][i]['columnRequire'] == 'Y' && (param[momWidget.searchProperty[index][i]['searchId']] == undefined || param[momWidget.searchProperty[index][i]['searchId']] =='')){
+  			        that.messageBox({type: 'warning', width: '400', height: '145', html: momWidget.searchProperty[index][i]['searchNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+  			        return false;
+  		      }	
+			  }
+  										
   		  
           }
         }	
@@ -4453,7 +4479,7 @@ var momWidget = {
 				var fieldValue = $('#'+clickedElment).val();
 				var activeTop = $('#'+clickedElment).offset().top;
 				var activeLeft = $('#'+clickedElment).offset().left;
-			    var dropdownGridId =10;
+			    var dropdownGridId =100;
 			    let dropdownGridQueryId = that.popupProperty[index][dropDownGridIndex]['dropdownGridList'];
 				
 			
@@ -4546,7 +4572,7 @@ var momWidget = {
 				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+29, left : activeLeft});
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  [], 'POPUPCLICK', your);     	
+				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  {}, 'POPUPCLICK', your);     	
 				  if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -6719,26 +6745,50 @@ var momWidget = {
 				let queryId = that.pageProperty[index]['programId']+'.customBtn'+btnIndex;
 				let actionType = 'R';	
 				let tmpYn = 'N';
-				var btnIndex = btnIndex;
-				
-				if(isCheckCol == true){
+	
+				let targetParam = '';
+				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['buttonId']==btnId){
+						targetParam = that.buttonProperty[index][i]['checkType'];	
+						break;	
+					}
+				}
+				if(targetParam=='GRID_CHECK'){
+					    param = that.getCheckedRowItems(that.grid[index],true);
+					    if(param.length==0){
+						     return;
+					    }
+				}
+				else if(targetParam=='GRID_SELECT'){
+					
+				}
+				else if(targetParam=='GRID_ALL'){
+					    param = AUIGrid.getGridData(that.grid[index]);
+					    if(param.length==0){
+						momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+						return;
+					    }
+							 
+				}
+				else{
+						if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[index],true);
 					    if(param.length==0){
 						     return;
 					    }
 					   
 														
+						}
+						else{					
+							    param = AUIGrid.getGridData(that.grid[index]);
+							    if(param.length==0){
+								momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+								return;
+							    }
+							   
+						}
 				}
-				else{					
-					    checkedItems = AUIGrid.getGridData(that.grid[index]);
-					    if(checkedItems.length==0){
-						momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-						return;
-					    }
-					    for(var i=0,max=checkedItems.length;i<max;i++){	
-						  param.push(checkedItems[i]); 														
-				        }
-				}
+			
 		 			for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 							 if(that.buttonProperty[index][i]['buttonId']=='customBtn'+btnIndex){
 								actionType = that.buttonProperty[index][i]['eventType'];
@@ -6747,8 +6797,9 @@ var momWidget = {
 							}
 					}
 				 let callInitResult = that.checkActionCallInit(index, actionType, param, btnId, your);
-				if(callInitResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+				 if(callInitResult['result'] != 'SUCCESS') {
+					          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
 						      return;
 			    }
@@ -6795,12 +6846,16 @@ var momWidget = {
 			      
 			   }
 			   else{
-				             mom_ajax(actionType, queryId,param, function(result1, data1) {
+				      mom_ajax(actionType, queryId,param, function(result1, data1) {
 								  if(result1!='SUCCESS') {
 							            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
 											  momWidget.splashHide();
 								              return;
-							      } 
+							      }
+							          momWidget.findBtnClicked(index, {}, true, btnId,momWidget.pageProperty[index]['programId'],your);			        	  
+						        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+									  momWidget.splashHide();
+								      return;
 			                 }, undefined, undefined, this, false);    
 			  } 
 				
@@ -7268,7 +7323,7 @@ var momWidget = {
 				}
 				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {									
 					if(this.popupProperty[index][i]['updateEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS' ) { //콤보박스							
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS'|| this.popupProperty[index][i]['popupType'] == 'DG' ) { //콤보박스							
 							
 							 	 //$('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
@@ -7287,7 +7342,7 @@ var momWidget = {
 						}
 					} 
 					else{ // 수정가능
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'SS' ||this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'SS' ||this.popupProperty[index][i]['popupTpe'] == 'M' || this.popupProperty[index][i]['popupType'] == 'DG') { //콤보박스							
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: false});
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
 							 
@@ -7413,7 +7468,7 @@ var momWidget = {
 				}
 				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {						
 					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS'|| this.popupProperty[index][i]['popupType'] == 'DG') { //콤보박스							
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
 							 
@@ -7430,7 +7485,7 @@ var momWidget = {
 						}
 					} 
 					else{ // 수정가능
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
+						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M'|| this.popupProperty[index][i]['popupType'] == 'DG'|| this.popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: false});
 							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
 							 
