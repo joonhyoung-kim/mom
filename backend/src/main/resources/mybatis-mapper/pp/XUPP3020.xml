@@ -158,7 +158,7 @@ ORDER BY MWG.WORK_GROUP_NM
               )
    </foreach>
   </insert>
-   <delete id="remove_createBtn1" parameterType="java.util.List">
+   <delete id="remove_defaultInfo1" parameterType="java.util.List">
       DELETE FROM MOM_PROC_WORK_ORDER
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">

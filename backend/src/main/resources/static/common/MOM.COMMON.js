@@ -1420,6 +1420,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			
 		}
 		else{
+		
 			param.divisionCd  = siteInfo.divisionCd;
 			param.companyCd   = siteInfo.companyCd;
 			param.langCd      = siteInfo.languageCd;
@@ -1427,6 +1428,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			param.actionMode  = actionMode;
 			param.p_err_code  = '';
 			param.p_err_msg   = '';
+		
 		}
 
 	}
@@ -1467,6 +1469,8 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			param.actionMode  = actionMode;
 			param.p_err_code  = '';
 			param.p_err_msg   = '';
+			param = JSON.stringify([param]);
+			
 		}
 	
 			

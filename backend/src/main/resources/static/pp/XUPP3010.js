@@ -24,13 +24,25 @@ var VIEW= {
 	 
 
 	},
-	procCallInit: function(index,your,action,btnId,param,result) {
+	delCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 0 || btnId == 'customBtn1-1'){
-			if(param[0].state = 'C'){
+			if(param[0].state == 'C'){
 				result.msg = '이미 확정 처리된 데이터 입니다.!';
 				result.result = 'WARN';
 				return;
 			}
+		    else if(param[0].state == 'R'){
+			 param[0]['actionMode'] = 'WA';
+			 result.param = param;
+		    }
+	
+		}
+	},
+	procCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 0 || btnId == 'customBtn1-1'){				    
+			 param['actionMode'] = 'WA';
+			 result.param = param;
+		    
 	
 		}
 	},

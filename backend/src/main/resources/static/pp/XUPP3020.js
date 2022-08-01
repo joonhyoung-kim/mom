@@ -18,6 +18,7 @@ var VIEW= {
 				$('#itemId'+'DP1').val(item['itemId']);
 				$('#borId'+'DP1').val(item['borId']);
 				$('#routingId'+'DP1').val(item['routingId']);
+				
 			}
 			else if(target=='workCenterCd'){
 				$('#workCenterCd'+'DP1').val(item['workCenterCd']);
@@ -37,10 +38,23 @@ var VIEW= {
 		}
 	
 	},
-		searchCallInit: function(index,your,action,btnId,param,result) {		
-		if(index==100 &&  btnId == 'POPUPCLICK'){
-			result.param  = {itemId:$('#itemId'+'DP1').val()};
-		}
+		searchCallInit: function(index,your,action,btnId,param,result,event) {		
+			if(index==100 &&  btnId == 'POPUPCLICK' ){
+				if($('#defaultPop1').attr('btnid')=='editBtn1'){
+					if($('#itemId'+'DP1').val() != ''){
+						result.param  = {itemId:''};
+					}
+					else{
+						result.param  = {itemId:$('#itemId'+'DP1').val()};
+					}
+					 
+				}
+				else{
+					result.param  = {itemId:$('#itemId'+'DP1').val()};
+				}
+			   
+			
+		   }
 		
 	},		
 

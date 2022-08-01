@@ -19,7 +19,7 @@ var VIEW= {
 		});
 	},
 	  cellClickCallBack: function(index,rowIndex,target,e) {
-		if(index == 1){
+		if(index == 100){
 			var item = e.item;	
 			$('#itemId'+'DP1').val(item['itemId']);
 			$('#workCenterCd'+'DP1').val(item['workCenterCd']);

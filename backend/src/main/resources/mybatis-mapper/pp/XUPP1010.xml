@@ -58,4 +58,11 @@
 			</if>
 			ORDER BY MCD.COMPANY_CD,MCD.DIVISION_CD, MSO.SO_NO, MSO.SO_SEQ
 	</select>
+	<select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+           { CALL MOM_DEMAND_PKG.sp_demand_plan(    #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+		                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+		                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+		                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}											  
+		                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
+   </select>    
 </mapper>

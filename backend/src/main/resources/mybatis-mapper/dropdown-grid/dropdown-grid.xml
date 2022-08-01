@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.DG">	
+<!-- 품목기준검색 -->
 <select id="get_XUSM8010" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
 	SELECT MB.ITEM_ID 
 	     , MI.ITEM_NM
@@ -32,6 +33,7 @@
 	ORDER BY MB.PRIORITY,MI.ITEM_NM
 
  </select> 
+ <!-- 작업장기준검색 -->
  <select id="get_XUSM8020" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
 		SELECT MB.ITEM_ID 
 	     , MI.ITEM_NM
@@ -62,6 +64,7 @@
 	AND    MB.USE_YN       = 'Y'
 	ORDER BY MB.PRIORITY,MI.ITEM_NM
  </select> 
+ <!-- 품목별환산단위 -->
  <select id="get_XUSM8030" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT A.UNIT_CATEGORY_NM          
      , A.UNIT_NM                                                                          
@@ -99,6 +102,7 @@ ORDER BY A.UNIT_CATEGORY_NM
        , A.UNIT_NM
        , A.CONVERSION_UNIT_NM
  </select>
+ <!-- 다국어팝업 -->
  <select id="get_XUSM8040" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	<!--   SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG -->
 	  SELECT MC.CODE AS LANG_CD2

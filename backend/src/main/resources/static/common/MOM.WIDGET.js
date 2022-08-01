@@ -2367,7 +2367,7 @@ var momWidget = {
         	return;               	   
         }*/
         else{ //검색조건 밸리데이션 성공시    
-        callInitResult = that.checkActionCallInit(index, 'R',  totalParam, btnId, your);     	
+        callInitResult = that.checkActionCallInit(index, 'R',  totalParam, btnId, your,event);     	
         	  if(callInitResult['result'] != 'SUCCESS') { 
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -3234,7 +3234,7 @@ var momWidget = {
 				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+20, left : activeLeft+0});
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  item, 'CELLCLICK', your);     	
+				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  item, 'CELLCLICK', your,e);     	
 			  if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -3941,19 +3941,19 @@ var momWidget = {
 				}
 				if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']!='NONE'){				   	
 				   	 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {		//커스텀 그리드랍업			     
-					     that.setCustomGridPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your);				
+					     that.setCustomGridPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
 					
 				}
 				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']=='NONE'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	 //커스텀 랍업				     
-					     that.setCustomPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your);				
+					     that.setCustomPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
 					
 				}
 				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']==''){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
-					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your);				
+					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
 					
 				}
@@ -4036,7 +4036,7 @@ var momWidget = {
 				        }
 				}
 				
-				callInitResult = that.checkActionCallInit(gridIndex, actionType, param, 'saveBtnCP', your);
+				callInitResult = that.checkActionCallInit(gridIndex, actionType, param, 'saveBtnCP', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -4572,7 +4572,7 @@ var momWidget = {
 				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+29, left : activeLeft});
 				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  {}, 'POPUPCLICK', your);     	
+				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  {}, 'POPUPCLICK', your,e);     	
 				  if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -4864,7 +4864,7 @@ var momWidget = {
 					else{
 						//that.splashShow();
 					}
-				if(that.checkActionCallInit(index, 'GS', param, 'saveUpBtn', your)['result'] != 'SUCCESS') {
+				if(that.checkActionCallInit(index, 'GS', param, 'saveUpBtn', your,e)['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
 					  momWidget.splashHide();
 				      return;
@@ -5066,11 +5066,11 @@ var momWidget = {
 					$('#' +'excelUpPop'+(index+1)).momModal('show');
 					AUIGrid.resize('#excelUpGrid'+(index+1));
 			});
-			$(document).on('click', '#' + addBtnId, function() {	
+			$(document).on('click', '#' + addBtnId, function(e) {	
 				 let param = {targetIndex:index};
 				 let targetIndex = 0;
 				 let targetItem = that.getCheckedRowItems(that.grid[index],true)[0];
-				 callInitResult = that.checkActionCallInit(index, 'GA', param, 'addBtn', your);
+				 callInitResult = that.checkActionCallInit(index, 'GA', param, 'addBtn', your,e);
 				 if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -5156,7 +5156,7 @@ var momWidget = {
 				that.setPopup(index,actionType);	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
-				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your);
+				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -5211,7 +5211,7 @@ var momWidget = {
 				that.setPopup(index,"CP");	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
-			    callInitResult = that.checkActionCallInit(index, actionType, param, 'copyBtn', your);
+			    callInitResult = that.checkActionCallInit(index, actionType, param, 'copyBtn', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -5261,7 +5261,7 @@ var momWidget = {
 				    }
 				}
 		
-				callInitResult = that.checkActionCallInit(index, 'P', param, 'procBtn', your);
+				callInitResult = that.checkActionCallInit(index, 'P', param, 'procBtn', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -5364,7 +5364,7 @@ var momWidget = {
 				    }
 				}
 		
-				callInitResult = that.checkActionCallInit(index, 'GS', param, 'saveBtn', your);
+				callInitResult = that.checkActionCallInit(index, 'GS', param, 'saveBtn', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -5491,9 +5491,9 @@ var momWidget = {
 					else{
 						actionMode = 'C';
 					}
-					if(actionType=='P'){
+					/*if(actionType=='P'){
 							queryId = that.pageProperty[index]['programId']+'.'+buttonId;
-					}
+					}*/
 				
 				
 				
@@ -5538,7 +5538,7 @@ var momWidget = {
 		    
 		    
 		
-				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your);
+				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
 					if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -6122,7 +6122,7 @@ var momWidget = {
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
 		
-				callInitResult = that.checkActionCallInit(index, actionType, param, 'editBtn', your,param);
+				callInitResult = that.checkActionCallInit(index, actionType, param, 'editBtn', your,param,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -6156,7 +6156,7 @@ var momWidget = {
 					that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES10491']});					
 					return;
 				}
-				callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,param);
+				callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,param,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -6737,7 +6737,7 @@ var momWidget = {
 				
 			
 			},
-			setCustomBtn: function(index,btnIndex,btnId,your) {
+			setCustomBtn: function(index,btnIndex,btnId,your,e) {
 				let that = momWidget;
 				let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				let checkedItems = [];
@@ -6745,8 +6745,9 @@ var momWidget = {
 				let queryId = that.pageProperty[index]['programId']+'.customBtn'+btnIndex;
 				let actionType = 'R';	
 				let tmpYn = 'N';
-	
+			    let callInitResult = undefined;
 				let targetParam = '';
+				let actionMode='R';
 				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']==btnId){
 						targetParam = that.buttonProperty[index][i]['checkType'];	
@@ -6796,38 +6797,59 @@ var momWidget = {
 									
 							}
 					}
-				 let callInitResult = that.checkActionCallInit(index, actionType, param, btnId, your);
-				 if(callInitResult['result'] != 'SUCCESS') {
-					          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    }
-			    	
-			     
-				 param = callInitResult['param'];
+				
 				
 				
 		       if(tmpYn =='Y'){
+			  			   callInitResult = that.checkActionCallInit(index, 'D', param, btnId, your,e);
+						   if(callInitResult['result'] != 'SUCCESS') {
+							          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+					       }
 			        mom_ajax('D', queryId,[], function(result1, data1) {
-			            if(result1!='SUCCESS') {
+			               if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
 							  momWidget.splashHide();
 				              return;
-			            }    	
-			             mom_ajax('C', queryId,param, function(result2, data2) {                                                                                                      
-				 		  if(result2!='SUCCESS') {
+			               }
+			               callInitResult = that.checkActionCallInit(index, 'C', param, btnId, your,e);
+						   if(callInitResult['result'] != 'SUCCESS') {
+							          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+					       }
+			    	
+			     
+				 		     param = callInitResult['param'];   	
+			                 mom_ajax('C', queryId,param, function(result2, data2) {                                                                                                      
+				 		     if(result2!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
 							  momWidget.splashHide();
 				              return;
 			              }    	
-			                 mom_ajax('P', queryId,[], function(result3, data3) {
+			                  callInitResult = that.checkActionCallInit(index, 'P', {}, btnId, your,e);
+				              if(callInitResult['result'] != 'SUCCESS') {
+					          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			       			}
+			    	
+			     
+				             param = callInitResult['param'];
+				             if(param['actionMode'] != undefined && param['actionMode'] != ''){
+							     actionMode = param['actionMode'];
+							 }
+			                 mom_ajax('P', queryId,param, function(result3, data3) {
 							    if(data3[0]['p_err_code']=='E') {
 						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
 										  momWidget.splashHide();
 							              return;
 						         }    	
-			                 }, undefined, undefined, this, false,undefined,actionType); 
+			                 }, undefined, undefined, this, false,undefined,actionMode); 
 			                    
 						 }, undefined, undefined, this, false);    
 						                      							  						
@@ -6846,6 +6868,16 @@ var momWidget = {
 			      
 			   }
 			   else{
+				      	   callInitResult = that.checkActionCallInit(index, actionType, param, btnId, your,e);
+						   if(callInitResult['result'] != 'SUCCESS') {
+							          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+					       }
+			    	
+			     
+				      param = callInitResult['param'];
 				      mom_ajax(actionType, queryId,param, function(result1, data1) {
 								  if(result1!='SUCCESS') {
 							            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
@@ -6864,12 +6896,12 @@ var momWidget = {
 				
 		           
 			},
-			setCustomPopBtn: function(index,popupIndex,btnId,your) {
+			setCustomPopBtn: function(index,popupIndex,btnId,your,e) {
 				let that = momWidget;
 				$('#' +'customPop'+popupIndex).momModal('show');
 		           
 			},
-			setCustomGridPopBtn: function(index,btnIndex,btnId,your) {				
+			setCustomGridPopBtn: function(index,btnIndex,btnId,your,e) {				
 				let that = momWidget;	
 				//that.wait(0.5);
 				let totalParam = {};
@@ -6895,7 +6927,7 @@ var momWidget = {
 						  }
 						  
 						 
-			 	          let callInitResult = that.checkActionCallInit(index, 'C',  totalParam, 'customBtn'+btnIndex, your);     	
+			 	          let callInitResult = that.checkActionCallInit(index, 'C',  totalParam, 'customBtn'+btnIndex, your,e);     	
 			  			  if(callInitResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
@@ -7072,7 +7104,7 @@ var momWidget = {
                 defaultValue      = that.popupProperty[index][i]['defaultValue'];
                
 	
-					if(popupType == 'S'  || popupType == 'M'|| popupType == 'DG'){
+					if(popupType == 'S'  || popupType == 'M'){
 						if(dropdownId != '' && dropdownId != undefined){
 							 queryId = dropdownId;
 							 splitArray1 = dropdownParam.split(',');					 
@@ -8935,12 +8967,12 @@ var momWidget = {
 	
 
 	// init 함수 처리
-	 checkActionCallInit: function(index, action, param, btnId, your) {
+	 checkActionCallInit: function(index, action, param, btnId, your,event) {
 		var result = {result:'SUCCESS', msg:'SUCCESS',param:param};
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		 if(action == 'C'   && your.createCallInit != undefined && (btnId=='createBtn' || btnId.indexOf('customBtn')>=0)) {
+		 if(action == 'C'  && your.createCallInit != undefined && (btnId=='createBtn' || btnId.indexOf('customBtn')>=0)) {
 			 your.createCallInit(index,your,action,btnId,param,result);				 
 		}
 		else if(action == 'U' && your.editCallInit != undefined) {
@@ -8956,7 +8988,7 @@ var momWidget = {
 			 your.excelCallInit(index,your,action,btnId,param,result);	
 		}
 		else if(action == 'R' && your.searchCallInit != undefined) {
-			 your.searchCallInit(index,your,action,btnId,param,result);	
+			 your.searchCallInit(index,your,action,btnId,param,result,event);	
 		}
 		else if(action == 'GS' && your.saveCallInit != undefined && (btnId=='saveBtn' || btnId=='saveBtnDP')) {
 				your.saveCallInit(index,your,action,btnId,param,result);			
