@@ -18,6 +18,20 @@ var VIEW= {
 		}
 	
 	},
+	addRowCallInit(index,your,action,btnId,param,result){
+		if(index==1){			
+				    if(widget.getCheckedRowItems(widget.grid[0]).length == 0){
+					     targetItem = {};
+					     result.msg = 'MSG00054';
+					     result.result = 'WARN';
+			        }			
+			        else{
+						   result.param = {targetIndex:0,addIndex:1};
+			          }
+						
+		}
+				
+	},
 	addRowCallBack(index,your,action,btnId,param,result,data){
 		if(index==1){
 						

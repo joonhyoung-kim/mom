@@ -41,12 +41,15 @@ var VIEW= {
 		searchCallInit: function(index,your,action,btnId,param,result,event) {		
 			if(index==100 &&  btnId == 'POPUPCLICK' ){
 				if($('#defaultPop1').attr('btnid')=='editBtn1'){
-					if($('#itemId'+'DP1').val() != ''){
+				/*	if($('#itemId'+'DP1').val() != ''){
 						result.param  = {itemId:''};
 					}
-					else{
+					else{&& event.currentTarget.id =='itemIdDP1'
 						result.param  = {itemId:$('#itemId'+'DP1').val()};
-					}
+					}*/
+						result.msg = '수정할수없습니다.!';
+						result.result = 'WARN';
+						return;
 					 
 				}
 				else{
@@ -57,7 +60,17 @@ var VIEW= {
 		   }
 		
 	},		
-
+     saveCallInit: function(index,your,action,btnId,param,result) {
+	     if(index ==0 && btnId =='saveBtnDP'){		           
+			 let checkedItem = widget.getCheckedRowItems(widget.grid[index],true);
+			 if(checkedItem.length ==0){
+				return;
+			 }
+			result.param.push({workOrderId:checkedItem[0]['workOrderId']})
+        
+	    }
+	  
+	},
 	
 	
 };

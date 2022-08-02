@@ -42,6 +42,7 @@ var multiLang = {
 			 return transText;
 		}
 		else if(text.indexOf('+')>=0 && text.indexOf('#')== -1){
+			let multiLangText = text.split('+');
 			for(let i = 0, max = multiLangText.length; i < max; i++) {
 				 for(let j = 0, max2 = multiLang.multiLangInfo.length; j < max2; j++) {
 					 if(multiLang['multiLangInfo'][j]['msgCd'] == multiLangText[i]){
@@ -49,7 +50,7 @@ var multiLang = {
 			     	     break;
 		             }
 				 }
-				transText += multiLangText[i];
+				//transText += multiLangText[i];
 				
 			}
 			 return transText;

@@ -42,7 +42,7 @@
 		     , MWO.OUTSOURCING_YN
 		     , MWO.MANUAL_YN
 		     , MWO.BOR_ID
-		     , MWO.REASON_CD
+		     , MWO.REASON_CD AS WO_REASON_CD
 		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0005', MWO.REASON_CD, 'KR') FROM DUAL)  AS REASON_NM
 		     , MWO.DESCRIPTION
 		     , MWO.UPDATE_BY
@@ -116,7 +116,7 @@ ORDER BY MWG.WORK_GROUP_NM
 		     , MWI.ISSUE_QTY
 		     , MWI.CANCEL_QTY
 		     , MWI.ISSUE_REQUEST_QTY - NVL(MWI.ISSUE_QTY,0)- NVL(MWI.CANCEL_QTY,0) AS REMAIN_QTY
-		     , MWI.REASON_CD
+		     , MWI.REASON_CD AS ISSUE_REASON_CD
 		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWI.COMPANY_CD, MWI.DIVISION_CD, 'PP0006', MWI.REASON_CD, 'KR') FROM DUAL)  AS REASON_NM
 		     , MWI.ISSUE_REQUEST_TYPE 
 		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWI.COMPANY_CD, MWI.DIVISION_CD, 'PP0008', MWI.ISSUE_REQUEST_TYPE, 'KR') FROM DUAL)  AS ISSUE_REQUEST_NM
@@ -179,7 +179,7 @@ ORDER BY MWG.WORK_GROUP_NM
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.reqQty, jdbcType=NUMERIC}
-                , #{item.reasonCd, jdbcType=VARCHAR}
+                , #{item.issueReasonCd, jdbcType=VARCHAR}
                 , #{item.issueRequestType, jdbcType=VARCHAR}
                 , #{item.deductYn, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
