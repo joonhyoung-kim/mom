@@ -41,7 +41,7 @@ public class MomController {
 	private final MomService momService;
 	private final FrameworkUtil frameworkUtil;
 	private final ReportUtil reportUtil;
-	@GetMapping(value = "/passwordChange")
+	@GetMapping(value = "/passwordChange")  //비밀번호변경
 	public Map<String,Object> passwordChange(@RequestParam Map<String, Object> param) {		
         String loginId = param.get("loginId").toString();
         String nowPass  = param.get("nowPass").toString();
@@ -55,7 +55,7 @@ public class MomController {
 
         return returnMap;
 	}
-	@GetMapping(value = "/createReport")
+	@GetMapping(value = "/createReport") //리포트 생성
 	public Map<String,Object> createReport(@RequestParam Map<String, Object> param) {
 		
         System.out.println("리포트 컨트롤러 진입="+param);     
@@ -76,7 +76,7 @@ public class MomController {
 
 		return returnMap;
 	}
-	@GetMapping("/request/{query}/{action}") 
+	@GetMapping("/request/{query}/{action}") //조회 컨트롤러
 	public List<Map<String,Object>> getMapList(@PathVariable String query,@PathVariable String action, @RequestParam Map<String, Object> param) {
 		System.out.println("받아온쿼리="+query);
 		//System.out.println("받아온파람="+param.get("DIVISION_CD"));
@@ -91,7 +91,7 @@ public class MomController {
 		return momService.getMapList(query, param);
 	}
 		
-	@PostMapping("/request/{query}/{action}")
+	@PostMapping("/request/{query}/{action}")  //등록 컨트롤러
 	public List<Map<String,Object>> createMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
@@ -120,7 +120,7 @@ public class MomController {
 	
 
 	
-	@PutMapping("/request/{query}/{action}")
+	@PutMapping("/request/{query}/{action}") //수정 컨트롤러
 	public List<Map<String,Object>> modifyMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) { 
 		System.out.println("받아온쿼리="+query);
 		//System.out.println("받아온파람="+param.get("DIVISION_CD"));
@@ -135,7 +135,7 @@ public class MomController {
 		return momService.modifyMapList(query, param);
 	}
 
-	@DeleteMapping("/request/{query}/{action}")
+	@DeleteMapping("/request/{query}/{action}")  //삭제 컨트롤러
 	public List<Map<String,Object>> removeMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);

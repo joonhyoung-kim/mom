@@ -59,31 +59,7 @@ public class MomDao {
 		List<Map<String,Object>> result =  null;
 		long start = System.currentTimeMillis();
 		try {	
-			 
-			//TestInnerResultHandler(result)
-			//result = sqlSession.selectList(query.trim(), param);	
-			//new TestInnerResultHandler(result)
-
-			//sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
-			// result = sqlSession.selectList(query.trim(), param);
-			//sqlSession.select(query.trim(), param, testInnerResultHandler);
-			 
-			
-			 //result = testInnerResultHandler.returnList;
-			// System.out.println("컴퍼니체크"+result.get(0).toString());
-			 //System.out.println("컴퍼니체크"+result.get(1).get("companyCd"));
-			/*
-			 * for(Map<String,Object> mapList :result) { mapList.put("p_err_code",
-			 * param.get("p_err_code")); mapList.put("p_err_msg", param.get("p_err_msg"));
-			 * System.out.println("맵리스트="+mapList); //result.add(mapList); }
-			 */
-			/*
-			 * if(param.get("requestType")!=null) {
-			 * if(param.get("requestType").toString().equals("proc")){
-			 * System.out.println("request="+param.get("requestType").toString());
-			 * result.add(param); } }
-			 */
-			//System.out.println("조회결과="+result);		
+			 		
 			System.out.println("조회파람="+param);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
