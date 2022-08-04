@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM1040">		
-		<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+		<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 		    SELECT *
 			FROM     MOM_USER_V 
 			WHERE    1=1
@@ -25,7 +25,7 @@
 	       </if>	 
 			ORDER BY USER_NO
 	    </select>
-	    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+	    <insert id="create_createBtn1" parameterType="java.util.List">  
             INSERT INTO MOM_USER (
 							       COMPANY_CD
 								 , DIVISION_CD
@@ -79,7 +79,7 @@
 					)				             
 			            </foreach>			               
         </insert>
-        <update id="modify_defaultInfo1" parameterType="java.util.List">     
+        <update id="modify_editBtn1" parameterType="java.util.List">     
          <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
            UPDATE MOM_USER
            SET USER_NM                = #{item.userNm,              jdbcType=VARCHAR}
@@ -106,7 +106,7 @@
          </where>
       </foreach>
       </update> 
-      <delete id = "remove_defaultInfo1" parameterType ="java.util.List">
+      <delete id = "remove_delBtn1" parameterType ="java.util.List">
                 DELETE FROM MOM_USER 
                <where>
                <foreach collection="list" item="item"  open="" separator="OR" close="">
@@ -117,7 +117,7 @@
              </foreach>
             </where>  
       </delete>
-  <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap">
+  <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap">
       MERGE INTO MOM_USER 
             USING( 
                          SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,

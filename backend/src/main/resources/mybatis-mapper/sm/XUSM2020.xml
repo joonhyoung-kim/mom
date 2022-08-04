@@ -8,7 +8,7 @@
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
     </parameterMap> -->
 	
-      <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
+      <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
 		  SELECT LEVEL
 		       , A.MENU_ID 
 		       , A.PARENT_MENU_ID 
@@ -38,7 +38,7 @@
 			  CONNECT BY PRIOR  A.MENU_ID = A.PARENT_MENU_ID  
 			  ORDER SIBLINGS BY A.PARENT_MENU_ID,A.SORT_NO, A.MENU_ID 		                	  
 	 </select>
-     <select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+     <select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
          SELECT MC.COMPANY_CD
 	          , MC.COMPANY_NM
 	          , MC.DIVISION_CD
@@ -57,7 +57,7 @@
 		        , MC.DIVISION_CD
 		        , MC.SORT_NO
      </select>         
-       <insert id="create_defaultInfo1" parameterType="java.util.List">
+       <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_DIVISION_MENU (
                   COMPANY_CD
@@ -88,7 +88,7 @@
               )
    </foreach>
   </insert> 
-    <delete id="remove_defaultInfo1" statementType="CALLABLE"  parameterType="java.util.List">
+    <delete id="remove_delBtn1" statementType="CALLABLE"  parameterType="java.util.List">
      <foreach collection="list" item="item" open="{ CALL DECLARE " close="}" separator="">              
        BEGIN   
        #{item.resultCode, mode=OUT, jdbcType=VARCHAR, javaType=String} := 'S'; 
@@ -115,7 +115,7 @@
 		END
      </foreach>
     </delete>
-	 <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap">
+	 <insert id="upsert_saveBtn1" parameterType="java.util.HashMap">
 	    MERGE INTO MOM_DIVISION_MENU MDM
 	    USING (
 	      
@@ -172,7 +172,7 @@
 			   , PARAM.updateDate
 	    )	 
 	</insert>
-    <insert id="upsert_defaultInfo2" parameterType="java.util.HashMap">
+    <insert id="upsert_saveBtn2" parameterType="java.util.HashMap">
 	    MERGE INTO MOM_MESSAGE MM
 	    USING (
 	             SELECT           TRIM(#{companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  

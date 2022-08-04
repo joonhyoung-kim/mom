@@ -7,7 +7,7 @@
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   fetchSize="1"resultType="com.mom.dto.LowerHashMap"
     </parameterMap> -->
-    	<select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+    	<select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
                    SELECT PROGRAM_ID
 				       ,  PROGRAM_NM
 				       ,  PROGRAM_TYPE
@@ -33,40 +33,7 @@
 				   </if>
 				    ORDER BY PROGRAM_ID,PROGRAM_TYPE  
 	</select>
-<!-- 	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	  SELECT * 
-	  FROM (SELECT ROWNUM AS RNUM
-                 , A.*
-                 , COUNT(*) OVER() AS ROW_COUNT
-            FROM ( SELECT PROGRAM_ID
-				       ,  PROGRAM_NM
-				       ,  PROGRAM_TYPE
-				       ,  TEMPLATE_ID
-				       ,  MOM_COMMON_PKG.FN_GET_TEMPLATE_NAME(#{companyCd, jdbcType=VARCHAR}, #{divisionCd, jdbcType=VARCHAR},TEMPLATE_ID) AS TEMPLATE_NM
-				       ,  LOG_YN
-				       ,  USE_YN
-				       ,  DESCRIPTION
-				       ,  CREATE_BY
-				       ,  TO_CHAR(CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
-				       ,  UPDATE_BY
-				       ,  TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-				   FROM   MOM_PROGRAM		 
-		           WHERE 1=1
-				   <if test="programIdNm != null and programIdNm != ''">
-				   AND (PROGRAM_ID LIKE '%' || TRIM(UPPER(#{programIdNm, jdbcType=VARCHAR})) || '%' OR PROGRAM_NM LIKE '%' || TRIM(UPPER(#{programIdNm, jdbcType=VARCHAR})) || '%')
-				   </if>
-				   <if test="programType != null and programType != ''">
-				   AND PROGRAM_TYPE = #{programType, jdbcType=VARCHAR}
-				   </if>
-				   <if test="useYn != null and useYn != ''">
-				   AND USE_YN = #{useYn, jdbcType=VARCHAR}
-				   </if>
-				   ORDER BY PROGRAM_ID,PROGRAM_TYPE ) A
-        )
-        
-	 WHERE RNUM BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
-	</select> -->
-    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+    <insert id="create_createBtn1" parameterType="java.util.List">  
         INSERT INTO MOM_PROGRAM(
 					           PROGRAM_ID
 					         , PROGRAM_NM
@@ -96,7 +63,7 @@
 				          )		             
 	            </foreach>			               
    </insert>   
-   <update id="modify_defaultInfo1" parameterType="java.util.List">     
+   <update id="modify_editBtn1" parameterType="java.util.List">     
       <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
         UPDATE MOM_PROGRAM SET 
 		       PROGRAM_NM     = #{item.programNm, jdbcType=VARCHAR}
@@ -112,7 +79,7 @@
          </where>
       </foreach>
    </update> 
-   <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
+   <delete id="remove_delBtn1" parameterType="java.util.List"> 
 	   DELETE
 	   FROM     MOM_PROGRAM
        <where> 
@@ -123,7 +90,7 @@
         </foreach>
        </where>
    </delete>
-   <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true" >
+   <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true" >
 	    MERGE INTO MOM_PROGRAM MP
 	    USING (
 	       

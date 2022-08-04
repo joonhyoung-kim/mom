@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD2040">
-   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
       SELECT A.COMPANY_CD
      , A.COMPANY_NM
      , A.DIVISION_CD
@@ -82,7 +82,7 @@ FROM  ( SELECT MCD.COMPANY_CD
 		       , A.UNIT_NM
 		       , A.CONVERSION_UNIT_NM
 	</select>
-	<select id="get_defaultInfo2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+	<select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT A.UNIT_CATEGORY_NM          -- 단위유형명    
      , A.UNIT_NM                                      -- 기준단위명                                        
      , A.CONVERSION_UNIT_NM            -- 변환단위명
@@ -120,7 +120,7 @@ ORDER BY A.UNIT_CATEGORY_NM
        , A.CONVERSION_UNIT_NM
 
 </select>
-  <insert id="create_defaultInfo1" parameterType="java.util.List">
+  <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_ITEM_UNIT_REL (
                   COMPANY_CD
@@ -153,7 +153,7 @@ ORDER BY A.UNIT_CATEGORY_NM
               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
+  <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_ITEM_UNIT_REL
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
@@ -175,7 +175,7 @@ ORDER BY A.UNIT_CATEGORY_NM
       AND    CONVERSION_UNIT = #{item.conversionUnit, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+  <delete id="remove_delBtn1" parameterType="java.util.List">
       DELETE FROM MOM_ITEM_UNIT_REL
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">

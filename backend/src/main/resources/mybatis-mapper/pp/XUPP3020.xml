@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUPP3020">
-	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
         SELECT MWO.COMPANY_CD
 		     , MWO.DIVISION_CD
 		     , MWO.WORK_ORDER_ID   
@@ -95,7 +95,7 @@ ORDER BY MWG.WORK_GROUP_NM
       , MWO.ITEM_ID
 
 	</select>
-   <delete id="remove_defaultInfo1" parameterType="java.util.List">
+   <delete id="remove_delBtn1" parameterType="java.util.List">
       DELETE FROM MOM_PROC_WORK_ORDER
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -106,48 +106,9 @@ ORDER BY MWG.WORK_GROUP_NM
        </foreach>
       </where>
    </delete> 
-   	<insert id="create_defaultInfo1" parameterType="java.util.List">
-     <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_PROC_WORK_ORDER (
-                  COMPANY_CD
-                , DIVISION_CD
-                , WORK_ORDER_ID
-                , WO_TYPE
-                , BOR_ID
-                , WO_QTY
-                , WO_START_TIME
-                , WO_END_TIME
-                , PRIORITY
-                , REASON_CD
-                , MANUAL_YN
-                , DESCRIPTION
-                , VAL_MSG
-                , MULTI_MSG
-                , CREATE_BY
-                , CREATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.workOrderId, jdbcType=VARCHAR}
-                , #{item.woType, jdbcType=VARCHAR}
-                , #{item.borId, jdbcType=VARCHAR}
-                , #{item.woQty, jdbcType=NUMERIC}
-                , TO_DATE(#{item.woStartDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , TO_DATE(#{item.woEndDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , #{item.priority, jdbcType=NUMERIC}
-                , #{item.reasonCd, jdbcType=VARCHAR}
-                , 'Y'
-                , #{item.description, jdbcType=VARCHAR}
-                , #{item.valMsg, jdbcType=VARCHAR}
-                , #{item.multiMsg, jdbcType=VARCHAR}
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              )
-   </foreach>
-  </insert>
   
-  
-	<select id="proc_defaultInfo1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+
+  <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
            { CALL MOM_WO_PKG.sp_create_manual_work_order(       #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -155,5 +116,20 @@ ORDER BY MWG.WORK_GROUP_NM
 					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
   </select>   
-
+  <select id="proc_editBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+           { CALL MOM_WO_PKG.sp_create_manual_work_order(       #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}	
+					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}											  
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
+  </select>   
+  <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+           { CALL MOM_WO_PKG.sp_create_manual_work_order(       #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}	
+					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}											  
+					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
+  </select>   
 </mapper>

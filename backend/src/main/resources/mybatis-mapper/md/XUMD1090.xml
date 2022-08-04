@@ -10,7 +10,7 @@
      AND     DIVISION_CD = #{divisionCd , jdbcType=VARCHAR}
      AND     CREATE_BY    = #{userId , jdbcType=VARCHAR}
   </select>
-   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 		  SELECT * 
 		FROM
 		    (
@@ -88,7 +88,7 @@
      </if>	
 
 	</select>
-	 <select id="get_defaultInfo2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	 <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 		    SELECT     MCD.COMPANY_CD
 				     , MCD.COMPANY_NM
 				     , MCD.DIVISION_CD
@@ -385,91 +385,5 @@
 					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}												  
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}       	              
   </select>   
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
-    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
-      UPDATE MOM_BOR
-      SET    ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
-           , ROUTING_ID = #{item.routingId, jdbcType=VARCHAR}
-           , WORK_CENTER_CD = #{item.workCenterCd, jdbcType=VARCHAR}
-           , TACT_TIME = #{item.tactTime, jdbcType=NUMERIC}
-           , TACT_TIME_UOM = #{item.tactTimeUom, jdbcType=VARCHAR}
-           , PROCESS_LT = #{item.processLt, jdbcType=NUMERIC}
-           , PROCESS_LT_UOM = #{item.processLtUom, jdbcType=VARCHAR}
-           , PRIORITY = #{item.priority, jdbcType=NUMERIC}
-           , YIELD = #{item.yield, jdbcType=NUMERIC}
-           , CONSUME_LOCATION_CD = #{item.consumeLocationCd, jdbcType=VARCHAR}
-           , GOOD_LOCATION_CD = #{item.goodLocationCd, jdbcType=VARCHAR}
-           , DEFECT_LOCATION_CD = #{item.defectLocationCd, jdbcType=VARCHAR}
-           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
-           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
-           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
-           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-      WHERE  1=1
-      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
-      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-      AND    BOR_ID = #{item.borId, jdbcType=VARCHAR}
-    </foreach>
-  </update>
-  <insert id="upsert_defaultInfo2" parameterType="java.util.HashMap" flushCache="true">
-      MERGE INTO MOM_BOR_PATH 
-            USING( 
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            #{item.borId, jdbcType=VARCHAR} as borId,
-                            #{item.operationSeq, jdbcType=NUMERIC} as operationSeq,
-                            #{item.operationId, jdbcType=VARCHAR} as operationId,
-                            #{item.workStationCd, jdbcType=VARCHAR} as workStationCd,
-                            #{item.inspectionYn, jdbcType=VARCHAR} as inspectionYn,
-                            #{item.finalOperationYn, jdbcType=VARCHAR} as finalOperationYn,
-                            #{item.milestone, jdbcType=VARCHAR} as milestone,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
-                     FROM DUAL
-                    ) PARAM
-            ON ( COMPANY_CD = PARAM.companyCd AND
-                 DIVISION_CD = PARAM.divisionCd AND
-                 BOR_ID = PARAM.borId AND
-                 OPERATION_ID = PARAM.operationId )
-            WHEN MATCHED THEN 
-                 UPDATE SET OPERATION_SEQ = PARAM.operationSeq
-                          , WORK_STATION_CD = PARAM.workStationCd
-                          , INSPECTION_YN = PARAM.inspectionYn
-                          , FINAL_OPERATION_YN = PARAM.finalOperationYn
-                          , MILESTONE = PARAM.milestone
-                          , DESCRIPTION = PARAM.description
-                          , UPDATE_BY = PARAM.updateBy
-                          , UPDATE_DATE = PARAM.updateDate
-            WHEN NOT MATCHED THEN
-                     INSERT ( COMPANY_CD
-                            , DIVISION_CD
-                            , BOR_ID
-                            , OPERATION_SEQ
-                            , OPERATION_ID
-                            , WORK_STATION_CD
-                            , INSPECTION_YN
-                            , FINAL_OPERATION_YN
-                            , MILESTONE
-                            , DESCRIPTION
-                            , CREATE_BY
-                            , CREATE_DATE
-                            , UPDATE_BY
-                            , UPDATE_DATE )
-                     VALUES ( PARAM.companyCd
-                            , PARAM.divisionCd
-                            , PARAM.borId
-                            , PARAM.operationSeq
-                            , PARAM.operationId
-                            , PARAM.workStationCd
-                            , PARAM.inspectionYn
-                            , PARAM.finalOperationYn
-                            , PARAM.milestone
-                            , PARAM.description
-                            , PARAM.createBy
-                            , PARAM.createDate
-                            , PARAM.updateBy
-                            , PARAM.updateDate )
-  </insert>
+  
 </mapper>

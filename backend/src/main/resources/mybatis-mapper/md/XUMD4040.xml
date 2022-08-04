@@ -58,11 +58,12 @@
 	AND  WEEK_DAY IN (${weekDay})
 	</if>	       						
    </select> 
-   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
    SELECT *
    FROM(SELECT ROWNUM AS KEY_ID,
 	                ROWNUM AS ID
-                 , A.*                 
+                 , A.*    
+                               
    FROM( SELECT    MCD.COMPANY_CD
 			     , MCD.COMPANY_NM
 			     , MCD.DIVISION_CD

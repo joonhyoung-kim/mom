@@ -11,7 +11,7 @@
 	<result property="BUTTON_PROPERTY" column="BUTTON_PROPERTY"/>
 	</resultMap>
 
-	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 		SELECT MCD.COMPANY_CD
 	         , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -30,7 +30,7 @@
 		ORDER BY MCD.COMPANY_CD, MCD.DIVISION_CD, MCC.SORT_NO, MCC.CODE_CATEGORY
 	</select>
 
-    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+    <insert id="create_createBtn1" parameterType="java.util.List">  
         INSERT INTO MOM_CODE_CATEGORY(
 							           COMPANY_CD
 									 , DIVISION_CD
@@ -60,7 +60,7 @@
 				          )		             
 	            </foreach>			               
    </insert>   
-   <update id="modify_defaultInfo1" parameterType="java.util.List">     
+   <update id="modify_editBtn1" parameterType="java.util.List">     
       <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
         UPDATE MOM_CODE_CATEGORY SET 
 		       CODE_CATEGORY_NM = #{item.categoryNm, jdbcType=VARCHAR}
@@ -76,7 +76,7 @@
          </where>
       </foreach>
    </update> 
-	<delete id = "remove_defaultInfo1" parameterType ="java.util.List">
+	<delete id = "remove_delBtn1" parameterType ="java.util.List">
                 DELETE FROM MOM_CODE_CATEGORY
                <where>
                <foreach collection="list" item="item"  open="" separator="OR" close="">
@@ -88,7 +88,7 @@
             </where>  
     </delete>
 
-   <insert id="create_defaultInfo2" parameterType="java.util.List">
+   <insert id="create_createBtn2" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_GROUP_CODE (
                   COMPANY_CD
@@ -123,7 +123,7 @@
               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo2" parameterType="java.util.List">
+  <update id="modify_editBtn2" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_GROUP_CODE
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
@@ -144,7 +144,7 @@
       AND    GROUP_CD = #{item.groupCd, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo2" parameterType="java.util.List">
+  <delete id="remove_delBtn2" parameterType="java.util.List">
       DELETE FROM MOM_GROUP_CODE
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -156,7 +156,7 @@
       </where>
   </delete>
   
-	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	    SELECT MCD.COMPANY_CD
 	         , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -189,7 +189,7 @@
 		</if>
 		ORDER BY MCD.COMPANY_CD, MCD.DIVISION_CD, MCC.SORT_NO, MGC.GROUP_CD 
 	</select>
-	<select id="get_defaultInfo3" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_findBtn3" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	    SELECT *
         FROM   MOM_CODE_V MV
         WHERE  1=1
@@ -200,7 +200,7 @@
 	    </if>	    
 	   ORDER BY SORT_NO,CODE_NM
 	</select>
-	  <insert id="create_defaultInfo3" parameterType="java.util.List">
+	  <insert id="create_findBtn3" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_CODE (
                   COMPANY_CD
@@ -255,7 +255,7 @@
                               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo3" parameterType="java.util.List">
+  <update id="modify_editBtn3" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_CODE
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
@@ -287,7 +287,7 @@
       AND    CODE = #{item.code, jdbcType=VARCHAR}
     </foreach>
   </update> 
-  <delete id="remove_defaultInfo3" parameterType="java.util.List">
+  <delete id="remove_delBtn3" parameterType="java.util.List">
       DELETE FROM MOM_CODE
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -299,7 +299,7 @@
        </foreach>
       </where>
   </delete>   
-    <select id="get_defaultInfo4" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    <select id="get_findBtn4" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 		    SELECT MC.COMPANY_CD
 	     , MDV.COMPANY_NM
 	     , MC.DIVISION_CD
@@ -319,7 +319,7 @@
 	AND    MC.USE_YN      = 'Y'
 	ORDER BY MC.COMPANY_CD, MC.DIVISION_CD, MC.SORT_NO
 	</select>
-    <insert id="upsert_defaultInfo4"  parameterType="java.util.HashMap" flushCache="true" >
+    <insert id="upsert_excelUpBtn4"  parameterType="java.util.HashMap" flushCache="true" >
 	    MERGE INTO MOM_MESSAGE MM
 	    USING (
 	     

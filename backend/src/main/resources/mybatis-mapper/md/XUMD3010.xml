@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD3010">
 
-   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
    	     	SELECT * 
       FROM (  
 		 SELECT ROWNUM AS KEY_ID
@@ -86,7 +86,7 @@ FROM   (SELECT MCD.COMPANY_CD
        WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
        </if>	
 	</select>
-   <insert id="create_defaultInfo1" parameterType="java.util.List">
+   <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_UNIT_PRICE (
                   COMPANY_CD
@@ -134,7 +134,7 @@ FROM   (SELECT MCD.COMPANY_CD
               )
    </foreach>
   </insert>
- <update id="modify_defaultInfo1" parameterType="java.util.List">
+ <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_UNIT_PRICE
       SET   
@@ -172,7 +172,7 @@ FROM   (SELECT MCD.COMPANY_CD
       AND    TO_CHAR(END_DATE,'YYYY-MM-DD') = #{item.endDate, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+  <delete id="remove_delBtn1" parameterType="java.util.List">
       DELETE FROM MOM_UNIT_PRICE
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -193,7 +193,7 @@ FROM   (SELECT MCD.COMPANY_CD
        </foreach>
       </where>
   </delete>
-     <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
+     <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_UNIT_PRICE 
             USING( 
                      SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,

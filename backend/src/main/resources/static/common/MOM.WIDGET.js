@@ -2321,7 +2321,7 @@ var momWidget = {
 	    var checkSearchParam = {};
 	    var checkSearchParam = {};
         var totalParam = {};
-        var queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.defaultInfo'+(index+1) : menuId+'.defaultInfo'+(index+1);
+        var queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.findBtn'+(index+1) : menuId+'.findBtn'+(index+1);
 		var that= this;	
 	
 		var menuParam = that.pageProperty[index] == undefined ? []: that.pageProperty[index]['param'] == undefined ? undefined:JSON.parse(that.pageProperty[index]['param']);
@@ -4906,7 +4906,7 @@ var momWidget = {
 				}	
 					 				
 				    var actionType = $('#excelUpPop1').attr('actiontype') == undefined ? 'CU' : $('#excelUpPop1').attr('actiontype');
-				    let queryId    = actionType == 'CU' ? that.pageProperty[index]['programId']+'.defaultInfo'+(index+1) : that.pageProperty[index]['programId']+'.validateEx'+(index+1);
+				    let queryId    = actionType == 'CU' ? that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1) : that.pageProperty[index]['programId']+'.validateEx'+(index+1);
 					setTimeout(function() {
 						if(actionType=='P'){
 							 param[0].excelUpYn = 'Y';
@@ -5241,7 +5241,7 @@ var momWidget = {
 			
 				 callbackData   = AUIGrid.getGridData(that.grid[index]);
 				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
-				if(callBackResult['result']  != 'SUCCESS') {
+				 if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
 				      return;
@@ -5402,14 +5402,10 @@ var momWidget = {
 				let param = [];
 				let tmpYn = 'N';
 				let actionType = 'CU';		
-				let queryId = that.pageProperty[index]['programId']+'.defaultInfo'+(index+1);
-				for(let i=0;i<that.buttonProperty[index].length;i++){
-					if(that.buttonProperty[index][i]['buttonId'] == 'procBtn'){
-						//actionType = that.buttonProperty[index][i]['eventType'];
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						
-					}					
-				 }
+				let queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
+				
+				
+			
 				 
 				if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[index]);
@@ -5445,7 +5441,7 @@ var momWidget = {
 					if(that.buttonProperty[index][i]['buttonId'] == 'saveBtn'){
 						actionType = that.buttonProperty[index][i]['eventType'];
 						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
+						//queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
 						break;
 					}
 			
@@ -5491,7 +5487,7 @@ var momWidget = {
 				   }, undefined, index, this, false,undefined,'D');
 				 }
 				 else{
-					  mom_ajax(actionType, that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+					  mom_ajax(actionType, queryId,param, function(result, data) {
 			            if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
@@ -5533,7 +5529,7 @@ var momWidget = {
 				var gridPopIndex   = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? index+1 : Number($('#defaultPop'+(index+1)).attr('gridPopIndex'));
 				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
 				//var btnIndex   = index;
-				var queryId = that.pageProperty[index]['programId']+'.defaultInfo'+(index+1);
+				var queryId = that.pageProperty[index]['programId']+'.'+buttonId;
 				var buttonParam = [];
 				var extraParam = {};
 				var validateCheck = true;
@@ -6037,8 +6033,8 @@ var momWidget = {
 				}
 				else{
 					if(Array.isArray(param)==true){
-					
-						param = [Object.assign(param[0], that.getPopupParam(index,your,extraParam)[0])];  
+					    param = param.length == 0 ? {}:param;
+						param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
 					}
 					else{
 						 param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
@@ -6195,7 +6191,7 @@ var momWidget = {
 						      return;
 			    }
 				  param = callInitResult['param'];	
-				  mom_ajax('D', that.pageProperty[index]['programId']+'.defaultInfo'+(index+1),param, function(result, data) {
+				  mom_ajax('D', that.pageProperty[index]['programId']+'.delBtn'+(index+1),param, function(result, data) {
 			              if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();

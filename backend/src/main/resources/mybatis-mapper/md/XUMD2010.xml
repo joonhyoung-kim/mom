@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD2010">
-   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
      SELECT * 
 	  FROM ( SELECT ROWNUM AS KEY_ID
                  , A.*
@@ -94,7 +94,7 @@
      WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
          </if>				
  </select>
- <insert id="create_defaultInfo1" parameterType="java.util.List">
+ <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_ITEM (
                   COMPANY_CD
@@ -195,7 +195,7 @@
               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
+  <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_ITEM
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
@@ -249,7 +249,7 @@
       AND    ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+  <delete id="remove_delBtn1" parameterType="java.util.List">
       DELETE FROM MOM_ITEM
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -260,7 +260,7 @@
        </foreach>
       </where>
   </delete>
-  <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
+  <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_ITEM 
             USING( 
                      SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
@@ -456,200 +456,5 @@
                             , PARAM.updateBy
                             , PARAM.updateDate )
   </insert>
-  <!-- <insert id="upsert_defaultInfo1" parameterType="java.util.List">
-      MERGE INTO MOM_ITEM 
-            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            #{item.itemId, jdbcType=VARCHAR} as itemId,
-                            #{item.itemNm, jdbcType=VARCHAR} as itemNm,
-                            #{item.itemGroupCd, jdbcType=VARCHAR} as itemGroupCd,
-                            #{item.itemType, jdbcType=VARCHAR} as itemType,
-                            #{item.itemSpec, jdbcType=VARCHAR} as itemSpec,
-                            #{item.unit, jdbcType=VARCHAR} as unit,
-                            #{item.purchaseUnit, jdbcType=VARCHAR} as purchaseUnit,
-                            #{item.procurementType, jdbcType=VARCHAR} as procurementType,
-                            #{item.materialType, jdbcType=VARCHAR} as materialType,
-                            #{item.netWeight, jdbcType=NUMERIC} as netWeight,
-                            #{item.netWeightUnit, jdbcType=VARCHAR} as netWeightUnit,
-                            #{item.grossWeight, jdbcType=NUMERIC} as grossWeight,
-                            #{item.grossWeightUnit, jdbcType=VARCHAR} as grossWeightUnit,
-                            #{item.inLocationCd, jdbcType=VARCHAR} as inLocationCd,
-                            #{item.outLocationCd, jdbcType=VARCHAR} as outLocationCd,
-                            #{item.issueType, jdbcType=VARCHAR} as issueType,
-                            #{item.issueUnit, jdbcType=VARCHAR} as issueUnit,
-                            #{item.vendorCd, jdbcType=VARCHAR} as vendorCd,
-                            #{item.departureVendorCd, jdbcType=VARCHAR} as departureVendorCd,
-                            #{item.testReportFlag, jdbcType=VARCHAR} as testReportFlag,
-                            #{item.iqcFlag, jdbcType=VARCHAR} as iqcFlag,
-                            #{item.pqcFlag, jdbcType=VARCHAR} as pqcFlag,
-                            #{item.fqcFlag, jdbcType=VARCHAR} as fqcFlag,
-                            #{item.oqcFlag, jdbcType=VARCHAR} as oqcFlag,
-                            #{item.rpItemId, jdbcType=VARCHAR} as rpItemId,
-                            #{item.itemCategoryL, jdbcType=VARCHAR} as itemCategoryL,
-                            #{item.itemCategoryM, jdbcType=VARCHAR} as itemCategoryM,
-                            #{item.itemCategoryS, jdbcType=VARCHAR} as itemCategoryS,
-                            #{item.exceptionIssueFlag, jdbcType=VARCHAR} as exceptionIssueFlag,
-                            #{item.color, jdbcType=VARCHAR} as color,
-                            #{item.customerDivisionCd, jdbcType=VARCHAR} as customerDivisionCd,
-                            #{item.maker, jdbcType=VARCHAR} as maker,
-                            #{item.abcType, jdbcType=VARCHAR} as abcType,
-                            #{item.drawingNo, jdbcType=VARCHAR} as drawingNo,
-                            #{item.hsCd, jdbcType=VARCHAR} as hsCd,
-                            #{item.reorderPoint, jdbcType=NUMERIC} as reorderPoint,
-                            #{item.safetyStockQty, jdbcType=NUMERIC} as safetyStockQty,
-                            #{item.phantomFlag, jdbcType=VARCHAR} as phantomFlag,
-                            #{item.mrpFlag, jdbcType=VARCHAR} as mrpFlag,
-                            #{item.useYn, jdbcType=VARCHAR} as useYn,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
-                     FROM DUAL
-                   </foreach> ) PARAM
-            ON ( COMPANY_CD = PARAM.companyCd AND
-                 DIVISION_CD = PARAM.divisionCd AND
-                 ITEM_ID = PARAM.itemId )
-            WHEN MATCHED THEN 
-                 UPDATE SET ITEM_NM = PARAM.itemNm
-                          , ITEM_GROUP_CD = PARAM.itemGroupCd
-                          , ITEM_TYPE = PARAM.itemType
-                          , ITEM_SPEC = PARAM.itemSpec
-                          , UNIT = PARAM.unit
-                          , PURCHASE_UNIT = PARAM.purchaseUnit
-                          , PROCUREMENT_TYPE = PARAM.procurementType
-                          , MATERIAL_TYPE = PARAM.materialType
-                          , NET_WEIGHT = PARAM.netWeight
-                          , NET_WEIGHT_UNIT = PARAM.netWeightUnit
-                          , GROSS_WEIGHT = PARAM.grossWeight
-                          , GROSS_WEIGHT_UNIT = PARAM.grossWeightUnit
-                          , IN_LOCATION_CD = PARAM.inLocationCd
-                          , OUT_LOCATION_CD = PARAM.outLocationCd
-                          , ISSUE_TYPE = PARAM.issueType
-                          , ISSUE_UNIT = PARAM.issueUnit
-                          , VENDOR_CD = PARAM.vendorCd
-                          , DEPARTURE_VENDOR_CD = PARAM.departureVendorCd
-                          , TEST_REPORT_FLAG = PARAM.testReportFlag
-                          , IQC_FLAG = PARAM.iqcFlag
-                          , PQC_FLAG = PARAM.pqcFlag
-                          , FQC_FLAG = PARAM.fqcFlag
-                          , OQC_FLAG = PARAM.oqcFlag
-                          , RP_ITEM_ID = PARAM.rpItemId
-                          , ITEM_CATEGORY_L = PARAM.itemCategoryL
-                          , ITEM_CATEGORY_M = PARAM.itemCategoryM
-                          , ITEM_CATEGORY_S = PARAM.itemCategoryS
-                          , EXCEPTION_ISSUE_FLAG = PARAM.exceptionIssueFlag
-                          , COLOR = PARAM.color
-                          , CUSTOMER_DIVISION_CD = PARAM.customerDivisionCd
-                          , MAKER = PARAM.maker
-                          , ABC_TYPE = PARAM.abcType
-                          , DRAWING_NO = PARAM.drawingNo
-                          , HS_CD = PARAM.hsCd
-                          , REORDER_POINT = PARAM.reorderPoint
-                          , SAFETY_STOCK_QTY = PARAM.safetyStockQty
-                          , PHANTOM_FLAG = PARAM.phantomFlag
-                          , MRP_FLAG = PARAM.mrpFlag
-                          , USE_YN = PARAM.useYn
-                          , DESCRIPTION = PARAM.description
-                          , CREATE_BY = PARAM.createBy
-                          , CREATE_DATE = PARAM.createDate
-                          , UPDATE_BY = PARAM.updateBy
-                          , UPDATE_DATE = PARAM.updateDate
-            WHEN NOT MATCHED THEN
-                     INSERT ( COMPANY_CD
-                            , DIVISION_CD
-                            , ITEM_ID
-                            , ITEM_NM
-                            , ITEM_GROUP_CD
-                            , ITEM_TYPE
-                            , ITEM_SPEC
-                            , UNIT
-                            , PURCHASE_UNIT
-                            , PROCUREMENT_TYPE
-                            , MATERIAL_TYPE
-                            , NET_WEIGHT
-                            , NET_WEIGHT_UNIT
-                            , GROSS_WEIGHT
-                            , GROSS_WEIGHT_UNIT
-                            , IN_LOCATION_CD
-                            , OUT_LOCATION_CD
-                            , ISSUE_TYPE
-                            , ISSUE_UNIT
-                            , VENDOR_CD
-                            , DEPARTURE_VENDOR_CD
-                            , TEST_REPORT_FLAG
-                            , IQC_FLAG
-                            , PQC_FLAG
-                            , FQC_FLAG
-                            , OQC_FLAG
-                            , RP_ITEM_ID
-                            , ITEM_CATEGORY_L
-                            , ITEM_CATEGORY_M
-                            , ITEM_CATEGORY_S
-                            , EXCEPTION_ISSUE_FLAG
-                            , COLOR
-                            , CUSTOMER_DIVISION_CD
-                            , MAKER
-                            , ABC_TYPE
-                            , DRAWING_NO
-                            , HS_CD
-                            , REORDER_POINT
-                            , SAFETY_STOCK_QTY
-                            , PHANTOM_FLAG
-                            , MRP_FLAG
-                            , USE_YN
-                            , DESCRIPTION
-                            , CREATE_BY
-                            , CREATE_DATE
-                            , UPDATE_BY
-                            , UPDATE_DATE )
-                     VALUES ( PARAM.companyCd
-                            , PARAM.divisionCd
-                            , PARAM.itemId
-                            , PARAM.itemNm
-                            , PARAM.itemGroupCd
-                            , PARAM.itemType
-                            , PARAM.itemSpec
-                            , PARAM.unit
-                            , PARAM.purchaseUnit
-                            , PARAM.procurementType
-                            , PARAM.materialType
-                            , PARAM.netWeight
-                            , PARAM.netWeightUnit
-                            , PARAM.grossWeight
-                            , PARAM.grossWeightUnit
-                            , PARAM.inLocationCd
-                            , PARAM.outLocationCd
-                            , PARAM.issueType
-                            , PARAM.issueUnit
-                            , PARAM.vendorCd
-                            , PARAM.departureVendorCd
-                            , PARAM.testReportFlag
-                            , PARAM.iqcFlag
-                            , PARAM.pqcFlag
-                            , PARAM.fqcFlag
-                            , PARAM.oqcFlag
-                            , PARAM.rpItemId
-                            , PARAM.itemCategoryL
-                            , PARAM.itemCategoryM
-                            , PARAM.itemCategoryS
-                            , PARAM.exceptionIssueFlag
-                            , PARAM.color
-                            , PARAM.customerDivisionCd
-                            , PARAM.maker
-                            , PARAM.abcType
-                            , PARAM.drawingNo
-                            , PARAM.hsCd
-                            , PARAM.reorderPoint
-                            , PARAM.safetyStockQty
-                            , PARAM.phantomFlag
-                            , PARAM.mrpFlag
-                            , PARAM.useYn
-                            , PARAM.description
-                            , PARAM.createBy
-                            , PARAM.createDate
-                            , PARAM.updateBy
-                            , PARAM.updateDate )
-  </insert> -->
+ 
 </mapper>

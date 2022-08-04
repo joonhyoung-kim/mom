@@ -8,7 +8,7 @@
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
     </parameterMap> -->
 	
-     <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
+     <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
 		 SELECT COMPANY_CD
 		      , DIVISION_CD
 		      , AUTH_GROUP_CD
@@ -26,7 +26,7 @@
 		 AND   DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}	
 		 ORDER BY COMPANY_CD, DIVISION_CD, AUTH_GROUP_CD		 	                	  
      </select>
-     <select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+     <select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 		 SELECT LEVEL
 	          , A.MENU_ID        
 	          , (SELECT MENU_TYPE FROM MOM_MENU WHERE MENU_ID = A.MENU_ID) AS MENU_TYPE       
@@ -75,7 +75,7 @@
 			CONNECT BY PRIOR  A.MENU_ID  = A.PARENT_MENU_ID  
 			ORDER SIBLINGS BY A.PARENT_MENU_ID,A.SORT_NO, A.MENU_ID 
      </select>  
-     <select id="get_defaultInfo3" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+     <select id="get_findBtn3" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 		SELECT *
 		FROM   MOM_USER_V  MU
 		WHERE MU.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
@@ -83,7 +83,7 @@
 		AND   MU.AUTH_GROUP_CD  = #{authGroupCd, jdbcType=VARCHAR}
 		ORDER by MU.USER_NO
      </select>  
-     <insert id="create_defaultInfo1" parameterType="java.util.List">  
+     <insert id="create_createBtn1" parameterType="java.util.List">  
          INSERT INTO MOM_AUTH_GROUP(
 							             COMPANY_CD
 									   , DIVISION_CD
@@ -111,7 +111,7 @@
 			  )				             
 	            </foreach>			               
     </insert>
-    <update id="modify_defaultInfo1" parameterType="java.util.List">     
+    <update id="modify_editBtn1" parameterType="java.util.List">     
       <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
         UPDATE MOM_AUTH_GROUP 
         SET    AUTH_GROUP_NM       = #{item.authGroupNm,     jdbcType=VARCHAR}
@@ -127,7 +127,7 @@
       </foreach>
     </update> 
 
-     <delete id="remove_defaultInfo1"   parameterType="java.util.List">
+     <delete id="remove_delBtn1"   parameterType="java.util.List">
      <foreach collection="list" item="item" open="{ CALL DECLARE " close="}" separator="">              
        BEGIN   
        DELETE FROM MOM_AUTH_MENU
@@ -154,7 +154,7 @@
 		END
      </foreach>
     </delete>
-    <insert id="upsert_defaultInfo2" parameterType="java.util.HashMap" flushCache="true">
+    <insert id="upsert_saveBtn2" parameterType="java.util.HashMap" flushCache="true">
 	    MERGE INTO MOM_AUTH_MENU MAM
 	    USING (
 	  

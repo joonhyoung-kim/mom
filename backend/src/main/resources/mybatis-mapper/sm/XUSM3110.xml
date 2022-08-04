@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM3110">
-  <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	 SELECT    MCD.COMPANY_CD
 		     , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -33,7 +33,7 @@
 	  </if>
 	 ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MG.MENU_ID, MG.GRID_ID    
   </select>
-    <insert id="create_defaultInfo1" parameterType="java.util.List">
+    <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_GRID (
                   COMPANY_CD
@@ -62,7 +62,7 @@
               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
+  <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_GRID
       SET    GRID_NM = #{item.gridNm, jdbcType=VARCHAR}
@@ -77,7 +77,7 @@
       AND    GRID_ID = #{item.gridId, jdbcType=VARCHAR}
     </foreach>
   </update>  
-  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+  <delete id="remove_delBtn1" parameterType="java.util.List">
       DELETE FROM MOM_GRID
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">

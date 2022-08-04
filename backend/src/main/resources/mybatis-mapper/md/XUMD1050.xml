@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD1050">
-  <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+  <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	  SELECT MCD.COMPANY_CD
            , MCD.COMPANY_NM
 		   , MCD.DIVISION_CD
@@ -49,7 +49,7 @@
 	  </if>
       ORDER BY  MWC.WORK_CENTER_NM					
   </select>
-  <insert id="create_defaultInfo1" parameterType="java.util.List">
+  <insert id="create_createBtn1" parameterType="java.util.List">
       INSERT INTO MOM_WORK_CENTER (
                   COMPANY_CD
                ,  DIVISION_CD
@@ -85,7 +85,7 @@
                )
              </foreach>
   </insert> 
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
+  <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_WORK_CENTER
       SET COMPANY_CD          = #{item.companyCd, 		  jdbcType=VARCHAR}
@@ -107,7 +107,7 @@
       AND   WORK_CENTER_CD    = TRIM(#{item.workCenterCd, jdbcType=VARCHAR})           
     </foreach>
   </update> 
-  <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
+  <delete id="remove_delBtn1" parameterType="java.util.List"> 
 	   DELETE
 	   FROM    MOM_WORK_CENTER
        <where> 
@@ -120,7 +120,7 @@
         </foreach>
        </where>
   </delete>  
-     <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
+     <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_WORK_CENTER 
             USING( 
                      SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,

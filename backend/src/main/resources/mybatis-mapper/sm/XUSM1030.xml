@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM1030">		
-		<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+		<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 		    SELECT MDV.COMPANY_CD
           , MDV.COMPANY_NM
           , MDV.DIVISION_CD
@@ -47,7 +47,7 @@
 		   </if>	  
 		   ORDER BY MD.SORT_NO, MD.DEPT_CD
 	    </select>
-	    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+	    <insert id="create_createBtn1" parameterType="java.util.List">  
             INSERT INTO MOM_DEPARTMENT (
 									     COMPANY_CD
 									   , DIVISION_CD
@@ -79,7 +79,7 @@
 					)				             
 			            </foreach>			               
         </insert>
-        <update id="modify_defaultInfo1" parameterType="java.util.List">     
+        <update id="modify_editBtn1" parameterType="java.util.List">     
          <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
            UPDATE MOM_DEPARTMENT
            SET DEPT_CD           = #{item.deptCd,         jdbcType=VARCHAR}
@@ -97,7 +97,7 @@
          </where>
       </foreach>
       </update> 
-      <delete id = "remove_defaultInfo1" parameterType ="java.util.List">
+      <delete id = "remove_delBtn1" parameterType ="java.util.List">
                 DELETE FROM MOM_DEPARTMENT
                <where>
                <foreach collection="list" item="item"  open="" separator="OR" close="">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM3120">
-  <select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
     SELECT MCD.COMPANY_CD
 	     , MCD.COMPANY_NM 
 	     , MCD.DIVISION_CD
@@ -33,7 +33,7 @@
 	</if>
 	ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MIG.ID_GEN_CD
   </select>
-  <select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+  <select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
     SELECT  MID.ID_GEN_CD
 	     ,  MID.DATE_INFO
 	     ,  MID.LAST_SEQ
@@ -43,7 +43,7 @@
 	AND     MID.ID_GEN_CD   = #{idGenCd, jdbcType=VARCHAR}
 	ORDER BY MID.ID_GEN_CD, MID.DATE_INFO DESC
  </select>
-   <insert id="create_defaultInfo1" parameterType="java.util.List">
+   <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_ID_GENERATE (
                   COMPANY_CD
@@ -82,69 +82,8 @@
               )
    </foreach>
   </insert>
-  <!--  <insert id="create_defaultInfo1" parameterType="java.util.List">
-   <foreach item="item" collection="list" index="i" separator=" " open="{CALL DECLARE BEGIN" close="END}"> 
-     INSERT INTO MOM_ID_GENERATE (
-                  COMPANY_CD
-                , DIVISION_CD
-                , ID_GEN_CD
-                , ID_GEN_NM
-                , PRE_FIX
-                , DATE_FORMAT
-                , MAX_NUMBER_LENGTH
-                , DATE_INFO
-                , LAST_SEQ
-                , LAST_ID_GEN_NO
-                , USE_YN
-                , DESCRIPTION
-                , CREATE_BY
-                , CREATE_DATE
-                , UPDATE_BY
-                , UPDATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.idGenCd, jdbcType=VARCHAR}
-                , #{item.idGenNm, jdbcType=VARCHAR}
-                , #{item.preFix, jdbcType=VARCHAR}
-                , #{item.dateFormat, jdbcType=VARCHAR}
-                , #{item.maxNumberLength, jdbcType=NUMERIC}
-                ,(SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
-				  FROM DUAL)
-                , #{item.lastSeq, jdbcType=NUMERIC}
-                , #{item.lastIdGenNo, jdbcType=VARCHAR}
-                , #{item.useYn, jdbcType=VARCHAR}
-                , #{item.description, jdbcType=VARCHAR}
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              );
-      INSERT INTO MOM_ID_GENERATE_DTL (
-                  COMPANY_CD
-                , DIVISION_CD
-                , ID_GEN_CD
-                , DATE_INFO
-                , LAST_SEQ
-                , CREATE_BY
-                , CREATE_DATE
-                , UPDATE_BY
-                , UPDATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.idGenCd, jdbcType=VARCHAR}
-                ,(SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
-				  FROM DUAL)
-                , #{item.lastSeq, jdbcType=NUMERIC}
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              );
-   </foreach> 
-  </insert>-->
-    <update id="modify_defaultInfo1" parameterType="java.util.List">
+
+    <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_ID_GENERATE
       SET    ID_GEN_NM = #{item.idGenNm, jdbcType=VARCHAR}
@@ -164,7 +103,7 @@
       AND    ID_GEN_CD = #{item.idGenCd, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+  <delete id="remove_delBtn1" parameterType="java.util.List">
       DELETE FROM MOM_ID_GENERATE
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">

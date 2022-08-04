@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD1030">
-   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	     	SELECT * 
 	  FROM ( SELECT ROWNUM AS KEY_ID,
 	                ROWNUM AS ID,
@@ -57,7 +57,7 @@
      WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
          </if>														
 	</select>
-    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+    <insert id="create_createBtn1" parameterType="java.util.List">  
         INSERT INTO MOM_PARTNER(
 					              COMPANY_CD
 								, DIVISION_CD
@@ -107,7 +107,7 @@
 				          )		             
 	            </foreach>			               
    </insert>   
-   <update id="modify_defaultInfo1" parameterType="java.util.List">     
+   <update id="modify_editBtn1" parameterType="java.util.List">     
      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
        UPDATE MOM_PARTNER
        SET    PARTNER_NM        = #{item.partnerNm,        jdbcType=VARCHAR}
@@ -132,7 +132,7 @@
        AND     PARTNER_CD        = TRIM(#{item.partnerCd,    jdbcType=VARCHAR})         
       </foreach>
    </update> 
-   <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
+   <delete id="remove_delBtn1" parameterType="java.util.List"> 
 	   DELETE
 	   FROM    MOM_PARTNER
        <where> 
@@ -145,7 +145,7 @@
         </foreach>
        </where>
    </delete>
-    <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap">
+    <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap">
       MERGE INTO MOM_PARTNER 
             USING( 
                      SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
@@ -237,96 +237,5 @@
                             , PARAM.updateBy
                             , PARAM.updateDate )
   </insert>
-  <!--  <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap">
-      MERGE INTO MOM_PARTNER 
-            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            #{item.partnerCd, jdbcType=VARCHAR} as partnerCd,
-                            #{item.partnerNm, jdbcType=VARCHAR} as partnerNm,
-                            #{item.partnerNmEng, jdbcType=VARCHAR} as partnerNmEng,
-                            #{item.partnerType, jdbcType=VARCHAR} as partnerType,
-                            #{item.businessNo, jdbcType=VARCHAR} as businessNo,
-                            #{item.businessItem, jdbcType=VARCHAR} as businessItem,
-                            #{item.businessType, jdbcType=VARCHAR} as businessType,
-                            #{item.telNo, jdbcType=VARCHAR} as telNo,
-                            #{item.faxNo, jdbcType=VARCHAR} as faxNo,
-                            #{item.email, jdbcType=VARCHAR} as email,
-                            #{item.address, jdbcType=VARCHAR} as address,
-                            #{item.representativeNm, jdbcType=VARCHAR} as representativeNm,
-                            #{item.partnerUserNm, jdbcType=VARCHAR} as partnerUserNm,
-                            #{item.useYn, jdbcType=VARCHAR} as useYn,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
-                     FROM DUAL
-                   </foreach> ) PARAM
-            ON ( COMPANY_CD = PARAM.companyCd AND
-                 DIVISION_CD = PARAM.divisionCd AND
-                 PARTNER_CD = PARAM.partnerCd )
-            WHEN MATCHED THEN 
-                 UPDATE SET PARTNER_NM = PARAM.partnerNm
-                          , PARTNER_NM_ENG = PARAM.partnerNmEng
-                          , PARTNER_TYPE = PARAM.partnerType
-                          , BUSINESS_NO = PARAM.businessNo
-                          , BUSINESS_ITEM = PARAM.businessItem
-                          , BUSINESS_TYPE = PARAM.businessType
-                          , TEL_NO = PARAM.telNo
-                          , FAX_NO = PARAM.faxNo
-                          , EMAIL = PARAM.email
-                          , ADDRESS = PARAM.address
-                          , REPRESENTATIVE_NM = PARAM.representativeNm
-                          , PARTNER_USER_NM = PARAM.partnerUserNm
-                          , USE_YN = PARAM.useYn
-                          , DESCRIPTION = PARAM.description
-                          , CREATE_BY = PARAM.createBy
-                          , CREATE_DATE = PARAM.createDate
-                          , UPDATE_BY = PARAM.updateBy
-                          , UPDATE_DATE = PARAM.updateDate
-            WHEN NOT MATCHED THEN
-                     INSERT ( COMPANY_CD
-                            , DIVISION_CD
-                            , PARTNER_CD
-                            , PARTNER_NM
-                            , PARTNER_NM_ENG
-                            , PARTNER_TYPE
-                            , BUSINESS_NO
-                            , BUSINESS_ITEM
-                            , BUSINESS_TYPE
-                            , TEL_NO
-                            , FAX_NO
-                            , EMAIL
-                            , ADDRESS
-                            , REPRESENTATIVE_NM
-                            , PARTNER_USER_NM
-                            , USE_YN
-                            , DESCRIPTION
-                            , CREATE_BY
-                            , CREATE_DATE
-                            , UPDATE_BY
-                            , UPDATE_DATE )
-                     VALUES ( PARAM.companyCd
-                            , PARAM.divisionCd
-                            , PARAM.partnerCd
-                            , PARAM.partnerNm
-                            , PARAM.partnerNmEng
-                            , PARAM.partnerType
-                            , PARAM.businessNo
-                            , PARAM.businessItem
-                            , PARAM.businessType
-                            , PARAM.telNo
-                            , PARAM.faxNo
-                            , PARAM.email
-                            , PARAM.address
-                            , PARAM.representativeNm
-                            , PARAM.partnerUserNm
-                            , PARAM.useYn
-                            , PARAM.description
-                            , PARAM.createBy
-                            , PARAM.createDate
-                            , PARAM.updateBy
-                            , PARAM.updateDate )
-  </insert> -->
+
 </mapper>

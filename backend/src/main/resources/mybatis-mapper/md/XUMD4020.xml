@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD4020">
-   <select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
        SELECT MCD.COMPANY_CD
      , MCD.COMPANY_NM
      , MCD.DIVISION_CD
@@ -44,7 +44,7 @@
 	</if>   
       ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MS.SHIFT_NM 
   </select>
-  <select id="get_defaultInfo2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+  <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
       SELECT MCD.COMPANY_CD
 	       , MCD.COMPANY_NM
 	       , MCD.DIVISION_CD
@@ -74,7 +74,7 @@
 	    </if>   
 		ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM , MSD.SHIFT_DETAIL_NM  
   </select>
-    <select id="get_defaultInfo3" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+    <select id="get_findBtn3" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
         SELECT MCD.COMPANY_CD
 		     , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -109,7 +109,7 @@
         ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM , MT.REST_TIME_NM
 
   </select>
-  <insert id="create_defaultInfo1" parameterType="java.util.List">
+  <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_SHIFT (
                   COMPANY_CD
@@ -144,7 +144,7 @@
               )
    </foreach>
   </insert>  
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
+  <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_SHIFT
       SET    SHIFT_NM = #{item.shiftNm, jdbcType=VARCHAR}
@@ -162,7 +162,7 @@
       AND    SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}
     </foreach>
   </update>  
-  <insert id="create_defaultInfo2" parameterType="java.util.List">
+  <insert id="create_createBtn2" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_SHIFT_DETAIL (
                   COMPANY_CD
@@ -197,7 +197,7 @@
               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo2" parameterType="java.util.List">
+  <update id="modify_editBtn2" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_SHIFT_DETAIL
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
@@ -219,7 +219,7 @@
       AND    SHIFT_DETAIL_CD = #{item.shiftDetailCd, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <insert id="create_defaultInfo3" parameterType="java.util.List">
+  <insert id="create_createBtn3" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_SHIFT_REST_TIME_MAP (
                   COMPANY_CD
@@ -246,7 +246,7 @@
               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo3" parameterType="java.util.List">
+  <update id="modify_editBtn3" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_SHIFT_REST_TIME_MAP
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
@@ -264,7 +264,7 @@
       AND    REST_TIME_CD = #{item.restTimeCd, jdbcType=VARCHAR}
     </foreach>
   </update>   
-    <delete id="remove_defaultInfo2" parameterType="java.util.List">
+    <delete id="remove_delBtn2" parameterType="java.util.List">
       DELETE FROM MOM_SHIFT_DETAIL
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -276,7 +276,7 @@
        </foreach>
       </where>
   </delete>    
-   <delete id="remove_defaultInfo3" parameterType="java.util.List">
+   <delete id="remove_delBtn3" parameterType="java.util.List">
       DELETE FROM MOM_SHIFT_REST_TIME_MAP
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">

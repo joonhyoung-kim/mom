@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUPP1030">
-	<select id="get_defaultInfo1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 		SELECT MCD.COMPANY_CD
 		     , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -84,74 +84,8 @@
 		       , MD.DEMAND_ID
 
 	</select>
-	<select id="get_defaultInfo2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-				SELECT MB.ITEM_ID                  -- 품목
-		     , MI.ITEM_NM                  -- 품명
-		     , MB.WORK_CENTER_CD           -- 작업장
-		     , MWC.WORK_CENTER_NM          -- 작업장명
-		     , MB.PRIORITY                 -- 우선순위 
-		FROM   MOM_BOR MB
-		     , MOM_ITEM MI
-		     , MOM_WORK_CENTER MWC
-		     , MOM_ROUTING MR
-		WHERE  MB.COMPANY_CD     = MI.COMPANY_CD
-		AND    MB.DIVISION_CD    = MI.DIVISION_CD
-		AND    MB.ITEM_ID        = MI.ITEM_ID
-		AND    MB.COMPANY_CD     = MWC.COMPANY_CD
-		AND    MB.DIVISION_CD    = MWC.DIVISION_CD
-		AND    MB.WORK_CENTER_CD = MWC.WORK_CENTER_CD
-		AND    MB.COMPANY_CD     = MR.COMPANY_CD
-		AND    MB.DIVISION_CD    = MR.DIVISION_CD
-		AND    MB.ROUTING_ID     = MR.ROUTING_ID
-		AND    MB.USE_YN         = 'Y'
-		ORDER BY MB.ITEM_ID, MB.PRIORITY
-	</select>
-
-
-  <insert id="create_defaultInfo1" parameterType="java.util.List">
-   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_DEMAND (
-                  COMPANY_CD
-                , DIVISION_CD
-                , DEMAND_ID
-                , SALES_ORDER_ID
-                , DEMAND_TYPE
-                , ITEM_ID
-                , DUE_DATE
-                , DUE_DATE_WEEK
-                , QTY
-                , PRIORITY
-                , WORK_CENTER_CD
-                , ALLOCATE_FLAG
-                , ALLOCATE_QTY
-                , DESCRIPTION
-                , CREATE_BY
-                , CREATE_DATE
-                , UPDATE_BY
-                , UPDATE_DATE )
-      VALUES 
-              (   #{item.companyCd, jdbcType=VARCHAR}
-                , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.demandId, jdbcType=VARCHAR}
-                , #{item.salesOrderId, jdbcType=VARCHAR}
-                , #{item.demandType, jdbcType=VARCHAR}
-                , #{item.itemId, jdbcType=VARCHAR}
-                , TO_DATE(#{item.dueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
-                , #{item.dueDateWeek, jdbcType=VARCHAR}
-                , #{item.qty, jdbcType=NUMERIC}
-                , #{item.priority, jdbcType=NUMERIC}
-                , #{item.workCenterCd, jdbcType=VARCHAR}
-                , 'N'
-                , 0
-                , #{item.description, jdbcType=VARCHAR}
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , #{item.userId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-              )
-   </foreach>
-  </insert>
-     <select id="proc_defaultInfo1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+	
+   <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL mom_demand_pkg.sp_create_manual_demand(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -165,7 +99,21 @@
 					                                          , #{description,      jdbcType=VARCHAR, mode=IN} 
 					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-  <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
+  <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL mom_demand_pkg.sp_create_manual_demand(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
+					                                          , #{demandType,       jdbcType=VARCHAR, mode=IN} 
+					                                          , #{itemId,           jdbcType=VARCHAR, mode=IN}  
+					                                          , TO_DATE(#{dueDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
+					                                          , #{qty,              jdbcType=NUMERIC, mode=IN}  
+					                                          , #{priority,         jdbcType=NUMERIC, mode=IN}  
+					                                          , #{workCenterCd,     jdbcType=VARCHAR, mode=IN}  
+					                                          , #{description,      jdbcType=VARCHAR, mode=IN} 
+					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
+  </select>  
+  <insert id="upsert_saveBtn1" parameterType="java.util.HashMap" flushCache="true">
       MERGE INTO MOM_DEMAND 
             USING( 
                      SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,

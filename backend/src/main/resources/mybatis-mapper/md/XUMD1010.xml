@@ -7,7 +7,7 @@
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   fetchSize="1"resultType="com.mom.dto.LowerHashMap"
     </parameterMap> -->
-    	<select id="get_defaultInfo1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+    	<select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
             SELECT MCD.COMPANY_CD
 			     , MCD.COMPANY_NM
 			     , MCD.DIVISION_CD
@@ -31,7 +31,7 @@
 		    </if>
 			ORDER BY  MP.PLANT_NM							
 	    </select>
-    <insert id="create_defaultInfo1" parameterType="java.util.List">  
+    <insert id="create_createBtn1" parameterType="java.util.List">  
         INSERT INTO MOM_PLANT(
 					              COMPANY_CD
 						        , DIVISION_CD
@@ -59,7 +59,7 @@
 				          )		             
 	            </foreach>			               
    </insert>   
-   <update id="modify_defaultInfo1" parameterType="java.util.List">     
+   <update id="modify_editBtn1" parameterType="java.util.List">     
       <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
         UPDATE MOM_PLANT 
         SET    PLANT_NM       = #{item.plantNm,     jdbcType=VARCHAR}
@@ -74,7 +74,7 @@
          </where>
       </foreach>
    </update> 
-   <delete id="remove_defaultInfo1" parameterType="java.util.List"> 
+   <delete id="remove_delBtn1" parameterType="java.util.List"> 
 	   DELETE FROM     MOM_PLANT
        <where> 
         <foreach collection="list" item="item" open="" close="" separator="OR"> 
@@ -86,7 +86,7 @@
         </foreach>
        </where>
    </delete>
-  <insert id="upsert_defaultInfo1" parameterType="java.util.HashMap" flushCache="true">
+  <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true">
 	  MERGE INTO MOM_PLANT MP
 	        USING ( 
 	                   SELECT     #{companyCd, jdbcType=VARCHAR}                              									           as companyCd,                                              					  
