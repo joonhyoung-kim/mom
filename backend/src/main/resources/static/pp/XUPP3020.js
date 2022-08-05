@@ -61,13 +61,25 @@ var VIEW= {
 		
 	},		
      saveCallInit: function(index,your,action,btnId,param,result) {
-	     if(index ==0 && btnId =='saveBtnDP'){		           
+	     if(index ==0 && btnId =='saveBtnDP'&& ($('#defaultPop1').attr('btnid')=='createBtn1' || $('#defaultPop1').attr('btnid')=='copyBtn1')){
+		    let startDate = new Date($('#woStartDateDP1').val());
+		    let endDate = new Date($('#woEndDateDP1').val());
+		    if(startDate>endDate){
+			    result.msg = '종료일은 시작일보다 미래여야합니다.!';
+			    result.result='WARN'
+				return;
+		    }
+		    
+	     }
+	     else if(index ==0 && btnId =='saveBtnDP'&& $('#defaultPop1').attr('btnid')=='editBtn1'){		           
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index],true);
-			 if(checkedItem.length ==0){
+			 if(checkedItem.length == 0){
+				result.result='WARN'
 				return;
 			 }
-			result.param.push({workOrderId:checkedItem[0]['workOrderId']})
-        
+			 param[0].workOrderId =checkedItem[0]['workOrderId'];
+			 result.param =  param;
+         
 	    }
 	  
 	},

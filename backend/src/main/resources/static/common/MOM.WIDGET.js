@@ -2321,6 +2321,7 @@ var momWidget = {
 	    var checkSearchParam = {};
 	    var checkSearchParam = {};
         var totalParam = {};
+        let searchParam = {};
         var queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.findBtn'+(index+1) : menuId+'.findBtn'+(index+1);
 		var that= this;	
 	
@@ -2331,25 +2332,12 @@ var momWidget = {
    
 		   // param = that.pageProperty[index]['param'];
 	        initParam = that.checkInitParam(index,param,your); //init param 설정시 세팅
-	        checkSearchParam = that.checkSearchParam(index,param,your); //search param 설정시 세팅
+	        checkSearchParam = that.checkSearchParam(index,searchParam,your); //search param 설정시 세팅
 	         if (!(that.checkSearchProperty(index, checkSearchParam, your))){ //파라미터 밸리데이션 체크
         	that.splashHide();
         	return;   
         	}
-	       /* for(let i=0,max=that.searchProperty[index];i<max;i++){	
-		 	    if(that.searchProperty[index][i]['columnRequire']=='Y'){
-				   if(checkSearchParam[that.searchProperty[index][i]['searchId']]==undefined || checkSearchParam[that.searchProperty[index][i]['searchId']]==''){
-					   momWidget.messageBox({type:'danger', width:'400', height: '145', html: checkSearchParam[that.searchProperty[index][i]['searchNm']]+'은/는 필수항목입니다!'});
-					   momWidget.splashHide();				
-					   return;
-				   }
-				   else{
-					
-				}
-			   }
-		      
-		
-			}*/
+
 	         if(menuParam != undefined){
 			    totalParam = Object.assign(menuParam, checkSearchParam);   	 
 	            totalParam = Object.assign(totalParam,initParam,param);  
@@ -3030,22 +3018,37 @@ var momWidget = {
 	
 			});
 		AUIGrid.bind(that.grid[index], "cellEditEnd", function(e) {
-			if(that.columnProperty[index][e.columnIndex]['columnType'] == 'S'){
+			let columnProp = that.columnProperty[index][e.columnIndex];
+			if(columnProp['columnType'] == 'S'){
 					for(var i=0, len=that.columnDropdown[index][e.dataField].length; i<len; i++) { // keyValueList 있는 값만..
 									if(that.columnDropdown[index][e.dataField][i]["code"] == e.value) {
 										break;
 									}
 									if(i==len-1&&e.value!=''){
-										AUIGrid.setCellValue(that.grid[index], e.columnIndex, e.dataField, e.oldValue);
-										that.messageBox({type: 'warning', width: '400', height: '145', html: '리스트에 없는 데이터입니다!'});
+										AUIGrid.setCellValue(that.grid[index], e.rowIndex,e.columnIndex, e.oldValue);
+										that.messageBox({type: 'warning', width: '400', height: '145', html: '리스트에 없는 데이터!'});
 									}
 								}
 								$('.aui-grid-cell-editor-button.aui-grid-cell-editor-button-combo-list').css('display','none');
 			}
+						
+			else if(columnProp['columnType'] == 'T'){
+				 if(e.value=='' || e.value==null || e.value==undefined){
+					AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, 0);
+				 }
+				 else{
+					   if(columnProp['dataType']=='numeric'){
+					     if(isNaN(e.value)==true){
+						      that.messageBox({type: 'warning', width: '400', height: '145', html: '숫자만 입력가능!'});
+						      AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, e.oldValue);
+					     }
+				       }
+				 }
+				  
+			}
 			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'DG'){
 				//that.editItem[index].push();
-			}			
-					
+			}		
 							
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
 			});
@@ -5558,14 +5561,14 @@ var momWidget = {
 		    
 		    
 		    
-		
+		/*
 				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
 					if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
 				      return;
 					}	
-				  	param = callInitResult['param'];	
+				  	param = callInitResult['param'];	*/
 				
 				var popupCount = that.popupProperty[index].length;
 				var popupItem  = that.popupProperty[index];
@@ -6022,6 +6025,7 @@ var momWidget = {
 					
 					
 				}
+				
 					param = buttonParam.map(function(item1){
 			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
 		        return item2;
@@ -6032,12 +6036,21 @@ var momWidget = {
 				
 				}
 				else{
+					    param = that.getPopupParam(index,your,extraParam);
+					    callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
+							if(callInitResult['result'] != 'SUCCESS') {
+								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+							}	
+				  	           param = callInitResult['param'];	
 					if(Array.isArray(param)==true){
-					    param = param.length == 0 ? {}:param;
-						param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
+					    param = param.length == 0 ? {}:param;					    
+						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
 					}
 					else{
-						 param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
+						// param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
 					}
 				
 				
@@ -6889,7 +6902,7 @@ var momWidget = {
 						      return;
 			    		}
 									 
-			        	  momWidget.findBtnClicked(index, {}, true, 'procBtn',momWidget.pageProperty[index]['programId'],your);			        	  
+			        	  momWidget.findBtnClicked(index, {}, true, btnId,momWidget.pageProperty[index]['programId'],your);			        	  
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
 					      return;

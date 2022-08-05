@@ -20,7 +20,7 @@ var VIEW= {
 			   }			
 			   else{
 						   result.param = {targetIndex:0,addIndex:1};
-			          }
+			   }
 			          
 		
 		}

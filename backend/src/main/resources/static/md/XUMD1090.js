@@ -12,32 +12,15 @@ var VIEW= {
 			   if(index ==0 && btnId =='saveBtnDP' && action=='C' ){		           
 					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
 		
-	
-					     //param[0]['borId'] = '1';
-			             //result.param = param;
-        
 	    }
 	     else if(index ==0 && btnId =='saveBtnDP' && action=='U' ){		           
-					    //var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
-		
-	
-					     //param[0]['borId'] = items[0]['item']['borId'];
-			             //result.param = param;
         
 	    }
 	   
 
 	},
 		searchCallBack: function(index,your,action,btnId,param,result,data) {
-		/*
-		    if(index ==1 && btnId =='saveBtnDP' && action=='CU' ){		           
-					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
-		
-		
-					     param[0]['borId'] = items[0]['item']['borId'];
-			             result.param = param;
-        
-	    }*/
+
 
    },
 	cellClickCallBack: function(index,rowIndex,target,e) {

@@ -13,30 +13,37 @@ var VIEW= {
 	},	
 	cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index == 0){
-			 momWidget.findBtnClicked(1, {workOrderId:e.item['workOrderId']}, true, 'CELLCLICK',menuId,VIEW);
+			 widget.findBtnClicked(1, {workOrderId:e.item['workOrderId']}, true, 'CELLCLICK',menuId,VIEW);
 		}
 	
 	
 	},
 	procCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 1 || btnId == 'customBtn2-1'){
-			if(param[0].resultState = 'C'){
+			if(param[0].resultState == 'C'){
 				result.msg = '이미 취소된 데이터는 취소할수 없습니다.!';
-				result.result = 'FAIL';
+				result.result = 'WARN';
 				return;
 			}
 	
 		}
 	},
-/*	searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index==0 && btnId== "CELLCLICK"){
-			result.param = {itemId:that.paramTmp.authGroupCd};
-			
+	searchCallInit: function(index,your,action,btnId,param,result,event) {
+		if(index==1 && btnId== "customBtn2-1"){
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			result.param = {workOrderId:checkItem[0].workOrderId};
+			  					
 		}
 
 		
-	},*/
+	},
+    searchCallBack: function(index,your,action,btnId,param,result,data) {
+		if(index==1 && btnId== "customBtn2-1"){
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			widget.findBtnClicked(0, {workOrderId:checkItem[0].workOrderId}, true, 'customBtn2-1',menuId,VIEW);			
+		}
 
+},
 	
 	
 };

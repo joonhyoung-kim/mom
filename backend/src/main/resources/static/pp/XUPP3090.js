@@ -18,6 +18,15 @@ var VIEW= {
 	
 	
 	},
+	searchCallInit: function(index,your,action,btnId,param,result,event) {
+		if(index==1 && btnId== "customBtn2-1"){
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			result.param = {workOrderId:checkItem[0].workOrderId};
+			  					
+		}
+
+		
+	}
 	
 };
 

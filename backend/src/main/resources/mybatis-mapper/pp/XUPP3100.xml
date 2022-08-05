@@ -15,16 +15,16 @@
                        , MII.DIVISION_CD
                        , MII.ITEM_INOUT_ID
                   FROM   MOM_ITEM_INOUT MII
-                  WHERE  MII.COMPANY_CD  = #{divisionCd, jdbcType=VARCHAR}
-                  AND    MII.DIVISION_CD = #{companyCd, jdbcType=VARCHAR}
+                  WHERE  MII.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+                  AND    MII.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
                   AND    MII.IO_DATE     BETWEEN TO_DATE(#{deductStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD') AND  TO_DATE(#{deductStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 23.9997/24 
                   AND    MII.IO_TYPE     = 'O'
                   AND    MII.IO_CATEGORY = 'M00070'
                   <if test="workOrderId != null and workOrderId != ''">
                   AND    MII.WORK_ORDER_ID = #{workOrderId, jdbcType=VARCHAR}
                   </if>
-                  <if test="itemId != null and itemId != ''">
-                  AND    MII.ITEM_ID   = #{itemId, jdbcType=VARCHAR}
+                  <if test="deductItemId != null and deductItemId != ''">
+                  AND    MII.ITEM_ID   = #{deductItemId, jdbcType=VARCHAR}
                   </if>
                   <if test="locationCd != null and locationCd != ''">
                   AND    MII.LOCATION_CD   = #{locationCd, jdbcType=VARCHAR}
@@ -53,6 +53,7 @@ SELECT CD.WORK_ORDER_ID
      , CD.COMPANY_CD
      , CD.DIVISION_CD
      , CD.ITEM_INOUT_ID 
+     , CD.ITEM_INOUT_ID  AS KEY_ID
      , MC.ITEM_INOUT_ID   AS CANCEL_ITEM_INOUT_ID
      , MC.DESCRIPTION        
 FROM   C_DEDUCT CD
@@ -68,13 +69,22 @@ AND    CD.WORK_ORDER_ID  = MWO.WORK_ORDER_ID
 AND    CD.COMPANY_CD     = MC.COMPANY_CD(+)
 AND    CD.DIVISION_CD    = MC.DIVISION_CD(+)
 AND    CD.ITEM_INOUT_ID  = MC.PREV_ITEM_INOUT_ID(+)
-AND    MWO.ITEM_ID       = '검색조건 품목(작업지시)'   
+ <if test="woItemId != null and woItemId != ''">
+AND    MWO.ITEM_ID       = #{woItemId, jdbcType=VARCHAR}
+ </if>
 ORDER BY CD.WORK_ORDER_ID
        , CD.WO_RESULT_ID
        , CD.IO_DATE
        , CD.ITEM_ID
-       , CD.IO_DATE;
-
+       , CD.IO_DATE
 	</select>
-
+<select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_WO_PKG.sp_cancel_wo_result(     		    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}			
+					                                          , #{workOrderId, jdbcType=VARCHAR, mode=IN}	
+					                                          , #{woResultId,  jdbcType=VARCHAR, mode=IN}									  
+					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+ </select>  
 </mapper>
