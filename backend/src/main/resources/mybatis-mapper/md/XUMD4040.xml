@@ -203,7 +203,7 @@
 					                                          , #{workCenterCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-  <insert id="create_defaultInfo1" parameterType="java.util.List">
+  <insert id="create_createBtn1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_SHIFT_SCHEDULE (
                   COMPANY_CD
@@ -232,7 +232,7 @@
               )
    </foreach>
   </insert>
-  <update id="modify_defaultInfo1" parameterType="java.util.List">
+  <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_SHIFT_SCHEDULE
       SET    SHIFT_CD = #{item.shiftCd, jdbcType=VARCHAR}         
@@ -248,7 +248,7 @@
       AND    APPLY_DATE = #{item.applyDate, jdbcType=VARCHAR}
     </foreach>
   </update>
-  <delete id="remove_defaultInfo1" parameterType="java.util.List">
+  <delete id="remove_delBtn1" parameterType="java.util.List">
       DELETE FROM MOM_SHIFT_SCHEDULE
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">

@@ -195,6 +195,107 @@
               )
    </foreach>
   </insert>
+  <insert id="create_copyBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_ITEM (
+                  COMPANY_CD
+                , DIVISION_CD
+                , ITEM_ID
+                , ITEM_NM
+                , ITEM_GROUP_CD
+                , ITEM_TYPE
+                , ITEM_SPEC
+                , UNIT
+                , PURCHASE_UNIT
+                , PROCUREMENT_TYPE
+                , MATERIAL_TYPE
+                , NET_WEIGHT
+                , NET_WEIGHT_UNIT
+                , GROSS_WEIGHT
+                , GROSS_WEIGHT_UNIT
+                , IN_LOCATION_CD
+                , OUT_LOCATION_CD
+                , ISSUE_TYPE
+                , ISSUE_UNIT
+                , VENDOR_CD
+                , DEPARTURE_VENDOR_CD
+                , TEST_REPORT_FLAG
+                , IQC_FLAG
+                , PQC_FLAG
+                , FQC_FLAG
+                , OQC_FLAG
+                , RP_ITEM_ID
+                , ITEM_CATEGORY_L
+                , ITEM_CATEGORY_M
+                , ITEM_CATEGORY_S
+                , EXCEPTION_ISSUE_FLAG
+                , COLOR
+                , CUSTOMER_DIVISION_CD
+                , MAKER
+                , ABC_TYPE
+                , DRAWING_NO
+                , HS_CD
+                , REORDER_POINT
+                , SAFETY_STOCK_QTY
+                , PHANTOM_FLAG
+                , MRP_FLAG
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.itemId, jdbcType=VARCHAR}
+                , #{item.itemNm, jdbcType=VARCHAR}
+                , #{item.itemGroupCd, jdbcType=VARCHAR}
+                , #{item.itemType, jdbcType=VARCHAR}
+                , #{item.itemSpec, jdbcType=VARCHAR}
+                , #{item.unit, jdbcType=VARCHAR}
+                , #{item.purchaseUnit, jdbcType=VARCHAR}
+                , #{item.procurementType, jdbcType=VARCHAR}
+                , #{item.materialType, jdbcType=VARCHAR}
+                , #{item.netWeight, jdbcType=NUMERIC}
+                , #{item.netWeightUnit, jdbcType=VARCHAR}
+                , #{item.grossWeight, jdbcType=NUMERIC}
+                , #{item.grossWeightUnit, jdbcType=VARCHAR}
+                , #{item.inLocationCd, jdbcType=VARCHAR}
+                , #{item.outLocationCd, jdbcType=VARCHAR}
+                , #{item.issueType, jdbcType=VARCHAR}
+                , #{item.issueUnit, jdbcType=VARCHAR}
+                , #{item.vendorCd, jdbcType=VARCHAR}
+                , #{item.departureVendorCd, jdbcType=VARCHAR}
+                , #{item.testReportFlag, jdbcType=VARCHAR}
+                , #{item.iqcFlag, jdbcType=VARCHAR}
+                , #{item.pqcFlag, jdbcType=VARCHAR}
+                , #{item.fqcFlag, jdbcType=VARCHAR}
+                , #{item.oqcFlag, jdbcType=VARCHAR}
+                , #{item.rpItemId, jdbcType=VARCHAR}
+                , #{item.itemCategoryL, jdbcType=VARCHAR}
+                , #{item.itemCategoryM, jdbcType=VARCHAR}
+                , #{item.itemCategoryS, jdbcType=VARCHAR}
+                , #{item.exceptionIssueFlag, jdbcType=VARCHAR}
+                , #{item.color, jdbcType=VARCHAR}
+                , #{item.customerDivisionCd, jdbcType=VARCHAR}
+                , #{item.maker, jdbcType=VARCHAR}
+                , #{item.abcType, jdbcType=VARCHAR}
+                , #{item.drawingNo, jdbcType=VARCHAR}
+                , #{item.hsCd, jdbcType=VARCHAR}
+                , #{item.reorderPoint, jdbcType=NUMERIC}
+                , #{item.safetyStockQty, jdbcType=NUMERIC}
+                , #{item.phantomFlag, jdbcType=VARCHAR}
+                , #{item.mrpFlag, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
   <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_ITEM

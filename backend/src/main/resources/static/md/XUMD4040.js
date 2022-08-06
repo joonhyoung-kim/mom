@@ -10,7 +10,7 @@ var VIEW= {
 	},
 	event: function(e) {
 		$(document).on('change','#shiftCdDP1', function(e) {
-			mom_ajax('R', 'XUMD4020.defaultInfo1', {shiftCd2:$('#shiftCdDP1').val(),useYn:'Y'}, function(result1, data1) { 
+			mom_ajax('R', 'XUMD4020.findBtn1', {shiftCd2:$('#shiftCdDP1').val(),useYn:'Y'}, function(result1, data1) { 
 		        if(result1 != 'SUCCESS' || data1.length == 0) {
 		    	  momWidget.splashHide();
 			      return;							     

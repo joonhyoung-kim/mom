@@ -78,13 +78,47 @@ ORDER BY CD.WORK_ORDER_ID
        , CD.ITEM_ID
        , CD.IO_DATE
 	</select>
+	<insert id="create_customBtn1-1" parameterType="java.util.List">
+      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PROC_ITEM_DEDUCT_CANCEL (
+                  COMPANY_CD
+                , DIVISION_CD
+                , ITEM_INOUT_ID
+                , CANCEL_ITEM_INOUT_ID
+                , DESCRIPTION
+                , VAL_MSG
+                , MULTI_MSG
+                , CREATE_BY
+                , CREATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.itemInoutId, jdbcType=VARCHAR}
+                , #{item.cancelItemInoutId, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.valMsg, jdbcType=VARCHAR}
+                , #{item.multiMsg, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+   <delete id="remove_customBtn1-1" parameterType="java.util.List">
+       DELETE FROM MOM_PROC_ITEM_DEDUCT_CANCEL
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>  
 <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_WO_PKG.sp_cancel_wo_result(     		    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+          { CALL MOM_WO_PKG.sp_cancel_item_deduct(     		    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}			
-					                                          , #{workOrderId, jdbcType=VARCHAR, mode=IN}	
-					                                          , #{woResultId,  jdbcType=VARCHAR, mode=IN}									  
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
  </select>  
 </mapper>

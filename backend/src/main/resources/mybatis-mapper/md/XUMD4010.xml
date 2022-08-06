@@ -30,7 +30,7 @@
 	AND    MC.DATE_ID <![CDATA[<]]> TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
     ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MC.DATE_ID   
    </select>
-   <update id="modify_editBtn1" parameterType="java.util.List">
+   <update id="modify_saveBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_CALENDAR
       SET     DAY_OFF_YN = #{item.dayOffYn, jdbcType=VARCHAR}

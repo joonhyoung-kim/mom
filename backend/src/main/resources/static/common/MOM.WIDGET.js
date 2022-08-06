@@ -3034,7 +3034,7 @@ var momWidget = {
 						
 			else if(columnProp['columnType'] == 'T'){
 				 if(e.value=='' || e.value==null || e.value==undefined){
-					AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, 0);
+					AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, '');
 				 }
 				 else{
 					   if(columnProp['dataType']=='numeric'){
@@ -3361,7 +3361,30 @@ var momWidget = {
 				
 			}
 			else if( checkMode == 'multipleRows'){
+				for(let i=0,max=gridData.length; i<max;i++){
+					if(AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])){
+						checkCount ++;
+					}
+					
+					
+				}
+				 if(checkCount==0){					
+					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					
+				}
+				else if(checkCount==1){
+					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+				}
+				else if(checkCount>1){
+					//AUIGrid.setAllCheckedRows(e.pid, false);
+					//AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					
+				}
 				
+				
+				else{
+					
+				}
 			}
 			else{
 				
@@ -5268,7 +5291,9 @@ var momWidget = {
 				
 				if(isCheckCol == true){
 					if (param.length == 0){
-					      return;	
+					   momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+					  momWidget.splashHide();
+					  return;		
 					}			
 										
 				}
@@ -6145,7 +6170,7 @@ var momWidget = {
 					if (param.length == 0){
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
 					  momWidget.splashHide();
-					      return;	
+					  return;	
 					}			
 										
 				}
@@ -6193,9 +6218,10 @@ var momWidget = {
 				var param = [];
 				var callBackParam = {};
 				param = that.getCheckedRowItems(that.grid[index]);
-				if(param.length < 1) {
-					that.messageBox({type:'warning', width:'400', height: '145', html:Language.lang['MESSAGES10491']});					
-					return;
+				if(param.length ==0) {
+					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+					  momWidget.splashHide();
+					  return;	
 				}
 				callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,param,e);
 				if(callInitResult['result'] != 'SUCCESS') {

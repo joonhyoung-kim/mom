@@ -11,41 +11,17 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-	   cellClickCallInit: function(index,rowIndex,e,) {
-		if(index == 0){
-			let item = e.item;		
-            if(item.state =='C' && e.dataField=='workCenterCd'){
-	             widget.messageBox({type: 'warning', width: '400', height: '145', html: multiLang.transText('MESSAGE','MSG00046')});
-	             return 'FAIL';
-			}
-         
+	 delCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 0 || btnId == 'customBtn1-1'){
+		   for(var i=0,max=param.length; i<max;i++){
+			if(param[i].cancelItemInoutId != undefined && param[i].cancelItemInoutId != ''){
+				result.msg = '이미 차감 취소된 데이터가 포함되어있습니다!';
+				result.result = 'WARN';
+				return;
+			}		    
+	       }
 		}
-	
-	},	
-	   cellClickCallBack: function(index,rowIndex,target,e) {
-		if(index == 0 && e.dataField != 'workCenterCd'){
-			 momWidget.findBtnClicked(1, {borId:e.item['borId']}, true, 'CELLCLICK',menuId,VIEW);
-		}
-		else if(index == 10){
-			var item = e.item;		
-            AUIGrid.setCellValue(widget.grid[0], rowIndex, "workCenterCd", item['workCenterCd']);
-            AUIGrid.setCellValue(widget.grid[0], rowIndex, "borId", item['borId']);
-            AUIGrid.setCellValue(widget.grid[0], rowIndex, "routingId", item['routingId']);
-           // $('#dropDownGridPop'+(index+1)).remove();
-			//momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080,[]);
-			 //$('#dropDownGridPop'+(index+1)).remove();
-		}
-	
-	}	
-/*	searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index==0 && btnId== "CELLCLICK"){
-			result.param = {itemId:that.paramTmp.authGroupCd};
-			
-		}
-
-		
-	},*/
-
+	}
 	
 	
 };

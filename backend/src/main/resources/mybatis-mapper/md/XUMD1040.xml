@@ -58,7 +58,33 @@
                               ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
                               )
                 </foreach>
-  </insert>   
+  </insert>
+  <insert id="create_copyBtn1" parameterType="java.util.List">
+         INSERT INTO MOM_WORK_GROUP (
+                                 COMPANY_CD
+                              ,  DIVISION_CD
+                              ,  WORK_GROUP_CD
+                              ,  WORK_GROUP_NM
+                              ,  USE_YN
+                              ,  DESCRIPTION
+                              ,  CREATE_BY
+                              ,  CREATE_DATE
+                              ,  UPDATE_BY
+                              ,  UPDATE_DATE )
+         VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+                              (   #{item.companyCd, jdbcType=VARCHAR}
+                              ,   #{item.divisionCd, jdbcType=VARCHAR}
+                              ,   #{item.workGroupCd, jdbcType=VARCHAR}
+                              ,   #{item.workGroupNm, jdbcType=VARCHAR}
+                              ,   #{item.useYn, jdbcType=VARCHAR}
+                              ,   #{item.description, jdbcType=VARCHAR}
+                              ,   #{item.userId, jdbcType=VARCHAR}
+                              ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                              ,   #{item.userId, jdbcType=VARCHAR}
+                              ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                              )
+                </foreach>
+  </insert>    
   <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_WORK_GROUP

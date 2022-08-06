@@ -37,7 +37,7 @@
 	   AND MCIM.CUSTOMER_CD = #{customerCd, jdbcType=VARCHAR}
 	   </if>
 	   <if test="customerItemId != null and customerItemId != ''">
-	   AND (MCIM.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
+	   AND (UPPER(MCIM.CUSTOMER_ITEM_ID) LIKE '%' || UPPER(#{customerItemId, jdbcType=VARCHAR}) || '%' )
 	   </if>
 	   <if test="itemId != null and itemId != ''">
 	   AND (MCIM.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
@@ -48,6 +48,36 @@
 	   ORDER BY  MI.ITEM_NM
 	</select>
     <insert id="create_createBtn1" parameterType="java.util.List">
+         INSERT INTO MOM_CUSTOMER_ITEM_MAPPING (
+                     COMPANY_CD
+                  ,  DIVISION_CD
+                  ,  CUSTOMER_CD
+                  ,  CUSTOMER_ITEM_ID
+                  ,  ITEM_ID
+                  ,  REQ_QTY
+                  ,  USE_YN
+                  ,  DESCRIPTION
+                  ,  CREATE_BY
+                  ,  CREATE_DATE
+                  ,  UPDATE_BY
+                  ,  UPDATE_DATE )
+         VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+                  (   #{item.companyCd, jdbcType=VARCHAR}
+                  ,   #{item.divisionCd, jdbcType=VARCHAR}
+                  ,   #{item.customerCd, jdbcType=VARCHAR}
+                  ,   #{item.customerItemId, jdbcType=VARCHAR}
+                  ,   #{item.itemId, jdbcType=VARCHAR}
+                  ,   #{item.reqQty, jdbcType=NUMERIC}
+                  ,   #{item.useYn, jdbcType=VARCHAR}
+                  ,   #{item.description, jdbcType=VARCHAR}
+                  ,   #{item.userId, jdbcType=VARCHAR}
+                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                  ,   #{item.userId, jdbcType=VARCHAR}
+                  ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                  )
+                </foreach>
+  </insert>	
+     <insert id="create_copyBtn1" parameterType="java.util.List">
          INSERT INTO MOM_CUSTOMER_ITEM_MAPPING (
                      COMPANY_CD
                   ,  DIVISION_CD
