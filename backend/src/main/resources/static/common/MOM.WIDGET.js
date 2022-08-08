@@ -49,16 +49,84 @@ var momWidget = {
 	dateCheckParam :        '-1', // 엑셀 업로드시 추가적인 벨리데이션(yyyymm형태)을 위한 변수
 	upsertFlag:             'Y',
 	//background: #6c5ffc !important;
-	init: function(index, menuId, your, customFlag) {		  
+	init: function(index, menuId, your, widgetType) {		  
 		  var that = this;	 
 		  let gridId = index;
 		  index--;
-		 
-		 
-    	
+
 		 // var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
-		  
-		  
+		  if(widgetType=='CP'){
+			  let popupTotalNum   = that.popupProperty[index].length;
+			  let popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
+			  let popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
+			  let remarkInline  = popupTotalNum % popupColNum == 1 ? 'Y':'N';
+			  var remarkYn      = 'N';
+			  let popupItem = [];
+			  
+			   for(var i=0,max=that.popupProperty[index].length;i<max;i++){
+			    	  if(that.popupProperty[index][i]['columnRequire']== "Y"){
+			    		    circleClass = 'circle-bg-orange';
+			    		    textClass   =  'textblock-orange';
+			    		    
+			    	  }
+			    	  else{
+			      		    circleClass = 'circle';
+			    		    textClass   = 'textblock';
+			    	  }
+			    	  
+		    		  if(that.popupProperty[index][i]['popupType']=='S' || that.popupProperty[index][i]['popupType'] == 'M'){
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
+		    			  
+			    	  }
+			    	  else if(that.popupProperty[index][i]['popupType']=='SS'){
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
+		    			   
+			    	  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='C'){
+		    			  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
+		    			  
+		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='C-HM'){
+		    			  labelField  = '<input  id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
+		    			  
+		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='P'){
+		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
+		    			  
+		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='DS'){
+		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  remarkYn    = 'Y';
+		    		  }
+		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){			  
+			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
+			    	  }
+			    	  else {
+			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
+			    	  }
+			    
+		    		  			    	  
+			    	  popupItem[i] =  {	  			    	  
+				    	  popupId:          that.popupProperty[index][i]['popupId'],
+				    	  popupNm:          that.popupProperty[index][i]['popupNm'],
+				      	  popupSeq:         that.popupProperty[index][i]['popupSeq'],
+				    	  defaultVlue:      that.popupProperty[index][i]['defaultValue'],
+				    	  columnRequire:    that.popupProperty[index][i]['columnRequire'],
+				    	  popupType:        that.popupProperty[index][i]['popupType'],
+				    	  labelField:       labelField,
+				    	  circleClass:      circleClass,
+				          textClass:        textClass
+		              };
+		              
+			      }
+
+			  
+			  let popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn,remarkInline);		    		 
+			  $('body').append(popupAreaHtml);
+		  }
+		  else{
+			
+				  
 		  if(index == 0){
 			  $('head').append('<script  src="/mom/content/jqwidgets/jqxtooltip.js"></script>');
 			  $('head').append('<script  src="/mom/content/jqwidgets/globalization/globalize.js"></script>');
@@ -171,7 +239,7 @@ var momWidget = {
 			  */ 
 			  
 			  if(Array.isArray(that.gridProperty[index]) == true && that.gridProperty[index].length !=0){
-				   var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+				  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
 			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
 			      var searchBtn      =  '';
 			      var gridPopYn      ='';
@@ -462,10 +530,7 @@ var momWidget = {
 						}
 					 }
 					 $('#contentArea'+(index+1)).append(gridAreaHtml); 
-				    	/* for(let i=0;i<$('.grid-pop').length;i++){
-					
-				        }*/
-			        // $('#contentArea'+(index+1)).append(gridAreaHtml); 	
+				  	
 			         $('.gridTab'+(index+1)).append(gridTabLeftHtml);
 			         $('.gridTab'+(index+1)).append(gridTabRightHtml);
 			
@@ -801,6 +866,7 @@ var momWidget = {
 			      that.startPage[index]    = 1;
 			      that.endPage[index]      = momWidget.gridProperty[0][0]['pageRowCount'] == undefined ? 20:momWidget.gridProperty[0][0]['pageRowCount'];
 	}, undefined, undefined, this, false);
+	
 												
 		  /*
 		  ----------------------------------------------------------------------------------------------------------------------------------     
@@ -843,7 +909,7 @@ var momWidget = {
 		        }
 			}
 		  
-		    
+		    }
 		
 		   // multiLang.transLang();
 			//that.procProcessTran(index, your);					// 자리 이동
@@ -9063,13 +9129,13 @@ var momWidget = {
 		} 
 		else if(action == 'GA' && your.addRowCallInit != undefined) {
 				your.addRowCallInit(index,your,action,btnId,param,result);			
-		} 
-		else if((action == 'C' || action == 'U' || action == 'P' || action == 'CP') && your.saveCallInit != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
-			 your.saveCallInit(index,your,action,btnId,param,result);			
-	    } 
+		} 		
 		else if(action == 'D'  && your.delCallInit != undefined) {		
 			 your.delCallInit(index,your,action,btnId,param,result);			
 		}
+		if((action == 'C' || action == 'U' || action == 'P' || action == 'CP') && your.saveCallInit != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+			 your.saveCallInit(index,your,action,btnId,param,result);			
+	    } 
 	/*	if(action == 'U' && your.editCallBack != undefined) {
 			 your.editCallBack(index,your,action,btnId,param,result);	
 		}	*/
@@ -9110,13 +9176,12 @@ var momWidget = {
 		else if(action == 'GA' && your.addRowCallBack != undefined) {
 				your.addRowCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if((action == 'C' || action == 'U' || action == 'P'|| action == 'CP') && your.saveCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
-			your.saveCallBack(index,your,action,btnId,param,result,data);		
-	} 
 		else if(action == 'D'  && your.delCallBack != undefined) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
-		
+		if((action == 'C' || action == 'U' || action == 'P'|| action == 'CP') && your.saveCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+			your.saveCallBack(index,your,action,btnId,param,result,data);		
+	    } 
 /*		if(action == 'U' && your.editCallBack != undefined) {
 			     your.editCallBack(index,your,action,btnId,param,result,data);	
 		}*/

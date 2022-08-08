@@ -144,6 +144,42 @@
               )
    </foreach>
   </insert>  
+   <insert id="create_copyBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_SHIFT (
+                  COMPANY_CD
+                , DIVISION_CD
+                , SHIFT_CD
+                , SHIFT_NM
+                , START_TIME
+                , END_TIME
+                , WORK_TIME
+                , MAIN_SHIFT_YN
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.shiftCd, jdbcType=VARCHAR}
+                , #{item.shiftNm, jdbcType=VARCHAR}
+                , #{item.startTime, jdbcType=VARCHAR}
+                , #{item.endTime, jdbcType=VARCHAR}
+                , #{item.workTime, jdbcType=NUMERIC}
+                , #{item.mainShiftYn, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>  
+  
   <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_SHIFT
@@ -163,6 +199,41 @@
     </foreach>
   </update>  
   <insert id="create_createBtn2" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_SHIFT_DETAIL (
+                  COMPANY_CD
+                , DIVISION_CD
+                , SHIFT_CD
+                , SHIFT_DETAIL_CD
+                , SHIFT_DETAIL_NM
+                , START_TIME
+                , END_TIME
+                , WORK_TIME
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.shiftCd, jdbcType=VARCHAR}
+                , #{item.shiftDetailCd, jdbcType=VARCHAR}
+                , #{item.shiftDetailNm, jdbcType=VARCHAR}
+                , #{item.startTime, jdbcType=VARCHAR}
+                , #{item.endTime, jdbcType=VARCHAR}
+                , #{item.workTime, jdbcType=NUMERIC}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+   <insert id="create_copyBtn2" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_SHIFT_DETAIL (
                   COMPANY_CD
@@ -220,6 +291,33 @@
     </foreach>
   </update>
   <insert id="create_createBtn3" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_SHIFT_REST_TIME_MAP (
+                  COMPANY_CD
+                , DIVISION_CD
+                , SHIFT_CD
+                , REST_TIME_CD
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.shiftCd, jdbcType=VARCHAR}
+                , #{item.restTimeCd, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+  <insert id="create_copyBtn3" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_SHIFT_REST_TIME_MAP (
                   COMPANY_CD

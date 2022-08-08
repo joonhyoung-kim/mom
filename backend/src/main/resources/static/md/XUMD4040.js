@@ -99,22 +99,7 @@ var VIEW= {
 			    result.param = items;  
                        
 	    }
-	/*    else if (index == 1 && btnId =='saveBtnDP'){
-		                var items = param;				
-					    for(var i=0;i<=items.length;i++){		
-						if(items[i]['fromWorkCd'] == $('#toWorkGroupCdDP2').val()){
-							items[0]['toWorkGroupCd'][0]['toWorkGroupCd']
-						}				
-					
-						     
-					    }
-			            result.param = items;
-	}
-     else if (index == 2 && btnId =='saveBtnDP'){
-		                var items = param;				
-				
-			            result.param = items;
-	}*/
+
 	},
 	editCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='editBtn'){	
@@ -125,35 +110,39 @@ var VIEW= {
 	 
 
 	},
-	procCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1 || index == 2){
-			var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
-			if(checkedItems == 0){
-				 result.msg = '데이터를 체크해주세요!';
-				 result.result = 'FAIL';
-			}
-			$('#startDate'+'DP'+(index+1)).val($('#startDate').val());
-			$('#endDate'+'DP'+(index+1)).val($('#endDate').val());	
-			
+	copyCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==0 && btnId =='copyBtn'){	
+	           var items = param;	
+	          $('#startDate'+'DP1').val(items[0]['applyDate']);
+			  $('#endDate'+'DP1').val(items[0]['applyDate']);	
 		}
-		else{
-			  //var items = param;	
-	          $('#startDate'+'DP'+(index+1)).val($('#startDate').val());
-			  $('#endDate'+'DP'+(index+1)).val($('#endDate').val());	
-		}
-	        
-		
 	 
 
+	},
+	procCallInit: function(index,your,action,btnId,param,result) {
+		    if(index == 1 || index == 2){
+				var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
+				if(checkedItems == 0){
+					 result.msg = '데이터를 체크해주세요!';
+					 result.result = 'FAIL';
+				}
+				  $('#startDate'+'DP'+(index+1)).val($('#startDate').val());
+				  $('#endDate'+'DP'+(index+1)).val($('#endDate').val());				
+			}
+			else{
+				  //var items = param;	
+		          $('#startDate'+'DP'+(index+1)).val($('#startDate').val());
+				  $('#endDate'+'DP'+(index+1)).val($('#endDate').val());	
+			}
+	        		 
 	},
 };
 
 $(document).ready(function(event){	
-	momWidget.init(1, menuId, VIEW);
-	momWidget.init(2, menuId, VIEW);
-	momWidget.init(3, menuId, VIEW);
-	momWidget.init(4, menuId, VIEW);
-	momWidget.init(5, menuId, VIEW);
-	
+	momWidget.init(1,  menuId, VIEW,'UI');
+	momWidget.init(1, 'XUSM8050', VIEW,'CP');
+	momWidget.init(1, 'XUSM8060', VIEW,'CP');
+	momWidget.init(1, 'XUSM8070', VIEW,'CP');
+	momWidget.init(1, 'XUSM8080', VIEW,'CP');	
 	VIEW.init();
 });

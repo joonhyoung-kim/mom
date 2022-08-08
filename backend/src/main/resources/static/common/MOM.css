@@ -3823,6 +3823,10 @@ input:focus{
     height: 22.8rem !important;
    /*  border: 1px solid rgb(77, 77, 78) !important; */
 }
+.widget-comboBox1{
+    display: inline-block !important;
+    float: left !important;
+}
 .side-menu__item {
     position: relative;
     display: -webkit-box;
@@ -4959,6 +4963,11 @@ input:focus{
 .h20pcalc5 {
 	height: 20%;
 	padding-top: 15px;
+}
+.w23p {
+	width: 23%;
+	float: left;
+	box-shadow: none;
 }
 .w32p {
 	width: 32%;

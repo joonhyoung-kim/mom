@@ -10,7 +10,7 @@ var VIEW= {
 	},
 	event: function(e) {
 		$(document).on('select','#restTimeCdDP3', function(e) {
-			mom_ajax('R', 'XUMD4030.defaultInfo1', {restTimeCd2:$('#restTimeCdDP3').val(),useYn:'Y'}, function(result1, data1) { 
+			mom_ajax('R', 'XUMD4030.findBtn1', {restTimeCd2:$('#restTimeCdDP3').val(),useYn:'Y'}, function(result1, data1) { 
 		        if(result1 != 'SUCCESS' || data1.length == 0) {
 		    	  momWidget.splashHide();
 			      return;							     

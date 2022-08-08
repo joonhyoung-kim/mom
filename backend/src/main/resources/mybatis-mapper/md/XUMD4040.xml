@@ -10,59 +10,12 @@
 	 AND   TO_CHAR(APPLY_DATE,'YYYY-MM-DD')  = #{applyDate, jdbcType=VARCHAR}
 	 AND   WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
    </select> 
-   <select id="get_totalCount1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	         SELECT COUNT(*) AS TOTAL_COUNT
-              FROM( SELECT    MSS.COMPANY_CD
-                            , MSS.DIVISION_CD
-						    , MSS.APPLY_DATE
-						    
-						    ,  ( SELECT MC.WEEK_DAY
-						         FROM   MOM_CALENDAR MC
-						         WHERE  MC.COMPANY_CD   = MSS.COMPANY_CD
-						         AND    MC.DIVISION_CD  = MSS.DIVISION_CD
-						         AND    MC.DATE_ID      = MSS.APPLY_DATE			
-						        ) AS WEEK_DAY 
-					        FROM     MOM_COM_DIV_V       MCD
-							       , MOM_SHIFT_SCHEDULE  MSS
-							       , MOM_SHIFT           MS
-							       , MOM_WORK_GROUP      MWG
-		       					   , MOM_WORK_CENTER     MWC
-							       , MOM_SHIFT_REST_TIME_V MT
-							WHERE  MCD.COMPANY_CD   = MSS.COMPANY_CD
-							AND    MCD.DIVISION_CD  = MSS.DIVISION_CD   
-							AND    MSS.COMPANY_CD   = MS.COMPANY_CD
-							AND    MSS.DIVISION_CD  = MS.DIVISION_CD    
-							AND    MSS.SHIFT_CD     = MS.SHIFT_CD 
-							AND    MS.COMPANY_CD    = MT.COMPANY_CD
-							AND    MS.DIVISION_CD   = MT.DIVISION_CD    
-							AND    MS.SHIFT_CD      = MT.SHIFT_CD 
-							AND    MWC.COMPANY_CD   = MWG.COMPANY_CD
-							AND    MWC.DIVISION_CD  = MWG.DIVISION_CD    
-							AND    MWC.WORK_GROUP_CD   = MWG.WORK_GROUP_CD 
-							AND    MSS.COMPANY_CD      = MWC.COMPANY_CD   
-					        AND    MSS.DIVISION_CD     = MWC.DIVISION_CD 
-							AND    MSS.WORK_CENTER_CD  = MWC.WORK_CENTER_CD
-							AND    MSS.APPLY_DATE BETWEEN TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
-					        <if test="dayOffYn != null and dayOffYn != ''">
-						    AND MSS.DAY_OFF_YN = #{dayOffYn, jdbcType=VARCHAR}
-						    </if>	
-							<if test="workGroupCd != null and workGroupCd != ''">
-						    AND MWG.WORK_GROUP_CD IN (${workGroupCd})
-						    </if>	
-					        <if test="workCenterCd != null and workCenterCd != ''">
-						    AND MSS.WORK_CENTER_CD IN (${workCenterCd})
-						    </if>	
-	)	 
-	WHERE  1=1 
-	<if test="weekDay != null and weekDay != ''">
-	AND  WEEK_DAY IN (${weekDay})
-	</if>	       						
-   </select> 
    <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
    SELECT *
-   FROM(SELECT ROWNUM AS KEY_ID,
-	                ROWNUM AS ID
-                 , A.*    
+   FROM(SELECT COUNT(*) OVER() AS TOTAL_COUNT,  
+               ROWNUM AS KEY_ID,
+	           ROWNUM AS ID,
+               A.*    
                                
    FROM( SELECT    MCD.COMPANY_CD
 			     , MCD.COMPANY_NM

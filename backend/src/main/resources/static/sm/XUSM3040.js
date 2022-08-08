@@ -132,9 +132,9 @@ var VIEW= {
 };
 
 $(document).ready(function(event){	
-	momWidget.init(1, menuId, VIEW);
-	momWidget.init(11, 'XUSM8040', VIEW);
-	momWidget.init(21, 'XUSM8040', VIEW);
-	momWidget.init(31, 'XUSM8040', VIEW);
+	momWidget.init(1, menuId, VIEW,'UI');
+	momWidget.init(11, 'XUSM8040', VIEW,'DG');
+	momWidget.init(21, 'XUSM8040', VIEW,'DG');
+	momWidget.init(31, 'XUSM8040', VIEW,'DG');
 	VIEW.init();
 });

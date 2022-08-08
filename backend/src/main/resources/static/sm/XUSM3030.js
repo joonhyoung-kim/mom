@@ -90,7 +90,7 @@ var XUSM3030 = {
 		if(prevMenuId==''){
 				prevMenuId = $('#menuId').val();
 		}
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val()}, function(result2, data2) {
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programType:$('#programType').val()}, function(result2, data2) {
 	    	  if(result2 != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -253,7 +253,7 @@ var XUSM3030 = {
 		var dataTypeList  = [{"code":"string","value":"문자"},{"code":"numeric","value":"숫자"},{"code":"date","value":"날짜"},{"code":"boolean","value":"참/거짓"}];
 		var columnTypeList  = [{"code":"T","value":"텍스트"},{"code":"S","value":"싱글-드롭다운"},{"code":"M","value":"멀티-드롭다운"},{"code":"CK","value":"체크박스"},{"code":"C","value":"캘린더"},{"code":"G","value":"그룹핑"},{"code":"DG","value":"드롭다운그리드"}];
 		var sortMethod    = [{"code":"ASC","value":"오름차순"},{"code":"DESC","value":"내림차순"},{"code":"NONE","value":"사용안함"}];
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programType:$('#programType').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -636,7 +636,7 @@ var XUSM3030 = {
 		var that = this;
 		var searchTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"},{"code":"CP","value":"캘린더(기간)"}];
 		var headerTypeList     = [{"code":"T","value":"텍스트"},{"code":"S","value":"드롭다운싱글"},{"code":"M","value":"드롭다운멀티"},{"code":"C","value":"캘린더"}];
-		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		  mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programType:$('#programType').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -901,7 +901,7 @@ var XUSM3030 = {
 	popupGrid: function(queryId) {
 		var that = this;
 		var searchTypeList  = [{"code":"T","value":"텍스트"},{"code":"I","value":"정수"},{"code":"D","value":"소수점"},{"code":"S","value":"드롭다운싱글"},{"code":"SS","value":"드롭다운싱글(검색)"},{"code":"M","value":"드롭다운멀티"},{"code":"MS","value":"드롭다운멀티(검색)"},{"code":"C","value":"캘린더"},{"code":"C-HM","value":"시분"},{"code":"P","value":"비밀번호"},{"code":"G","value":"그리드"},{"code":"DG","value":"드롭다운그리드"},{"code":"DS","value":"비고"}];
-		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programType:$('#programType').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -1127,7 +1127,7 @@ var XUSM3030 = {
 		var that = this;
 		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"delGridBtn","value":"삭제(그리드)"},{"code":"procBtn","value":"프로시저호출"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"},{"code":"customBtn","value":"커스텀버튼"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
-		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programId:''}, function(result, data) {
+		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programType:$('#programType').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
 			      momWidget.splashHide();
@@ -1425,7 +1425,41 @@ var XUSM3030 = {
 	event: function() {
 		var that = this;	
 	
+		$(document).on('select', '#programType', function(e) {
+			    mom_ajax('R', 'XUSM3030.menuList', {menuType:$('#programType').val().trim()}, function(result, data) {
+		        if(result != 'SUCCESS') {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }					       
+			  	 $('#menuId').jqxComboBox("clear");			
+			  	 searchComboItems[0]['menuId'] = data;
+			  	 $('#menuId').jqxComboBox("source",data);	
+			 	 //$("#menuId").jqxComboBox('selectIndex', 0 ); 
+			 	 //$('#gridId').val('1');
+				//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
+				//momWidget.splashHide();
+			   
+
+	}, undefined, undefined, this, false,'Y');
+			
+		});
+		  mom_ajax('R', 'XUSM3030.menuList', {menuType:'P'}, function(result, data) {
+		      if(result != 'SUCCESS') {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }					       
+			  	 $('#menuId').jqxComboBox("clear");			
+			  	 searchComboItems[0]['menuId'] = data;
+			  	 $('#menuId').jqxComboBox("source",data);	
+			 	 //$("#menuId").jqxComboBox('selectIndex', 0 ); 
+			 	 //$('#gridId').val('1');
+				//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
+				//momWidget.splashHide();
+			   
+
+	}, undefined, undefined, this, false,'Y');
 	
+		
 		$(document).on('select', '#menuId', function(e) {
 		
 			  if($('#gridId').val()!=''){
@@ -1485,7 +1519,7 @@ var XUSM3030 = {
 					      
 			  }
 			  if($('#menuId').jqxComboBox('getSelectedItem')!=null && $('#menuId').jqxComboBox('getSelectedItem')!=''){
-				  mom_ajax('R', 'DD.DD00006', {menuId:$("#menuId").val()}, function(result5, data5) {
+				  mom_ajax('R', 'DD.DD00006', {menuId:$("#menuId").val(),programType:$('#programType').val()}, function(result5, data5) {
 						      if(result5 != 'SUCCESS') {
 						    	  momWidget.splashHide();
 							      return;							     
@@ -2104,7 +2138,8 @@ var XUSM3030 = {
 	},
 	setComboBox: function() {
 		$('#menuId').jqxComboBox({source:[], displayMember: "name", valueMember: "code", width: 250, height: 20,dropDownHeight: 120,searchMode: 'none',remoteAutoComplete: false});	
-		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 200, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
+		$('#gridId').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 180, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
+		$('#programType').jqxComboBox({source: [], displayMember: "name", valueMember: "code", width: 150, height: 20,dropDownHeight: 120,dropDownWidth: 220});	
 		$('#gridId').val('1');						 
 	    //searchComboQueryId['multiLangCd'] = "XUSM3030.multiLangList";		
 		//searchComboMinLength['multiLangCd'] = 1;
@@ -2157,7 +2192,8 @@ var XUSM3030 = {
     							},500);
 							 }
 						  
-						      		}, undefined, undefined, this, false);
+				}, undefined, undefined, this, false);
+				
 			}
 				
 
@@ -2240,7 +2276,7 @@ var XUSM3030 = {
 						// momWidget.messageBox({type:'danger', width:'400', height: '145', html: '포커스!'});	
 				         // return;
 				    });
-		  mom_ajax('R', 'XUSM3030.menuList', {}, function(result, data) {
+		  mom_ajax('R', 'XUSM3030.menuList', {menuType:'P'}, function(result, data) {
 		      if(result != 'SUCCESS') {
 		    	  momWidget.splashHide();
 			      return;							     
@@ -2252,7 +2288,18 @@ var XUSM3030 = {
 			 	 //$('#gridId').val('1');
 				//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
 				//momWidget.splashHide();
-			    return;
+			   
+
+	}, undefined, undefined, this, false,'Y');	
+	mom_ajax('R', 'XUSM3030.programTypeList', {}, function(result, data) {
+		      if(result != 'SUCCESS') {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }					       
+			  	 $('#programType').jqxComboBox("clear");				  	
+			  	 $('#programType').jqxComboBox("source",data);	
+			  	 $("#programType").jqxComboBox('selectIndex', 0 ); 		
+			  
 
 	}, undefined, undefined, this, false,'Y');	
 

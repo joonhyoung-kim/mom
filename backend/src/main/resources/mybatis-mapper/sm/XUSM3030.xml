@@ -23,7 +23,7 @@
              AND    MCD.DIVISION_CD  = MM.DIVISION_CD
              AND    MM.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
              AND    MM.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
-		     AND    MM.MSG_TYPE = 'WIDGET'
+		   <!--  AND    MM.MSG_TYPE = 'WIDGET' -->
 		     AND    MM.MSG_CD IN ( SELECT MMS.MSG_CD 
 		                             FROM   MOM_MESSAGE MMS
 		                             WHERE  MMS.COMPANY_CD  = MM.COMPANY_CD
@@ -81,6 +81,7 @@
    	         , A.MENU_ID ||'('|| A.MENU_NM ||')'  AS NAME
         FROM   (SELECT MM.MENU_ID  
                      , MM.MENU_NM
+                     , MM.MENU_TYPE
                 FROM   MOM_DIVISION_MENU MDM
                      , MOM_MENU   MM 
 		        WHERE  MDM.MENU_ID      = MM.MENU_ID
@@ -91,10 +92,29 @@
         UNION ALL        
 		        SELECT MM.MENU_ID 
 		             , MM.MENU_NM
+		             , MM.MENU_TYPE
 		        FROM   MOM_MENU MM 
 		        where  MM.MENU_ID     <![CDATA[ <> 'XUDG' ]]> 
-		        AND    MM.MENU_TYPE = 'D' ) A
+		        AND    MM.MENU_TYPE = 'DG'
+		  UNION ALL        
+		        SELECT MM.MENU_ID 
+		             , MM.MENU_NM
+		             , MM.MENU_TYPE
+		        FROM   MOM_MENU MM 
+		        where  MM.MENU_ID     <![CDATA[ <> 'XUCP' ]]> 
+		        AND    MM.MENU_TYPE = 'CP'
+
+		         ) A
+		WHERE A.MENU_TYPE = #{menuType, jdbcType=VARCHAR}
 		ORDER BY A.MENU_ID,A.MENU_NM 
+	</select>
+	<select id="get_programTypeList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
+        SELECT CODE
+             , CODE ||'('|| CODE_NM ||')'  AS NAME
+        FROM MOM_CODE 
+        WHERE GROUP_CD = 'SM0015'
+        AND   CODE <![CDATA[ <> 'M' ]]> 
+        ORDER BY SORT_NO
 	</select>
     <select id="get_gridList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	   SELECT  GRID_ID AS CODE
