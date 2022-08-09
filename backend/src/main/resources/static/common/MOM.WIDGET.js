@@ -55,77 +55,8 @@ var momWidget = {
 		  index--;
 
 		 // var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
-		  if(widgetType=='CP'){
-			  let popupTotalNum   = that.popupProperty[index].length;
-			  let popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
-			  let popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
-			  let remarkInline  = popupTotalNum % popupColNum == 1 ? 'Y':'N';
-			  var remarkYn      = 'N';
-			  let popupItem = [];
-			  
-			   for(var i=0,max=that.popupProperty[index].length;i<max;i++){
-			    	  if(that.popupProperty[index][i]['columnRequire']== "Y"){
-			    		    circleClass = 'circle-bg-orange';
-			    		    textClass   =  'textblock-orange';
-			    		    
-			    	  }
-			    	  else{
-			      		    circleClass = 'circle';
-			    		    textClass   = 'textblock';
-			    	  }
-			    	  
-		    		  if(that.popupProperty[index][i]['popupType']=='S' || that.popupProperty[index][i]['popupType'] == 'M'){
-		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
-		    			  
-			    	  }
-			    	  else if(that.popupProperty[index][i]['popupType']=='SS'){
-		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
-		    			   
-			    	  }
-		    		  else if (that.popupProperty[index][i]['popupType']=='C'){
-		    			  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
-		    			  
-		    		  }
-		    		  else if (that.popupProperty[index][i]['popupType']=='C-HM'){
-		    			  labelField  = '<input  id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
-		    			  
-		    		  }
-		    		  else if (that.popupProperty[index][i]['popupType']=='P'){
-		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
-		    			  
-		    		  }
-		    		  else if (that.popupProperty[index][i]['popupType']=='DS'){
-		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
-		    			  remarkYn    = 'Y';
-		    		  }
-		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){			  
-			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
-			    	  }
-			    	  else {
-			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
-			    	  }
-			    
-		    		  			    	  
-			    	  popupItem[i] =  {	  			    	  
-				    	  popupId:          that.popupProperty[index][i]['popupId'],
-				    	  popupNm:          that.popupProperty[index][i]['popupNm'],
-				      	  popupSeq:         that.popupProperty[index][i]['popupSeq'],
-				    	  defaultVlue:      that.popupProperty[index][i]['defaultValue'],
-				    	  columnRequire:    that.popupProperty[index][i]['columnRequire'],
-				    	  popupType:        that.popupProperty[index][i]['popupType'],
-				    	  labelField:       labelField,
-				    	  circleClass:      circleClass,
-				          textClass:        textClass
-		              };
-		              
-			      }
-
-			  
-			  let popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn,remarkInline);		    		 
-			  $('body').append(popupAreaHtml);
-		  }
-		  else{
-			
+		
+	
 				  
 		  if(index == 0){
 			  $('head').append('<script  src="/mom/content/jqwidgets/jqxtooltip.js"></script>');
@@ -143,7 +74,7 @@ var momWidget = {
 			 
 			  //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');			  
 		  }
-		  else if(index>0 && index % 10 == 0 ){
+		  else if(index>0 &&  widgetType=='DG' ){
 			gridId = 1;
 		  }
 		  
@@ -183,36 +114,14 @@ var momWidget = {
 		      that.searchComboItems[index] = {};
 		      that.editItem[index] = {};
 		     // that.preComboItems[index] = {};
-		      if(gridString=='[]'){
-			  
-			  }
-			  else{
-				   gridString   = gridString.substr(1,  gridString.length-2);  
-			  }
-			  if(columnString=='[]'){
-			  
-			  }
-			  else{
-				    columnString = columnString.substr(1,  columnString.length-2); 
-			  }
-		       if(searchString=='[]'){
-			  
-			  }
-			  else{
-				    searchString = searchString.substr(1,  searchString.length-2); 
-			  } 
-			  if(buttonString=='[]'){
-			  
-			  }
-			  else{
-				    buttonString = buttonString.substr(1,  buttonString.length-2);  
-			  }   
-			  if(popupString=='[]'){
-			  
-			  }
-			  else{
-				     popupString = popupString.substr(1,  popupString.length-2);  
-			  }   					 
+		
+			  gridString   = gridString =='[]'   ? gridString   : gridString.substr(1,    gridString.length-2);
+			  columnString = columnString =='[]' ? columnString : columnString.substr(1,  columnString.length-2);
+			  searchString = searchString =='[]' ? searchString : searchString.substr(1,  searchString.length-2);
+			  buttonString = buttonString =='[]' ? buttonString : buttonString.substr(1,  buttonString.length-2);
+		      popupString  = popupString =='[]'  ? popupString  : popupString.substr(1,   popupString.length-2);
+			
+						 
 			       
 		    	  that.pageProperty[index]     = {programId:data1[0].programId,menuId:data1[0].menuId,templateId:data1[0].templateId,param:data1[0].param};
 			      that.gridProperty[index]     = JSON.parse(gridString);
@@ -522,12 +431,22 @@ var momWidget = {
 			    	 }  
 			    		
                      for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-						if(that.buttonProperty[index][i]['popupGridId'] != undefined && that.buttonProperty[index][i]['popupGridId'] != '' && that.buttonProperty[index][i]['popupGridId'] != 'NONE'){
+					    
+						if(widgetType= 'DG'){
 							 popupAreaHtml = that.createPopup.gridPop(index+1,gridPopIndex,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.gridExtraProperty[index]['popupTitle']);							 								    		 
 			    		    $('body').append(popupAreaHtml);
 			    		    gridPopIndex = ($('.grid-pop').length +1)*10 +1;
+			    		    that.buttonProperty[index]['customType'] = 'DG';
 			    		    //break;
 						}
+						else if(widgetType= 'GRID' && that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 ){							
+							that.createCustomPop(index,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.buttonProperty[index][i]['eventType']);
+							that.buttonProperty[index]['customType'] = 'CP';
+						}
+						
+				        else{
+									that.buttonProperty[index]['customType'] = 'GRID';
+				        }
 					 }
 					 $('#contentArea'+(index+1)).append(gridAreaHtml); 
 				  	
@@ -867,7 +786,12 @@ var momWidget = {
 			      that.endPage[index]      = momWidget.gridProperty[0][0]['pageRowCount'] == undefined ? 20:momWidget.gridProperty[0][0]['pageRowCount'];
 	}, undefined, undefined, this, false);
 	
-												
+		
+			
+			 
+			  
+			 
+		  									
 		  /*
 		  ----------------------------------------------------------------------------------------------------------------------------------     
 		  * 화면별 이벤트 세팅 
@@ -909,7 +833,7 @@ var momWidget = {
 		        }
 			}
 		  
-		    }
+		    
 		
 		   // multiLang.transLang();
 			//that.procProcessTran(index, your);					// 자리 이동
@@ -981,7 +905,106 @@ var momWidget = {
 				AUIGrid.resize(momWidget.grid[index]);  모르겠는데 두번 resize해야 정상resizing됨..
 			});*/
 	},	
+    createCustomPop: function(index,menuId,btnId,actionType){
+		
+			  mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:1}, function(result1, data1) { //해당 페이지의 위젯정보 조회
+			   
+			   let popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
+			       popupString  = popupString =='[]'  ? popupString  : popupString.substr(1,   popupString.length-2);			       
+			   let popupProperty    = JSON.parse(popupString);
+			   let gridString       = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
+ 				   gridString       = gridString =='[]'   ? gridString   : gridString.substr(1,    gridString.length-2);
+  			   let gridProperty     = JSON.parse(gridString);
+			   let buttonString     = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
+			       buttonString     = buttonString =='[]' ? buttonString : buttonString.substr(1,  buttonString.length-2);
+			   let buttonProperty   = JSON.parse(buttonString);		   
+			      var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
+			      var searchBtn      =  '';
+			      var gridPopYn      =  '';
+			      var templateInfo   =  '';
+		      
+			      for(let i=0,max=gridExceptList.length; i<max;i++){
+			    	   gridExtraProp[gridExceptList[i]] = gridProperty[0][gridExceptList[i]];			    	  
+			    	   delete gridProperty[0][gridExceptList[i]];
+			      }
+			      let gridExtraProperty = gridExtraProp;
+			   			   
+			   let popupTotalNum   = popupProperty.length;
+			   let popupColNum     = gridExtraProperty['popupColNum'] == undefined ? 3:Number(gridExtraProperty['popupColNum']);
+			   let popupRowNum     = gridExtraProperty['popupRowNum'] == undefined ? 3:Number(gridExtraProperty['popupRowNum']);
+			   let remarkInline    = popupTotalNum % popupColNum == 1 ? 'Y':'N';
+			   let remarkYn        = 'N';
+			   let circleClass = '';
+			   let textClass   = '';
+			   let popupItem = [];
+			   let labelField = '';
+			   let actionType = actionType == undefined ? 'C':actionType;
+			     for(var i=0,max=popupProperty.length;i<max;i++){
+			    	  if(popupProperty[i]['columnRequire']== "Y"){
+			    		    circleClass = 'circle-bg-orange';
+			    		    textClass   =  'textblock-orange';
+			    		    
+			    	  }
+			    	  else{
+			      		    circleClass = 'circle';
+			    		    textClass   = 'textblock';
+			    	  }
+			    	  
+		    		  if(popupProperty[i]['popupType']=='S' || popupProperty[i]['popupType'] == 'M'){
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
+		    			  
+			    	  }
+			    	  else if(popupProperty[i]['popupType']=='SS'){
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
+		    			   
+			    	  }
+		    		  else if (popupProperty[i]['popupType']=='C'){
+		    			  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
+		    			  
+		    		  }
+		    		  else if (popupProperty[i]['popupType']=='C-HM'){
+		    			  labelField  = '<input  id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
+		    			  
+		    		  }
+		    		  else if (popupProperty[i]['popupType']=='P'){
+		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
+		    			  
+		    		  }
+		    		  else if (popupProperty[i]['popupType']=='DS'){
+		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  remarkYn    = 'Y';
+		    		  }
+		    		  else if(popupProperty[i]['popupType']=='DG'){			  
+			    		  labelField  = '<select maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
+			    	  }
+			    	  else {
+			    		  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
+			    	  }
+			    
+		    		  			    	  
+			    	  popupItem[i] =  {	  			    	  
+				    	  popupId:          popupProperty[i]['popupId'],
+				    	  popupNm:          popupProperty[i]['popupNm'],
+				      	  popupSeq:         popupProperty[i]['popupSeq'],
+				    	  defaultVlue:      popupProperty[i]['defaultValue'],
+				    	  columnRequire:    popupProperty[i]['columnRequire'],
+				    	  popupType:        popupProperty[i]['popupType'],
+				    	  labelField:       labelField,
+				    	  circleClass:      circleClass,
+				          textClass:        textClass
+		              };
+		              
+			      }
 
+			
+				
+			  let popupAreaHtml = that.createPopup.customPop(btnId,index+1,popupColNum,popupRowNum,popupItem,gridExtraProperty['popupTitle'],remarkYn,remarkInline,actionType);				  			  	    		 
+			  $('body').append(popupAreaHtml);
+			  //that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
+		     // that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
+			  })
+    },
 	setSearchSet: function(index,your){
 		var that = this;
 		var searchId = undefined;
@@ -2200,7 +2223,322 @@ var momWidget = {
 	    	     +    '</div>';
 	    return topHtml + midHtml+botHtml;
 		},	
+		customPop : function(btnId,index,colNum,rowNum,popupItem,popupTitle,remarkYn,remarkInline,actionType) {	//열3줄 colNum==3
+	    var midHtml = '';
+		var botHtml = '';
+		var tmpCnt  = 1;
+		var totalNum = popupItem.length;
+		var fieldCnt = remarkInline == 'N' ? 1: popupItem.length%colNum;
+		var remarkInlineClass = remarkInline == 'Y' ? 'in' : 'out';
+		var defaultPopClass = remarkYn == 'Y' ? 'defaultPop-C'+colNum+'-R'+rowNum+'-remark-'+remarkInlineClass : 'defaultPop-C'+colNum+'-R'+rowNum;
+		var searchAreaClass = remarkYn == 'Y' ? 'R'+rowNum+'-remark-'+remarkInlineClass : 'R'+rowNum;
 		
+		
+		var topHtml =	'<div id="customPop-'+btnId+'" actionType ='+actionType+'" class="modal '+defaultPopClass+'">'
+	        +    '<div class="panelheader">' 
+	        +     '<div class="modal-header-title">'
+	        +       '<div class ="fa fa-edit"></div>'
+	        +       '<div multi-lang="" id="popupTitle'+index+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
+	        +     '</div>'
+	        +     '<div class = "modal-header-xbtn">'
+	        +     '<a href="#" class="bntpopclose"></a>'
+	        +     '</div>'
+	        +    '</div>'
+	        +    '<div class = "searcharea-pop '+searchAreaClass+'">';
+	    for(var i=0;i<totalNum;i+=colNum){	//전체 돌리는 개수 
+	        if(tmpCnt == rowNum && fieldCnt==1){ // 마지막 하나일떄 
+		       	 midHtml +=   '<div class ="modal-contents-row">'
+	             +           '<div class ="w-col w-col-'+colNum+'">'
+	             +            '<div class ="labelbox">'
+	             +              '<div class ='+popupItem[i].circleClass+'></div>'
+	             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	             +            '</div>'
+	             +          popupItem[i].labelField
+	             +           '</div>'
+	             +          '</div>'; 
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        }
+	        else if(tmpCnt == rowNum && fieldCnt==2){ //마지막 2개일떄 
+			       	 midHtml +=   '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i].labelField
+		             +           '</div>';
+		             if(remarkYn =='Y'){
+						 midHtml += '</div>'
+					 +    '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+						 
+		             }
+		              else{
+		  midHtml +=           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+		              }
+		           
+			    	 if(rowNum>tmpCnt){
+			    		 tmpCnt ++;
+			    	 }
+	        }
+	                else if(tmpCnt == rowNum && fieldCnt==3){ //마지막 3개일떄 
+			       	 midHtml +=   '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+2].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+			    	 if(rowNum>tmpCnt){
+			    		 tmpCnt ++;
+			    	 }
+	        }
+	          else if(tmpCnt == rowNum && fieldCnt==4){ //마지막 4개일떄 
+			       	 midHtml +=   '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+2].labelField
+		             +           '</div>'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+3].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+3].textClass+'>'+popupItem[i+3].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+3].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+			    	 if(rowNum>tmpCnt){
+			    		 tmpCnt ++;
+			    	 }
+	         }
+	         else if (colNum ==1){
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +          '</div>'; 
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	          else if (colNum ==2){
+	        	    	 midHtml +=   '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i].labelField
+		             +           '</div>';
+		             if(tmpCnt == rowNum && remarkYn =='Y'){
+						 midHtml += '</div>'
+					 +    '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+						 
+		             }
+		              else{
+		  midHtml +=           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+1].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+		              }
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	        else if (colNum ==3){
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+1].labelField
+	               +           '</div>';
+	            if(tmpCnt == rowNum && remarkYn =='Y'&&remarkInline=='Y'){
+						 midHtml += '</div>'
+					 +    '<div class ="modal-contents-row">'
+		             +           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+2].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+						 
+		             }
+		        else{
+		  midHtml +=           '<div class ="w-col w-col-'+colNum+'">'
+		             +            '<div class ="labelbox">'
+		             +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+		             +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+		             +            '</div>'
+		             +          popupItem[i+2].labelField
+		             +           '</div>'
+		             +          '</div>'; 
+		              }
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	          else if (colNum ==5){
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+1].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+2].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+3].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+3].textClass+'>'+popupItem[i+3].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+3].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+4].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+4].textClass+'>'+popupItem[i+4].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+4].labelField
+	               +           '</div>'
+	               +          '</div>'; 
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	          else{
+	        	 midHtml +=   '<div class ="modal-contents-row">'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+1].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+1].textClass+'>'+popupItem[i+1].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+1].labelField
+	               +           '</div>'
+	               +           '<div class ="w-col w-col-'+colNum+'">'
+	               +            '<div class ="labelbox">'
+	               +              '<div class ='+popupItem[i+2].circleClass+'></div>'
+	               +              '<div class ='+popupItem[i+2].textClass+'>'+popupItem[i+2].popupNm+'</div>'  
+	               +            '</div>'
+	               +          popupItem[i+2].labelField
+	               +           '</div>'
+	               +          '</div>'; 
+		    	 if(rowNum>tmpCnt){
+		    		 tmpCnt ++;
+		    	 }
+	        	
+	        }
+	
+	    }
+	    botHtml  =     '</div>'
+	    	     +     '<div class="panelfooter">'
+	    	   	 +      '<div class="footer-pop-btn-area">'
+	    	     +       '<button  id = "saveBtnDP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
+	    	     +       '<button  id = "cancelBtnDP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG00036')+'</button>'
+	    	     +      '</div>'       
+	    	     +    '</div>';
+	    return topHtml + midHtml+botHtml;
+		},	
 			
 		gridPop : function(index,gridPopIndex,menuId,btnId,popupTitle) {
 			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal grid-pop gridPop-'+menuId+'">'
@@ -4064,19 +4402,19 @@ var momWidget = {
 				if(that.buttonProperty[index].length==0){
 					break;
 				}
-				if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']!='NONE'){				   	
+				if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 &&that.buttonProperty[index][i]['customType']=='DG'){				   	
 				   	 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {		//커스텀 그리드랍업			     
 					     that.setCustomGridPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
 					
 				}
-				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']!=''&&that.buttonProperty[index][i]['popupGridId']=='NONE'){
+				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['customType']=='CP'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	 //커스텀 랍업				     
 					     that.setCustomPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
 					
 				}
-				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['popupGridId']==''){
+				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['customType']=='GRID'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
 					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
@@ -7032,7 +7370,48 @@ var momWidget = {
 			},
 			setCustomPopBtn: function(index,popupIndex,btnId,your,e) {
 				let that = momWidget;
-				$('#' +'customPop'+popupIndex).momModal('show');
+				let callbackData = [];	
+				/*let targetArray = e.target.id.split('DP');
+				var buttonId = targetArray[0];*/
+				var actionType = 'C';
+		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
+					if(that.buttonProperty[index][k]['buttonId']+(index+1) == btnId){
+						actionType = that.buttonProperty[index][k]['eventType'];
+						
+					}
+				}	
+				if($('#changePwBtn'+(index+1)).length){
+					 $('#changePwBtn'+(index+1)).css('display','none');
+				}	
+				that.setPopup(index,actionType);	
+				$('#defaultPop'+(index+1)).attr('actionType', actionType);
+				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
+				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
+				if(callInitResult['result'] != 'SUCCESS') {
+					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: callInitResult['msg']});
+					  momWidget.splashHide();
+				      return;
+				}		
+				//$('#popupTitle'+(index+1)).text('등록');	
+				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
+				$('#popupTitle'+(index+1)).text('');
+				$('#popupTitle'+(index+1)).append(popupTitle+'('+multiLang.transText('MESSAGE','MSG00039')+')');	
+				$('#' +'defaultPop'+(index+1)).momModal('show');
+				
+				    // AUIGrid.resize('#grid'+index+1);
+				 that.htmlResize(index,your);
+				//that.popUpSizeSet(index);			
+			
+				 callbackData   = AUIGrid.getGridData(that.grid[index]);
+				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
+				 if(callBackResult['result']  != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+					  momWidget.splashHide();
+				      return;
+				}		
+				
+				
+			
 		           
 			},
 			setCustomGridPopBtn: function(index,btnIndex,btnId,your,e) {				

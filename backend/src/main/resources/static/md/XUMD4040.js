@@ -139,10 +139,10 @@ var VIEW= {
 };
 
 $(document).ready(function(event){	
-	momWidget.init(1,  menuId, VIEW,'UI');
-	momWidget.init(1, 'XUSM8050', VIEW,'CP');
-	momWidget.init(1, 'XUSM8060', VIEW,'CP');
-	momWidget.init(1, 'XUSM8070', VIEW,'CP');
-	momWidget.init(1, 'XUSM8080', VIEW,'CP');	
+	momWidget.init(1,   menuId,    VIEW,'GRID');
+	/*momWidget.init(91, 'XUSM8050', VIEW,'CP');
+	momWidget.init(92, 'XUSM8060', VIEW,'CP');
+	momWidget.init(93, 'XUSM8070', VIEW,'CP');
+	momWidget.init(94, 'XUSM8080', VIEW,'CP');	*/
 	VIEW.init();
 });
