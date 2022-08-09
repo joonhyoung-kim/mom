@@ -432,20 +432,20 @@ var momWidget = {
 			    		
                      for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
 					    
-						if(widgetType= 'DG'){
+						if(widgetType== 'DG'){
 							 popupAreaHtml = that.createPopup.gridPop(index+1,gridPopIndex,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.gridExtraProperty[index]['popupTitle']);							 								    		 
 			    		    $('body').append(popupAreaHtml);
 			    		    gridPopIndex = ($('.grid-pop').length +1)*10 +1;
-			    		    that.buttonProperty[index]['customType'] = 'DG';
+			    		    that.buttonProperty[index][i]['customType'] = 'DG';
 			    		    //break;
 						}
-						else if(widgetType= 'GRID' && that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 ){							
+						else if(widgetType== 'GRID' && that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 ){							
 							that.createCustomPop(index,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.buttonProperty[index][i]['eventType']);
-							that.buttonProperty[index]['customType'] = 'CP';
+							that.buttonProperty[index][i]['customType'] = 'CP';
 						}
 						
 				        else{
-									that.buttonProperty[index]['customType'] = 'GRID';
+									that.buttonProperty[index][i]['customType'] = 'GRID';
 				        }
 					 }
 					 $('#contentArea'+(index+1)).append(gridAreaHtml); 
@@ -905,106 +905,7 @@ var momWidget = {
 				AUIGrid.resize(momWidget.grid[index]);  모르겠는데 두번 resize해야 정상resizing됨..
 			});*/
 	},	
-    createCustomPop: function(index,menuId,btnId,actionType){
-		
-			  mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:1}, function(result1, data1) { //해당 페이지의 위젯정보 조회
-			   
-			   let popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
-			       popupString  = popupString =='[]'  ? popupString  : popupString.substr(1,   popupString.length-2);			       
-			   let popupProperty    = JSON.parse(popupString);
-			   let gridString       = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
- 				   gridString       = gridString =='[]'   ? gridString   : gridString.substr(1,    gridString.length-2);
-  			   let gridProperty     = JSON.parse(gridString);
-			   let buttonString     = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
-			       buttonString     = buttonString =='[]' ? buttonString : buttonString.substr(1,  buttonString.length-2);
-			   let buttonProperty   = JSON.parse(buttonString);		   
-			      var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
-			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
-			      var searchBtn      =  '';
-			      var gridPopYn      =  '';
-			      var templateInfo   =  '';
-		      
-			      for(let i=0,max=gridExceptList.length; i<max;i++){
-			    	   gridExtraProp[gridExceptList[i]] = gridProperty[0][gridExceptList[i]];			    	  
-			    	   delete gridProperty[0][gridExceptList[i]];
-			      }
-			      let gridExtraProperty = gridExtraProp;
-			   			   
-			   let popupTotalNum   = popupProperty.length;
-			   let popupColNum     = gridExtraProperty['popupColNum'] == undefined ? 3:Number(gridExtraProperty['popupColNum']);
-			   let popupRowNum     = gridExtraProperty['popupRowNum'] == undefined ? 3:Number(gridExtraProperty['popupRowNum']);
-			   let remarkInline    = popupTotalNum % popupColNum == 1 ? 'Y':'N';
-			   let remarkYn        = 'N';
-			   let circleClass = '';
-			   let textClass   = '';
-			   let popupItem = [];
-			   let labelField = '';
-			   let actionType = actionType == undefined ? 'C':actionType;
-			     for(var i=0,max=popupProperty.length;i<max;i++){
-			    	  if(popupProperty[i]['columnRequire']== "Y"){
-			    		    circleClass = 'circle-bg-orange';
-			    		    textClass   =  'textblock-orange';
-			    		    
-			    	  }
-			    	  else{
-			      		    circleClass = 'circle';
-			    		    textClass   = 'textblock';
-			    	  }
-			    	  
-		    		  if(popupProperty[i]['popupType']=='S' || popupProperty[i]['popupType'] == 'M'){
-		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
-		    			  
-			    	  }
-			    	  else if(popupProperty[i]['popupType']=='SS'){
-		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
-		    			   
-			    	  }
-		    		  else if (popupProperty[i]['popupType']=='C'){
-		    			  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
-		    			  
-		    		  }
-		    		  else if (popupProperty[i]['popupType']=='C-HM'){
-		    			  labelField  = '<input  id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
-		    			  
-		    		  }
-		    		  else if (popupProperty[i]['popupType']=='P'){
-		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
-		    			  
-		    		  }
-		    		  else if (popupProperty[i]['popupType']=='DS'){
-		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'></textarea>';
-		    			  remarkYn    = 'Y';
-		    		  }
-		    		  else if(popupProperty[i]['popupType']=='DG'){			  
-			    		  labelField  = '<select maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
-			    	  }
-			    	  else {
-			    		  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
-			    	  }
-			    
-		    		  			    	  
-			    	  popupItem[i] =  {	  			    	  
-				    	  popupId:          popupProperty[i]['popupId'],
-				    	  popupNm:          popupProperty[i]['popupNm'],
-				      	  popupSeq:         popupProperty[i]['popupSeq'],
-				    	  defaultVlue:      popupProperty[i]['defaultValue'],
-				    	  columnRequire:    popupProperty[i]['columnRequire'],
-				    	  popupType:        popupProperty[i]['popupType'],
-				    	  labelField:       labelField,
-				    	  circleClass:      circleClass,
-				          textClass:        textClass
-		              };
-		              
-			      }
-
-			
-				
-			  let popupAreaHtml = that.createPopup.customPop(btnId,index+1,popupColNum,popupRowNum,popupItem,gridExtraProperty['popupTitle'],remarkYn,remarkInline,actionType);				  			  	    		 
-			  $('body').append(popupAreaHtml);
-			  //that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
-		     // that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
-			  })
-    },
+   
 	setSearchSet: function(index,your){
 		var that = this;
 		var searchId = undefined;
@@ -2584,6 +2485,110 @@ var momWidget = {
 		    },
 
 	},
+	 createCustomPop: function(index,menuId,btnId,actionType){
+		       var actionType = actionType == undefined ? 'C': actionType;
+
+			   mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:1}, function(result1, data1) { //해당 페이지의 위젯정보 조회
+			   let that = momWidget;
+			   
+			   let popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
+			       popupString  = popupString =='[]'  ? popupString  : popupString.substr(1,   popupString.length-2);			       
+			   let popupProperty    = JSON.parse(popupString);
+			   let gridString       = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
+ 				   gridString       = gridString =='[]'   ? gridString   : gridString.substr(1,    gridString.length-2);
+  			   let gridProperty     = JSON.parse(gridString);
+			   let buttonString     = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
+			       buttonString     = buttonString =='[]' ? buttonString : buttonString.substr(1,  buttonString.length-2);
+			   let buttonProperty   = JSON.parse(buttonString);		   
+			      buttonProperty.sort(function(a,b){ return a.buttonSeq-b.buttonSeq});
+			      popupProperty.sort(function(a,b){ return a.popupSeq-b.popupSeq});		
+			      var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
+			      var searchBtn      =  '';
+			      var gridPopYn      =  '';
+			      var templateInfo   =  '';
+		      
+			      for(let i=0,max=gridExceptList.length; i<max;i++){
+			    	   gridExtraProp[gridExceptList[i]] = gridProperty[0][gridExceptList[i]];			    	  
+			    	   delete gridProperty[0][gridExceptList[i]];
+			      }
+			      let gridExtraProperty = gridExtraProp;
+			   			   
+			   let popupTotalNum   = popupProperty.length;
+			   let popupColNum     = gridExtraProperty['popupColNum'] == undefined ? 3:Number(gridExtraProperty['popupColNum']);
+			   let popupRowNum     = gridExtraProperty['popupRowNum'] == undefined ? 3:Number(gridExtraProperty['popupRowNum']);
+			   let remarkInline    = popupTotalNum % popupColNum == 1 ? 'Y':'N';
+			   let remarkYn        = 'N';
+			   let circleClass = '';
+			   let textClass   = '';
+			   let popupItem = [];
+			   let labelField = '';
+			 
+			     for(var i=0,max=popupProperty.length;i<max;i++){
+			    	  if(popupProperty[i]['columnRequire']== "Y"){
+			    		    circleClass = 'circle-bg-orange';
+			    		    textClass   =  'textblock-orange';
+			    		    
+			    	  }
+			    	  else{
+			      		    circleClass = 'circle';
+			    		    textClass   = 'textblock';
+			    	  }
+			    	  
+		    		  if(popupProperty[i]['popupType']=='S' || popupProperty[i]['popupType'] == 'M'){
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
+		    			  
+			    	  }
+			    	  else if(popupProperty[i]['popupType']=='SS'){
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
+		    			   
+			    	  }
+		    		  else if (popupProperty[i]['popupType']=='C'){
+		    			  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
+		    			  
+		    		  }
+		    		  else if (popupProperty[i]['popupType']=='C-HM'){
+		    			  labelField  = '<input  id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
+		    			  
+		    		  }
+		    		  else if (popupProperty[i]['popupType']=='P'){
+		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
+		    			  
+		    		  }
+		    		  else if (popupProperty[i]['popupType']=='DS'){
+		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  remarkYn    = 'Y';
+		    		  }
+		    		  else if(popupProperty[i]['popupType']=='DG'){			  
+			    		  labelField  = '<select maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
+			    	  }
+			    	  else {
+			    		  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
+			    	  }
+			    
+		    		  			    	  
+			    	  popupItem[i] =  {	  			    	  
+				    	  popupId:          popupProperty[i]['popupId'],
+				    	  popupNm:          popupProperty[i]['popupNm'],
+				      	  popupSeq:         popupProperty[i]['popupSeq'],
+				    	  defaultVlue:      popupProperty[i]['defaultValue'],
+				    	  columnRequire:    popupProperty[i]['columnRequire'],
+				    	  popupType:        popupProperty[i]['popupType'],
+				    	  labelField:       labelField,
+				    	  circleClass:      circleClass,
+				          textClass:        textClass
+		              };
+		              
+			      }
+
+			
+				
+			  let popupAreaHtml = that.createPopup.customPop(btnId,index+1,popupColNum,popupRowNum,popupItem,gridExtraProperty['popupTitle'],remarkYn,remarkInline,actionType);				  			  	    		 
+			  $('body').append(popupAreaHtml);
+			  //that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
+		     // that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
+			  })
+    },
 	design: function(index, idx, color, align) {
 	    $('head').append('<style>.aui-grid-user-custom-header{background-color: #ff8000 !important;font-weight: bold;background: -webkit-gradient(linear, left top, left bottom, from(#ff8000),to(#ff8000));background: -webkit-linear-gradient(top, #ff8000, #ff8000);background: -moz-linear-gradient(top, #ff8000, #ff8000);background: -ms-linear-gradient(top, #ff8000, #ff8000);background: -o-linear-gradient(top, #ff8000, #ff8000);background: linear-gradient(top,#ff8000, #ff8000);}</style>');
 	    $('head').append('<style>.back-red{background-color: #ff8000 !important;}</style>');
@@ -4429,6 +4434,7 @@ var momWidget = {
 			var editBtnId        = 'editBtn'+(index + 1);	
 			var editBtnIdV       = 'editBtnV'+(index + 1);	
 			var cancelBtnId      = 'cancelBtn'+'DP'+(index + 1);	
+			var cancelCustomBtnId      = 'cancelBtn'+'DP'+(index + 1);	
 			var dropDownGridCancelBtnId  = 'cancelBtn'+'DG'+(index + 1);	
 			var excelDownBtnId   = 'excelDownBtn'+(index + 1);
 			var excelTmpBtnId    = 'excelTmpBtn'+(index + 1);
@@ -7373,45 +7379,29 @@ var momWidget = {
 				let callbackData = [];	
 				/*let targetArray = e.target.id.split('DP');
 				var buttonId = targetArray[0];*/
-				var actionType = 'C';
-		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
-					if(that.buttonProperty[index][k]['buttonId']+(index+1) == btnId){
-						actionType = that.buttonProperty[index][k]['eventType'];
-						
-					}
-				}	
-				if($('#changePwBtn'+(index+1)).length){
-					 $('#changePwBtn'+(index+1)).css('display','none');
-				}	
+				var actionType = $('#customPop-'+btnId).attr('actiontype');
+		      	
+			
 				that.setPopup(index,actionType);	
-				$('#defaultPop'+(index+1)).attr('actionType', actionType);
-				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
+				
 				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
 				      return;
 				}		
-				//$('#popupTitle'+(index+1)).text('등록');	
-				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
-				$('#popupTitle'+(index+1)).text('');
-				$('#popupTitle'+(index+1)).append(popupTitle+'('+multiLang.transText('MESSAGE','MSG00039')+')');	
-				$('#' +'defaultPop'+(index+1)).momModal('show');
-				
-				    // AUIGrid.resize('#grid'+index+1);
+		
+				 $('#'+'customPop-'+btnId).momModal('show');
 				 that.htmlResize(index,your);
-				//that.popUpSizeSet(index);			
-			
+
 				 callbackData   = AUIGrid.getGridData(that.grid[index]);
-				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
+				 let callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
 				 if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
 				      return;
 				}		
-				
-				
-			
+
 		           
 			},
 			setCustomGridPopBtn: function(index,btnIndex,btnId,your,e) {				
