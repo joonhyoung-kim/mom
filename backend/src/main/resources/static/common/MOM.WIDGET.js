@@ -2168,7 +2168,7 @@ var momWidget = {
 		             +              '<div class ='+popupItem[i].circleClass+'></div>'
 		             +              '<div class ='+popupItem[i].textClass+'>'+popupItem[i].popupNm+'</div>'  
 		             +            '</div>'
-		             +          popupItem[i].labelField
+		             +          popupItem[i].labelField 
 		             +           '</div>';
 		             if(remarkYn =='Y'){
 						 midHtml += '</div>'
@@ -2518,7 +2518,7 @@ var momWidget = {
 			   let popupTotalNum   = popupProperty.length;
 			   let popupColNum     = gridExtraProperty['popupColNum'] == undefined ? 3:Number(gridExtraProperty['popupColNum']);
 			   let popupRowNum     = gridExtraProperty['popupRowNum'] == undefined ? 3:Number(gridExtraProperty['popupRowNum']);
-			   let remarkInline    = popupTotalNum % popupColNum == 1 ? 'Y':'N';
+			   let remarkInline    = popupTotalNum % popupColNum == 1 ? 'N':'Y';
 			   let remarkYn        = 'N';
 			   let circleClass = '';
 			   let textClass   = '';
@@ -2586,6 +2586,8 @@ var momWidget = {
 				
 			  let popupAreaHtml = that.createPopup.customPop(btnId,index+1,popupColNum,popupRowNum,popupItem,gridExtraProperty['popupTitle'],remarkYn,remarkInline,actionType);				  			  	    		 
 			  $('body').append(popupAreaHtml);
+			  that.setCustomBoXSet(btnId,btnId);      
+			               
 			  //that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		     // that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
 			  })
@@ -3891,7 +3893,7 @@ var momWidget = {
 		});
 
 	},
-		setComboBoxSet: function(index, your) {
+	setComboBoxSet: function(index, your) {
 		var that =  momWidget;	
         var searchId = '';
         var popupId = '';
@@ -4175,6 +4177,228 @@ var momWidget = {
 							
 			      });	
 			      	      	$('#'+popupId).on('keyup', function (e) {
+				        if(e.keyCode==13){	
+					        let passCount = 0;				 	  
+							that.popupPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
+						
+	                     if(that.popupPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
+		             		for(var i=0,max1=that.popupPrevItem.length; i<max1;i++){
+								if(that.popupPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
+								passCount ++;	
+							}
+						    
+					     } 
+					     if(passCount>=1){
+						     return;
+						 }
+							}							  
+      					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
+      					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[e.currentTarget.id] == undefined || that.searchComboItems[e.currentTarget.id] == ''){
+							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[e.currentTarget.id]);	
+			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
+			  		        //that.popupOpenYn = 'Y'; 
+	          				return;
+						} 
+						//$('#'+e.currentTarget.id).val('');
+						let searchStr = $('#'+e.currentTarget.id).val();
+						//$('#'+e.currentTarget.id).jqxComboBox('clear');
+      					let oldItems = that.searchComboItems[e.currentTarget.id];
+      				/*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
+	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
+						}*/
+      					    
+      					let newItems = [];
+              			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					
+				 			if(oldItems[i]['label'].toUpperCase().indexOf($('#'+e.currentTarget.id).val().toUpperCase()) >=0){
+								//$("#jqxComboBox").jqxComboBox('removeItem', "List Item" ); 
+								 newItems.push(oldItems[i]);
+								//$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']}); 
+							}
+							else{
+								//$('#'+e.currentTarget.id).jqxComboBox('removeItem', oldItems[i]['code']);
+							}
+
+			  		   }
+			  		      
+	               			//$('#'+e.currentTarget.id).val(searchStr);
+    					
+			  		  
+			  		   if(newItems.length ==0 ){
+				 		   
+			  		       $('#'+e.currentTarget.id).jqxComboBox('source',oldItems);	
+			  		       $('#'+e.currentTarget.id).jqxComboBox('open');
+			  		  
+						}
+						else{
+							
+			  		    	$('#'+e.currentTarget.id).jqxComboBox('source',newItems);	
+			  		    	$('#'+e.currentTarget.id).jqxComboBox('open');
+			  		    	
+			  		    	 $('#'+e.currentTarget.id).val(searchStr);
+						}
+    				
+					 
+			  		    
+     					
+						}
+				    	
+			      });
+				
+			      
+			      
+				}
+				else if(popupType == 'DG' ){    
+						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'press enter to open'});       		
+					  	 $('#'+popupId).on('bindingComplete', function (e) {
+							/*   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px'
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});*/
+			      });		
+				}
+				else if (popupType == 'M'){
+					$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
+					 	 $('#'+popupId).on('bindingComplete', function (e) {
+							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px'
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });		
+				}
+				else if(popupType == 'SS'){
+						popupMinLen  = Number(that.popupProperty[index][j]['defaultValue'].trim());
+						popupComboMinLength[popupId] = popupMinLen;
+						if(popupDropdownId != '' && popupDropdownId != undefined){
+						popupQueryId = popupDropdownId;
+						popupComboItem[popupId] =  popupNameSpace +'.'+popupQueryId;
+							 
+							// paramMap[i] = splitArray[0]:; 
+						}
+						else{
+							    popupQueryId = popupDropdownId;
+							 //   paramMap[i] = ; 
+						}
+					that.popupComboQueryId[index] = popupComboItem;
+					that.popupComboMinLength[index] = popupComboMinLength; 		    
+						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+popupMinLen +' or more characters',minLength: popupMinLen,remoteAutoComplete: false});
+	 	 $('#'+popupId).on('bindingComplete', function (e) {
+			if ($('#'+e.target.id).jqxComboBox('isOpened' ) == false){
+				return;
+			}
+							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px'
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });	
+			       $('#'+popupId).on('close', function (e) {
+				     var tmpCd = e.target.children[1].value; 
+				            if(tmpCd ==''){
+								$('#'+e.target.id).jqxComboBox('clear');
+								return;
+							}
+							
+							 //$('#'+e.target.id).val(tmpCd);
+			      });			
+				}
+				  
+					  	 	
+						    			        	 
+						        
+		}
+			
+			}
+	
+	
+
+	},
+		setCustomBoXSet: function(index, btnId) {
+		var that =  momWidget;	
+		var btnIndex = btnId.split('customBtn')[1];
+        var searchId = '';
+        var popupId = '';
+        var searchType = '';
+        var popupType = '';
+        var paramMap   = [];
+        var searchQueryId = '';
+        var popupQueryId = '';
+        var searchHeaderDropdownId = '';
+        var searchHeaderType = '';
+        var popupHeaderDropdownId = '';
+        var popupHeaderType = '';
+        var searchComboMinLength={};
+        var searchComboItem = {};
+        var popupComboMinLength={};
+        var popupComboItem = {};
+        var searchDropdownId  = '';
+        var popupDropdownId  = '';
+        var searchNameSpace  = '';
+        var popupNameSpace  = '';
+        var searchMinLen=1;
+        var popupMinLen=1;
+        var maxItemWidth = 0;
+        var maxItemWidthArry = 0;
+        var maxItemWidthNum = 0;
+        var searchDropdownParam =[];
+        var popupDropdownParam =[];
+     
+		
+		if (that.customPopupProperty[btnId].length > 0){
+		  for(var j=0,max2=that.customPopupProperty[index].length; j<max2;j++){			
+				popupDropdownId       = that.customPopupProperty[index][j]['dropdownId'];
+				popupDropdownParam   = that.customPopupProperty[index][j]['dropdownParam'] == '' ? []:that.popupProperty[index][j]['dropdownParam'];
+			    popupType        = that.customPopupProperty[index][j]['popupType']; 
+			    popupNameSpace   = popupDropdownId.substr(0, 2);  
+			    queryId          = '';
+			    paramMap.length  = 0;
+			  //  minLength        = 1;
+			    popupId = that.customPopupProperty[index][j]['popupId'] + 'DP' +btnIndex;
+					if(popupType == 'S' ){    
+						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'none'});       		
+					  	 $('#'+popupId).on('bindingComplete', function (e) {
+							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							   maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px';
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+			      });		
+			   /*    	$('#'+popupId).on('open', function (e) {
+				    that.popupOpenYn = 'N';
+				 });*/	
+				    $('#'+popupId).on('close', function (e) {
+				     var tmpCd = e.target.children[1].value; 
+				           /* if(tmpCd ==''){
+								$('#'+e.target.id).jqxComboBox('clear');
+								return;
+							}*/
+							//that.popupOpenYn = 'N';
+						
+
+							
+			      });	
+			      	 $('#'+popupId).on('keyup', function (e) {
 				        if(e.keyCode==13){	
 					        let passCount = 0;				 	  
 							that.popupPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
@@ -8064,8 +8288,8 @@ var momWidget = {
 			
 			
 			
-		
-			$( "#defaultPop"+(index+1)).draggable();
+		    $( "#defaultPop"+(index+1)).draggable();
+			$( ".customPop").draggable();
 		},
 	
 		
