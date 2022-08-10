@@ -4262,6 +4262,12 @@ input:focus{
 .btnpop.close-pop-btn{
 	 background: #d8dce3;
 }
+.btnpop.save-customPop-btn{
+	     background: #d8dce3;
+}
+.btnpop.close-customPop-btn{
+	 background: #d8dce3;
+}
 .btnpop {
     display: inline-block;
     margin-right: 3px;

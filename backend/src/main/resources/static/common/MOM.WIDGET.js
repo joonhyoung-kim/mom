@@ -11,7 +11,7 @@ var momWidget = {
 	searchProperty: 	    [], // 검색조건 세팅 속성(mom_widget 테이블)
 	buttonProperty: 	    [], // 버튼 세팅 속성(mom_widget 테이블)
 	popupProperty: 		    [], // 팝업 세팅 속성(mom_widget 테이블)
-	
+	customPopupProperty:    {}, // 커스텀팝업 세팅 속성(mom_widget 테이블)
 	gridExtraProperty:      [], // 메인 그리드 커스텀 세팅값 (checkId,gridTitle,headerColor,initSearch,popupColNum,popupRowNum,popupTitle,showFindBtn)
 	excelUpGridProperty:    [], // 엑셀 업로드 컬럼 세팅 속성(aui grid 기준에 맞게 가공)
 	excelDownProperty: 		[], // 엑셀 다운로드 컬럼 세팅 속성(aui grid 기준에 맞게 가공)	
@@ -111,7 +111,7 @@ var momWidget = {
 		      var searchString = data1[0]['searchProperty'] == undefined ? '[]':data1[0]['searchProperty'];
 		      var buttonString = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
 		      var popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
-		      that.searchComboItems[index] = {};
+		      that.searchComboItems = {};
 		      that.editItem[index] = {};
 		     // that.preComboItems[index] = {};
 		
@@ -995,7 +995,7 @@ var momWidget = {
 				        		$('#'+searchId+'SP'+(index+1)).val(defaultValue); 
 				        		//comboTmp[searchId2] = data;
 				        		
-				        		that.searchComboItems[index][searchId2] = data;
+				        		that.searchComboItems[searchId2] = data;
 
 				        	}
 				        	  
@@ -2135,7 +2135,7 @@ var momWidget = {
 		var searchAreaClass = remarkYn == 'Y' ? 'R'+rowNum+'-remark-'+remarkInlineClass : 'R'+rowNum;
 		
 		
-		var topHtml =	'<div id="customPop-'+btnId+'" actionType ='+actionType+'" class="modal '+defaultPopClass+'">'
+		var topHtml =	'<div id="customPop-'+btnId+'" actionType ='+actionType+' class="modal customPop '+defaultPopClass+'">'
 	        +    '<div class="panelheader">' 
 	        +     '<div class="modal-header-title">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -2434,8 +2434,8 @@ var momWidget = {
 	    botHtml  =     '</div>'
 	    	     +     '<div class="panelfooter">'
 	    	   	 +      '<div class="footer-pop-btn-area">'
-	    	     +       '<button  id = "saveBtnDP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
-	    	     +       '<button  id = "cancelBtnDP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG00036')+'</button>'
+	    	     +       '<button  id = "saveCustomBtnDP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
+	    	     +       '<button  id = "cancelCustomBtnDP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG00036')+'</button>'
 	    	     +      '</div>'       
 	    	     +    '</div>';
 	    return topHtml + midHtml+botHtml;
@@ -2502,12 +2502,13 @@ var momWidget = {
 			   let buttonProperty   = JSON.parse(buttonString);		   
 			      buttonProperty.sort(function(a,b){ return a.buttonSeq-b.buttonSeq});
 			      popupProperty.sort(function(a,b){ return a.popupSeq-b.popupSeq});		
+			      that.customPopupProperty[btnId] = popupProperty;
 			      var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
 			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
 			      var searchBtn      =  '';
 			      var gridPopYn      =  '';
 			      var templateInfo   =  '';
-		      
+		          let btnIndex = btnId.split('customBtn')[1];
 			      for(let i=0,max=gridExceptList.length; i<max;i++){
 			    	   gridExtraProp[gridExceptList[i]] = gridProperty[0][gridExceptList[i]];			    	  
 			    	   delete gridProperty[0][gridExceptList[i]];
@@ -2536,34 +2537,34 @@ var momWidget = {
 			    	  }
 			    	  
 		    		  if(popupProperty[i]['popupType']=='S' || popupProperty[i]['popupType'] == 'M'){
-		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+btnIndex +' class="searchSelectField"></select>';
 		    			  
 			    	  }
 			    	  else if(popupProperty[i]['popupType']=='SS'){
-		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+btnIndex+' class="searchSelectField-popup-combo"></select>';
 		    			   
 			    	  }
 		    		  else if (popupProperty[i]['popupType']=='C'){
-		    			  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
+		    			  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+btnIndex+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
 		    			  
 		    		  }
 		    		  else if (popupProperty[i]['popupType']=='C-HM'){
-		    			  labelField  = '<input  id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
+		    			  labelField  = '<input  id='+popupProperty[i]['popupId']+'DP'+btnIndex+' type="time"  class="w-input popupInputField"></input>';
 		    			  
 		    		  }
 		    		  else if (popupProperty[i]['popupType']=='P'){
-		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
+		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+btnIndex+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+btnIndex+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
 		    			  
 		    		  }
 		    		  else if (popupProperty[i]['popupType']=='DS'){
-		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+popupProperty[i]['popupId']+'DP'+btnIndex+'></textarea>';
 		    			  remarkYn    = 'Y';
 		    		  }
 		    		  else if(popupProperty[i]['popupType']=='DG'){			  
-			    		  labelField  = '<select maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
+			    		  labelField  = '<select maxlength="256" id='+popupProperty[i]['popupId']+'DP'+btnIndex+'  class="grid-popup searchSelectField"></select>';
 			    	  }
 			    	  else {
-			    		  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
+			    		  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+btnIndex+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
 			    	  }
 			    
 		    		  			    	  
@@ -4069,15 +4070,15 @@ var momWidget = {
 							}	
 										  				  
       					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
-      					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[index][e.currentTarget.id] == undefined || that.searchComboItems[index][e.currentTarget.id] == ''){
-							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[index][e.currentTarget.id]);	
+      					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[e.currentTarget.id] == undefined || that.searchComboItems[e.currentTarget.id] == ''){
+							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[e.currentTarget.id]);	
 			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
 	          				return;
 						} 
 						//$('#'+e.currentTarget.id).val('');
 						let searchStr = $('#'+e.currentTarget.id).val();
 						//$('#'+e.currentTarget.id).jqxComboBox('clear');
-      					let oldItems = that.searchComboItems[index][e.currentTarget.id];
+      					let oldItems = that.searchComboItems[e.currentTarget.id];
       				/*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
 	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
 						}*/
@@ -4190,8 +4191,8 @@ var momWidget = {
 						 }
 							}							  
       					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
-      					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[index][e.currentTarget.id] == undefined || that.searchComboItems[index][e.currentTarget.id] == ''){
-							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[index][e.currentTarget.id]);	
+      					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[e.currentTarget.id] == undefined || that.searchComboItems[e.currentTarget.id] == ''){
+							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[e.currentTarget.id]);	
 			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
 			  		        //that.popupOpenYn = 'Y'; 
 	          				return;
@@ -4199,7 +4200,7 @@ var momWidget = {
 						//$('#'+e.currentTarget.id).val('');
 						let searchStr = $('#'+e.currentTarget.id).val();
 						//$('#'+e.currentTarget.id).jqxComboBox('clear');
-      					let oldItems = that.searchComboItems[index][e.currentTarget.id];
+      					let oldItems = that.searchComboItems[e.currentTarget.id];
       				/*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
 	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
 						}*/
@@ -4434,7 +4435,8 @@ var momWidget = {
 			var editBtnId        = 'editBtn'+(index + 1);	
 			var editBtnIdV       = 'editBtnV'+(index + 1);	
 			var cancelBtnId      = 'cancelBtn'+'DP'+(index + 1);	
-			var cancelCustomBtnId      = 'cancelBtn'+'DP'+(index + 1);	
+			var cancelCustomBtnId  = 'cancelCustomBtn'+'DP'+(index + 1);	
+			var saveCustomBtnId  = 'saveCustomBtn'+'DP'+(index + 1);
 			var dropDownGridCancelBtnId  = 'cancelBtn'+'DG'+(index + 1);	
 			var excelDownBtnId   = 'excelDownBtn'+(index + 1);
 			var excelTmpBtnId    = 'excelTmpBtn'+(index + 1);
@@ -4476,6 +4478,10 @@ var momWidget = {
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
+			$(document).on('click', '#'+cancelCustomBtnId , function(e) {
+				$('.' + 'customPop').momModal('hide');	
+			
+			});
 			$(document).on('click', '#'+gridPopCancelBtnId + (index + 1) , function(e) {
 				$('.' + 'grid-pop').momModal('hide');	
 			});
@@ -4484,7 +4490,7 @@ var momWidget = {
 				let customPopId = e.target.parentElement.parentElement.parentElement.id; //커스텀 팝업 id
 				let buttonId    = customPopId.split('customBtn')[1]; //커스텀 버튼 id
 				let gridIndex   = Number($('#'+customPopId).attr('gridindex'))-1;			
-				let isCheckCol = that.gridProperty[gridIndex][0]['showRowCheckColumn'];
+				let isCheckCol  = that.gridProperty[gridIndex][0]['showRowCheckColumn'];
 				let param = [];
 				let callInitResult = [];
 				let actionType = 'C';
@@ -5656,7 +5662,7 @@ var momWidget = {
 				if($('#changePwBtn'+(index+1)).length){
 					 $('#changePwBtn'+(index+1)).css('display','none');
 				}	
-				that.setPopup(index,actionType);	
+				that.setPopup(index,actionType,'createBtn'+(index+1),'N');	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
 				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
@@ -5713,7 +5719,7 @@ var momWidget = {
 				      return;
 				}
 								
-				that.setPopup(index,"CP");	
+				that.setPopup(index,"CP",'copy'+(index+1),'N');	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
 			    callInitResult = that.checkActionCallInit(index, actionType, param, 'copyBtn', your,e);
@@ -6593,7 +6599,7 @@ var momWidget = {
 					 $('#changePwBtn'+(index+1)).css('display','block');
 				}
 				$('#' +'defaultPop'+(index+1)).momModal('show');
-				that.setPopup(index,'U');	
+				that.setPopup(index,'U','editBtn'+(index+1),'N');	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
 		
@@ -7382,7 +7388,7 @@ var momWidget = {
 				var actionType = $('#customPop-'+btnId).attr('actiontype');
 		      	
 			
-				that.setPopup(index,actionType);	
+				that.setPopup(index,actionType,btnId,'Y');	
 				
 				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
@@ -7574,7 +7580,7 @@ var momWidget = {
             	return param;
             },
 		// Level 2. 등록 팝업창 열기시 데이터 복사, by procCreateBtn, procEditBtn
-		setPopup: function(index, type) {
+	setPopup: function(index, type, btnId,customYn) {
 			var that = this;
 			var parentIndex = index['parent'] == undefined ? index : index['parent'];
 			var index = index['child'] == undefined ? index : index['child'];
@@ -7589,22 +7595,33 @@ var momWidget = {
 			var splitArray2 = undefined;
 			var searchComboMinLength={};
 			var searchComboItem = {};
-			for(var k = 0, max = that.popupProperty[index].length; k< max; k++) {	
-				 $('#' + this.popupProperty[index][k]['popupId'] + 'DP' + (index + 1)).val('');	
+			var btnIndex = index+1;
+			
+			if(customYn =='Y'){
+				var popupProperty = that.customPopupProperty;
+				index =  btnId;
+				btnIndex = btnId.split('customBtn')[1];
+			}
+			else{
+				var popupProperty = that.popupProperty;
+			}
+			
+			for(var k = 0, max = popupProperty[index].length; k< max; k++) {	
+				 $('#' + popupProperty[index][k]['popupId'] + 'DP' + (index + 1)).val('');	
 			}
 							
-			for(var i = 0, max = that.popupProperty[index].length; i< max; i++) {	
-				popupId          = that.popupProperty[index][i]['popupId']+ 'DP' + (index + 1);
-				dropdownGridId   = that.popupProperty[index][i]['popupId']+ 'DG' + (index + 1);
-				dropdownId       = that.popupProperty[index][i]['dropdownId'];
-				dropdownParam    = that.popupProperty[index][i]['dropdownParam'];
-			    popupType        = that.popupProperty[index][i]['popupType']; 
+			for(var i = 0, max = popupProperty[index].length; i< max; i++) {	
+				popupId          = popupProperty[index][i]['popupId']+ 'DP' +  btnIndex;
+				dropdownGridId   = popupProperty[index][i]['popupId']+ 'DG' +  btnIndex;
+				dropdownId       = popupProperty[index][i]['dropdownId'];
+				dropdownParam    = popupProperty[index][i]['dropdownParam'];
+			    popupType        = popupProperty[index][i]['popupType']; 
 			    nameSpace        = dropdownId.substr(0, 2);  
 			    queryId          = '';
 			    paramMap.length  = 0;
 			    minLength        = 1;
-			    searchType        = that.popupProperty[index][i]['popupType']; 
-                defaultValue      = that.popupProperty[index][i]['defaultValue'];
+			    searchType        = popupProperty[index][i]['popupType']; 
+                defaultValue      = popupProperty[index][i]['defaultValue'];
                
 	
 					if(popupType == 'S'  || popupType == 'M'){
@@ -7627,13 +7644,13 @@ var momWidget = {
 						    	  momWidget.splashHide();
 							      return;							     
 						      }							  
-						      	     that.searchComboItems[index][popupId] = data;  
+						      	     that.searchComboItems[popupId] = data;  
 						        	 $('#'+popupId).jqxComboBox({source: data});
 						          // $('#'+popupId).prev().prev().attr('class','circle-dh')
 						        	 if(popupType == 'S' || popupType =='M'){
 							          if(defaultValue=='NULL'){
 								           defaultValue='';
-								           that.popupProperty[index][i]['defaultValue'] = '';
+								           popupProperty[index][i]['defaultValue'] = '';
 							          }
 							          if(popupType =='M'){
 								             $('#'+popupId).jqxComboBox('checkIndex', 0); 
@@ -7763,60 +7780,60 @@ var momWidget = {
 					
 			
 			if(type == 'C' || type=='P') {
-				for(var i = 0, max = this.popupProperty[index].length; i< max; i++) {
+				for(var i = 0, max = popupProperty[index].length; i< max; i++) {
 								
-					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS' || this.popupProperty[index][i]['popupType'] == 'DG') { //콤보박스
+					if(popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'M' || popupProperty[index][i]['popupType'] == 'SS' || popupProperty[index][i]['popupType'] == 'DG') { //콤보박스
 						
 						
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).jqxComboBox({disabled: true});
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('background','#ededed');
 							 
 							 
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).children().children().css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).jqxDateTimeInput({ disabled: true});
 						}
 						else{ // 텍스트
 						
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','#817b7b');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('color','#817b7b');
 						}
 					} 
 					else  { // 수정가능
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'SS' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'SS' || popupProperty[index][i]['popupType'] == 'M') { //콤보박스
 							
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: false});
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).jqxComboBox({disabled: false});
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('background','#fff');
 							 
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).children().children().css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).jqxDateTimeInput({ disabled: false});
 						}
 						else{ // 텍스트
 
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','black');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' +  btnIndex).css('color','black');
 						}
 					}
 				
-					if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined  && this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
-						     	if(this.popupProperty[index][i]['popupType'] == 'C' && defaultValue.includes("-") && defaultValue.length>9){							
-							     $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+					if(popupProperty[index][i]['defaultValue'] != '' && popupProperty[index][i]['defaultValue'] != undefined  && popupProperty[index][i]['popupType'] != 'SS'&& popupProperty[index][i]['popupType'] != 'MS'){
+						     	if(popupProperty[index][i]['popupType'] == 'C' && defaultValue.includes("-") && defaultValue.length>9){							
+							     $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).val(popupProperty[index][i]['defaultValue']);
 								}
-								else if(this.popupProperty[index][i]['popupType'] == 'C' &&(  this.popupProperty[index][i]['defaultValue'].includes("INIT") ||  this.popupProperty[index][i]['defaultValue'].includes("LAST") ||  this.popupProperty[index][i]['defaultValue'].includes("TODAY"))){
+								else if(popupProperty[index][i]['popupType'] == 'C' &&(  popupProperty[index][i]['defaultValue'].includes("INIT") ||  popupProperty[index][i]['defaultValue'].includes("LAST") ||  popupProperty[index][i]['defaultValue'].includes("TODAY"))){
 									
 								}
 								else{
-									 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+									 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).val(popupProperty[index][i]['defaultValue']);
 								}
 							
 					}
@@ -7829,69 +7846,69 @@ var momWidget = {
 								
 				var checkedItems = this.getCheckedRowItems(this.grid[index],true);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
-					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
-						 $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');		
-						 if(this.popupProperty[index][j]['popupId'] == undefined || this.popupProperty[index][j]['popupId'] == ''){	
+					for(var j = 0, max2 = popupProperty[index].length; j< max2; j++){
+						 $('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val('');		
+						 if(popupProperty[index][j]['popupId'] == undefined || popupProperty[index][j]['popupId'] == ''){	
 							 continue;
 						 }
 						 else{
 							if(momWidget.popupProperty[index][j]['popupType'] =='C'){
-								if(checkedItems[i][this.popupProperty[index][j]['popupId']] == undefined){
+								if(checkedItems[i][popupProperty[index][j]['popupId']] == undefined){
 									continue;
 								}
-								checkedItems[i][this.popupProperty[index][j]['popupId']] = checkedItems[i][this.popupProperty[index][j]['popupId']].substr(0,10);
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								checkedItems[i][popupProperty[index][j]['popupId']] = checkedItems[i][popupProperty[index][j]['popupId']].substr(0,10);
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
 							}
 							else if(momWidget.popupProperty[index][j]['popupType'] =='SS'){
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).jqxComboBox({source:[]});
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).jqxComboBox({source:[]});
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
 							}
 							else{
 
 								
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
 							}
 							    
 						 }
 						
 					}				
 				}
-				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {									
-					if(this.popupProperty[index][i]['updateEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS'|| this.popupProperty[index][i]['popupType'] == 'DG' ) { //콤보박스							
+				for(var i = 0, max3 = popupProperty[index].length; i< max3; i++) {									
+					if(popupProperty[index][i]['updateEditFlag'] == 'N') { // 읽기전용
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'M' || popupProperty[index][i]['popupType'] == 'SS'|| popupProperty[index][i]['popupType'] == 'DG' ) { //콤보박스							
 							
-							 	 //$('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							  $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
+							 	 //$('#' + popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP'  + btnIndex).css('background','#ededed');
+							  $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxComboBox({disabled: true});
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({ disabled: true});
 						}
 						else{ // 텍스트
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','#817b7b');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('color','#817b7b');
 						}
 					} 
 					else{ // 수정가능
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'SS' ||this.popupProperty[index][i]['popupTpe'] == 'M' || this.popupProperty[index][i]['popupType'] == 'DG') { //콤보박스							
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: false});
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'SS' ||popupProperty[index][i]['popupTpe'] == 'M' || popupProperty[index][i]['popupType'] == 'DG') { //콤보박스							
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxComboBox({disabled: false});
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
 							 
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({ disabled: false});
 						}
 						else{ // 텍스트
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','black');							 
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('color','black');							 
 						}
 					}
 					
@@ -7904,72 +7921,72 @@ var momWidget = {
 					return 'FAIL';
 				}
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
-					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
-						// $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');	
-						 if(this.popupProperty[index][j]['popupId'] == undefined || this.popupProperty[index][j]['popupId'] == ''){	
+					for(var j = 0, max2 = popupProperty[index].length; j< max2; j++){
+						// $('#' + popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');	
+						 if(popupProperty[index][j]['popupId'] == undefined || popupProperty[index][j]['popupId'] == ''){	
 							 continue;
 						 }
 						 else{
 								if(momWidget.popupProperty[index][j]['popupType'] =='C'){
-									if(checkedItems[i][this.popupProperty[index][j]['popupId']] == undefined){
+									if(checkedItems[i][popupProperty[index][j]['popupId']] == undefined){
 									continue;
 								}
-								checkedItems[i][this.popupProperty[index][j]['popupId']] = checkedItems[i][this.popupProperty[index][j]['popupId']].substr(0,10);
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								checkedItems[i][popupProperty[index][j]['popupId']] = checkedItems[i][popupProperty[index][j]['popupId']].substr(0,10);
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
 							}
 							else{
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
 							}
 							   
 						 }
 						
 					}				
 				}
-				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {						
-					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+				for(var i = 0, max3 = popupProperty[index].length; i< max3; i++) {						
+					if(popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'M' || popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxComboBox({disabled: true});
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
 							 
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({ disabled: true});
 						}
 						else{ // 텍스트
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
 						}
 					} 
 					else{ // 수정가능
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: false});
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'M') { //콤보박스							
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxComboBox({disabled: false});
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
 							 
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({ disabled: false});
 						}
 						else{ // 텍스트
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','black');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('color','black');
 						}
 					}
-						if(this.popupProperty[index][i]['defaultValue'] != '' && this.popupProperty[index][i]['defaultValue'] != undefined  && this.popupProperty[index][i]['popupType'] != 'SS'&& this.popupProperty[index][i]['popupType'] != 'MS'){
-						     	if(this.popupProperty[index][i]['popupType'] == 'C' && defaultValue.includes("-") && defaultValue.length>9){							
-							     $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+						if(popupProperty[index][i]['defaultValue'] != '' && popupProperty[index][i]['defaultValue'] != undefined  && popupProperty[index][i]['popupType'] != 'SS'&& popupProperty[index][i]['popupType'] != 'MS'){
+						     	if(popupProperty[index][i]['popupType'] == 'C' && defaultValue.includes("-") && defaultValue.length>9){							
+							     $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).val(popupProperty[index][i]['defaultValue']);
 								}
-								else if(this.popupProperty[index][i]['popupType'] == 'C' &&(  this.popupProperty[index][i]['defaultValue'].includes("INIT") ||  this.popupProperty[index][i]['defaultValue'].includes("LAST") ||  this.popupProperty[index][i]['defaultValue'].includes("TODAY"))){
+								else if(popupProperty[index][i]['popupType'] == 'C' &&(  popupProperty[index][i]['defaultValue'].includes("INIT") ||  popupProperty[index][i]['defaultValue'].includes("LAST") ||  popupProperty[index][i]['defaultValue'].includes("TODAY"))){
 									
 								}
 								else{
-									 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).val(this.popupProperty[index][i]['defaultValue']);
+									 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).val(popupProperty[index][i]['defaultValue']);
 								}
 							
 					}
@@ -7980,61 +7997,61 @@ var momWidget = {
 			else if (type =='CP'){
 				var checkedItems = this.getCheckedRowItems(this.grid[index],false);
 				for(var i = 0, max1 = checkedItems.length; i< max1; i++){
-					for(var j = 0, max2 = this.popupProperty[index].length; j< max2; j++){
-						 $('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val('');	
-						 if(this.popupProperty[index][j]['popupId'] == undefined || this.popupProperty[index][j]['popupId'] == ''){	
+					for(var j = 0, max2 = popupProperty[index].length; j< max2; j++){
+						 $('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val('');	
+						 if(popupProperty[index][j]['popupId'] == undefined || popupProperty[index][j]['popupId'] == ''){	
 							 continue;
 						 }
 						 else{
 								if(momWidget.popupProperty[index][j]['popupType'] =='C'){
-									if(checkedItems[i][this.popupProperty[index][j]['popupId']] == undefined){
+									if(checkedItems[i][popupProperty[index][j]['popupId']] == undefined){
 									continue;
 								}
-								checkedItems[i][this.popupProperty[index][j]['popupId']] = checkedItems[i][this.popupProperty[index][j]['popupId']].substr(0,10);
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								checkedItems[i][popupProperty[index][j]['popupId']] = checkedItems[i][popupProperty[index][j]['popupId']].substr(0,10);
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
 							}
 							else{
-								$('#' + this.popupProperty[index][j]['popupId'] + 'DP' + (index + 1)).val(checkedItems[i][this.popupProperty[index][j]['popupId']]);
+								$('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
 							}
 							   
 						 }
 						
 					}				
 				}
-				for(var i = 0, max3 = this.popupProperty[index].length; i< max3; i++) {						
-					if(this.popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M' || this.popupProperty[index][i]['popupType'] == 'SS'|| this.popupProperty[index][i]['popupType'] == 'DG') { //콤보박스							
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: true});
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+				for(var i = 0, max3 = popupProperty[index].length; i< max3; i++) {						
+					if(popupProperty[index][i]['insertEditFlag'] == 'N') { // 읽기전용
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'M' || popupProperty[index][i]['popupType'] == 'SS'|| popupProperty[index][i]['popupType'] == 'DG') { //콤보박스							
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxComboBox({disabled: true});
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
 							 
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#ededed');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: true});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({ disabled: true});
 						}
 						else{ // 텍스트
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', true);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#ededed');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#ededed');
 						}
 					} 
 					else{ // 수정가능
-						if(this.popupProperty[index][i]['popupType'] == 'S' || this.popupProperty[index][i]['popupType'] == 'M'|| this.popupProperty[index][i]['popupType'] == 'DG'|| this.popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxComboBox({disabled: false});
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
+						if(popupProperty[index][i]['popupType'] == 'S' || popupProperty[index][i]['popupType'] == 'M'|| popupProperty[index][i]['popupType'] == 'DG'|| popupProperty[index][i]['popupType'] == 'SS') { //콤보박스							
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxComboBox({disabled: false});
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
 							 
 						}					
-						else if(this.popupProperty[index][i]['popupType'] == 'C'){ //캘린더
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).children().children().css('background','#fff');
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).jqxDateTimeInput({ disabled: false});
+						else if(popupProperty[index][i]['popupType'] == 'C'){ //캘린더
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background','#fff');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({ disabled: false});
 						}
 						else{ // 텍스트
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).attr('readonly', false);
-							 $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('background','#fff');
-							  $('#' + this.popupProperty[index][i]['popupId'] + 'DP' + (index + 1)).css('color','black');
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
+							 $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background','#fff');
+							  $('#' + popupProperty[index][i]['popupId'] + 'DP'+ btnIndex).css('color','black');
 						}
 					}
 					
