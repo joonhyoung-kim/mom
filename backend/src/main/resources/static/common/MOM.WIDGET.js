@@ -400,6 +400,7 @@ var momWidget = {
 			      var sortTmp   = [];
 		          var groupHeader = 'N';
 			      var popupAreaHtml = '';
+			      var isCellMerge = false;
 			      let gridPopIndex = ($('.grid-pop').length +1)*10 +1;
 			      if(index == 0 ){				    
 			    		 var createFrontArea ={};  
@@ -469,7 +470,7 @@ var momWidget = {
 			    	   isRequire = that.columnProperty[index][i]['columnRequire'] == 'Y' ? 'Y': 'N';
 			    	   sortType = that.columnProperty[index][i]['sortMethod'] == 'ASC' ? 1: -1;
 			    	   sortNo   = that.columnProperty[index][i]['sortNo'] == '' ? 0: that.columnProperty[index][i]['sortNo'];
-			    	 
+			    	   isCellMerge = that.columnProperty[index][i]['cellMerge'] == '' ? false : that.columnProperty[index][i]['cellMerge'] == 'Y' ? true: false;
 			    	  // groupHeader  = that.columnProperty[index][i]['columnType'] == 'G' ? 'Y': 'N';
 			    	   
 			    	   if(sortNo > 0){
@@ -483,10 +484,11 @@ var momWidget = {
 								  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
 									   		, dataType      : that.columnProperty[index][i]['dataType'] 
 											, formatString  : that.columnProperty[index][i]['dataFormat']											
-				    	                   // , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
 				    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : that.columnProperty[index][i]['columnCreate']  == 'Y' ? true : false
 								  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
-								  			, visible       : gridShow  
+								  			, visible       : gridShow 
+								  			, mergePolicy : "restrict" 
+								  			, cellMerge : isCellMerge 
 								  			, filter : {
 										      showIcon : true
 											}
@@ -505,6 +507,8 @@ var momWidget = {
 					    	                    , headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
 									  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
 									  			, visible       : excelDownShow
+									  			, mergePolicy : "restrict"
+									  			, cellMerge : isCellMerge 
 									  		 
 					                    });
 					      if(widthUse == 'Y'){
@@ -552,8 +556,9 @@ var momWidget = {
 			    		   columnProp[i].renderer = {
 									          type: 'CheckBoxEditRenderer'
 											, editable: true
-											,checkValue : 'Y' 
-											,unCheckValue : 'N'
+											, checkValue : 'Y' 
+											, unCheckValue : 'N'
+											
 										};
 			    		   
 			    		 /*  columnProp[i].headerRenderer = { 
@@ -3129,6 +3134,29 @@ var momWidget = {
         }	
 	    return true;
 	},
+	 syncData: function(index,item, rowIndex, dataField, refDataField, value) {
+		var that = momWidget;
+	var gridData = AUIGrid.getGridData(that.grid[index]);
+	var gridLen = gridData.length;
+	var rowIdField = AUIGrid.getProp(that.grid[index], "rowIdField");
+	var items4update = [];
+	var row;
+	var obj;
+
+	for(var i=rowIndex+1; i<gridLen; i++) {
+		row = gridData[i];
+		if(item[refDataField] == row[refDataField]) {
+			obj = {};
+			obj[rowIdField] = row[rowIdField];
+			obj[dataField] = value;
+			items4update.push(obj);
+		} else {
+			break;
+		}
+	}
+	// 동일하게 변경
+	AUIGrid.updateRowsById(that.grid[index], items4update);
+},
 	/*	// 검색버튼을 누른 효과
 		: function(index, splash, param, retrieveCallBack, indexInfo, your) { 
 			if(indexInfo != undefined && indexInfo['index'] != -1) {
@@ -3460,6 +3488,12 @@ var momWidget = {
 			}
 			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'DG'){
 				//that.editItem[index].push();
+			}
+			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'CK'){
+				if(e.dataField == "checkBox") {
+			// 체크박스 클릭 했을 때, 병합된 모든 행의 체크박스를 동기화 시킴.
+			that.syncData(index,e.item, e.rowIndex, e.dataField, "workOrderId", e.value);
+		     }
 			}		
 							
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
@@ -7488,7 +7522,9 @@ var momWidget = {
 					   
 														
 						}
-						else{					
+						else{	
+							
+				          		
 							    param = AUIGrid.getGridData(that.grid[index]);
 							    if(param.length==0){
 								momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});

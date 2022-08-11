@@ -220,6 +220,7 @@
 			  ,	DROPDOWN_PARAM
 			  , COLUMN_REQUIRE
 			  , GROUPING_COLUMN
+			  , CELL_MERGE
 			FROM   MOM_COLUMN_PROPERTY		   	  
 		    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 			AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
@@ -278,7 +279,7 @@
     USING (
       
              SELECT
-                          TRIM(#{menuId, jdbcType=VARCHAR})           																   as menuId
+                          TRIM(#{menuId, jdbcType=VARCHAR})           															   as menuId
 				             , #{menuNm, jdbcType=VARCHAR}             															   as menuNm
 				             , TRIM(#{parentMenuId, jdbcType=VARCHAR}) 													           as parentMenuId
 				             , TRIM(#{menuSeq, jdbcType=INTEGER})      												               as menuSeq
@@ -545,7 +546,8 @@
                              ,DROPDOWN_PARAM 
                              ,COLUMN_REQUIRE 
                              ,GROUPING_COLUMN
-							 , CREATE_BY
+                             ,CELL_MERGE
+							 ,CREATE_BY
 						) VALUES(
                                #{item.companyCd,         jdbcType=VARCHAR}
 				             , #{item.divisionCd,        jdbcType=VARCHAR}
@@ -574,7 +576,8 @@
 				             , #{item.dropdownId,            jdbcType=VARCHAR}
 				             , #{item.dropdownParam,         jdbcType=VARCHAR}	
 				             , NVL(#{item.columnRequire,     jdbcType=VARCHAR},'N')		
-				             , #{item.groupingColumn,         jdbcType=VARCHAR}		             
+				             , #{item.groupingColumn,        jdbcType=VARCHAR}		    
+				             , NVL(#{item.cellMerge,         jdbcType=VARCHAR},'N')		         
 				             , #{item.userId,                jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               

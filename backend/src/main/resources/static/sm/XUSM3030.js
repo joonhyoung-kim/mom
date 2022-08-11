@@ -339,6 +339,18 @@ var XUSM3030 = {
 				,unCheckValue : 'N'
 			}
 		},
+			{
+			  dataField 	: 'cellMerge' 
+			, headerText 	: '셀병합'
+			, style			: 'my-column-style-edit'
+			, width			: 80
+			, renderer 		: {
+				  type 		: 'CheckBoxEditRenderer'
+				, editable	: true
+				,checkValue : 'Y' 
+				,unCheckValue : 'N'
+			}
+		},
 				{
 			  dataField 	: 'dataFormat' 
 			, headerText 	: '데이터서식'
@@ -2012,6 +2024,7 @@ var XUSM3030 = {
 							columnId: "",
 							columnNm: "컬럼명",
 							columnRequire: 'N',
+							cellMerge:  'N',
 							columnSeq: rowCnt+1,
 							columnShow: 'N',
 							columnWidth: 150,
