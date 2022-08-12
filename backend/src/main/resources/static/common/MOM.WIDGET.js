@@ -3492,7 +3492,7 @@ var momWidget = {
 			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'CK'){
 				if(e.dataField == "checkBox") {
 			// 체크박스 클릭 했을 때, 병합된 모든 행의 체크박스를 동기화 시킴.
-			that.syncData(index,e.item, e.rowIndex, e.dataField, "workOrderId", e.value);
+			that.syncData(index,e.item, e.rowIndex, e.dataField, that.columnProperty[0][1]['columnId'], e.value);
 		     }
 			}		
 							
@@ -3511,6 +3511,7 @@ var momWidget = {
 		return event.value; // 원래값
 	});*/
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
+			let customCheckBox = 'N';
 			for(let i=0,max=that.columnProperty[index].length; i<max;i++){
 				 if( that.columnProperty[index][i]['columnType']=='C' && that.columnProperty[index][i]['columnId'] == e.dataField){
 			/*	  $('#calendar-main').datepicker({
@@ -3534,14 +3535,17 @@ var momWidget = {
 						
 					}
 					
-			      $('#calendar-pop').attr('rowIndex',e.rowIndex);
-			      $('#calendar-pop').attr('columnIndex',e.columnIndex);
-			      $('#calendar-pop').css('display','block');
+			        $('#calendar-pop').attr('rowIndex',e.rowIndex);
+			        $('#calendar-pop').attr('columnIndex',e.columnIndex);
+			        $('#calendar-pop').css('display','block');
 			        let td = AUIGrid.getCellElementByIndex(that.grid[index], e.rowIndex,e.columnIndex); // 0, 0 번째 TD 얻기
 		       	    let offset = $(td).offset();
 					let activeTop = offset.top;//
 					let activeLeft = offset.left;	
 			      $('#calendar-pop').offset({top : activeTop, left : activeLeft});		
+			    }
+			    if(that.columnProperty[index][i]['columnId']=='checkBox'){
+				    customCheckBox = 'Y';
 			    }
 			}
 			  
@@ -3605,7 +3609,7 @@ var momWidget = {
 			      columnString = columnString.substr(1,  columnString.length-2);
 			      that.gridProperty[dropdownGridId]     = JSON.parse(gridString);
 			      that.columnProperty[dropdownGridId]   = JSON.parse(columnString);
-			      				var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+			    var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
 				var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};			
 			      for(var i=0,max=gridExceptList.length; i<max;i++){
 			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[dropdownGridId][0][gridExceptList[i]];			    	  
@@ -3613,11 +3617,11 @@ var momWidget = {
 			      }
 			      that.gridExtraProperty[dropdownGridId] = gridExtraProp;
 			     var popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
-			    var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
-			    var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId,rowIndex);
+			     var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
+			     var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId,rowIndex);
 			    
-                var menuId = that.pageProperty[index]['programId'];
-                    var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
+ 		         var menuId = that.pageProperty[index]['programId'];
+                 var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
                     if(isShow == 'block'){
 	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
 	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
@@ -3721,7 +3725,8 @@ var momWidget = {
 			let checkCount = 0;
 			if(selectionMode =='singleCell' || selectionMode == 'singleRow'){
 				for(let i=0,max=gridData.length; i<max;i++){
-					if(AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])){
+					if(AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])){ //체크되어있따면
+					  
 						checkCount ++;
 					}
 					
@@ -3729,14 +3734,23 @@ var momWidget = {
 				}
 				 if(checkCount==0){					
 					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					
+					  if(customCheckBox=='Y'){
+						//that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], 'Y');
+						     
+					  }
 				}
-				else if(checkCount==1){
-					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-				}
-				else if(checkCount>1){
+				 else if(checkCount==1){
+					     AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					     if(customCheckBox=='Y'){
+						   //that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], 'N');
+					    }
+				     }
+				 else if(checkCount>1){
 					AUIGrid.setAllCheckedRows(e.pid, false);
 					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					  if(customCheckBox=='Y'){
+						  // that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], '');
+					  }
 					
 				}
 				
@@ -3771,8 +3785,7 @@ var momWidget = {
 			
 		});	
 		AUIGrid.bind(that.grid[index], "rowCheckClick", function(e) {
-			//$('#findBtn'+(index+1)).click();			
-			// AUIGrid.setAllCheckedRows(e.pid, false);
+		
 			const rowIdField = AUIGrid.getProp(e['pid'], 'rowIdField'); 			 
 			const rowId = e['item'][rowIdField];
 			let gridData = AUIGrid.getGridData(e['pid']);
@@ -9940,27 +9953,7 @@ var momWidget = {
 		return 'SUCCESS';
 	},
 	
-	procCallBack: function(index, action, result, data, param, callBackParam, indexInfo, your) {
-		if(your == undefined) {
-			return 'FAIL';
-		}
-		
-		if(action == 'E' && your.excelCallBack != undefined) {
-			your.excelCallBack(result, data, param, callBackParam, indexInfo);
-			return 'SUCCESS';
-		} else if(action == 'R' && your.retrieveCallBack != undefined) {
-			your.retrieveCallBack(result, data, param, callBackParam, indexInfo);
-			return 'SUCCESS';
-		} else if((action == 'C' || action == 'L') && your.saveCallBack != undefined) {
-			your.saveCallBack(result, data, param, callBackParam, indexInfo);
-			return 'SUCCESS';
-		} else if((action == 'D' || action == 'LD') && your.delCallBack != undefined) {
-			your.delCallBack(result, data, param, callBackParam, indexInfo);
-			return 'SUCCESS';
-		}
-		
-		return 'FAIL';
-	},
+
 		
 	procProcessTran: function(index1, your) {
 		var that = this.grid == undefined ? this.momWidget : this;

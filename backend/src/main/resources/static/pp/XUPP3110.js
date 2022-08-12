@@ -13,15 +13,31 @@ var VIEW= {
 	},
 	 delCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 0 || btnId == 'customBtn1-1'){
+	
+		 let checkedItems = [];
+	
 		   for(var i=0,max=param.length; i<max;i++){
-			if(param[i].cancelItemInoutId != undefined && param[i].cancelItemInoutId != ''){
-				result.msg = '이미 차감 취소된 데이터가 포함되어있습니다!';
+			if( param[i].checkBox=='Y' && param[i].resultState =='C'){
+				result.msg = '이미  취소된 데이터가 포함되어있습니다!';
 				result.result = 'WARN';
 				return;
+			}
+			else if(param[i].checkBox=='Y'&&(param[i].resultState =='E' || param[i].resultState =='R')){
+				checkedItems.push(param[i]);
 			}		    
 	       }
+	       if(checkedItems.length ==0){
+		        result.msg = '취소할 실적을 체크해주세요!';
+				result.result = 'WARN';
+				return;
+	      }
+	       result.param = checkedItems;
+	       
+	       
+	       
 		}
 	}
+	
 	
 	
 };
