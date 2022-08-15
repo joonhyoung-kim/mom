@@ -3474,7 +3474,13 @@ var momWidget = {
 						
 			else if(columnProp['columnType'] == 'T'){
 				 if(e.value=='' || e.value==null || e.value==undefined){
-					AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, '');
+					 if(columnProp['dataType']=='string'){
+						AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, '');
+					 }
+					 else if(columnProp['dataType']=='numeric'){
+						
+					 }
+					
 				 }
 				 else{
 					   if(columnProp['dataType']=='numeric'){
@@ -6118,11 +6124,32 @@ var momWidget = {
 				let tmpYn = 'N';
 				let actionType = 'CU';		
 				let queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
-				
-				
-			
-				 
-				if(isCheckCol == true){
+				let targetParam ='';
+				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['buttonId']=='saveBtn'){
+						targetParam = that.buttonProperty[index][i]['checkType'];	
+						break;	
+					}
+				}
+				if(targetParam=='GRID_CHECK'){
+					param = that.getCheckedRowItems(that.grid[index],true);
+					if(param.length==0){
+						     return;
+					}
+				}
+				else if(targetParam=='GRID_SELECT'){
+					
+				}
+				else if(targetParam=='GRID_ALL'){
+					    param = AUIGrid.getGridData(that.grid[index]);
+					    if(param.length==0){
+							momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00055')});
+							return;
+					    }
+							 
+				}
+				else{
+					if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[index]);
 					if (param.length == 0){
 						  checkedItems = AUIGrid.getGridData(that.grid[index]);
@@ -6134,13 +6161,17 @@ var momWidget = {
 					}				
 									
 				}
-				else{
-					
-					    checkedItems = AUIGrid.getGridData(that.grid[index]);
-					for(var i=0,max=checkedItems.length;i<max;i++){	
-						  param.push(checkedItems[i]); 														
-				    }
+					else{
+						
+						    checkedItems = AUIGrid.getGridData(that.grid[index]);
+						for(var i=0,max=checkedItems.length;i<max;i++){	
+							  param.push(checkedItems[i]); 														
+					    }
+					}
 				}
+			
+				 
+				
 		
 				callInitResult = that.checkActionCallInit(index, 'GS', param, 'saveBtn', your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
