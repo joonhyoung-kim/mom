@@ -69,6 +69,11 @@ var VIEW= {
 			    result.result='WARN'
 				return;
 		    }
+		    if($('#reasonCdDP1').val()==''){
+			        result.msg = '수작업등록시 등록사유 필수! ';
+					result.result = 'WARN';
+					return;
+		    }
 		    
 	     }
 	     else if(index ==0 && btnId =='saveBtnDP'&& $('#defaultPop1').attr('btnid')=='editBtn1'){		           

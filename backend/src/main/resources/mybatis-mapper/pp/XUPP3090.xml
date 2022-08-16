@@ -127,7 +127,7 @@
 	AND    MWI.COMPANY_CD      =  #{companyCd, jdbcType=VARCHAR}
 	AND    MWI.DIVISION_CD     =  #{divisionCd, jdbcType=VARCHAR}
 	AND    MWI.WORK_ORDER_ID   =  #{workOrderId, jdbcType=VARCHAR} 
-	AND    MWI.DEDUCT_YN = 'Y'
+	AND    MWI.DEDUCT_YN = 'M'
 	ORDER BY MI.ITEM_ID
 </select>
 <delete id="remove_customBtn2-1" parameterType="java.util.List">

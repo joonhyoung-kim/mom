@@ -4256,6 +4256,11 @@ input:focus{
 	padding-right: 10px;
 	padding-left: 10px;
 }
+.jqx-fill-state-disabled {
+	cursor: default;
+    color: black;
+    opacity: 0.9 !important;
+}
 .btnpop.save-pop-btn{
 	     background: #d8dce3;
 }

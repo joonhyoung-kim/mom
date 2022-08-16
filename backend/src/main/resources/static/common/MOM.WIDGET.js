@@ -4301,7 +4301,7 @@ var momWidget = {
 			      
 				}
 				else if(popupType == 'DG' ){    
-						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'press enter to open'});       		
+						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'press click to open'});       		
 					  	 $('#'+popupId).on('bindingComplete', function (e) {
 							/*   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
 							  maxItemWidthArry = maxItemWidth.split('px');
@@ -6152,12 +6152,12 @@ var momWidget = {
 					if(isCheckCol == true){
 					    param = that.getCheckedRowItems(that.grid[index]);
 					if (param.length == 0){
-						  checkedItems = AUIGrid.getGridData(that.grid[index]);
+						 /* checkedItems = AUIGrid.getGridData(that.grid[index]);
 						  for(let i=0,max=checkedItems.length;i<max;i++){	
 						     param.push(checkedItems[i]); 														
-				          }
-						/*  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-					      return;	*/
+				          }*/
+						  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+					      return;	
 					}				
 									
 				}

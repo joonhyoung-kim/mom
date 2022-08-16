@@ -176,7 +176,7 @@ ORDER BY MWG.WORK_GROUP_NM
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.issueLocationCd, jdbcType=VARCHAR}
                 , #{item.requestLocationCd, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , TO_DATE(#{item.requestDate, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS') 
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.reqQty, jdbcType=NUMERIC}
                 , #{item.issueReasonCd, jdbcType=VARCHAR}
