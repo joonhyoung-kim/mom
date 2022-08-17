@@ -1139,6 +1139,7 @@ var XUSM3030 = {
 		var that = this;
 		var buttonTypeList  = [{"code":"createBtn","value":"등록"},{"code":"editBtn","value":"수정"},{"code":"copyBtn","value":"복사"},{"code":"delBtn","value":"삭제"},{"code":"delGridBtn","value":"삭제(그리드)"},{"code":"procBtn","value":"프로시저호출"},{"code":"excelDownBtn","value":"엑셀다운"},{"code":"excelTmpBtn","value":"엑셀양식다운"},{"code":"excelUpBtn","value":"엑셀업로드"},{"code":"excelUpBtnV","value":"엑셀업로드(검사)"},{"code":"addBtn","value":"행추가"},{"code":"saveBtn","value":"저장"},{"code":"saveBtnV","value":"저장(검사)"},{"code":"customBtn","value":"커스텀버튼"}];
 		var searchTypeList  = [{"code":"C","value":"등록"},{"code":"CP","value":"복사"},{"code":"U","value":"수정"},{"code":"CU","value":"저장"},{"code":"CU","value":"엑셀업로드"},{"code":"D","value":"삭제"},{"code":"R","value":"조회"},{"code":"P","value":"프로시저호출"},{"code":"NONE","value":"없음"}];
+		var customTypeList  = [{"code":"ST","value":"표준"},{"code":"EX","value":"커스텀(실행)"},{"code":"CP","value":"커스텀팝업"},{"code":"DG","value":"드롭다운그리드"}];
 		mom_ajax('R', 'XUSM3030.'+queryId, {menuId:prevMenuId,gridId:$('#gridId').val(),programType:$('#programType').val()}, function(result, data) {
 			  if(result != 'SUCCESS') {
 			      return;
@@ -1221,6 +1222,34 @@ var XUSM3030 = {
 						autoEasyMode : true,    //  자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 						showEditorBtnOver: true,  
 						list: searchTypeList, 
+						keyField:   'code', 
+						valueField: 'value'
+					}
+			}, 
+			{
+				  dataField 	: 'buttonType' 
+				, headerText 	: '버튼타입'
+				, width			: 150
+				, style			: 'my-column-style-edit2'
+				, labelFunction: function(rowIndex, columnIndex, value, item) { 
+		            	var retStr = "";
+		            	var comboList = customTypeList;
+		    			for(var i=0,len=comboList.length; i<len; i++) { 
+		    					  if(comboList[i]["code"] == value) {
+		        					  retStr = comboList[i]["value"];
+		        					  break;
+		        				  } 				    				
+		    			}
+		    			
+		    			return retStr == "" ? value : retStr;	               
+					}
+					, editRenderer : {
+						type: 'ComboBoxRenderer', 
+						autoCompleteMode : true, // 자동완성 모드 설정 
+						matchFromFirst : false, //  처음부터 매치가 아닌 단순 포함되는 자동완성
+						autoEasyMode : true,    //  자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver: true,  
+						list: customTypeList, 
 						keyField:   'code', 
 						valueField: 'value'
 					}

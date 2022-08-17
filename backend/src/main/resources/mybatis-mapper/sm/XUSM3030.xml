@@ -253,6 +253,7 @@
 			  , BUTTON_NM
 			  ,	BUTTON_SEQ
 			  ,	EVENT_TYPE
+			  , BUTTON_TYPE
 			  , POPUP_GRID_ID
 			  ,	BUTTON_PARAMETER
 			  ,	BUTTON_ICON 
@@ -714,6 +715,7 @@
 							   , TEMP_USE_YN
 							   , CHECK_TYPE
 							   , POPUP_GRID_ID
+							   , BUTTON_TYPE
 							   , CREATE_BY
 						) VALUES(
                                #{item.companyCd,         jdbcType=VARCHAR}
@@ -731,6 +733,7 @@
 				             , NVL(#{item.tempUseYn,    jdbcType=VARCHAR},'N')
 				             , #{item.checkType,         jdbcType=VARCHAR}
 				             , #{item.popupGridId,       jdbcType=VARCHAR}
+				             , #{item.buttonType,        jdbcType=VARCHAR}
 				             , #{item.userId,            jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               

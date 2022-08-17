@@ -79,6 +79,38 @@
 					)				             
 			            </foreach>			               
         </insert>
+         <insert id="create_copyBtn1" parameterType="java.util.List">  
+            INSERT INTO MOM_DEPARTMENT (
+									     COMPANY_CD
+									   , DIVISION_CD
+									   , DEPT_CD
+									   , DEPT_NM
+									   , PARENT_DEPT_CD
+									   , SORT_NO
+									   , USE_YN
+									   , DESCRIPTION
+									   , CREATE_BY
+									   , CREATE_DATE
+									   , UPDATE_BY
+									   , UPDATE_DATE
+		 							  )     
+            VALUES(
+		                <foreach item="item" collection="list" index="i" separator=" " open="">
+						               #{item.companyCd,         jdbcType=VARCHAR}
+						             , #{item.divisionCd,        jdbcType=VARCHAR}
+						             , TRIM(#{item.deptCd,       jdbcType=VARCHAR})
+						             , #{item.deptNm,            jdbcType=INTEGER}
+						             , TRIM(#{item.parentDeptCd, jdbcType=VARCHAR})
+						             , #{item.sortNo,            jdbcType=NUMERIC} 
+						             , TRIM(#{item.useYn,        jdbcType=VARCHAR})
+						             , #{item.description,       jdbcType=VARCHAR}					            
+						             , TRIM(#{item.userId,       jdbcType=VARCHAR})
+						             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+						             , TRIM(#{item.userId,       jdbcType=VARCHAR})
+						             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+					)				             
+			            </foreach>			               
+        </insert>
         <update id="modify_editBtn1" parameterType="java.util.List">     
          <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
            UPDATE MOM_DEPARTMENT

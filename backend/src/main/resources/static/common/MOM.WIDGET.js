@@ -433,20 +433,20 @@ var momWidget = {
 			    		
                      for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
 					    
-						if(widgetType== 'DG'){
+						if(that.buttonProperty[index][i]['buttonType']=='DG'){
 							 popupAreaHtml = that.createPopup.gridPop(index+1,gridPopIndex,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.gridExtraProperty[index]['popupTitle']);							 								    		 
 			    		    $('body').append(popupAreaHtml);
 			    		    gridPopIndex = ($('.grid-pop').length +1)*10 +1;
-			    		    that.buttonProperty[index][i]['customType'] = 'DG';
+			    		    //that.buttonProperty[index][i]['customType'] = 'DG';
 			    		    //break;
 						}
-						else if(widgetType== 'GRID' && that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 ){							
+						else if(that.buttonProperty[index][i]['buttonType']=='CP'){							
 							that.createCustomPop(index,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.buttonProperty[index][i]['eventType']);
-							that.buttonProperty[index][i]['customType'] = 'CP';
+							//that.buttonProperty[index][i]['customType'] = 'CP';
 						}
 						
 				        else{
-									that.buttonProperty[index][i]['customType'] = 'GRID';
+									//that.buttonProperty[index][i]['customType'] = 'GRID';
 				        }
 					 }
 					 $('#contentArea'+(index+1)).append(gridAreaHtml); 
@@ -4685,19 +4685,19 @@ var momWidget = {
 				if(that.buttonProperty[index].length==0){
 					break;
 				}
-				if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 &&that.buttonProperty[index][i]['customType']=='DG'){				   	
+				if(that.buttonProperty[index][i]['buttonType']=='DG'){				   	
 				   	 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {		//커스텀 그리드랍업			     
 					     that.setCustomGridPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
 					
 				}
-				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['customType']=='CP'){
+				else if(that.buttonProperty[index][i]['buttonType']=='CP'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	 //커스텀 랍업				     
 					     that.setCustomPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
 					
 				}
-				else if(that.buttonProperty[index][i]['buttonId'].indexOf('customBtn')>=0 && that.buttonProperty[index][i]['customType']=='GRID'){
+				else if( that.buttonProperty[index][i]['buttonType']=='EX'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
 					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
@@ -6276,6 +6276,7 @@ var momWidget = {
 				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
 				//var btnIndex   = index;
 				var queryId = that.pageProperty[index]['programId']+'.'+buttonId;
+				that.wait(0.5);
 				var buttonParam = [];
 				var extraParam = {};
 				var validateCheck = true;
@@ -7755,6 +7756,7 @@ var momWidget = {
 								 AUIGrid.setGridData(that.grid[gridPopIndex-1], data1); 
 								 $('#'+'gridPop-'+btnId).momModal('show');
 								AUIGrid.resize(that.grid[gridPopIndex-1]);
+								$( ".grid-pop").draggable();
 									 let  callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customBtn'+btnIndex, your,data1);     	
 		    					            if(callBackResult['result'] != 'SUCCESS') {
 												  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
@@ -8370,6 +8372,7 @@ var momWidget = {
 			
 		    $( "#defaultPop"+(index+1)).draggable();
 			$( ".customPop").draggable();
+			
 		},
 	
 		

@@ -200,7 +200,62 @@
 	    </if>	    
 	   ORDER BY SORT_NO,CODE_NM
 	</select>
-	  <insert id="create_findBtn3" parameterType="java.util.List">
+	  <insert id="create_createBtn3" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_CODE (
+                  COMPANY_CD
+                , DIVISION_CD
+                , GROUP_CD
+                , CODE
+                , CODE_NM
+                , PARENT_CODE
+                , SORT_NO
+                , CODE_TYPE
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE
+                , ATTRIBUTE1
+                , ATTRIBUTE2
+                , ATTRIBUTE3
+                , ATTRIBUTE4
+                , ATTRIBUTE5
+                , ATTRIBUTE6
+                , ATTRIBUTE7
+                , ATTRIBUTE8
+                , ATTRIBUTE9
+                , ATTRIBUTE10 )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.groupCd, jdbcType=VARCHAR}
+                , #{item.code, jdbcType=VARCHAR}
+                , #{item.codeNm, jdbcType=VARCHAR}
+                , #{item.parentCode, jdbcType=VARCHAR}
+                , #{item.sortNo, jdbcType=NUMERIC}
+                , #{item.codeType, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.attribute1, jdbcType=VARCHAR}
+                , #{item.attribute2, jdbcType=VARCHAR}
+                , #{item.attribute3, jdbcType=VARCHAR}
+                , #{item.attribute4, jdbcType=VARCHAR}
+                , #{item.attribute5, jdbcType=VARCHAR}
+                , #{item.attribute6, jdbcType=VARCHAR}
+                , #{item.attribute7, jdbcType=VARCHAR}
+                , #{item.attribute8, jdbcType=VARCHAR}
+                , #{item.attribute9, jdbcType=VARCHAR}
+                , #{item.attribute10, jdbcType=VARCHAR}
+                              )
+   </foreach>
+  </insert>
+  	  <insert id="create_copyBtn3" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_CODE (
                   COMPANY_CD
