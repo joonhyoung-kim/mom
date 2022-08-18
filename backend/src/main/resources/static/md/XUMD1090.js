@@ -13,19 +13,27 @@ var VIEW= {
 					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
 		
 	    }
-	     else if(index ==0 && btnId =='saveBtnDP' && action=='U' ){		           
+	     else if(index ==0 && btnId =='saveBtnDP' && action=='U'){		           
         
 	    }
+	  
 	   
 
 	},
-		searchCallBack: function(index,your,action,btnId,param,result,data) {
+	searchCallInit: function(index,your,action,btnId,param,result,event) {
+		if(index ==1 && btnId =='saveBtn' ){
+			 let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+		      result.param = {borId:checkItem[0].borId};
+			  					
+		}
 
-
-   },
+		
+	},
+		
 	cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index==0){
 			var item = e.item;	
+			
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
 			  setTimeout(function() {
 			 mom_ajax('R', 'DD.DD00023', {workCenterCd:item['workCenterCd']}, function(result, data) {
