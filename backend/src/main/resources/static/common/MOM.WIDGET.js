@@ -63,7 +63,7 @@ var momWidget = {
 			  $('head').append('<script  src="/mom/content/jqwidgets/globalization/globalize.js"></script>');
 			  $('head').append('<script src="/mom/content/time/moment.js"></script>');
 			  $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
-			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd !important;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
+			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd !important;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
  			  let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
 			  $('body').append(uploadPop);
 			  //$('body').append(fileUpProgressBar);
@@ -3449,7 +3449,17 @@ var momWidget = {
 		
 		   }
 		});
-			AUIGrid.bind(that.grid[index], "cellEditBegin", function(e) {	
+			AUIGrid.bind(that.grid[index], "cellEditBegin", function(e) {
+			 if(your != undefined && your.cellEditCallInit != undefined) {
+				result = your.cellEditCallInit(index,e.rowIndex,e);
+				if (result == undefined){
+					result = 'SUCCESS';
+				}
+				if(result != 'SUCCESS'){
+					//e.orgEvent.stopImmediatePropagation();
+					return false;
+				}
+			}	
 			 for(let i=0,max=that.columnProperty[index].length; i<max;i++){
 				if(that.columnProperty[index][i]['columnEditable'] =='N' && that.columnProperty[index][i]['columnCreate'] =='Y' && e.item.addItem == undefined && e.dataField == that.columnProperty[index][i]['columnId']){
 						return false;
@@ -3501,7 +3511,16 @@ var momWidget = {
 			that.syncData(index,e.item, e.rowIndex, e.dataField, that.columnProperty[0][1]['columnId'], e.value);
 		     }
 			}		
-							
+			if(your != undefined && your.cellEditCallBack != undefined) {
+				result = your.cellEditCallBack(index,e.rowIndex,e);
+				if (result == undefined){
+					result = 'SUCCESS';
+				}
+				if(result != 'SUCCESS'){
+					//e.orgEvent.stopImmediatePropagation();
+					return false;
+				}
+			}				
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
 			});
 		$(document).on('click', '#upBtn1', function() {
