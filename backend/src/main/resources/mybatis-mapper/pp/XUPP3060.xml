@@ -123,7 +123,31 @@
 		                                               AND     MWR.STATE          = 'R'
 		                                             )
 		               )
-		SELECT MWO.COMPANY_CD
+	  SELECT A.COMPANY_CD
+           , A.DIVISION_CD
+           , A.WORK_ORDER_ID
+           , A.OPERATION_SEQ 
+           , A.OPERATION_ID
+           , A.KEY_ID
+           , A.OPERATION_NM
+           , A.WORK_STATION_CD
+           , A.WORK_STATION_NM
+           , A.INSPECTION_YN
+           , A.FINAL_OPERATION_YN
+           , A.MILESTONE
+           , A.WORK_DAY
+           , A.START_DATE
+           , A.END_DATE
+           , A.GOOD_QTY
+           , A.DEFECT_QTY
+           , A.WO_RESULT_ID
+           , A.STATE
+           , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(A.COMPANY_CD, A.DIVISION_CD, 'PP0010', A.STATE, 'KR') FROM DUAL) AS STATE_NM
+           , A.DESCRIPTION
+           , A.UPDATE_BY
+           , A.UPDATEBYNM
+           , A.UPDATE_DATE
+       FROM(   SELECT MWO.COMPANY_CD
 		     , MWO.DIVISION_CD
 		     , MWO.WORK_ORDER_ID
 		     , MWO.OPERATION_SEQ 
@@ -136,17 +160,16 @@
 		     , MWO.FINAL_OPERATION_YN
 		     , MWO.MILESTONE
 		     , TO_CHAR(P.WORK_DAY  ,'YYYY-MM-DD')    AS WORK_DAY
-		     , TO_CHAR(P.START_TIME  ,'YYYY-MM-DD')  AS START_TIME
-		     , TO_CHAR(P.END_TIME  ,'YYYY-MM-DD')    AS END_TIME
-		     , P.GOOD_QTY
-		     , P.DEFECT_QTY
-		     , MWO.WORK_ORDER_ID
+		     , TO_CHAR(P.START_TIME  ,'YYYY-MM-DD')  AS START_DATE
+		     , TO_CHAR(P.END_TIME  ,'YYYY-MM-DD')    AS END_DATE
+		     , NVL(P.GOOD_QTY,0) AS GOOD_QTY
+		     , NVL(P.DEFECT_QTY,0) AS DEFECT_QTY
 		     , P.WO_RESULT_ID
 		     , CASE WHEN P.WO_RESULT_ID IS NULL THEN 
 		           DECODE(MWO.OPERATION_SEQ, MIN(MWO.OPERATION_SEQ) OVER(PARTITION BY MWO.WORK_ORDER_ID), 'R', 'W')
 		       ELSE
 		           P.STATE
-		       END AS  STATE
+		       END AS  STATE 
 		     , P.DESCRIPTION
 		     , P.UPDATE_BY
 		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(P.COMPANY_CD, P.DIVISION_CD, P.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
@@ -158,20 +181,24 @@
 		AND    MWO.WORK_ORDER_ID  = P.WORK_ORDER_ID (+)     
 		AND    MWO.OPERATION_ID   = P.OPERATION_ID  (+)             
 		AND     MWO.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
-		 AND    MWO.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}
-		AND    MWO.WORK_ORDER_ID  = #{workOrderId, jdbcType=VARCHAR}
-		ORDER BY MWO.OPERATION_SEQ
+		AND    MWO.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}
+		AND     MWO.WORK_ORDER_ID  = #{workOrderId, jdbcType=VARCHAR} ) A
+		ORDER BY A.OPERATION_SEQ
 			
 	</select>
-	<insert id="create_customBtn2-1" parameterType="java.util.List">
+   <insert id="create_customBtn2-1" parameterType="java.util.List">
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_PROC_WO_RESULT (
+     INTO MOM_PROC_WO_RESULR_OP_PATH (
                   COMPANY_CD
                 , DIVISION_CD
                 , WORK_ORDER_ID
-                , WORK_CENTER_CD
-                , WO_START_TIME
-                , WO_END_TIME
+                , WO_RESULT_ID
+                , OPERATION_SEQ
+                , OPERATION_ID
+                , FINAL_OPERATION_YN
+                , STATE
+                , START_TIME
+                , END_TIME
                 , GOOD_QTY
                 , DEFECT_QTY
                 , DESCRIPTION
@@ -183,9 +210,13 @@
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.workOrderId, jdbcType=VARCHAR}
-                , #{item.workCenterCd, jdbcType=VARCHAR}
-                , TO_DATE(#{item.woStartTime, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS')
-                , TO_DATE(#{item.woEndTime, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS')
+                , #{item.woResultId, jdbcType=VARCHAR}
+                , #{item.operationSeq, jdbcType=NUMERIC}
+                , #{item.operationId, jdbcType=VARCHAR}
+                , #{item.finalOperationYn, jdbcType=VARCHAR}
+                , #{item.state, jdbcType=VARCHAR}
+                , TO_DATE(#{item.startDate, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS') 
+                , TO_DATE(#{item.endDate, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS') 
                 , #{item.goodQty, jdbcType=NUMERIC}
                 , #{item.defectQty, jdbcType=NUMERIC}
                 , #{item.description, jdbcType=VARCHAR}
@@ -197,7 +228,7 @@
    </foreach>
   </insert>
    <delete id="remove_customBtn2-1" parameterType="java.util.List">
-      DELETE FROM MOM_PROC_WO_RESULT
+      DELETE FROM MOM_PROC_WO_RESULR_OP_PATH
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
         (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
@@ -208,7 +239,7 @@
       </where>
    </delete> 
    <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-           { CALL MOM_WO_PKG.sp_create_wo_result(             #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+           { CALL MOM_WO_PKG.sp_create_wo_op_result(             #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}											  
