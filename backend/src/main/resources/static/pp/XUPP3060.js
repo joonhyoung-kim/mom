@@ -28,23 +28,51 @@ var VIEW= {
 
 	},	
 	 cellEditCallBack: function(index,rowIndex,e,) {
-		if(index == 1){			
-            if(e.dataField =='goodQty'){
-	             //widget.messageBox({type: 'warning', width: '400', height: '145', html: multiLang.transText('MESSAGE','MSG00046')});
-	             return 'FAIL';
-			}
-			else if(e.dataField =='defectQty') {
-				
-			}
-			else if(e.dataField =='startDate') {
-				
-			}
-			else if(e.dataField =='endDate') {
-				
+		if(index == 1){	
+			let totalGoodQty = Number(e.item.totalGoodQty);
+			let totalDefectQty = Number(e.item.totalDefectQty);
+			if(e.rowIndex==0){				
+				  if(e.dataField =='goodQty'){
+		                if(totalGoodQty <Number(e.value)){
+			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '총지시수량보다 클수없습니다! '});
+			                return;
+						}
+						else{
+							
+						}
+				   }
+				   else if(e.dataField =='defectQty') {
+						
+				   }
+				   else if(e.dataField =='startDate') {
+						
+				   }
+				   else if(e.dataField =='endDate') {
+						
+				   }
+				   else{
+						
+				   }
 			}
 			else{
-				
-			}
+				  if(e.dataField =='goodQty'){
+	             //widget.messageBox({type: 'warning', width: '400', height: '145', html: multiLang.transText('MESSAGE','MSG00046')});
+		             return 'FAIL';
+				}
+				else if(e.dataField =='defectQty') {
+					
+				}
+				else if(e.dataField =='startDate') {
+					
+				}
+				else if(e.dataField =='endDate') {
+					
+				}
+				else{
+					
+				}
+			}		
+         
 			
          
 		}
@@ -78,12 +106,16 @@ var VIEW= {
 			        for(let i =0;i<columnProp.length;i++){
 				      AUIGrid.setColumnPropByDataField(widget.grid[1], columnProp[i]['columnId'], { 		    	
 						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						  if(item.state == 'R' && columnProp[i]['columnEditable'] =='Y'){						 
+					     if(item != null){						
+						   if(item.state == 'R' && columnProp[i]['columnEditable'] =='Y'){						 
 							    return '';
 						  }
-						  else {							    
+						   else {							    
 							     return 'warn-style';
 						  }
+					     }
+						 
+						 
 							
 						},
 					
@@ -94,8 +126,8 @@ var VIEW= {
 			AUIGrid.update('#grid2');	
 		}
 
-},
- delCallInit: function(index,your,action,btnId,param,result) {
+	},
+    delCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 1 || btnId == 'customBtn2-1'){		
 		   for(var i=0,max=param.length; i<max;i++){
 			if( param[i].state !='R'){
