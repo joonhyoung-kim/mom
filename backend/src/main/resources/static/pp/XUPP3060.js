@@ -29,45 +29,50 @@ var VIEW= {
 	},	
 	 cellEditCallBack: function(index,rowIndex,e,) {
 		if(index == 1){	
-			let totalGoodQty = Number(e.item.totalGoodQty);
+			let remainQty = Number(e.item.remainQty);
 			let totalDefectQty = Number(e.item.totalDefectQty);
 			if(e.rowIndex==0){				
 				  if(e.dataField =='goodQty'){
-		                if(totalGoodQty <Number(e.value)){
-			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '총지시수량보다 클수없습니다! '});
+		                if(remainQty <Number(e.value)){
+			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '작업수량보다 클수없습니다! '});
 			                return;
 						}
-						else{
-							
-						}
+						
 				   }
 				   else if(e.dataField =='defectQty') {
-						
+						 if(remainQty <Number(e.value)){
+			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '작업수량보다 클수없습니다! '});
+			                return;
+						}
 				   }
-				   else if(e.dataField =='startDate') {
-						
-				   }
-				   else if(e.dataField =='endDate') {
-						
-				   }
+				
 				   else{
 						
 				   }
 			}
 			else{
+				  let prevGoodQty   = Number(AUIGrid.getCellValue(widget.grid[index],rowIndex-1, 'goodQty'));
+				  let gridItem = AUIGrid.getGridData(widget.grid[index]);
+				  let prevDefectQty = 0; 
+				  let woQty = Number(AUIGrid.getCellValue(widget.grid[index],rowIndex, 'remainQty'));
+				  for(let i=0;i<gridItem.length-1;i++){
+					  prevDefectQty +=Number(gridItem[i]['defectQty']);
+				  }
+				 
+				  let prevRemainQty = woQty-prevGoodQty-prevDefectQty;
 				  if(e.dataField =='goodQty'){
-	             //widget.messageBox({type: 'warning', width: '400', height: '145', html: multiLang.transText('MESSAGE','MSG00046')});
-		             return 'FAIL';
-				}
-				else if(e.dataField =='defectQty') {
-					
-				}
-				else if(e.dataField =='startDate') {
-					
-				}
-				else if(e.dataField =='endDate') {
-					
-				}
+	                  if(prevRemainQty <Number(e.value)){
+			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '공정잔량보다 클수없습니다! '});
+			                return;
+						}
+				  }
+				  else if(e.dataField =='defectQty') {					 
+					  if(prevRemainQty <Number(e.value)){
+			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '공정잔량보다 클수없습니다! '});
+			                return;
+						}
+				 }
+			
 				else{
 					
 				}
@@ -78,11 +83,45 @@ var VIEW= {
 		}
 
 	},	
+	calendarGridSaveCallBack: function(index,rowIndex,columnIndex,dataField,item,nowTime,e){
+		 if(index==1){
+			   if(dataField =='startDate') {
+							let woStartDate   = new Date(item.woStartDate);
+		                    let woOpStartDate = new Date(nowTime);
+						    if(woOpStartDate<woStartDate){
+							    AUIGrid.setCellValue(widget.grid[index], rowIndex,columnIndex, '');
+							    momWidget.messageBox({type:'warning', width:'400', height: '145', html: '공정 시작시간은 작업지시 확정일 이후여야 합니다!'});
+							    momWidget.splashHide();
+						        return;
+						    }
+			   }
+			   else if (dataField =='endDate'){
+				         let woOpStartDate = AUIGrid.getCellValue(widget.grid[index],rowIndex, 'startDate');
+				         if(woOpStartDate=='' || woOpStartDate== undefined ){
+					            AUIGrid.setCellValue(widget.grid[index], rowIndex,columnIndex, '');
+							    momWidget.messageBox({type:'warning', width:'400', height: '145', html: '공정 시작시간 먼저 입력해주세요!'});
+							    momWidget.splashHide();
+						        return;
+				         }
+				         else{
+								let woStartDate   = new Date(item.startDate);
+					            let woOpEndDate = new Date(nowTime);
+						    if(woOpEndDate<woStartDate){
+							    AUIGrid.setCellValue(widget.grid[index], rowIndex,columnIndex, '');
+							    momWidget.messageBox({type:'warning', width:'400', height: '145', html: '공정 완료시간은 공정 시작시간 이후여야 합니다!'});
+							    momWidget.splashHide();
+						        return;
+						    }
+				         }
+					        
+			   }
+		}
+	},
 	   cellClickCallBack: function(index,rowIndex,target,e) {
-		if(index == 0 ){
-		
+		if(index == 0 ){		
 			widget.findBtnClicked(1, {workOrderId:e.item['workOrderId']}, true, 'customBtn2-1',menuId,VIEW);			
 		}
+		
 	
 	
 	},

@@ -2482,8 +2482,8 @@ var momWidget = {
 						/*+'<div id="calendar-main"></div>'*/
 						+'<input type="datetime-local" class = "calendar-pop-time-input" id="time-main"></input>'
 						+'<div class = "calendar-pop-footer" id="calendar-pop-footer">'
-						+'<button class = "calendar-pop-button left" id="saveBtnDT">'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
-						+'<button class = "calendar-pop-button right" id="closeBtnDT">'+multiLang.transText('MESSAGE','MSG00036')+'</button>'
+						+'<button class = "calendar-pop-button left" id="saveBtnDT'+(index+1)+'">'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
+						+'<button class = "calendar-pop-button right" id="closeBtnDT'+(index+1)+'">'+multiLang.transText('MESSAGE','MSG00036')+'</button>'
 						+'</div>'
 						+'</div>';
 					   return html;
@@ -2815,7 +2815,37 @@ var momWidget = {
 				//option.footers = footerProperty;
 				    //that.excelDownGrid[index]
 					 // AUIGrid.exportToXlsx("#excelGrid"+(index+1), excelDownOpt);
-					  				
+				//AUIGrid.exportToXlsx(that.excelDownGrid[index], excelDownOpt);
+				$('.aui-grid-export-progress-modal').height('100%');
+				$('#grid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
+								   //that.splashHide();
+							      //AUIGrid.setGridData(that.grid[index], data);  
+							  }
+							   if(btnId=='EXCEL_DOWN'){	 							  
+								    that.excelDownGridData[index] = data;
+								    that.backWork[index] = 'N';
+								   	var excelData = that.excelDownGridData[index]; 
+									AUIGrid.setGridData(that.excelDownGrid[index], excelData);												
+									var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd');
+								    var excelDownOpt = {fileName: fileName ,
+										    		    progressBar: true,
+										    		    showRowNumColumn:false,
+										    		    footers: undefined,
+										    		    exportWithStyle: true
+								    		            };
+				    
+				    excelDownOpt.afterRequestCallback = function() { // 엑셀 만들고 호출되는 콜백함수
+					$('.aui-grid-export-progress-modal').remove();
+					// AUIGrid.GridData(that.excelGrid[index]);
+					
+					//$('#excelArea' + (index + 1)).remove();
+					//AUIGrid.destroy(that.excelDownGrid[index]);
+					//that.exceldownGrid[index] = undefined;
+				}
+				//option.footers = footerProperty;
+				    //that.excelDownGrid[index]
+					 // AUIGrid.exportToXlsx("#excelGrid"+(index+1), excelDownOpt);
+				AUIGrid.exportToXlsx(that.excelDownGrid[index], excelDownOpt);
 				$('.aui-grid-export-progress-modal').height('100%');
 				$('#grid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
 								   //that.splashHide();
@@ -4764,8 +4794,8 @@ var momWidget = {
 			var paginLastBtnClass  = 'aui-grid-paging-last';
 			var paginPrevBtnClass  = 'aui-grid-paging-prev';
 			var paginNextBtnClass  = 'aui-grid-paging-next';
-			let calendarPopSaveBtnId = 'saveBtnDT';
-			let calendarPopCloseBtnId = 'closeBtnDT';
+			let calendarPopSaveBtnId = 'saveBtnDT'+(index + 1);
+			let calendarPopCloseBtnId = 'closeBtnDT'+(index + 1);
 			let gridPopSaveBtnId   = 'saveBtnCP';
 			let gridPopCancelBtnId = 'cancelBtnCP';
 			
@@ -4895,7 +4925,14 @@ var momWidget = {
 	        let nowTime = $( "#time-main" ).val().replace('T',' ');
 	        
 			$('#calendar-pop').css('display','none');
-			AUIGrid.setCellValue(that.grid[index],Number($('#calendar-pop').attr('rowIndex')), Number($('#calendar-pop').attr('columnIndex')), nowTime);
+			let rowIndex= Number($('#calendar-pop').attr('rowIndex'));
+			let columnIndex = Number($('#calendar-pop').attr('columnIndex'));
+			let dataField = AUIGrid.getColumnLayout(that.grid[index])[columnIndex]['dataField'];
+			let item = AUIGrid.getGridData(that.grid[index])[rowIndex];
+			AUIGrid.setCellValue(that.grid[index],rowIndex, columnIndex, nowTime);
+			if (your != undefined && your.calendarGridSaveCallBack != undefined) {
+				  your.calendarGridSaveCallBack(index,rowIndex,columnIndex,dataField,item,nowTime,e);
+			}
 			});
 			$(document).on('click', '#' + calendarPopCloseBtnId, function(e) {	
 			$('#calendar-pop').css('display','none');
@@ -7003,7 +7040,7 @@ var momWidget = {
 					}					
 					if(that.gridProperty[index][0]['usePaging']== true){
 						//that.backWork[index] = 'Y';		    
-						that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
+						that.findBtnClicked(index, {}, true, 'EXCEL_DOWN',menuId,your);
 						return;
 	
 					}	

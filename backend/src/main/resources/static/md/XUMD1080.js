@@ -23,12 +23,12 @@ var XUMD1080= {
 	
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1 && btnId=='findBtn'){	
+		if(index == 1 && (btnId=='findBtn' ||  btnId=='EXCEL_DOWN')){	
 			var item = param;
 			var checkedItems =AUIGrid.getSelectedItems(momWidget.grid[0])[0];
 				if (checkedItems==undefined){
-					  result.result = 'FAIL';
-					  result.msg    =  '상단에서 Routin Id 선택 필요!';
+					 /* result.result = 'FAIL';
+					  result.msg    =  '상단에서 Routin Id 선택 필요!';*/
 					  widget.splashHide();
 					  return;	
 				}

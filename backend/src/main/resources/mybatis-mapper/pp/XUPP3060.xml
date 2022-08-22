@@ -31,10 +31,10 @@
 		     , MWO.GOOD_QTY  AS TOTAL_GOOD_QTY 
 		     , MWO.DEFECT_QTY  AS TOTAL_DEFECT_QTY 
 		     , MWO.CANCEL_QTY
-		     , MWO.WO_QTY + NVL(MWO.GOOD_QTY, 0) + NVL(MWO.DEFECT_QTY, 0) + NVL(MWO.CANCEL_QTY,0) AS REMAIN_QTY
+		     , NVL(MWO.WO_QTY,0) + NVL(MWO.GOOD_QTY, 0) + NVL(MWO.DEFECT_QTY, 0) + NVL(MWO.CANCEL_QTY,0) AS REMAIN_QTY
 		     , TO_CHAR(MWO.PLAN_DATE  ,'YYYY-MM-DD')      AS PLAN_DATE
-		     , TO_CHAR(MWO.WO_START_TIME  ,'YYYY-MM-DD')  AS WO_START_TIME
-		     , TO_CHAR(MWO.WO_END_TIME  ,'YYYY-MM-DD')    AS WO_END_TIME
+		     , TO_CHAR(MWO.WO_START_TIME  ,'YYYY-MM-DD')  AS WO_START_DATE
+		     , TO_CHAR(MWO.WO_END_TIME  ,'YYYY-MM-DD')    AS WO_END_DATE
 		     , MWO.PRIORITY
 		     , MWO.DEMAND_ID
 		     , MWO.PARENT_WO_ID
@@ -111,10 +111,11 @@
 		                      , MWP.DESCRIPTION
 		                      , MWP.UPDATE_BY
 		                      , MWP.UPDATE_DATE
-		                      , MWO.WO_QTY
+		                      , MWO.WO_QTY 
 		                      , MWO.GOOD_QTY AS TOTAL_GOOD_QTY
 		                      , MWO.DEFECT_QTY  AS TOTAL_DEFECT_QTY
 		                      , MWO.CANCEL_QTY  AS TOTAL_CANCEL_QTY
+		                      
 		                 FROM   MOM_WO_RESULT_OP_PATH MWP
 		                      , MOM_WORK_ORDER   MWO
 		                 WHERE  MWP.COMPANY_CD     = MWO.COMPANY_CD 
@@ -154,10 +155,12 @@
            , A.DESCRIPTION
            , A.UPDATE_BY
            , A.UPDATEBYNM
-           , A.UPDATE_DATE
+           , A.UPDATE_DATE   
            , NVL(A.TOTAL_GOOD_QTY,0) AS TOTAL_GOOD_QTY
 		   , NVL(A.TOTAL_DEFECT_QTY,0) AS TOTAL_DEFECT_QTY
-		     A.REMAIN_QTY
+           , NVL(A.TOTAL_CANCEL_QTY,0) AS TOTAL_CANCEL_QTY
+           , NVL(A.WO_QTY,0) - NVL(A.TOTAL_GOOD_QTY, 0) - NVL(A.TOTAL_DEFECT_QTY, 0) - NVL(A.TOTAL_CANCEL_QTY,0) AS REMAIN_QTY
+		   , A.WO_START_DATE
        FROM(   SELECT MWO.COMPANY_CD
 		     , MWO.DIVISION_CD
 		     , MWO.WORK_ORDER_ID
@@ -185,15 +188,21 @@
 		     , P.UPDATE_BY
 		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(P.COMPANY_CD, P.DIVISION_CD, P.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
 		     , TO_CHAR(P.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-		     , P.TOTAL_GOOD_QTY
-		     , P.TOTAL_DEFECT_QTY
-		     , NVL(P.WO_QTY,0) - NVL(P.TOTAL_GOOD_QTY, 0) - NVL(P.TOTAL_DEFECT_QTY, 0) - NVL(P.TOTAL_CANCEL_QTY,0) AS REMAIN_QTY
+		     , MW.GOOD_QTY AS TOTAL_GOOD_QTY
+		     , MW.DEFECT_QTY AS TOTAL_DEFECT_QTY
+             , MW.CANCEL_QTY AS TOTAL_CANCEL_QTY
+             , MW.WO_QTY
+             , TO_CHAR(MW.WO_START_TIME ,'YYYY-MM-DD')  AS WO_START_DATE
 		FROM   MOM_WO_OPERATION_PATH MWO
+			 , MOM_WORK_ORDER MW
 		     , C_PATH  P
 		WHERE  MWO.COMPANY_CD     = P.COMPANY_CD(+)                     
 		AND    MWO.DIVISION_CD    = P.DIVISION_CD(+)                     
 		AND    MWO.WORK_ORDER_ID  = P.WORK_ORDER_ID (+)     
-		AND    MWO.OPERATION_ID   = P.OPERATION_ID  (+)             
+		AND    MWO.OPERATION_ID   = P.OPERATION_ID  (+)            
+		AND    MW.COMPANY_CD      = MWO.COMPANY_CD                     
+		AND    MW.DIVISION_CD     = MWO.DIVISION_CD                     
+		AND    MW.WORK_ORDER_ID   = MWO.WORK_ORDER_ID  
 		AND     MWO.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
 		AND    MWO.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}
 		AND     MWO.WORK_ORDER_ID  = #{workOrderId, jdbcType=VARCHAR} ) A
