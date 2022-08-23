@@ -40,7 +40,7 @@ var VIEW= {
 	
 	},
 	 cellEditCallBack: function(index,rowIndex,e,) {
-		if(index == 0){	
+		if(index == 1){	
 			      let remainQty = Number(e.item.remainQty);
 			      let totalDefectQty = Number(e.item.totalDefectQty);
 			
