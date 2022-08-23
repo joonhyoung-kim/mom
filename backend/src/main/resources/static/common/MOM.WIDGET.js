@@ -3566,8 +3566,37 @@ var momWidget = {
 		return event.value; // 원래값
 	});*/
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
+			
 			let customCheckBox = 'N';
-			for(let i=0,max=that.columnProperty[index].length; i<max;i++){
+		
+			  
+			  		
+			   
+				//let scrollbar = $('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset() == undefined ? {top:0,left:0}:$('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset();			
+				
+								
+		        	    
+			let item = e.item;
+			let rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); 
+			let rowId = item[rowIdField];
+			let rowIdValue = [] ;
+			let dropdownGridYn = 'N';
+			let dropDownGridIndex = 0;
+		    let rowIndex = $('#dropDownGridPop'+(index+1)).length == 0 ?  0: Number($('#dropDownGridPop'+(index+1)).attr('rowIndex'));
+		    let target = $('#dropDownGridPop'+(index+1)).length == 0 ?  '': $('#dropDownGridPop'+(index+1)).attr('target');
+			let selectionMode = momWidget.gridProperty[index][0]['selectionMode'];
+				if(your != undefined && your.cellClickCallInit != undefined) {
+				result = your.cellClickCallInit(index,rowIndex,e) ;
+				if (result == undefined){
+					result = 'SUCCESS';
+				}
+				if(result != 'SUCCESS'){
+					e.orgEvent.stopImmediatePropagation();
+					return;
+				}
+			}
+			
+				for(let i=0,max=that.columnProperty[index].length; i<max;i++){
 				 if( that.columnProperty[index][i]['columnType']=='C' && that.columnProperty[index][i]['columnId'] == e.dataField){
 			/*	  $('#calendar-main').datepicker({
 					changeMonth: true,
@@ -3603,32 +3632,7 @@ var momWidget = {
 				    customCheckBox = 'Y';
 			    }
 			}
-			  
-			  		
-			   
-				//let scrollbar = $('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset() == undefined ? {top:0,left:0}:$('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset();			
-				
-								
-		        	    
-			let item = e.item;
-			let rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); 
-			let rowId = item[rowIdField];
-			let rowIdValue = [] ;
-			let dropdownGridYn = 'N';
-			let dropDownGridIndex = 0;
-		    let rowIndex = $('#dropDownGridPop'+(index+1)).length == 0 ?  0: Number($('#dropDownGridPop'+(index+1)).attr('rowIndex'));
-		    let target = $('#dropDownGridPop'+(index+1)).length == 0 ?  '': $('#dropDownGridPop'+(index+1)).attr('target');
-			let selectionMode = momWidget.gridProperty[index][0]['selectionMode'];
-				if(your != undefined && your.cellClickCallInit != undefined) {
-				result = your.cellClickCallInit(index,rowIndex,e) ;
-				if (result == undefined){
-					result = 'SUCCESS';
-				}
-				if(result != 'SUCCESS'){
-					e.orgEvent.stopImmediatePropagation();
-					return;
-				}
-			}
+			
 			 for(let i=0,max1=that.columnProperty[index].length; i<max1;i++){
 				if(that.columnProperty[index][i].columnType == 'DG' && that.columnProperty[index][i].columnId == e.dataField){					
 						dropdownGridYn = 'Y';

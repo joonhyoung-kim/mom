@@ -11,6 +11,35 @@ var VIEW= {
 	event: function(e) {
 	
 	},
+	 cellEditCallBack: function(index,rowIndex,e,) {
+		if(index == 0){	
+			let planQty = Number(e.item.planQty);						
+				  if(e.dataField =='confirmQty'){
+		                if(planQty <Number(e.value)){
+			                AUIGrid.setCellValue(widget.grid[index], rowIndex,e.columnIndex, 0);
+			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '계획수량보다 클수없습니다! '});
+			                return;
+						}
+						
+				   }
+				   else if(e.dataField =='defectQty'){
+						 if(remainQty <Number(e.value)){
+			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '작업수량보다 클수없습니다! '});
+			                return;
+						}
+				   }
+				
+				   else{
+						
+				   }
+			
+			
+         
+			
+         
+		}
+
+	},	
 	 editCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='customBtn1-2'){
 			let items = [];	
