@@ -27,9 +27,9 @@ var VIEW= {
 		}
 
 	},	
-	 cellEditCallBack: function(index,rowIndex,e,) {
+	 cellEditCallBack: function(index,rowIndex,columnIndex,dataField,item,e) {
 		if(index == 1){	
-			let remainQty = Number(e.item.remainQty);
+			let remainQty = Number(item.remainQty);
 			let totalDefectQty = Number(e.item.totalDefectQty);
 			if(e.rowIndex==0){				
 				  if(e.dataField =='goodQty'){

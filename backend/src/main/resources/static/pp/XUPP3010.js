@@ -11,12 +11,12 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-	 cellEditCallBack: function(index,rowIndex,e,) {
+	 cellEditCallBack: function(index,rowIndex,columnIndex,dataField,item,e) {
 		if(index == 0){	
-			let planQty = Number(e.item.planQty);						
+			let planQty = Number(item.planQty);						
 				  if(e.dataField =='confirmQty'){
 		                if(planQty <Number(e.value)){
-			                AUIGrid.setCellValue(widget.grid[index], rowIndex,e.columnIndex, 0);
+			                AUIGrid.setCellValue(widget.grid[index], rowIndex,columnIndex, 0);
 			                widget.messageBox({type: 'warning', width: '400', height: '145', html: '계획수량보다 클수없습니다! '});
 			                return;
 						}

@@ -3542,7 +3542,7 @@ var momWidget = {
 		     }
 			}		
 			if(your != undefined && your.cellEditCallBack != undefined) {
-				result = your.cellEditCallBack(index,e.rowIndex,e);
+				result = your.cellEditCallBack(index,e.rowIndex,e.columnIndex,e.dataField,e.item,e);
 				if (result == undefined){
 					result = 'SUCCESS';
 				}
