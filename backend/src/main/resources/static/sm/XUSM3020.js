@@ -109,7 +109,7 @@ var VIEW= {
 		}
 
 	},	
-	saveCallInit: function(index,your,action,btnId,param,result) {
+	savegGridCallInit: function(index,your,action,btnId,param,result) {
 	     if(index ==3 && btnId =='saveBtn'){		           
 			checkedItem = widget.getCheckedRowItems(widget.grid[2]);
             if(checkedItem.length == 0){

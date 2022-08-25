@@ -31,7 +31,7 @@ var XUSM1040 = {
 
 
 	},
-	saveCallInit: function(index,your,action,btnId,param,result) {
+	savePopCallInit: function(index,your,action,btnId,param,result) {
 		if(index==0){		
 			for(var i=0,max=param.length; i<max;i++){
 				 param[i].pwEncode = 'Y';

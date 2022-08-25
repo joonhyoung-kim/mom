@@ -65,7 +65,7 @@ var VIEW= {
 		}
 	
 	},
-	saveCallInit: function(index,your,action,btnId,param,result) {
+	savePopCallInit: function(index,your,action,btnId,param,result) {
 	     if(index == 0 && btnId =='saveBtnDP'){		           
 					    var items = param;
 					    var startTime = items[0]['startTime'].split(':');

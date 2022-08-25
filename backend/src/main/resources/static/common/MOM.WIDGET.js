@@ -9859,39 +9859,37 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		 if(action == 'C'  && your.createCallInit != undefined && (btnId=='createBtn' || btnId.indexOf('customBtn')>=0)) {
+		 if(your.createCallInit != undefined && btnId=='createBtn' ) {
 			 your.createCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(action == 'U' && your.editCallInit != undefined) {
+		else if(your.editCallInit != undefined && btnId=='editBtn') {
 			 your.editCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(action == 'CP' && your.copyCallInit != undefined) {
+		else if( your.copyCallInit != undefined && btnId=='copyBtn') {
 			 your.copyCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(action == 'P' && your.procCallInit != undefined) {
-			 your.procCallInit(index,your,action,btnId,param,result);				 
+		else if(your.customCallInit != undefined && btnId.indexOf('customBtn')>=0) {
+			 your.customCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(action == 'E' && your.excelCallInit != undefined) {
-			 your.excelCallInit(index,your,action,btnId,param,result);	
+		else if(your.excelDownCallInit != undefined&& btnId=='excelDownBtn') {
+			 your.excelDownCallInit(index,your,action,btnId,param,result);	
 		}
 		else if(action == 'R' && your.searchCallInit != undefined) {
 			 your.searchCallInit(index,your,action,btnId,param,result,event);	
 		}
-		else if(action == 'GS' && your.saveCallInit != undefined && (btnId=='saveBtn' || btnId=='saveBtnDP')) {
-				your.saveCallInit(index,your,action,btnId,param,result);			
+		else if(your.saveGridCallInit != undefined && btnId=='saveBtn' ) {
+				your.saveGridCallInit(index,your,action,btnId,param,result);			
 		} 
-		else if(action == 'GA' && your.addRowCallInit != undefined) {
+		else if(your.addRowCallInit != undefined&& btnId=='addBtn') {
 				your.addRowCallInit(index,your,action,btnId,param,result);			
 		} 		
-		else if(action == 'D'  && your.delCallInit != undefined) {		
+		else if(your.delCallInit != undefined && btnId=='delBtn') {		
 			 your.delCallInit(index,your,action,btnId,param,result);			
 		}
-		if((action == 'C' || action == 'U' || action == 'P' || action == 'CP') && your.saveCallInit != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
-			 your.saveCallInit(index,your,action,btnId,param,result);			
+		if(your.savePopCallInit != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+			 your.savePopCallInit(index,your,action,btnId,param,result);			
 	    } 
-	/*	if(action == 'U' && your.editCallBack != undefined) {
-			 your.editCallBack(index,your,action,btnId,param,result);	
-		}	*/
+
 		
 
 			return {result:result.result,param:result.param,msg:result.msg};
@@ -9903,41 +9901,38 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		if(action == 'C'  && your.createCallBack != undefined && (btnId=='createBtn' || btnId.indexOf('customBtn')>=0)) {
+		if( your.createCallBack != undefined && btnId=='createBtn' ) {
 			your.createCallBack(index,your,action,btnId,param,result,data);	
 			
 		}
-		else if(action == 'U' && your.editCallBack != undefined) {
+		else if(your.editCallBack != undefined && btnId=='editBtn') {
 			your.editCallBack(index,your,action,btnId,param,result,data);	
 		}	
 					
-		else if(action == 'CP' && your.copyCallBack != undefined) {
+		else if( your.copyCallBack != undefined && btnId=='copyBtn') {
 			your.copyCallBack(index,your,action,btnId,param,result,data);	
 		}	
-		else if(action == 'P' && your.procCallBack != undefined) {
-			your.procCallBack(index,your,action,btnId,param,result,data);	
+		else if(your.customCallBack != undefined && btnId.indexOf('customBtn')>=0) {
+			your.customCallBack(index,your,action,btnId,param,result,data);	
 		}	
-		else if(action == 'E' && your.excelCallBack != undefined) {
-			your.excelCallBack(index,your,action,btnId,param,result,data);	
+		else if(your.excelDownCallBack != undefined&& btnId=='excelDownBtn') {
+			your.excelDownCallBack(index,your,action,btnId,param,result,data);	
 		}
 		else if(action == 'R' && your.searchCallBack != undefined) {
 			your.searchCallBack(index,your,action,btnId,param,result,data);	
 		}
-		else if(action == 'GS' && your.saveCallBack != undefined && (btnId=='saveBtn' || btnId=='saveBtnDP')) {
-				your.saveCallBack(index,your,action,btnId,param,result,data);				
+		else if(your.saveGridCallBack != undefined && btnId=='saveBtn' ) {
+				your.saveGridCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if(action == 'GA' && your.addRowCallBack != undefined) {
+		else if(your.addRowCallBack != undefined&& btnId=='addBtn') {
 				your.addRowCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if(action == 'D'  && your.delCallBack != undefined) {		
+		else if(your.delCallBack != undefined && btnId=='delBtn') {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
-		if((action == 'C' || action == 'U' || action == 'P'|| action == 'CP') && your.saveCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
-			your.saveCallBack(index,your,action,btnId,param,result,data);		
+		if(your.savePopCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+			your.savePopCallBack(index,your,action,btnId,param,result,data);		
 	    } 
-/*		if(action == 'U' && your.editCallBack != undefined) {
-			     your.editCallBack(index,your,action,btnId,param,result,data);	
-		}*/
 	
 			return {result:result.result,param:result.param,msg:result.msg};
 		

@@ -18,15 +18,18 @@ var VIEW= {
 	
 	
 	},
-	procCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1 || btnId == 'customBtn2-1'){
+	customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 1 ){
+			if(action =='P' || btnId == 'customBtn2-1'){
 			if(param[0].resultState == 'C'){
 				result.msg = '이미 취소된 데이터는 취소할수 없습니다.!';
 				result.result = 'WARN';
 				return;
 			}
 	
+		   }
 		}
+		
 	},
 	searchCallInit: function(index,your,action,btnId,param,result,event) {
 		if(index==1 && btnId== "customBtn2-1"){

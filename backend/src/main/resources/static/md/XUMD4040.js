@@ -23,7 +23,7 @@ var VIEW= {
 		});
 	},
 	
-    saveCallInit: function(index,your,action,btnId,param,result) {
+    savePopCallInit: function(index,your,action,btnId,param,result) {
 	     if(index == 0 && action == 'C' && btnId =='saveBtnDP'){		           
 					    var items = param;	
 					    	
@@ -119,8 +119,9 @@ var VIEW= {
 	 
 
 	},
-	procCallInit: function(index,your,action,btnId,param,result) {
-		    if(index == 1 || index == 2){
+	customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 1 || index == 2){
+			 if (action =='P'){
 				var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
 				if(checkedItems == 0){
 					 result.msg = '데이터를 체크해주세요!';
@@ -134,8 +135,10 @@ var VIEW= {
 		          $('#startDate'+'DP'+(index+1)).val($('#startDate').val());
 				  $('#endDate'+'DP'+(index+1)).val($('#endDate').val());	
 			}
+		}
+		   
 	        		 
-	},
+	}
 };
 
 $(document).ready(function(event){	

@@ -74,7 +74,7 @@ var VIEW= {
 
 	},
 
-	saveCallInit: function(index,your,action,btnId,param,result) {
+	savePopCallInit: function(index,your,action,btnId,param,result) {
 	     if(index ==10 && btnId =='saveBtnCP'){		           
 					    var gridItems = AUIGrid.getGridData(widget.grid[index]);
 				        for(var i=0;i<gridItems.length;i++){

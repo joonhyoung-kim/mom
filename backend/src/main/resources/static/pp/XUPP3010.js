@@ -40,8 +40,8 @@ var VIEW= {
 		}
 
 	},	
-	 editCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==0 && btnId =='customBtn1-2'){
+	 customCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==0 && action=='U'&&btnId =='customBtn1-2'){
 			let items = [];	
 	          for(let i=0,max=param.length;i<max;i++){
 		           if(param[i].state =='R'){
@@ -50,11 +50,7 @@ var VIEW= {
 			  }
 			result.param = items;  	
 		}
-	 
-
-	},
-	delCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 0 || btnId == 'customBtn1-1'){
+	    else if((index == 0 || btnId == 'customBtn1-1')&& action=='D'){
 			if(param[0].state == 'C'){
 				result.msg = '이미 확정 처리된 데이터 입니다.!';
 				result.result = 'WARN';
@@ -64,16 +60,20 @@ var VIEW= {
 			 param[0]['actionMode'] = 'WA';
 			 result.param = param;
 		    }
-	
 		}
+
 	},
-	procCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 0 || btnId == 'customBtn1-1'){				    
+	
+	customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 0){
+			if(action == 'P' || btnId == 'customBtn1-1'){				    
 			 param['actionMode'] = 'WA';
 			 result.param = param;
 		    
 	
 		}
+		}
+		
 	},
     cellClickCallInit: function(index,rowIndex,e,) {
 		if(index == 0){

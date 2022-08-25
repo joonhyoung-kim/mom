@@ -36,7 +36,7 @@ var XUSM2030 = {
 	
 	},
 
-		saveCallInit: function(index,your,action,btnId,param,result){
+		saveGridCallInit: function(index,your,action,btnId,param,result){
 		if(index == 1 && btnId =='saveBtn'){
 			var gridItem =  AUIGrid.getGridData(momWidget.grid[index]);
 			for(var i=0,max=gridItem.length;i<max;i++){

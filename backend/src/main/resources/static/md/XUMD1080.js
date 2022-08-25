@@ -17,7 +17,7 @@ var XUMD1080= {
 					  widget.splashHide();
 					  return;	
 				}
-		$('#routingIdDP2').val(checkedItems[0].routingId);
+					$('#routingIdDP2').val(checkedItems[0].routingId);
 					 		
 		}
 	

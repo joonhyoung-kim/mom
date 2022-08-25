@@ -26,7 +26,7 @@ var XUSM1030 = {
 			}
 		});
 	},
-	saveCallInit: function(index,your,action,btnId,param,result) {
+	savePopCallInit: function(index,your,action,btnId,param,result) {
 		if(index==1){
 			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0]);
 			if(checkedItem =='FAIL'){
@@ -36,7 +36,7 @@ var XUSM1030 = {
 			for(var i=0,max=param.length; i<max;i++){
 				 param[i].authGroupCd = checkedItem[0]['authGroupCd'];
 			}	
-		
+		result.param = param;
 		}
 	
 	}

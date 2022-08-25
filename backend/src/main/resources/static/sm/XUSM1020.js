@@ -48,12 +48,13 @@ var XUSM1020 = {
 		}
 		
 	},	
-	saveCallInit: function(index,your,action,btnId,param,result){
+	savePopCallInit: function(index,your,action,btnId,param,result){
 	 if(index == 0){
 		
 	}
-	else if(index == 1){		
-			param[0].companyCode = that.paramTmp.companyCode;
+	else if(index == 1){	
+		    param[0] = that.paramTmp.companyCode;	
+			result.param  = param;
 				
 		}
 	

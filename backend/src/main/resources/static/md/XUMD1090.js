@@ -8,18 +8,7 @@ var VIEW= {
 		that = this;	
 		//that.event();
 	},
-		saveCallInit: function(index,your,action,btnId,param,result) {
-			   if(index ==0 && btnId =='saveBtnDP' && action=='C' ){		           
-					    var items = AUIGrid.getCheckedRowItems(widget.grid[index]);
-		
-	    }
-	     else if(index ==0 && btnId =='saveBtnDP' && action=='U'){		           
-        
-	    }
-	  
-	   
-
-	},
+	
 	searchCallInit: function(index,your,action,btnId,param,result,event) {
 		if(index ==1 && btnId =='saveBtn' ){
 			 let checkItem = widget.getCheckedRowItems(widget.grid[0]);
