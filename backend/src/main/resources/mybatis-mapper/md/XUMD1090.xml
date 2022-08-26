@@ -320,7 +320,7 @@
 					                                          , #{actionMode, jdbcType=VARCHAR, mode=IN}												  
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-  <delete id="remove_validateEx1" parameterType="java.util.List">
+  <delete id="remove_excelUpBtnV1" parameterType="java.util.List">
       DELETE FROM MOM_PROC_BOR
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -331,7 +331,7 @@
        </foreach>
       </where>
    </delete>  
-   <insert id="create_validateEx1"  parameterType="java.util.List" >    
+   <insert id="create_excelUpBtnV1"  parameterType="java.util.List" >    
    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
        INTO MOM_PROC_BOR (
                   COMPANY_CD
@@ -378,7 +378,7 @@
 
            
   </insert>  
-   <select id="proc_validateEx1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_excelUpBtnV1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
            { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}

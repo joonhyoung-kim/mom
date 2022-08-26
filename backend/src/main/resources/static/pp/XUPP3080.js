@@ -18,15 +18,18 @@ var VIEW= {
 	
 	
 	},
-	delCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1 || btnId == 'customBtn2-1'){
-			for(let i=0,max=param.length; i<max;i++){
-				if(param[i].resultState == 'C'){
-				result.msg = '이미 취소된 데이터는 취소할수 없습니다.!';
-				result.result = 'WARN';
-				return;
+	customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 1){
+			if( action =='D' && btnId == 'customBtn2-1'){
+				for(let i=0,max=param.length; i<max;i++){
+					if(param[i].resultState == 'C'){
+					result.msg = '이미 취소된 데이터는 취소할수 없습니다.!';
+					result.result = 'WARN';
+					return;
+				    }
+			    }
 			}
-			}
+			
 				
 		}
 	},

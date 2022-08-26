@@ -11,9 +11,9 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-	 delCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 0 || btnId == 'customBtn1-1'){
-	
+      customCallInit: function(index,your,action,btnId,param,result) {
+	  if(index==0 && action=='D'){
+		if( btnId == 'customBtn1-1' ){	
 		 let checkedItems = [];
 	
 		   for(var i=0,max=param.length; i<max;i++){
@@ -36,6 +36,8 @@ var VIEW= {
 	       
 	       
 		}
+	  }
+		
 	}
 	
 	

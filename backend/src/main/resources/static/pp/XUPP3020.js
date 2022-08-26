@@ -60,7 +60,7 @@ var VIEW= {
 		   }
 		
 	},		
-     saveCallInit: function(index,your,action,btnId,param,result) {
+     savePopCallInit: function(index,your,action,btnId,param,result) {
 	     if(index ==0 && btnId =='saveBtnDP'&& ($('#defaultPop1').attr('btnid')=='createBtn1' || $('#defaultPop1').attr('btnid')=='copyBtn1')){
 		    let startDate = new Date($('#woStartDateDP1').val());
 		    let endDate = new Date($('#woEndDateDP1').val());

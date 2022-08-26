@@ -225,16 +225,19 @@ var VIEW= {
 		}
 
 	},
-    delCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1 || btnId == 'customBtn2-1'){		
-		   for(var i=0,max=param.length; i<max;i++){
-			if( param[i].state !='R'){
-				result.msg = '상태가 진행인 공정만 실적등록 가능합니다!';
-				result.result = 'WARN';
-				return;
-			}				    
-	       }
-          result.param = param;
+    customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 1){
+			if(action=='D'&& btnId == 'customBtn2-1'){
+				 for(var i=0,max=param.length; i<max;i++){
+					if( param[i].state !='R'){
+						result.msg = '상태가 진행인 공정만 실적등록 가능합니다!';
+						result.result = 'WARN';
+						return;
+					}				    
+	              }
+             result.param = param;
+			}		
+		  
 	       
 		}
 	}
