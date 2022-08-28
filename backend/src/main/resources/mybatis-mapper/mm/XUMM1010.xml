@@ -502,7 +502,7 @@
                 , #{item.prSeq, jdbcType=NUMERIC}
                 , #{item.puchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
-                , TO_DATE(#{item.dueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.currencyCd, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}

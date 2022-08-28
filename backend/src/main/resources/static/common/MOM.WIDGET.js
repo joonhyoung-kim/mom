@@ -5557,7 +5557,7 @@ var momWidget = {
 							}
 							AUIGrid.updateRows(that.excelUpGrid[index], data1, rowIndexes); 
 			      				//AUIGrid.setGridData(that.excelUpGrid[index], data1);	
-					var	fileName = that.pagePrope rty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd')+'_검사결과';
+					var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd')+'_검사결과';
 				    var excelDownOpt = {fileName: fileName ,
 						    		    progressBar: true,
 						    		    showRowNumColumn:false,
