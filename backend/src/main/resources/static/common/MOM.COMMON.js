@@ -1804,7 +1804,7 @@ function excelUploadGrid(file, index,grid,validate) {
 	var reader = new FileReader();
     reader.onload = function() {
         var fileData = reader.result;
-        var wb = XLSX.read(fileData, {type : 'binary'});
+        var wb = XLSX.read(fileData, {type : 'binary', cellDates: true, dateNF: 'yyyy-mm-dd HH:mm:ss'});
         wb.SheetNames.forEach(function(sheetName) {
 	        var rowObj =XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
 	     if(rowObj.length>100000){
@@ -1818,6 +1818,7 @@ function excelUploadGrid(file, index,grid,validate) {
 	        }
 	        reRowObj = JSON.parse(reRowObj);
 	        for(var i = 0; i < reRowObj.length; i++) {
+		        
 	        	excelData.push(reRowObj[i]);
 	        }
 	       
@@ -1835,16 +1836,25 @@ function excelUploadGrid(file, index,grid,validate) {
             columnInfo[key] = format;
 
         }
-      
+        
         for(var i = 0; i < excelData.length; i++) {
         	for(var key in excelData[i]) {
         		if(headerInfo[key] != undefined) {
         			if(columnInfo[key] == "string"){
 	                    if(isNaN(excelData[i][key])==false){
+		                        
 		                        excelData[i][key] = excelData[i][key]+''.replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
 	                   }
 	                   else{
-								excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').trim();
+		                   if(!isNaN(Date.parse(excelData[i][key]))){
+			                   let date = moment(excelData[i][key]);  			        //'YYYY-MM-DD HH:mm:ss'          			                  			            			                   
+			                   excelData[i][key] = moment(date).add(52, "seconds").format('YYYY-MM-DD 00:00:00'); 
+			                 
+		                   }
+		                   else{
+							excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').trim();
+						   }
+								
 	                   }
         				
         			}

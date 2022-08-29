@@ -5633,7 +5633,7 @@ var momWidget = {
 			      				}
 			      				 if(data3[0]['p_err_code']=='E') {
 								
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '검사 불합격! 검사 결과를 다운 받으세요'});
+					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '검사 불합격! 검사 결과를 다운 받으세요'+multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
 									  momWidget.splashHide();
 									  $("#exUpCheckDown"+(index+1)).prop("disabled", false);
 						              return;
@@ -5688,15 +5688,15 @@ var momWidget = {
 				      return;
 				}	
 					 				
-				    var actionType = $('#excelUpPop1').attr('actiontype') == undefined ? 'CU' : $('#excelUpPop1').attr('actiontype');
+				    var actionType = $('#excelUpPop'+(index+1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop'+(index+1)).attr('actiontype');
 				    let queryId    = actionType == 'CU' ? that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1) : that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1);
+				    let validateYn = $('#excelUpPop'+(index+1)).attr('validateYn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('validateYn');
+				    let tmpYn = $('#excelUpPop'+(index+1)).attr('tmpYn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('tmpYn');
 					setTimeout(function() {
-						if(actionType=='P'){
+						if(validateYn=='Y'){
 							 param[0].excelUpYn = 'Y';
-						     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
-					
-						// $("#pleaseWaitDialog").modal('show');
-						 mom_ajax(actionType, queryId,[], function(result, data) {
+					         param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
+							 mom_ajax(actionType, queryId,[], function(result, data) {
 							   bar.width('100%');
 					           percent.text('100%'+' '+param.length+'/'+param.length);  
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
@@ -5716,16 +5716,56 @@ var momWidget = {
 								  momWidget.splashHide();
 								  //$("#pleaseWaitDialog").momModal('hide');
 							      return;
-				          }, undefined, index, this, false,undefined,'EA');
+				          }, undefined, index, this, false,undefined,'EA');	
+		          
+						
+					
+						// $("#pleaseWaitDialog").modal('show');
+					
 						}
 						else{
 							 param[0].excelUpYn = 'Y';
-						 param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
-					
-						// $("#pleaseWaitDialog").modal('show');
-						 mom_ajax(actionType, queryId,param, function(result, data) {
-							   bar.width('100%');
-					           percent.text('100%'+' '+param.length+'/'+param.length);  
+						     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
+							 if(tmpYn=='Y'){
+								    mom_ajax('D', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1) ,[], function(result1, data1) {
+						            if(result1!='SUCCESS') {
+						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
+										  momWidget.splashHide();
+							              return;
+						            }    	
+					                   mom_ajax('C', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1),param, function(result2, data2) {                                                                                                      
+						 		  			if(result2!='SUCCESS') {
+							            	   momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
+											   momWidget.splashHide();
+								               return;
+							                }    	
+					                 mom_ajax('P', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1),[], function(result3, data3) {
+									    if(data3[0]['p_err_code']=='E') {
+								            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
+												  momWidget.splashHide();
+									              return;
+								         }    	
+					                 }, undefined, undefined, this, false,undefined,'C'); 
+			                    
+						 }, undefined, undefined, this, false);    
+						                      							  						
+			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'excelUpBtn', your);
+						if(callBackResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    		}
+						  let callBackParam = callBackResult['param'];		 
+			        	  momWidget.findBtnClicked(index, callBackParam, true, 'excelUpBtn',momWidget.pageProperty[index]['programId'],your);			        	  
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, undefined, this, false);
+							 }
+							 else{
+								 mom_ajax(actionType, queryId,param, function(result, data) {
+									   bar.width('100%');
+							           percent.text('100%'+' '+param.length+'/'+param.length);  
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
 					            if(data[0]['p_err_code']=='E') {
 									  $("#pleaseWaitDialog").momModal('hide');
@@ -5744,6 +5784,11 @@ var momWidget = {
 								  //$("#pleaseWaitDialog").momModal('hide');
 							      return;
 				          }, undefined, index, this, false,undefined,'EA');
+							}
+							
+					
+						// $("#pleaseWaitDialog").modal('show');
+						
 						}
 						
 				    
@@ -5756,7 +5801,7 @@ var momWidget = {
 				 var bar = $('.bar');
 				 var percent = $('.percent');
 				 var status = $('#status');
-				 let validateYn = $('#excelUpPop'+(index+1)).attr('actiontype') == 'CU' ? 'N':'Y';
+				 let validateYn = $('#excelUpPop'+(index+1)).attr('validateYn') == undefined ? 'N':$('#excelUpPop'+(index+1)).attr('validateYn');
 			   bar.width('0%');
 			   percent.text('0%');  
 			
@@ -5783,9 +5828,19 @@ var momWidget = {
 				
 			});
 			$(document).on('click', '#' + excelUpBtnId, function() {
-				 //$("#exUpCheck"+(index+1)).prop("disabled", false);				 
+				 //$("#exUpCheck"+(index+1)).prop("disabled", false);		
+				 let eventType = 'CU';	
+				 let tmpYn = 'N';	 
 				  $("#saveBtnExUp"+(index+1)).prop("disabled", false);
-				  $('#excelUpPop'+(index+1)).attr('actionType', 'CU');
+				  for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+					  if(that.buttonProperty[index][i]['buttonId'] == 'excelUpBtn') {
+						 eventType =   that.buttonProperty[index][i]['eventType'];
+						 tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+					  }
+				  }
+				  $('#excelUpPop'+(index+1)).attr('actionType', eventType);
+				  $('#excelUpPop'+(index+1)).attr('validateYn', 'N');
+				  $('#excelUpPop'+(index+1)).attr('tmpYn', tmpYn);
 			     //$("#exUpCheckDown"+(index+1)).prop("disabled", true);
 				$('#excelFile1').val('')
 				AUIGrid.clearGridData(that.excelUpGrid[index]);
@@ -5839,6 +5894,8 @@ var momWidget = {
 			     $("#exUpCheckDown"+(index+1)).prop("disabled", true);
 			     $('#excelUpPop'+(index+1)).attr('actionType', 'P');
 			     $('#excelUpPop'+(index+1)).attr('index', index);
+			     
+			     $('#excelUpPop'+(index+1)).attr('validateYn', 'Y');
 				 $('#excelFile1').val('')
 				 
 				AUIGrid.clearGridData(that.excelUpGrid[index]);
@@ -9920,6 +9977,9 @@ var momWidget = {
 		}	
 		else if(your.customCallBack != undefined && btnId.indexOf('customBtn')>=0) {
 			your.customCallBack(index,your,action,btnId,param,result,data);	
+		}
+		else if(your.excelUpCallBack != undefined&& btnId=='excelUpBtn') {
+			your.excelUpCallBack(index,your,action,btnId,param,result,data);	
 		}	
 		else if(your.excelDownCallBack != undefined&& btnId=='excelDownBtn') {
 			your.excelDownCallBack(index,your,action,btnId,param,result,data);	

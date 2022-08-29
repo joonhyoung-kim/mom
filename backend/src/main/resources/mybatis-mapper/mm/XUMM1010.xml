@@ -476,7 +476,7 @@
 					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
    </select>  
- 	<insert id="create_excelUpBtnV2" parameterType="java.util.List">
+ 	<insert id="create_excelUpBtn2" parameterType="java.util.List">
      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_PROC_PR_DTL (
                   COMPANY_CD
@@ -502,7 +502,7 @@
                 , #{item.prSeq, jdbcType=NUMERIC}
                 , #{item.puchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
-                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS')
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.currencyCd, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}
@@ -515,7 +515,7 @@
               )
    </foreach>
   </insert>
-   <delete id="remove_excelUpBtnV2" parameterType="java.util.List">
+   <delete id="remove_excelUpBtn2" parameterType="java.util.List">
        DELETE FROM MOM_PROC_PR_DTL
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -526,11 +526,12 @@
        </foreach>
       </where>
    </delete>  
-   <select id="proc_excelUpBtnV2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_excelUpBtn2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MATERIAL_PKG.sp_upsert_pr_dtl(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
  </select>  
+
 </mapper>

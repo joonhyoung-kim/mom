@@ -11,6 +11,16 @@ var VIEW= {
 	event: function(e) {
 	
 	},
+	
+    searchCallInit: function(index,your,action,btnId,param,result,event) {
+		if(index==1 && btnId== "excelUpBtn"){
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			result.param = {prNo:checkItem[0].prNo};
+			  					
+		}
+
+		
+	},
 	cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index == 0 ){		
 			widget.findBtnClicked(1, {prNo:e.item['prNo']}, true, 'CELLCLICK',menuId,VIEW);			
