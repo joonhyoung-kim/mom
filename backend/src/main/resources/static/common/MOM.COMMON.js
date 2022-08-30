@@ -1902,6 +1902,7 @@ function excelUploadGrid(file, index,grid,validate) {
     };
  /*     if(file.files[0]['size']>100000){
 			momWidget.messageBox({type:'warning', width:'400', height: '145', html: '10만건 이하로 업로드 해주세요(현재크기:'+file.files[0]['size']+')'});
+			
 	        return;
 		}*/
     reader.readAsBinaryString(file.files[0]);

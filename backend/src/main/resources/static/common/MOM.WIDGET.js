@@ -5749,14 +5749,14 @@ var momWidget = {
 			                    
 						 }, undefined, undefined, this, false);    
 						                      							  						
-			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'excelUpBtn', your);
+			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'excelUpBtn'+(index+1), your);
 						if(callBackResult['result'] != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 							  momWidget.splashHide();
 						      return;
 			    		}
 						  let callBackParam = callBackResult['param'];		 
-			        	  momWidget.findBtnClicked(index, callBackParam, true, 'excelUpBtn',momWidget.pageProperty[index]['programId'],your);			        	  
+			        	  momWidget.findBtnClicked(index, callBackParam, true, 'excelUpBtn'+(index+1),momWidget.pageProperty[index]['programId'],your);			        	  
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
 					      return;
@@ -6065,7 +6065,7 @@ var momWidget = {
 				that.setPopup(index,actionType,'createBtn'+(index+1),'N');	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
-				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
+				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn'+(index+1), your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -6082,7 +6082,7 @@ var momWidget = {
 				//that.popUpSizeSet(index);			
 			
 				 callbackData   = AUIGrid.getGridData(that.grid[index]);
-				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
+				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn'+(index+1), your,callbackData);	
 				 if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
@@ -6951,7 +6951,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, buttonId,momWidget.pageProperty[btnIndex]['menuId'],your);
 			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -9922,13 +9922,13 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		 if(your.createCallInit != undefined && btnId=='createBtn' ) {
+		 if((action == 'C' || action == 'P' ) && your.createCallInit != undefined && btnId.indexOf('createBtn')>=0 ) {
 			 your.createCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(your.editCallInit != undefined && btnId=='editBtn') {
+		else if(your.editCallInit != undefined && btnId.indexOf('editBtn')>=0) {
 			 your.editCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if( your.copyCallInit != undefined && btnId=='copyBtn') {
+		else if( your.copyCallInit != undefined && btnId.indexOf('copyBtn')>=0) {
 			 your.copyCallInit(index,your,action,btnId,param,result);				 
 		}
 		else if(your.customCallInit != undefined && btnId.indexOf('customBtn')>=0) {
@@ -9964,39 +9964,39 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		if( your.createCallBack != undefined && btnId=='createBtn' ) {
+		if( (action == 'C' || action == 'P' ) && your.createCallBack != undefined && btnId.indexOf('createBtn')>=0 ) {
 			your.createCallBack(index,your,action,btnId,param,result,data);	
 			
 		}
-		else if(your.editCallBack != undefined && btnId=='editBtn') {
+		else if(your.editCallBack != undefined && btnId.indexOf('editBtn')>=0) {
 			your.editCallBack(index,your,action,btnId,param,result,data);	
 		}	
 					
-		else if( your.copyCallBack != undefined && btnId=='copyBtn') {
+		else if( your.copyCallBack != undefined && btnId.indexOf('copyBtn')>=0) {
 			your.copyCallBack(index,your,action,btnId,param,result,data);	
 		}	
 		else if(your.customCallBack != undefined && btnId.indexOf('customBtn')>=0) {
 			your.customCallBack(index,your,action,btnId,param,result,data);	
 		}
-		else if(your.excelUpCallBack != undefined&& btnId=='excelUpBtn') {
+		else if(your.excelUpCallBack != undefined && btnId.indexOf('excelUpBtn')>=0) {
 			your.excelUpCallBack(index,your,action,btnId,param,result,data);	
 		}	
-		else if(your.excelDownCallBack != undefined&& btnId=='excelDownBtn') {
+		else if(your.excelDownCallBack != undefined &&  btnId.indexOf('excelDownBtn')>=0) {
 			your.excelDownCallBack(index,your,action,btnId,param,result,data);	
 		}
 		else if(action == 'R' && your.searchCallBack != undefined) {
 			your.searchCallBack(index,your,action,btnId,param,result,data);	
 		}
-		else if(your.saveGridCallBack != undefined && btnId=='saveBtn' ) {
+		else if(your.saveGridCallBack != undefined && btnId.indexOf('saveBtn')>=0 ) {
 				your.saveGridCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if(your.addRowCallBack != undefined&& btnId=='addBtn') {
+		else if(your.addRowCallBack != undefined && btnId.indexOf('addBtn')>=0) {
 				your.addRowCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if(your.delCallBack != undefined && btnId=='delBtn') {		
+		else if(your.delCallBack != undefined && btnId.indexOf('delBtn')>=0) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
-		if(your.savePopCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+		if(your.savePopCallBack != undefined && (btnId.indexOf('saveBtnDP')>=0 || btnId.indexOf('saveBtnCP')>=0)) {
 			your.savePopCallBack(index,your,action,btnId,param,result,data);		
 	    } 
 	
