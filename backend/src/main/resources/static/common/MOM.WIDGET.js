@@ -3569,10 +3569,6 @@ var momWidget = {
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
 			
 			let customCheckBox = 'N';
-		
-			  
-			  		
-			   
 				//let scrollbar = $('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset() == undefined ? {top:0,left:0}:$('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset();			
 				
 								
