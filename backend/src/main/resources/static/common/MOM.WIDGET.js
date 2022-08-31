@@ -4754,7 +4754,7 @@ var momWidget = {
 			         });	
 					
 				}
-				else if( that.buttonProperty[index][i]['buttonType']=='EX'){
+				else if( that.buttonProperty[index][i]['buttonType']=='ST' || that.buttonProperty[index][i]['buttonType']=='EX'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
 					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
