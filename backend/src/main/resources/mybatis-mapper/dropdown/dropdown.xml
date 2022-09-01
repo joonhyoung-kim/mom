@@ -274,7 +274,7 @@
    AND    USE_YN      = 'Y' 
    ORDER BY LABEL
 </select>
-<select id="get_DD00029" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+ <select id="get_DD00029" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT SO_TYPE       AS CODE 
         , SO_TYPE    ||'('|| SO_TYPE_NM      ||')' AS LABEL
    FROM   MOM_SO_CATEGORY   
@@ -282,8 +282,8 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
    ORDER BY LABEL
-</select>
-<select id="get_DD00030" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+ </select>
+ <select id="get_DD00030" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT REST_TIME_CD       AS CODE 
         , REST_TIME_CD    ||'('|| REST_TIME_NM       ||')' AS LABEL
    FROM   MOM_SHIFT_REST_TIME   
@@ -291,8 +291,8 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
    ORDER BY LABEL
-</select>
-<select id="get_DD00031" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+ </select>
+ <select id="get_DD00031" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
    SELECT SHIFT_CD        AS CODE 
         , SHIFT_CD     ||'('|| SHIFT_NM        ||')' AS LABEL
    FROM   MOM_SHIFT
@@ -300,5 +300,38 @@
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
    AND    USE_YN      = 'Y'
    ORDER BY LABEL
+ </select> 
+ <select id="get_DD00032" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT ID_GEN_CD         AS CODE 
+        , ID_GEN_CD      ||'('|| ID_GEN_NM         ||')' AS LABEL
+   FROM   MOM_ID_GENERATE
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY ID_GEN_NM 
+ </select> 
+ <select id="get_DD00033" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+   SELECT USER_NO   AS CODE
+        , USER_NO      ||'('|| USER_NM          ||')' AS LABEL 
+   FROM   MOM_USER 
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY USER_NM
+ </select> 
+  <select id="get_DD00034" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+    SELECT MUI.USER_NO    AS CODE
+	     , MUI.USER_NO      ||'('|| MU.USER_NM          ||')' AS LABEL 
+	FROM   MOM_USER_ITEM_TYPE_REL MUI
+	    ,  MOM_USER MU
+	WHERE  MUI.COMPANY_CD   = MU.COMPANY_CD
+	AND    MUI.DIVISION_CD  = MU.DIVISION_CD
+	AND    MUI.USER_NO      = MU.USER_NO
+	AND    MUI.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
+	AND    MUI.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	AND    MUI.CATEGORY     = #{category, jdbcType=VARCHAR} 
+	AND    MUI.ITEM_TYPE    = NVL(#{itemType, jdbcType=VARCHAR} , MUI.ITEM_TYPE)
+	AND    MUI.USE_YN       = 'Y'
+	ORDER BY MU.USER_NM
  </select> 
 </mapper>

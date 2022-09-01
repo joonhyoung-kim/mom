@@ -23,6 +23,7 @@ var momWidget = {
 	totalRowCount:          [], // 페이징시 풀스캔(전체조회) 전체 카운트(전체 조회건수) 저장
     
 	columnDropdown:         [], // 그리드 컬럼에 콤보박스 사용할 경우 해당 list 보관	
+	columnDropdownReSearch: [], // 그리드 컬럼에 콤보박스 사용할 경우 (조인조건으로 사용할 특정 컬럼들보관)
 	dropdownProperty:       [], // 그리드 컬럼에 콤보박스 사용할 경우 해당 속성 보관
 		
 	totalPage:              [], // ??
@@ -621,7 +622,9 @@ var momWidget = {
 								   				keyField: 'code', 
 								   				valueField: 'label' ,
 								   			    listFunction : function(rowIndex, columnIndex, item, dataField) {											    					   			    
-								   			                
+								   			                /*if(that.columnDropdownReSearch[index][that.columnProperty[index][columnIndex]['columnId']]){
+									                                   
+															}*/
 									                        return that.columnDropdown[index][that.columnProperty[index][columnIndex]['columnId']];									 
 								                           
 								                }
@@ -703,6 +706,7 @@ var momWidget = {
 			    	   	
 			      } 	
 			      		    that.columnDropdown[index]= dropdownTmp;
+			      		    
 				          var childrenTmp =[];
 				          var childrenColumn = [];
 				          var parentId = '';

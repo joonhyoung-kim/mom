@@ -1570,6 +1570,24 @@ border-color: #d8dce3 !important;
     box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
     height: 23.6rem !important;
 }
+.searcharea-gridPop-C4-R4 {
+   /*  padding-left: 0.7rem; */
+    border: none;
+    padding-top: rem;
+    /* padding-bottom: 15px; */
+    width: 100%;
+ /*    margin-left: -0.3rem; */
+    position: relative;
+    /* margin-bottom: 8px; */
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    height: 100% !important;
+}
 .gridPop-XUSM8040 {
     z-index: 1050;
     border-radius: 0.5rem;
@@ -3426,6 +3444,21 @@ border-color: #d8dce3 !important;
     height: 25rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
+}
+.gridPop-C4-R4{
+	z-index: 1050;
+    /* display: none; */
+    float: none !important;
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    overflow: hidden !important;
+    width: 55rem !important;
+    position: relative !important;
+  /*   margin-left: 30% !important; */
+    margin-top: -37.5% !important;
+    background: white !important;
+    height: 13rem !important;
+    border-radius: 0.5rem;
+   /*  border: 1px solid #4d4d4e !important; */
 }
 .defaultPop-C3-R3 {
     z-index: 1050;
