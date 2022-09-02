@@ -77,7 +77,7 @@ var VIEW= {
 								          return;							     
 							        }
 							        if(data1.length > 0){
-								  		  result.result = 'FAIL';
+								  		  result.result = 'WARN';
 							              result.msg = '적용일 기간에 SHIFT 존재합니다!!';
 								          return;		
 									}			
@@ -120,22 +120,32 @@ var VIEW= {
 
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1 || index == 2){
-			 if (action =='P'){
+			 if (btnId=='customBtn1-1'){
 				var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
 				if(checkedItems == 0){
 					 result.msg = '데이터를 체크해주세요!';
 					 result.result = 'FAIL';
 				}
-				  $('#startDate'+'DP'+(index+1)).val($('#startDate').val());
-				  $('#endDate'+'DP'+(index+1)).val($('#endDate').val());				
+				  $('#startDateDP1-1').val($('#startDateSP1').val());
+				  $('#endDateDP1-1').val($('#endDateSP1').val());	
+				  $('#fromWorkCenterCdDP1-1').val(checkedItems[0]['workCenterCd']);
+				  		
 			}
+			else if(btnId=='customBtn1-2'){
+					var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
+				if(checkedItems == 0){
+					 result.msg = '데이터를 체크해주세요!';
+					 result.result = 'FAIL';
+				}
+				  $('#startDateDP1-2').val($('#startDateSP1').val());
+				  $('#endDateDP1-2').val($('#endDateSP1').val());			
+				  $('#fromWorkCenterCdDP1-2').val(checkedItems[0]['workCenterCd']);	
+			}
+				
 			else{
-				  //var items = param;	
-		          $('#startDate'+'DP'+(index+1)).val($('#startDate').val());
-				  $('#endDate'+'DP'+(index+1)).val($('#endDate').val());	
+				  	
 			}
-		}
+		
 		   
 	        		 
 	}

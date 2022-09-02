@@ -32,7 +32,22 @@ var VIEW= {
 		}
 		
 	
-	}	
+	},
+	customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 0 ){
+			if(action =='D' || btnId == 'customBtn1-2'){
+			    for(var i=0,max=param.length; i<max;i++){
+					 if(param[i].poUserNo == undefined || param[i].poUserNo == ''){
+							result.msg = '발주담당자를 지정하지 않은 데이터가 있습니다!';
+							result.result = 'WARN';
+							return;
+					 }		    
+			    }
+	
+		   }
+		}
+		
+	}
 	
 };
 

@@ -1419,6 +1419,9 @@ var XUSM3030 = {
 				}
 				AUIGrid.setCellValue('#grid1', e.rowIndex, 'headerDropdownParam', dropDownParam);
 			}
+			else if(e.dataField == 'buttonParameter'){
+				
+			}
 			if(chooseTab =='button' && e.dataField=='buttonId'){
 				  if(e.value == 'createBtn'){
 					     buttonNmText ='등록';
@@ -1860,40 +1863,36 @@ var XUSM3030 = {
 			let customCnt = 0;
 			if(chooseTab == 'button'){
 				for(var i=0,max=checkedItems.length;i<max;i++){	
-			    mapList[i] = checkedItems[i];
-				if(mapList[i].buttonId.indexOf('customBtn')>=0){
-					customCnt ++;		
-					
-				}
+			        mapList[i] = checkedItems[i];
+					if(mapList[i].buttonId.indexOf('customBtn')>=0){
+						customCnt ++;		
+						
+					}
 
-			}
+			   }
 				for(var i=0,max=checkedItems.length;i<max;i++){	
-				//mapList[i] = checkedItems[i]['item'];
-				mapList[i] = checkedItems[i];
-				mapList[i].menuId       = prevMenuId;
-				mapList[i].gridId       = $('#gridId').val();
-				mapList[i].actionType   ='CU';
-			   if(mapList[i].buttonId=='customBtn'){
-					mapList[i].buttonId = 'customBtn' + $('#gridId').val() + '-'+ customCnt;
-					
-				}
+					//mapList[i] = checkedItems[i]['item'];
+					mapList[i] = checkedItems[i];
+					mapList[i].menuId       = prevMenuId;
+					mapList[i].gridId       = $('#gridId').val();
+					mapList[i].actionType   ='CU';
+				    if(mapList[i].buttonId=='customBtn'){
+						mapList[i].buttonId = 'customBtn' + $('#gridId').val() + '-'+ customCnt;
+						
+					}
 				
-				
-				
-				
-			}
+			
+			    }
 			}
 			else{
 					for(var i=0,max=checkedItems.length;i<max;i++){	
-				//mapList[i] = checkedItems[i]['item'];
-				mapList[i] = checkedItems[i];
-				mapList[i].menuId       = prevMenuId;
-				mapList[i].gridId       = $('#gridId').val();
-				mapList[i].actionType   ='CU';
-				
-				
-				
-			}
+						//mapList[i] = checkedItems[i]['item'];
+						mapList[i] = checkedItems[i];
+						mapList[i].menuId       = prevMenuId;
+						mapList[i].gridId       = $('#gridId').val();
+						mapList[i].actionType   ='CU';
+
+			        }
 			}
 		
 			if(chooseTab == 'grid'){

@@ -3460,6 +3460,9 @@ border-color: #d8dce3 !important;
     border-radius: 0.5rem;
    /*  border: 1px solid #4d4d4e !important; */
 }
+.jqx-combobox-content-disabled {
+    color: #040303;
+}
 .defaultPop-C3-R3 {
     z-index: 1050;
     /* display: none; */

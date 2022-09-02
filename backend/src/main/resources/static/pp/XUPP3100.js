@@ -13,17 +13,18 @@ var VIEW= {
 	},
 	 customCallInit: function(index,your,action,btnId,param,result) {
 		if(index==0){
-		    if( action=='D' && btnId == 'customBtn1-1'){
-				     for(var i=0,max=param.length; i<max;i++){
+		    if(btnId == 'customBtn1-1'){
+			
+				   
+		    }				
+		}
+		  /*for(var i=0,max=param.length; i<max;i++){
 						if(param[i].cancelItemInoutId != undefined && param[i].cancelItemInoutId != ''){
 							result.msg = '이미 차감 취소된 데이터가 포함되어있습니다!';
 							result.result = 'WARN';
 							return;
 						}		    
-			         }
-		    }				
-		}
-		
+			         }*/
 	}
 	
 	
