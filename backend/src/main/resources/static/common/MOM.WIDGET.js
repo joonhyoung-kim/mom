@@ -23,6 +23,7 @@ var momWidget = {
 	totalRowCount:          [], // 페이징시 풀스캔(전체조회) 전체 카운트(전체 조회건수) 저장
     
 	columnDropdown:         [], // 그리드 컬럼에 콤보박스 사용할 경우 해당 list 보관	
+	columnDropdownReSearch: [], // 그리드 컬럼에 콤보박스 사용할 경우 (조인조건으로 사용할 특정 컬럼들보관)
 	dropdownProperty:       [], // 그리드 컬럼에 콤보박스 사용할 경우 해당 속성 보관
 		
 	totalPage:              [], // ??
@@ -621,7 +622,9 @@ var momWidget = {
 								   				keyField: 'code', 
 								   				valueField: 'label' ,
 								   			    listFunction : function(rowIndex, columnIndex, item, dataField) {											    					   			    
-								   			                
+								   			                /*if(that.columnDropdownReSearch[index][that.columnProperty[index][columnIndex]['columnId']]){
+									                                   
+															}*/
 									                        return that.columnDropdown[index][that.columnProperty[index][columnIndex]['columnId']];									 
 								                           
 								                }
@@ -703,6 +706,7 @@ var momWidget = {
 			    	   	
 			      } 	
 			      		    that.columnDropdown[index]= dropdownTmp;
+			      		    
 				          var childrenTmp =[];
 				          var childrenColumn = [];
 				          var parentId = '';
@@ -2440,8 +2444,8 @@ var momWidget = {
 	    botHtml  =     '</div>'
 	    	     +     '<div class="panelfooter">'
 	    	   	 +      '<div class="footer-pop-btn-area">'
-	    	     +       '<button  id = "saveCustomBtnDP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
-	    	     +       '<button  id = "cancelCustomBtnDP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG00036')+'</button>'
+	    	     +       '<button  id = "saveCustomPopBtnDP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
+	    	     +       '<button  id = "cancelCustomPopBtnDP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG00036')+'</button>'
 	    	     +      '</div>'       
 	    	     +    '</div>';
 	    return topHtml + midHtml+botHtml;
@@ -3569,10 +3573,6 @@ var momWidget = {
 		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
 			
 			let customCheckBox = 'N';
-		
-			  
-			  		
-			   
 				//let scrollbar = $('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset() == undefined ? {top:0,left:0}:$('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset();			
 				
 								
@@ -4754,7 +4754,7 @@ var momWidget = {
 			         });	
 					
 				}
-				else if( that.buttonProperty[index][i]['buttonType']=='EX'){
+				else if( that.buttonProperty[index][i]['buttonType']=='ST' || that.buttonProperty[index][i]['buttonType']=='EX'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
 					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
 			         });	
@@ -4769,8 +4769,8 @@ var momWidget = {
 			var editBtnId        = 'editBtn'+(index + 1);	
 			var editBtnIdV       = 'editBtnV'+(index + 1);	
 			var cancelBtnId      = 'cancelBtn'+'DP'+(index + 1);	
-			var cancelCustomBtnId  = 'cancelCustomBtn'+'DP'+(index + 1);	
-			var saveCustomBtnId  = 'saveCustomBtn'+'DP'+(index + 1);
+			var cancelCustomPopBtnId  = 'cancelCustomPopBtn'+'DP'+(index + 1);	
+			var saveCustomPopBtnId  = 'saveCustomPopBtn'+'DP'+(index + 1);
 			var dropDownGridCancelBtnId  = 'cancelBtn'+'DG'+(index + 1);	
 			var excelDownBtnId   = 'excelDownBtn'+(index + 1);
 			var excelTmpBtnId    = 'excelTmpBtn'+(index + 1);
@@ -4812,7 +4812,7 @@ var momWidget = {
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
-			$(document).on('click', '#'+cancelCustomBtnId , function(e) {
+			$(document).on('click', '#'+cancelCustomPopBtnId , function(e) {
 				$('.' + 'customPop').momModal('hide');	
 			
 			});
@@ -5633,7 +5633,7 @@ var momWidget = {
 			      				}
 			      				 if(data3[0]['p_err_code']=='E') {
 								
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '검사 불합격! 검사 결과를 다운 받으세요'});
+					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '검사 불합격! 검사 결과를 다운 받으세요'+multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
 									  momWidget.splashHide();
 									  $("#exUpCheckDown"+(index+1)).prop("disabled", false);
 						              return;
@@ -5688,15 +5688,15 @@ var momWidget = {
 				      return;
 				}	
 					 				
-				    var actionType = $('#excelUpPop1').attr('actiontype') == undefined ? 'CU' : $('#excelUpPop1').attr('actiontype');
+				    var actionType = $('#excelUpPop'+(index+1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop'+(index+1)).attr('actiontype');
 				    let queryId    = actionType == 'CU' ? that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1) : that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1);
+				    let validateYn = $('#excelUpPop'+(index+1)).attr('validateYn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('validateYn');
+				    let tmpYn = $('#excelUpPop'+(index+1)).attr('tmpYn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('tmpYn');
 					setTimeout(function() {
-						if(actionType=='P'){
+						if(validateYn=='Y'){
 							 param[0].excelUpYn = 'Y';
-						     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
-					
-						// $("#pleaseWaitDialog").modal('show');
-						 mom_ajax(actionType, queryId,[], function(result, data) {
+					         param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
+							 mom_ajax(actionType, queryId,[], function(result, data) {
 							   bar.width('100%');
 					           percent.text('100%'+' '+param.length+'/'+param.length);  
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
@@ -5716,16 +5716,56 @@ var momWidget = {
 								  momWidget.splashHide();
 								  //$("#pleaseWaitDialog").momModal('hide');
 							      return;
-				          }, undefined, index, this, false,undefined,'EA');
+				          }, undefined, index, this, false,undefined,'EA');	
+		          
+						
+					
+						// $("#pleaseWaitDialog").modal('show');
+					
 						}
 						else{
 							 param[0].excelUpYn = 'Y';
-						 param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
-					
-						// $("#pleaseWaitDialog").modal('show');
-						 mom_ajax(actionType, queryId,param, function(result, data) {
-							   bar.width('100%');
-					           percent.text('100%'+' '+param.length+'/'+param.length);  
+						     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
+							 if(tmpYn=='Y'){
+								    mom_ajax('D', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1) ,[], function(result1, data1) {
+						            if(result1!='SUCCESS') {
+						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
+										  momWidget.splashHide();
+							              return;
+						            }    	
+					                   mom_ajax('C', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1),param, function(result2, data2) {                                                                                                      
+						 		  			if(result2!='SUCCESS') {
+							            	   momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
+											   momWidget.splashHide();
+								               return;
+							                }    	
+					                 mom_ajax('P', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1),[], function(result3, data3) {
+									    if(data3[0]['p_err_code']=='E') {
+								            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
+												  momWidget.splashHide();
+									              return;
+								         }    	
+					                 }, undefined, undefined, this, false,undefined,'C'); 
+			                    
+						 }, undefined, undefined, this, false);    
+						                      							  						
+			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'excelUpBtn'+(index+1), your);
+						if(callBackResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    		}
+						  let callBackParam = callBackResult['param'];		 
+			        	  momWidget.findBtnClicked(index, callBackParam, true, 'excelUpBtn'+(index+1),momWidget.pageProperty[index]['programId'],your);			        	  
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, undefined, this, false);
+							 }
+							 else{
+								 mom_ajax(actionType, queryId,param, function(result, data) {
+									   bar.width('100%');
+							           percent.text('100%'+' '+param.length+'/'+param.length);  
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
 					            if(data[0]['p_err_code']=='E') {
 									  $("#pleaseWaitDialog").momModal('hide');
@@ -5744,6 +5784,11 @@ var momWidget = {
 								  //$("#pleaseWaitDialog").momModal('hide');
 							      return;
 				          }, undefined, index, this, false,undefined,'EA');
+							}
+							
+					
+						// $("#pleaseWaitDialog").modal('show');
+						
 						}
 						
 				    
@@ -5756,7 +5801,7 @@ var momWidget = {
 				 var bar = $('.bar');
 				 var percent = $('.percent');
 				 var status = $('#status');
-				 let validateYn = $('#excelUpPop'+(index+1)).attr('actiontype') == 'CU' ? 'N':'Y';
+				 let validateYn = $('#excelUpPop'+(index+1)).attr('validateYn') == undefined ? 'N':$('#excelUpPop'+(index+1)).attr('validateYn');
 			   bar.width('0%');
 			   percent.text('0%');  
 			
@@ -5783,9 +5828,19 @@ var momWidget = {
 				
 			});
 			$(document).on('click', '#' + excelUpBtnId, function() {
-				 //$("#exUpCheck"+(index+1)).prop("disabled", false);				 
+				 //$("#exUpCheck"+(index+1)).prop("disabled", false);		
+				 let eventType = 'CU';	
+				 let tmpYn = 'N';	 
 				  $("#saveBtnExUp"+(index+1)).prop("disabled", false);
-				  $('#excelUpPop'+(index+1)).attr('actionType', 'CU');
+				  for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+					  if(that.buttonProperty[index][i]['buttonId'] == 'excelUpBtn') {
+						 eventType =   that.buttonProperty[index][i]['eventType'];
+						 tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+					  }
+				  }
+				  $('#excelUpPop'+(index+1)).attr('actionType', eventType);
+				  $('#excelUpPop'+(index+1)).attr('validateYn', 'N');
+				  $('#excelUpPop'+(index+1)).attr('tmpYn', tmpYn);
 			     //$("#exUpCheckDown"+(index+1)).prop("disabled", true);
 				$('#excelFile1').val('')
 				AUIGrid.clearGridData(that.excelUpGrid[index]);
@@ -5839,6 +5894,8 @@ var momWidget = {
 			     $("#exUpCheckDown"+(index+1)).prop("disabled", true);
 			     $('#excelUpPop'+(index+1)).attr('actionType', 'P');
 			     $('#excelUpPop'+(index+1)).attr('index', index);
+			     
+			     $('#excelUpPop'+(index+1)).attr('validateYn', 'Y');
 				 $('#excelFile1').val('')
 				 
 				AUIGrid.clearGridData(that.excelUpGrid[index]);
@@ -6008,7 +6065,7 @@ var momWidget = {
 				that.setPopup(index,actionType,'createBtn'+(index+1),'N');	
 				$('#defaultPop'+(index+1)).attr('actionType', actionType);
 				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
-				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
+				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn'+(index+1), your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -6025,7 +6082,7 @@ var momWidget = {
 				//that.popUpSizeSet(index);			
 			
 				 callbackData   = AUIGrid.getGridData(that.grid[index]);
-				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
+				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn'+(index+1), your,callbackData);	
 				 if(callBackResult['result']  != 'SUCCESS') {
 					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 					  momWidget.splashHide();
@@ -6325,7 +6382,7 @@ var momWidget = {
 					
 				
 			});
-			$(document).on('click', '#' + savePopBtnId, function(e) {
+				$(document).on('click', '#' + savePopBtnId, function(e) {
 				 
 		        momWidget.splashShow();
 	    		setTimeout(function() {	
@@ -6894,7 +6951,618 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, buttonId,momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, index, this, false,undefined,actionMode);
+							
+							
+							 }, undefined, index, this, false,undefined,actionMode);
+				   }, undefined, index, this, false,undefined,actionMode);
+					
+				}
+				else{
+					 mom_ajax(actionType, queryId,param, function(result, data) {
+			             if(data[0]['p_err_code']=='E') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
+							  momWidget.splashHide();
+				              return;
+			            } 
+			               callBackResult = that.checkActionCallBack(index, actionType, {}, 'createBtn'+index, your);   				                         							  						
+			        	if(callBackResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+							  momWidget.splashHide();
+						      return;
+						}
+						if(your.initParam != undefined && your.initParam != ''){
+				              initParam = your.initParam;
+			             }
 			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, index, this, false);
+				}
+					
+						
+							 
+				 },500);
+				  
+			
+				
+			});
+			$(document).on('click', '#' + saveCustomPopBtnId, function(e) {				 
+		        momWidget.splashShow();
+	    		setTimeout(function() {	
+				var param = [];
+				var initParam ={};
+		        let searchResult = true;
+		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
+		        let tmpYn = 'N';
+		        let buttonId = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
+				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
+				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
+				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
+				var gridPopIndex   = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? index+1 : Number($('#defaultPop'+(index+1)).attr('gridPopIndex'));
+				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
+				//var btnIndex   = index;
+				var queryId = that.pageProperty[index]['programId']+'.'+buttonId;
+				that.wait(0.5);
+				var buttonParam = [];
+				var extraParam = {};
+				var validateCheck = true;
+				let actionMode = 'C';
+				
+				
+					if(buttonId.indexOf('createBtn') >= 0) {
+ 				        actionMode = 'C';
+					}
+					else if(buttonId.indexOf('copyBtn') >= 0){
+								actionMode = 'C';
+					}
+					else if(buttonId.indexOf('editBtn') >= 0){
+							actionMode = 'U';
+					}
+					else if(buttonId.indexOf('delBtn') >= 0){
+							actionMode = 'D';
+					}
+					else if(buttonId.indexOf('procBtn') >= 0){
+							actionMode = 'P';
+					}
+					else{
+						actionMode = 'C';
+					}
+
+		    
+		    
+		    
+		/*
+				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
+					if(callInitResult['result'] != 'SUCCESS') {
+					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+					  momWidget.splashHide();
+				      return;
+					}	
+				  	param = callInitResult['param'];	*/
+				
+				var popupCount = that.popupProperty[index].length;
+				var popupItem  = that.popupProperty[index];
+				if(gridPopYn=='Y'){
+					
+				}
+				else{
+					for(var i=0,max2=popupCount;i<max2;i++){
+					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val() == undefined ? '':$('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
+					let fieldValues = [];
+					
+					if(actionType == 'C' ){		
+						 let containsYn = 'Y';		
+						if(that.popupProperty[index][i]['columnRequire']=='Y' && fieldValue ==''){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						}
+					if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
+					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M' && fieldValue !=''){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'SS' && fieldValue !=''){
+						
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+									searchResult = false;
+							      if(result != 'SUCCESS' || data.length ==0) {		
+								      that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});					    	  
+							    	  momWidget.splashHide();
+								      return ;							     
+							      }	
+							       
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+										   searchResult = true;
+									       break;
+										}
+
+								 }
+							      
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
+						
+						 return;
+					}		      		
+				}
+				
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS' && fieldValue !=''){
+						
+					}			
+					else{
+						
+					}	
+					}
+					else if (actionType == 'U' ){ 
+						    let containsYn = 'Y';
+						    if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+					    containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
+					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+		else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
+						   
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+						 			searchResult = false;
+							      if(result != 'SUCCESS' || data.length ==0) {	
+								     that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});									    	 
+							    	  momWidget.splashHide();								
+								      return ;							     
+							      }	
+							       
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+											searchResult = true;
+									       break;
+										}
+										
+							    	  
+									
+									  
+		                			
+	    						
+								 }
+							      
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
+						
+						 return;
+					}		      		
+				}
+				
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
+						
+					}			
+					else{
+						
+					}
+					}
+						else if (actionType == 'CP' ){
+						    if(fieldValue ==''&&that.popupProperty[index][i]['columnRequire']=='Y'){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
+					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+							      if(result != 'SUCCESS' || data.length ==0) {
+							    	  searchResult = false;
+							    	  momWidget.splashHide();
+									 
+								      return ;							     
+							      }	
+							       
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+									       searchResult = true;
+									       break;
+										}
+										
+							    	  
+									 
+									  
+		                			
+	    						
+								 }
+							      
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
+						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+						 return;
+					}		      		
+				}
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
+						
+					}			
+					else{
+						
+					}
+					}
+					else if (actionType == 'P' ){
+					if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						} 
+							if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+							if(comboBoxItems[j]['value'] == fieldValue){
+								containsYn = 'Y';
+							}
+																			
+					}
+					if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
+						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
+							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
+							 momWidget.splashHide();
+				             return;
+						} 
+						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						let containsYn = 'N';
+						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
+							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
+								for(var h=0,max3=fieldValues.length;h<max3;h++){
+										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
+										    containsYn = 'Y';
+										}
+								}
+						
+																			
+							}
+								if(containsYn == 'N'){
+						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
+						 momWidget.splashHide();
+				         return;
+					}
+					}
+					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
+							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
+							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
+							var minLength = that.popupComboMinLength[index][popupId] ;
+							var queryId2 = that.popupComboQueryId[index][popupId];
+				if(searchString.length < minLength)	{
+										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
+										return;
+							}
+							
+				else{
+	
+					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
+							      if(result != 'SUCCESS' || data.length ==0) {
+							    	  searchResult = false;
+							 
+								      return ;							     
+							      }	
+							       	searchResult = false;
+							      for(var z=0,max7=data.length;z<max7;z++){
+								      if(data[z]['code'] == searchString){
+										   searchResult = true;
+									       break;
+									       
+										}
+										}
+
+							      //$('#'+popupId).jqxComboBox({source: data});
+							   
+		                		        momWidget.splashHide();
+		                			
+	    						
+							      		}, undefined, undefined, that, false)
+							      		
+							      	
+							      		
+							      		
+					if(!searchResult) {
+						 momWidget.splashHide();
+						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
+						 return;
+					}		      		
+				}
+					}	
+					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
+						
+					}			
+					else{
+						
+					}
+						 
+						
+						 
+					}
+				
+					
+				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'&& fieldValue !=''){
+				
+						  if(isNaN(Number($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim()))==true){
+							  momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' 숫자입력!'});
+							 momWidget.splashHide();
+				             return;
+						  }
+					 						
+				    }
+					
+				}
+				}
+			   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+						
+					}					
+				 }
+				//if(btnIndex != undefined && btnPopYn == 'Y'){
+					//if(btnIndex != undefined && btnPopYn =='Y'){
+					  for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
+					    if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
+							buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
+							break;
+					   }
+				}
+				for(var j=0,max2=buttonParam.length;j<max2;j++){
+						if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
+					
+						extraParam['typeMap'] = buttonParam[j]['typeMap'];
+						extraParam['typeList'] = buttonParam[j]['typeList'];
+					}
+						
+					
+					
+				}
+				
+					param = buttonParam.map(function(item1){
+			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
+		        return item2;
+		    })
+		    $.extend(item1, obj);               
+			    return item1;
+			});
+				
+				
+			
+					  
+					    callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
+							if(callInitResult['result'] != 'SUCCESS') {
+								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+							}	
+				  	           param = callInitResult['param'];	
+					if(Array.isArray(param)==true){
+					    param = param.length == 0 ? {}:param;					    
+						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
+					}
+					else{
+						// param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
+					}
+				
+				
+				
+				if(tmpYn=='Y'){
+					 mom_ajax('D', queryId,[], function(result1, data1) {
+						 if(result1!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
+							  momWidget.splashHide();
+				              return;
+			            }    	
+						  mom_ajax('C', queryId,param, function(result2, data2) {
+							 if(result2!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
+							  momWidget.splashHide();
+				              return;
+			            }   
+							 mom_ajax('P', queryId,[], function(result3, data3) {
+			            	     if(data3[0]['p_err_code']=='E') {
+						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
+			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
+							  momWidget.splashHide();
+				              return;
+			            } 
+			                callBackResult = that.checkActionCallBack(index, actionType, {}, buttonId, your);   				                         							  						
+				        	if(callBackResult['result'] != 'SUCCESS') {
+								  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+								  momWidget.splashHide();
+							      return;
+							}
+						if(your.initParam != undefined && your.initParam != ''){
+				              initParam = your.initParam;
+			             }
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, buttonId,momWidget.pageProperty[btnIndex]['menuId'],your);
 			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -7761,7 +8429,7 @@ var momWidget = {
 			
 				that.setPopup(index,actionType,btnId,'Y');	
 				
-				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
+				callInitResult = that.checkActionCallInit(index, actionType, [], btnId, your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: callInitResult['msg']});
 					  momWidget.splashHide();
@@ -9865,13 +10533,13 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		 if(your.createCallInit != undefined && btnId=='createBtn' ) {
+		 if((action == 'C' || action == 'P' ) && your.createCallInit != undefined && btnId.indexOf('createBtn')>=0 ) {
 			 your.createCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if(your.editCallInit != undefined && btnId=='editBtn') {
+		else if(your.editCallInit != undefined && btnId.indexOf('editBtn')>=0) {
 			 your.editCallInit(index,your,action,btnId,param,result);				 
 		}
-		else if( your.copyCallInit != undefined && btnId=='copyBtn') {
+		else if( your.copyCallInit != undefined && btnId.indexOf('copyBtn')>=0) {
 			 your.copyCallInit(index,your,action,btnId,param,result);				 
 		}
 		else if(your.customCallInit != undefined && btnId.indexOf('customBtn')>=0) {
@@ -9907,36 +10575,39 @@ var momWidget = {
 		if(your == undefined) {
 			return 'FAIL';
 		}		
-		if( your.createCallBack != undefined && btnId=='createBtn' ) {
+		if( (action == 'C' || action == 'P' ) && your.createCallBack != undefined && btnId.indexOf('createBtn')>=0 ) {
 			your.createCallBack(index,your,action,btnId,param,result,data);	
 			
 		}
-		else if(your.editCallBack != undefined && btnId=='editBtn') {
+		else if(your.editCallBack != undefined && btnId.indexOf('editBtn')>=0) {
 			your.editCallBack(index,your,action,btnId,param,result,data);	
 		}	
 					
-		else if( your.copyCallBack != undefined && btnId=='copyBtn') {
+		else if( your.copyCallBack != undefined && btnId.indexOf('copyBtn')>=0) {
 			your.copyCallBack(index,your,action,btnId,param,result,data);	
 		}	
 		else if(your.customCallBack != undefined && btnId.indexOf('customBtn')>=0) {
 			your.customCallBack(index,your,action,btnId,param,result,data);	
+		}
+		else if(your.excelUpCallBack != undefined && btnId.indexOf('excelUpBtn')>=0) {
+			your.excelUpCallBack(index,your,action,btnId,param,result,data);	
 		}	
-		else if(your.excelDownCallBack != undefined&& btnId=='excelDownBtn') {
+		else if(your.excelDownCallBack != undefined &&  btnId.indexOf('excelDownBtn')>=0) {
 			your.excelDownCallBack(index,your,action,btnId,param,result,data);	
 		}
 		else if(action == 'R' && your.searchCallBack != undefined) {
 			your.searchCallBack(index,your,action,btnId,param,result,data);	
 		}
-		else if(your.saveGridCallBack != undefined && btnId=='saveBtn' ) {
+		else if(your.saveGridCallBack != undefined && btnId.indexOf('saveBtn')>=0 ) {
 				your.saveGridCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if(your.addRowCallBack != undefined&& btnId=='addBtn') {
+		else if(your.addRowCallBack != undefined && btnId.indexOf('addBtn')>=0) {
 				your.addRowCallBack(index,your,action,btnId,param,result,data);				
 		} 
-		else if(your.delCallBack != undefined && btnId=='delBtn') {		
+		else if(your.delCallBack != undefined && btnId.indexOf('delBtn')>=0) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
 		}
-		if(your.savePopCallBack != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+		if(your.savePopCallBack != undefined && (btnId.indexOf('saveBtnDP')>=0 || btnId.indexOf('saveBtnCP')>=0)) {
 			your.savePopCallBack(index,your,action,btnId,param,result,data);		
 	    } 
 	

@@ -56,15 +56,15 @@
 			 <!--     , MS.START_TIME
 			     , MS.END_TIME -->
 			    ,  MSS.DAY_OFF_YN
-			    , CASE WHEN DAY_OFF_YN = 'N' THEN MS.WORK_TIME
+			    , CASE WHEN DAY_OFF_YN = 'N' THEN NVL(MS.WORK_TIME,0)
                        WHEN DAY_OFF_YN = 'Y' THEN 0
                   ELSE 0
                   END AS WORK_TIME                  
-                , CASE WHEN DAY_OFF_YN = 'N' THEN MT.REST_TIME
+                , CASE WHEN DAY_OFF_YN = 'N' THEN NVL(MT.REST_TIME,0)
                        WHEN DAY_OFF_YN = 'Y' THEN 0
                   ELSE 0
                   END AS REST_TIME                 
-                , CASE WHEN DAY_OFF_YN = 'N' THEN MS.WORK_TIME - MT.REST_TIME
+                , CASE WHEN DAY_OFF_YN = 'N' THEN NVL(MS.WORK_TIME,0) - NVL(MT.REST_TIME,0)
                        WHEN DAY_OFF_YN = 'Y' THEN 0
                    ELSE 0
                    END AS REAL_WORK_TIME
@@ -85,15 +85,17 @@
 		AND    MSS.COMPANY_CD   = MS.COMPANY_CD
 		AND    MSS.DIVISION_CD  = MS.DIVISION_CD    
 		AND    MSS.SHIFT_CD     = MS.SHIFT_CD 
-		AND    MS.COMPANY_CD    = MT.COMPANY_CD
-		AND    MS.DIVISION_CD   = MT.DIVISION_CD    
-		AND    MS.SHIFT_CD      = MT.SHIFT_CD 
+		AND    MS.COMPANY_CD    = MT.COMPANY_CD(+)
+		AND    MS.DIVISION_CD   = MT.DIVISION_CD(+)    
+		AND    MS.SHIFT_CD      = MT.SHIFT_CD(+) 
 		AND    MWC.COMPANY_CD   = MWG.COMPANY_CD
 		AND    MWC.DIVISION_CD  = MWG.DIVISION_CD    
 		AND    MWC.WORK_GROUP_CD   = MWG.WORK_GROUP_CD 
 		AND    MSS.COMPANY_CD      = MWC.COMPANY_CD   
         AND    MSS.DIVISION_CD     = MWC.DIVISION_CD 
 		AND    MSS.WORK_CENTER_CD  = MWC.WORK_CENTER_CD
+		AND    MSS.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}   
+        AND    MSS.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}
 		AND    MSS.APPLY_DATE BETWEEN TO_DATE(#{startDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{endDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
 	    <if test="dayOffYn != null and dayOffYn != ''">
 	    AND MSS.DAY_OFF_YN = #{dayOffYn, jdbcType=VARCHAR}
@@ -114,7 +116,7 @@
     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
     </if>           
 	</select>
-  <select id="proc_customBtnA2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_copy_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -125,7 +127,7 @@
 					                                          , #{toWorkGroupCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select> 
-  <select id="proc_customBtnB3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_customBtn1-2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd4040_wc_copy_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -136,8 +138,8 @@
 					                                          , #{toWorkCenterCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-    <select id="proc_customBtnC4" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_dayoff_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+    <select id="proc_customBtn1-3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_dayoff_proc(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
@@ -146,8 +148,8 @@
 					                                          , #{workGroupCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-    <select id="proc_customBtnD5" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_MASTER_INFO_PKG.xumd4040_wc_dayoff_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
+    <select id="proc_customBtn1-4" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.xumd4040_wc_dayoff_proc(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
