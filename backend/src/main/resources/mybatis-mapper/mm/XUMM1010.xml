@@ -55,7 +55,7 @@
 	      , MI.ITEM_SPEC
 	      , MI.ITEM_TYPE
 	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM
-	      , TO_CHAR(MPD.DUE_DATE ,'YYYY-MM-DD')     AS DUE_DATE
+	      , TO_CHAR(MPD.DUE_DATE ,'YYYY-MM-DD')     AS REQUEST_DUE_DATE
 	      , MPD.STATE
 	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MM0004', MPD.STATE, 'KR') FROM DUAL)  AS STATE_NM
 	      , MPD.REQUEST_QTY
@@ -80,7 +80,8 @@
 	      , MPD.DESCRIPTION
 	      , MPD.COMPANY_CD
 	      , MPD.DIVISION_CD
-	     , MPD.PUCHASE_REQUEST_ID
+	      , MPD.PUCHASE_REQUEST_ID
+	      , MPD.PUCHASE_REQUEST_ID AS KEY_ID
 	FROM    MOM_PR_DTL MPD
 	      , MOM_ITEM MI
 	WHERE   MPD.COMPANY_CD   = MI.COMPANY_CD
@@ -305,6 +306,63 @@
 					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
  </select>  
+  <insert id="create_customBtn2-1" parameterType="java.util.List">
+      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+    INTO MOM_PROC_PR_DTL (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PR_NO
+                , PR_SEQ
+                , PUCHASE_REQUEST_ID
+                , ITEM_ID
+                , DUE_DATE
+                , REQUEST_QTY
+                , CURRENCY_CD
+                , UNIT_PRICE
+                , DESCRIPTION
+                , DEL_YN
+                , VAL_MSG
+                , MULTI_MSG
+                , CREATE_BY
+                , CREATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.prNo, jdbcType=VARCHAR}
+                , #{item.prSeq, jdbcType=NUMERIC}
+                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.itemId, jdbcType=VARCHAR}
+                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , #{item.requestQty, jdbcType=NUMERIC}
+                , #{item.currencyCd, jdbcType=VARCHAR}
+                , #{item.unitPrice, jdbcType=NUMERIC}
+                , #{item.description, jdbcType=VARCHAR}
+                , 'Y'
+                , #{item.valMsg, jdbcType=VARCHAR}
+                , #{item.multiMsg, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+   <delete id="remove_customBtn2-1" parameterType="java.util.List">
+       DELETE FROM MOM_PROC_PR_DTL
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>  
+   <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MATERIAL_PKG.sp_upsert_pr_dtl(     	    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+ </select>  
  <insert id="create_createBtn2" parameterType="java.util.List">
      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_PROC_PR_DTL (
@@ -331,7 +389,7 @@
                 , #{item.prSeq, jdbcType=NUMERIC}
                 , ''
                 , #{item.itemId, jdbcType=VARCHAR}
-                , TO_DATE(#{item.dueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.currencyCd, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}
@@ -388,7 +446,7 @@
                 , #{item.prSeq, jdbcType=NUMERIC}
                 , ''
                 , #{item.itemId, jdbcType=VARCHAR}
-                , TO_DATE(#{item.dueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.currencyCd, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}
@@ -445,7 +503,7 @@
                 , #{item.prSeq, jdbcType=NUMERIC}
                 , #{item.puchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
-                , TO_DATE(#{item.dueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.currencyCd, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}
@@ -476,7 +534,7 @@
 					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
    </select>  
- 	<insert id="create_excelUpBtnV2" parameterType="java.util.List">
+ 	<insert id="create_excelUpBtn2" parameterType="java.util.List">
      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_PROC_PR_DTL (
                   COMPANY_CD
@@ -502,7 +560,7 @@
                 , #{item.prSeq, jdbcType=NUMERIC}
                 , #{item.puchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
-                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS')
                 , #{item.requestQty, jdbcType=NUMERIC}
                 , #{item.currencyCd, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}
@@ -515,7 +573,7 @@
               )
    </foreach>
   </insert>
-   <delete id="remove_excelUpBtnV2" parameterType="java.util.List">
+   <delete id="remove_excelUpBtn2" parameterType="java.util.List">
        DELETE FROM MOM_PROC_PR_DTL
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -526,11 +584,12 @@
        </foreach>
       </where>
    </delete>  
-   <select id="proc_excelUpBtnV2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_excelUpBtn2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MATERIAL_PKG.sp_upsert_pr_dtl(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
  </select>  
+
 </mapper>
