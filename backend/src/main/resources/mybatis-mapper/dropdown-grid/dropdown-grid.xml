@@ -113,6 +113,19 @@ ORDER BY A.UNIT_CATEGORY_NM
 	  AND    MC.GROUP_CD     = #{groupCd, jdbcType=VARCHAR}
 	  AND    MC.USE_YN = 'Y'
  </select>
+  <!-- 거래처정보 -->
+ <select id="get_XUSM8050" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<!--   SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG -->
+	  SELECT MP.PARTNER_CD
+	       , MP.PARTNER_CD AS KEY_ID
+		   , MP.PARTNER_NM	   
+		   , MP.DO_INVOICE_YN
+		FROM   MOM_PARTNER MP
+		WHERE  MP.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR} 
+		AND    MP.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR}
+		ORDER BY MP.PARTNER_CD
+
+ </select>
   <!-- 사용자조회(구매요청서접수) -->
  <select id="get_XUSM8090" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
 	  SELECT MUI.USER_NO   

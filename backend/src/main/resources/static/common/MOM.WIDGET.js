@@ -5273,6 +5273,7 @@ var momWidget = {
 			// e.preventDefault();
 		});
 			$(document).on('click','.grid-popup', function(e) {	
+				
 				let columnProp = [];					
 				let activeId =  e.target.parentElement.parentElement.parentElement.parentElement.id.split('DP');
 				let targetId = 	activeId[0]; //선택자 
@@ -5302,6 +5303,7 @@ var momWidget = {
 			
 	
 			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
+				
 		         if(result1 != 'SUCCESS' || data1.length == 0) {
 		    	  momWidget.splashHide();
 			      return;							     
@@ -5399,6 +5401,7 @@ var momWidget = {
 				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
 			      totalParam = callInitResult['param'];
 				  		 mom_ajax('R', 'DG.'+dropdownGridQueryId, totalParam, function(result1, data1) {
+					//momWidget.splashShow();
 					if(result1 != 'SUCCESS') {
 						    	  momWidget.splashHide();
 							      return;							     
