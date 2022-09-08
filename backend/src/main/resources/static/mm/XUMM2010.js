@@ -11,6 +11,31 @@ var VIEW= {
 	event: function(e) {
 	
 	},
+	editCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==0 && btnId =='editBtn'){	
+			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
+              VIEW.partnerCd = checkedItem[0]['vendorCd'];
+		}
+	 
+
+	},
+	copyCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==0 && btnId =='copyBtn'){	
+			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
+              VIEW.partnerCd = checkedItem[0]['vendorCd'];
+		}
+	 
+
+	},
+	savePopCallInit: function(index,your,action,btnId,param,result) {
+	     if(index ==0 && btnId =='saveBtnDP'){		    			
+			 param[0].partnerCd =VIEW.partnerCd;
+			 result.param =  param;
+		    
+	     }
+	
+	  
+	},
 	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
 		if(index ==0 && btnId =='createBtn1'){			
 			$('#poReferenceTypeDP1').val('10');
@@ -20,35 +45,34 @@ var VIEW= {
 
 	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
-        if(index==0 && btnId== "customBtn1-1"){
-			AUIGrid.clearGridData(widget.grid[1]);	
+        if(index==1){
+			
 			  					
 		} 
-		else if(index==1 && btnId== "customBtn2-1"){
-			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
-			result.param = {prNo:checkItem[0].prNo};
-			  					
-		}
+	
 
 		
 	},
     cellClickCallBack: function(index,rowIndex,target,e) {				
-		if(index==100 && target=='vendorCd'){
-			$('#vendorCdDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
-            partnerCd = e.item.partnerCd;
+		if(index==100 && target=='vendorNm'){
+			$('#vendorNmDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
+            VIEW.partnerCd = e.item.partnerCd;
+		}
+		else if(index==0){
+			widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);
 		}
 			
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 0 ){
 			if(action =='D' || btnId == 'customBtn1-2'){
-			    for(var i=0,max=param.length; i<max;i++){
+			   /* for(var i=0,max=param.length; i<max;i++){
 					 if(param[i].poUserNo == undefined || param[i].poUserNo == ''){
 							result.msg = '발주담당자를 지정하지 않은 데이터가 있습니다!';
 							result.result = 'WARN';
 							return;
 					 }		    
-			    }
+			    }*/
 	
 		   }
 		}
