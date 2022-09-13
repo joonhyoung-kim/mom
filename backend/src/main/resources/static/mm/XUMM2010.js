@@ -82,7 +82,8 @@ var VIEW= {
 };
 
 $(document).ready(function(event){	
-	momWidget.init(1, menuId, VIEW);	
-	momWidget.init(2, menuId, VIEW);	
+	momWidget.init(1, menuId, VIEW,'GRID');	
+	momWidget.init(2, menuId, VIEW,'GRID');	
+	momWidget.init(11, 'XUSM8060', VIEW,'DG');
 	VIEW.init();
 });

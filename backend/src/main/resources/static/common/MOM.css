@@ -254,6 +254,16 @@
 	position:relative;
 	margin-top: 0.6rem;
 }
+.grid-box11-h02{
+	/* height: 63rem; */
+	/* height: 95.5%; */
+     width:calc(100% - 0.3rem); 
+  /*    height:calc(100% - 6rem);   */
+     height:36.8vh;
+	/* position: absolute;  */
+	position:relative;
+	margin-top: 0.6rem;
+}
 .grid-box21-h01{
 	/* height: 63rem; */
 	/* height: 95.5%; */
@@ -289,7 +299,7 @@
 	/* height: 95.5%; */
      width:calc(100% - 0.3rem); 
   /*    height:calc(100% - 6rem);   */
-     height:96.8%;
+     height:92%;
 	/* position: absolute;  */
 	position:relative;
 	margin-top: 0.6rem;
@@ -309,7 +319,7 @@
 	/* height: 95.5%; */
      width:calc(100% - 0.3rem); 
   /*    height:calc(100% - 6rem);   */
-     height:92%;
+     height:95%;
 	/* position: absolute;  */
 	position:relative;
 	margin-top: 0.6rem;
@@ -365,12 +375,8 @@
 	margin-top: 0.6rem;
 }
 .grid-box2-h00{
-	/* height: 63rem; */
-	/* height: 95.2%; */
     width:calc(100% - 0.3rem); 
-   /*  height:calc(100% - 3.2rem);  */
-   height:96.8%;
-	/* position: absolute;  */
+    height:calc(48vh - 3.5vh); 
 	position:relative;
 	margin-top: 0.6rem;
 }
@@ -405,7 +411,7 @@
 	/* height: 14.5rem; */
 	/* height: 93.5%; */
 	/* height: inherit; */
-	height:96.8%;
+	height:89%;
     width:calc(100% - 0.3rem); 
 	position:relative;
 	margin-top: 0.6rem;
@@ -463,7 +469,7 @@
 .gridTab11 {
     border-bottom: 1px solid #bdbdbd;
     background-color: #ececf2; 
-    height: 2.5rem; 
+    height: 3.3vh; 
    /*  height: 3.5%; */
     padding-top: 0.5rem; 
     border-bottom: none;   
@@ -471,9 +477,9 @@
 .gridTab21 {
     border-bottom: 1px solid #bdbdbd;
     background-color: #ececf2; 
-    height: 2.5rem; 
+    height: 7%; 
    /*  height: 3.5%; */
-    padding-top: 0.5rem; 
+    padding-top: 0.62rem;
     border-bottom: none;   
 }
 .gridTab31 {
@@ -503,7 +509,7 @@
 .gridTab2 {
 	background-color: #ececf2; 
     border-bottom: 1px solid #bdbdbd;
-    height: 2.5rem; 
+    height: 3.5vh; 
     border-bottom: none;
     padding-top: 0.5rem;
    /*  padding-top: 0.4rem; */
@@ -512,7 +518,7 @@
 .gridTab3 {
     border-bottom: 1px solid #bdbdbd;
     background-color: #ececf2; 
-    height: 2.5rem; 
+    height: 3.5vh; 
     border-bottom: none;
     padding-top: 0.5rem;
   
@@ -572,6 +578,12 @@
 }
 .gridArea-tm1st-h02-01{
 	background: #f0f0f5;
+    height: 89%;
+    border: none;
+/*     width: 160.8rem; */
+}
+.gridArea-tm1st-h02-011{
+	background: #f0f0f5;
     height: 98%;
     border: none;
 /*     width: 160.8rem; */
@@ -600,7 +612,7 @@
 }
 .gridArea-tm2h-h00-02{
 	background: #f0f0f5;
-    height: 94%;
+    height: 100%;
     border: none;
 }
 .gridArea-tm2h-h00-02-footer{
@@ -615,13 +627,16 @@
 }
 .gridArea-tm2h-h02-01{
 	background: #f0f0f5;
-    height: 85%;
+    height: 78.5%;
     border: none;
 }
 .gridArea-tm2h-h03-01{
 	background: #f0f0f5;
     height: 64%;
     border: none;
+}
+#split1{
+	height:100vh !important;
 }
 .gridArea-tm3vh-h00-01{
 	background: #f0f0f5;
@@ -630,12 +645,12 @@
 }
 .gridArea-tm3vh-h00-02{
 	background: #f0f0f5;
-    height:calc(100% - 0.9rem);
+    height:100%;
     border: none;
 }
 .gridArea-tm3vh-h00-03{
 	background: #f0f0f5;
-    height:94%;
+    height:100%;
     border: none;
 }
 .gridArea-tm3hv-h00-01{
@@ -765,7 +780,8 @@
 .searchArea-h02 {
 	margin: 0;
 	width: 100%;
-    height: 8.2rem;
+    /* height: 8.2rem; */
+    height: 10.5vh;
     border:  1px solid #b7b0b0;
     background: #d8dce3;
     position: relative;
@@ -1453,16 +1469,17 @@ border-color: #d8dce3 !important;
     z-index: 999999;
 }
 .gridpop-panelfooter {
-	height: 4.1rem;
-	margin-top: -0.1rem;
+    height: 7%;
+    margin-top: 3vh;
     text-align: center;
     position: relative;
     top: 0rem;
     border-top: 1px solid rgb(188, 189, 189);
-    padding-top: 0.1rem;
+    padding-top: 0.2vh;
     margin-left: 0.4rem;
-    width: 99.2%;
+    width: 99.3%;
     border: 1px solid #bdbdbd;
+    background: #f0f0f5;
 }
 .searcharea-pop {
 	padding-left: 1.8rem;
@@ -1618,6 +1635,43 @@ border-color: #d8dce3 !important;
     background-attachment: scroll;
     box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
     height: 24rem !important;
+}
+.gridPop-XUSM8060 {
+    z-index: 1050;
+    border-radius: 0.5rem;
+    float: none !important;
+    overflow: hidden !important;
+    width: 150rem !important;
+    position: absolute;
+    transform: translateX(4%);
+    background: white !important;
+    height: 55vh !important;
+    border: 1px solid rgb(77, 77, 78) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    top: -18vh;
+    left: -13vh;
+    bottom: 0;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+}
+.gridPop-searcharea-XUSM8060 {
+    padding-left: 0.7rem;
+    border: none;
+    padding-top: rem;
+    /* padding-bottom: 15px; */
+    width: 100%;
+    margin-left: -0.3rem;
+    position: relative;
+    /* margin-bottom: 8px; */
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    height: 47vh;
 }
 .searcharea-pop.R1 {
     height: 38rem;
@@ -4108,7 +4162,7 @@ input:focus{
     padding-top: 0.2rem;
 }
 .panelheader-gridPop {
-    height: 10%;
+    height: 3vh;
     padding-left: 2.7rem;
     background-color: rgb(248 249 250);
     color: #000000;
@@ -4573,10 +4627,26 @@ input:focus{
 .databottom.blue {}
 .tabcontentarea {
 	/*  height: 94.5% ;  */
-    height: calc(100% - 4.5rem); 
+   /*  height: calc(100% - 4.5rem);  */
+        height: 97vh !important;
 	margin-bottom: 0px;
 	background: #f0f0f5;	
 /*  	border-top: 1px solid #b7b0b0; */
+    margin-top: 0.2rem; 
+}
+.tabcontentarea1 {
+	/*  height: 94.5% ;  */
+   /*  height: calc(100% - 4.5rem);  */
+        height: 99.8vh !important;
+	margin-bottom: 0px;
+	background: #f0f0f5;	
+/*  	border-top: 1px solid #b7b0b0; */
+    margin-top: 0.2rem; 
+}
+.tabcontentarea55 {
+    height: 50% !important;
+	margin-bottom: 0px;
+	background: #f0f0f5;	
     margin-top: 0.2rem; 
 }
 .front_main {

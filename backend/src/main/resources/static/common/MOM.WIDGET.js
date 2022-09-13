@@ -164,11 +164,11 @@ var momWidget = {
 			
 				
 				      searchBtn = '';
-				      templateInfo = that.pageProperty[0]['templateId'].split('-');
+				      templateInfo = that.pageProperty[index]['templateId'].split('-');
 			      }
 			      else{
 				        searchBtn = '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button>';
-				        templateInfo = that.pageProperty[0]['templateId'].split('-');
+				        templateInfo = that.pageProperty[index]['templateId'].split('-');
 			     }
 			
 			     // var popupTemplateInfo = ;
@@ -1591,14 +1591,14 @@ var momWidget = {
 	},
 
 		tm1st : function(index,splitRatio,content,target) {
-		var html ='<div id ='+ content+index+' class = "tabcontentarea"></div>';  
+		var html ='<div id ='+ content+index+' class = "tabcontentarea1"></div>';  
 		$(target).append(html); 		
 		return html;
 		},
 		tm2h : function(index,splitRatio,content,target) {
 	    var html     =	 '<div id = "split1" class="splitGrid">'
-		           +     '<div id = "contentArea1" class = "tabcontentarea"></div>'
-	               +     '<div id = "contentArea2" class = "tabcontentarea"></div>'	               
+		           +     '<div id = "contentArea1" class = "tabcontentarea55"></div>'
+	               +     '<div id = "contentArea2" class = "tabcontentarea55"></div>'	               
 	        	   +     '</div>';		
 		$(target).append(html);   
 		 $('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'horizontal', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
@@ -1606,8 +1606,8 @@ var momWidget = {
 		},
 		tm2v : function(index,splitRatio,content,target) {
 		    var html     =	 '<div id = "split1" class="splitGrid">'
-			           +     '<div id = "contentArea1" class = "tabcontentarea"></div>'
-		               +     '<div id = "contentArea2" class = "tabcontentarea"></div>'	               
+			           +     '<div id = "contentArea1" class = "tabcontentarea1"></div>'
+		               +     '<div id = "contentArea2" class = "tabcontentarea1"></div>'	               
 		        	   +     '</div>';	  
 			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
@@ -1617,11 +1617,11 @@ var momWidget = {
 		    var html     = '<div id = "split1" class="splitGrid">'
                          +    '<div>'
                          +      '<div id = "split2" class="splitGrid">'
-                         +       '<div id = '+ content+index+' class = "tabcontentarea"></div>'
-                         +       '<div id = '+ content+(index+2)+' class = "tabcontentarea"></div>'	
+                         +       '<div id = '+ content+index+' class = "tabcontentarea55"></div>'
+                         +       '<div id = '+ content+(index+2)+' class = "tabcontentarea55"></div>'	
                          +      '</div>'
                          +    '</div>'
-                         +    '<div id = '+ content+(index+1)+' class = "tabcontentarea"></div>'
+                         +    '<div id = '+ content+(index+1)+' class = "tabcontentarea1"></div>'
                          + '</div>';
 			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
@@ -1630,11 +1630,11 @@ var momWidget = {
 		},
 		tm3hv : function(index,splitRatio,content,target) {
 		      var html     = '<div id = "split1" class="splitGrid">'
-		                 +    '<div id = '+ content+index+' class = "tabcontentarea"></div>'
+		                 +    '<div id = '+ content+index+' class = "tabcontentarea1"></div>'
                          +    '<div>'
                          +      '<div id = "split2" class="splitGrid">'
-                         +       '<div id = '+ content+(index+1)+' class = "tabcontentarea"></div>'
-                         +       '<div id = '+ content+(index+2)+' class = "tabcontentarea"></div>'	
+                         +       '<div id = '+ content+(index+1)+' class = "tabcontentarea55"></div>'
+                         +       '<div id = '+ content+(index+2)+' class = "tabcontentarea55"></div>'	
                          +      '</div>'
                          +    '</div>'
                          + '</div>';
