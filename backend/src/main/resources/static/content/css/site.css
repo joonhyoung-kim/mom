@@ -170,9 +170,9 @@ output { display: block; padding-top: 7px; font-size: 12px; line-height: 1.42857
 button::-moz-focus-inner, input::-moz-focus-inner { border:0; padding:0}
 textarea { overflow: auto; vertical-align: top }
 table { border-collapse: collapse; border-spacing: 0 }
-form { margin: 0px;
+/* form { margin: 0px;
        position: relative;
-       top: -0.3rem; }
+       top: -0.3rem; } */
  [class^=w-icon-], [class*=" w-icon-"] {
  font-family:mica-icons;
  speak:none;
