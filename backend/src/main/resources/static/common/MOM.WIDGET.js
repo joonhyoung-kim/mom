@@ -167,7 +167,7 @@ var momWidget = {
 				      templateInfo = that.pageProperty[index]['templateId'].split('-');
 			      }
 			      else{
-				        searchBtn = '<button type="button" style="margin-right: 1rem;" class="btn search btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button>';
+				        searchBtn = '<div class="col-xl-3  align-self-center search-btn-group "><button type="button" style="margin-right: 1rem;" class="col-xl-3  align-self-center w-auto  px-4 py-2  searchField-Btn find btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button></div>';
 				        templateInfo = that.pageProperty[index]['templateId'].split('-');
 			     }
 			
@@ -205,18 +205,18 @@ var momWidget = {
 			    	  }
 			    		    		   
 			    	  if(that.searchProperty[index][i]['searchType']=='S'){
-			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField"></select>';
+			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="mt-2 searchSelectField"></select>';
 			    	  }
 			    	  else if(that.searchProperty[index][i]['searchType']=='SS'){
-		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="searchSelectField-search-combo"></select>';
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="mt-2 searchSelectField-search-combo"></select>';
 		    			   
 			    	  }
 			    	  else if(that.searchProperty[index][i]['searchType']=='MS'){
-		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="searchSelectField-search-combo"></select>';
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="mt-2 searchSelectField-search-combo"></select>';
 		    			   
 			    	  }
 			    	  else if (that.searchProperty[index][i]['searchType']=='M'){
-			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField"></select>';
+			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="mt-2 searchSelectField"></select>';
 			    	  }
 			    	   else if (that.searchProperty[index][i]['searchType']=='C'){
 			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField"></div>';
@@ -225,7 +225,7 @@ var momWidget = {
 			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+(index+1)+' class="fromDateField searchSelectField"></div>' +'<div id="fromToIcon" class="fromToIcon" >~</div>'+ '<div id='+that.searchProperty[index][i]['searchId']+'ED'+(index+1)+' class="toDateField searchSelectField"></div>';
 			    	  }
 			    	  else{
-			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' input-type="text" type="text" class="w-input searchInputField" date-format="date"></input>';
+			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' input-type="text" type="text" class="form-control w-input searchInputField" date-format="date"></input>';
 			    	  }
 			    	  searchItem[i] =  {	  			    	  
 				    	  searchId:         that.searchProperty[index][i]['searchId'],
@@ -255,9 +255,9 @@ var momWidget = {
 			    	    searchStyle = 'h01';
 			    	    classItem[0] = {
 					    		        // searchAreaClass:'searchArea-h01',
-					    		         searchAreaClass:'"col'+' searchArea-h01'+' pt-3"',
-					    		         searchItemClass:'"form-group searchItem-h01"',
-					    			     labelBoxClass:'"mx-4 mt-3 labelbox-col3"',
+					    		         searchAreaClass:'"col-xl-12'+' searchArea-h01'+' pt-2"',
+					    		         searchItemClass:'"col-xl-3 mb-2  align-self-center searchItem-h01"',
+					    			     labelBoxClass:'"mx-4 mt-2 labelbox-col3"',
 					    			     index:index+1
 			             }
 			        var searchAreaHtml  = that.createSearchArea.h01(classItem,searchItem,searchBtn);	      
@@ -266,9 +266,9 @@ var momWidget = {
 			    	 searchLineCnt = 2;
 			    	 searchStyle = 'h02';
 			    	   classItem[0] = {
-			    		         searchAreaClass:'searchArea-h02', 
-			    		         searchItemClass:'"form-group searchItem-h02"',
-			    		         labelBoxClass:'"mx-4 mt-3 labelbox-col3"'	,
+			    		         searchAreaClass:'"col-xl-12'+' searchArea-h02'+' pt-2"', 
+			    		         searchItemClass:'"col-xl-3 mb-2 searchItem-h02"',
+			    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	,
 			    		         index:index+1
 			    				
 			             }
@@ -279,8 +279,8 @@ var momWidget = {
 			    	 searchStyle = 'h03';
 			    	   classItem[0] = {
 			    		         searchAreaClass:'searchArea-h03', 
-			    		         searchItemClass:'"form-group searchItem-h03"',
-			    		         labelBoxClass:'"mx-4 mt-3 labelbox-col3"'	,
+			    		         searchItemClass:'"col-xl-3 mb-2 searchItem-h03"',
+			    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	,
 			    		         index:index+1
 			    				
 			             }
@@ -289,9 +289,9 @@ var momWidget = {
 			     else{
 			  	       classItem[0] = {
 		    		        // searchAreaClass:'searchArea-h01',
-		    		         searchAreaClass:'"col'+' searchArea-h01'+' pt-3"',
-		    		         searchItemClass:'"form-group searchItem-h01"',
-		    		         labelBoxClass:'"mx-4 mt-3 labelbox-col3"'	 ,
+		    		         searchAreaClass:'"card'+' searchArea-h01'+' pt-2"',
+		    		         searchItemClass:'"mb-2 form-group searchItem-h01"',
+		    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	 ,
 		    		         index:index+1
 		              }
 		             var searchAreaHtml  = that.createSearchArea.h01(classItem,searchItem,searchBtn);	  
@@ -362,7 +362,7 @@ var momWidget = {
 						 var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
 					}
 					else if(searchStyle =='h01'){
-						 var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'h-gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						 var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
 					} 
 					else if(searchStyle =='h02'){
 						 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
@@ -1418,10 +1418,10 @@ var momWidget = {
 	    var botHtml = '';
 	    topHtml =	'<div id="searchArea" class='+classItem[0].searchAreaClass+'>'
 		  // +'<ul id="ul" class="w-list-unstyled w-clearfix b1">';
-	    +'<form id="ul" class="searchRowBox h01">';
+	    +'<ul id="ul" class="row pe-3 pt-1  searchRowBox h01">';
 		  for(var i=0;i<searchItem.length;i++){	    
 		       if(i== (searchItem.length-1)){
-			       midHtml +=  '<li class='+classItem[0].searchItemClass+' style="width: auto;">'+ 
+			       midHtml +=  '<li class='+classItem[0].searchItemClass+'>'+ 
 					       '<div class='+classItem[0].labelBoxClass+'>'+
 					       '<div class='+searchItem[i].circelClass+'></div>'+
 					        searchItem[i].headerField+
@@ -1456,7 +1456,7 @@ var momWidget = {
 	    var botHtml2 = '';
 	    var searchHtml = '';
 	    topHtml =	'<div id="searchArea" class='+classItem[0].searchAreaClass+'>'
-	                  +'<form id="ul" class="searchRowBox h02">';
+	                  +'<ul id="ul" class="row pe-3 pt-1 searchRowBox h02">';
 		  for(var i=0;i<3;i++){	    
 		    	   midHtml +=  '<li class='+classItem[0].searchItemClass+'>' 
 					+'       <div class='+classItem[0].labelBoxClass+'>'
@@ -1472,7 +1472,7 @@ var momWidget = {
 	        	   // + '</div>';
 			searchHtml = topHtml + midHtml + botHtml;
 	
-				topHtml2 =	'<form id="ul" class="searchRowBox h02" style="padding-top: 0.4rem;">';
+				topHtml2 =	'<ul id="ul" class="row pe-3 pt-1 searchRowBox h02" style="padding-top: 0.4rem;">';
 			
 			
 			  for(var j=3;j<searchItem.length;j++){	    
@@ -1669,34 +1669,38 @@ var momWidget = {
 	createGridArea: {
 		h00 : function(index,gridId,gridSizeClass) {
 	    var html   =	'<div class='+gridSizeClass+'>'
-		           +     '<div class = "gridTab'+index+'"></div>'
+	               +     '<div class = "card">'
+		           +     '<div class = "card-header ps-0 pe-2 pb-1 gridTab'+index+'></div>'
 	               +     '<div class = "grid-box'+index+'-h00">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
-	        	   +     '</div></div>';
+	        	   +     '</div></div></div>';
 			return html;
 		},
 		h01 : function(index,gridId,gridSizeClass) {
-	    var html   =	'<div class='+gridSizeClass+'>'
-		           +     '<div class = "gridTab'+index+'"></div>'
-	               +     '<div class = "grid-box'+index+'-h01">'
+	    var html   =	'<div class='+'"col-xl-12 px-0 '+gridSizeClass+'">'
+	               +     '<div class = "card">'
+		           +     '<div class = "card-header  ps-0 pe-2 pb-1 gridTab'+index+'"></div>'
+	               +     '<div class = "card-body grid-box'+index+'-h01">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
-	        	   +     '</div></div>';
+	        	    +     '</div></div></div>';
 			return html;
 		},
 		h02 : function(index,gridId,gridSizeClass) {
 	    var html   =	'<div class='+gridSizeClass+'>'
-		           +     '<div class = "gridTab'+index+'"></div>'
+	      		   +     '<div class = "card">'
+		           +     '<div class = "card-header  ps-0 pe-2 pb-1 gridTab'+index+'"></div>'
 	               +     '<div class = "grid-box'+index+'-h02">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
-	        	   +     '</div></div>';
+	        	  +     '</div></div></div>';
 			return html;
 		},
 		h03 : function(index,gridId,gridSizeClass) {
 	    var html   =	'<div class='+gridSizeClass+'>'
-		           +     '<div class = "gridTab'+index+'"></div>'
+	      		   +     '<div class = "card">'
+		           +     '<div class = "card-header  ps-0 pe-2 pb-1 gridTab'+index+'"></div>'
 	               +     '<div class = "grid-box'+index+'-h03">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
-	        	   +     '</div></div>';
+	        	   +     '</div></div></div>';
 			return html;
 		}
 	/*	
@@ -1706,7 +1710,7 @@ var momWidget = {
 	},     
 	createGridTabArea: {
 		rightTab : function(index,btnItem) {
-	    var topHtml = '<div class="widget-box2">';
+	    var topHtml = '<div class="end widget-box2">';
 	    var midHtml = '';
 	    var botHtml = '';
 	    for(var i=0;i<btnItem.length;i++){
@@ -1729,7 +1733,7 @@ var momWidget = {
 	    return topHtml + midHtml+botHtml;
 		},
 		leftTab : function(index,gridTitle,btnItem) {
-		    var topHtml = '<div class="widget-box1">';
+		    var topHtml = '<div class="widget-box1 h-75 ms-2">';
 		    var midHtml = '';
 		    var botHtml = '';
 		    	 midHtml += '<div class ="w-icon fa fa-align-justify icon"></div>'
