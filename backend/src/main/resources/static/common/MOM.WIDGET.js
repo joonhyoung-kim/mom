@@ -60,6 +60,7 @@ var momWidget = {
 	
 				  
 		  if(index == 0){
+			  $('head').prepend('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">');
 			  $('head').append('<script  src="/mom/content/jqwidgets/jqxtooltip.js"></script>');
 			  $('head').append('<script  src="/mom/content/jqwidgets/globalization/globalize.js"></script>');
 			  $('head').append('<script src="/mom/content/time/moment.js"></script>');

@@ -197,6 +197,7 @@
     float: left;
     box-shadow: none;
     margin-bottom: 1.1rem;
+    display:flex;
 }
 .searchItem-h03{
         width: 32%;
