@@ -56,6 +56,7 @@ var XUMD1080= {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1, menuId, XUMD1080);
 	momWidget.init(2, menuId, XUMD1080);
 	XUMD1080.init();

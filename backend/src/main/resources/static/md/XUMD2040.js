@@ -38,6 +38,7 @@ var view= {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1, menuId, view);
 	view.init();
 });

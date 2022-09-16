@@ -24,6 +24,7 @@ var XUMD2020= {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1, menuId, XUMD2020);
 	XUMD2020.init();
 });

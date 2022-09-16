@@ -152,6 +152,7 @@ var VIEW= {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1,   menuId,    VIEW,'GRID');
 	/*momWidget.init(91, 'XUSM8050', VIEW,'CP');
 	momWidget.init(92, 'XUSM8060', VIEW,'CP');

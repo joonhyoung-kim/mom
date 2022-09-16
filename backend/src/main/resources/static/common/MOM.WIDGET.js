@@ -60,12 +60,6 @@ var momWidget = {
 	
 				  
 		  if(index == 0){
-			  $('head').prepend('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">');
-			  $('head').append('<script  src="/mom/content/jqwidgets/jqxtooltip.js"></script>');
-			  $('head').append('<script  src="/mom/content/jqwidgets/globalization/globalize.js"></script>');
-			  $('head').append('<script src="/mom/content/time/moment.js"></script>');
-			  $('head').append('<style type="text/css">.aui-grid-default-header {background: linear-gradient(to bottom, #f8f8f8, #eee) !important;text-align: center;font-weight: bold;font-size: 1.1em;cursor: pointer;color: black;}</style>');
-			  $('head').append('<style type="text/css">.my-column-style-edit {background:#c7e8fd;color:black;font-weight:bold;}.aui-grid-edit-column-left{background:#c7e8fd !important;color:black;text-align: left;}.aui-grid-edit-column-center{background:#c7e8fd;color:black;text-align: center;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black;text-align: right;}.aui-grid-default-column-center{background-color:rgb(250 250 250);text-align: center;font-size: 1em;cursor: default;}.aui-grid-default-column-left {background-color:rgb(250 250 250);text-align: left;font-size: 1em;cursor: default;}.aui-grid-default-column-right {background-color:rgb(250 250 250);text-align: right;font-size: 1em;cursor: default;}.excel-upload-danger{background:#fff62c;font-weight:bold:color:#22741C;}.my-header-style-require {background:#ffcd00 !important;font-weight: bold;color:#000000;position:relative}.my-header-style-default {background:#eee !important;font-weight: bold;color:#000000;position:relative}</style>');
  			  //let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
 			  //$('body').append(uploadPop);
 			  //$('body').append(fileUpProgressBar);
@@ -168,7 +162,7 @@ var momWidget = {
 				      templateInfo = that.pageProperty[index]['templateId'].split('-');
 			      }
 			      else{
-				        searchBtn = '<div class="col-xl-3  align-self-center search-btn-group "><button type="button" style="margin-right: 1rem;" class="col-xl-3  align-self-center w-auto  px-4 py-2  searchField-Btn find btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button></div>';
+				        searchBtn = '<div class="col-xl-3  align-self-center search-btn-group "><button type="button"  class="col-xl-3  align-self-center w-auto  px-4 py-2  searchField-Btn find btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button></div>';
 				        templateInfo = that.pageProperty[index]['templateId'].split('-');
 			     }
 			
@@ -268,7 +262,7 @@ var momWidget = {
 			    	 searchStyle = 'h02';
 			    	   classItem[0] = {
 			    		         searchAreaClass:'"col-xl-12'+' searchArea-h02'+' pt-2"', 
-			    		         searchItemClass:'"col-xl-3 mb-2 searchItem-h02"',
+			    		         searchItemClass:'"col-xl-3 mb-2 mt-2 align-self-center searchItem-h02"',
 			    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	,
 			    		         index:index+1
 			    				
@@ -280,7 +274,7 @@ var momWidget = {
 			    	 searchStyle = 'h03';
 			    	   classItem[0] = {
 			    		         searchAreaClass:'searchArea-h03', 
-			    		         searchItemClass:'"col-xl-3 mb-2 searchItem-h03"',
+			    		         searchItemClass:'"col-xl-3 mb-2 align-self-center searchItem-h03"',
 			    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	,
 			    		         index:index+1
 			    				
@@ -291,7 +285,7 @@ var momWidget = {
 			  	       classItem[0] = {
 		    		        // searchAreaClass:'searchArea-h01',
 		    		         searchAreaClass:'"card'+' searchArea-h01'+' pt-2"',
-		    		         searchItemClass:'"mb-2 form-group searchItem-h01"',
+		    		         searchItemClass:'"col-xl-3 mb-2  align-self-center searchItem-h01"',
 		    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	 ,
 		    		         index:index+1
 		              }
@@ -311,11 +305,11 @@ var momWidget = {
 			    	  }
 			    	  
 		    		  if(that.popupProperty[index][i]['popupType']=='S' || that.popupProperty[index][i]['popupType'] == 'M'){
-		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField"></select>';
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="popupSelectField"></select>';
 		    			  
 			    	  }
 			    	  else if(that.popupProperty[index][i]['popupType']=='SS'){
-		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="popupSelectField-popup-combo"></select>';
 		    			   
 			    	  }
 		    		  else if (that.popupProperty[index][i]['popupType']=='C'){
@@ -335,7 +329,7 @@ var momWidget = {
 		    			  remarkYn    = 'Y';
 		    		  }
 		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){			  
-			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
+			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="grid-popup popupSelectField"></select>';
 			    	  }
 			    	  else {
 			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
@@ -371,21 +365,40 @@ var momWidget = {
 					else if(searchStyle =='h03'){
 						 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
 					} 
+					
+				
 				 
 				 }
 				 else{
+					 if(momWidget.gridProperty[index][0]['usePaging']){
+						if(searchStyle =='h00'){
+						 var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+						}
+						else if(searchStyle =='h01'){
+							  var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+						} 
+						else if(searchStyle =='h02'){
+							 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+						} 
+						else if(searchStyle =='h03'){
+							 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+						} 
+					 }
+					 else{
 						if(searchStyle =='h00'){
 						 var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
-					}
-					else if(searchStyle =='h01'){
-						  var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
-					} 
-					else if(searchStyle =='h02'){
-						 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
-					} 
-					else if(searchStyle =='h03'){
-						 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
-					} 
+						}
+						else if(searchStyle =='h01'){
+							  var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+						} 
+						else if(searchStyle =='h02'){
+							 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+						} 
+						else if(searchStyle =='h03'){
+							 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+						} 
+					 }
+					
 					
 				}
 				
@@ -415,7 +428,7 @@ var momWidget = {
 			    			createFrontArea["tm3vh"]  = that.tm3vh; 
 			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
 			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
-			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',".front_main");
+			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',"#front_main");
 			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
 			    	 }
 			    	  else if(index >0 && index%10 ==0){				    
@@ -1478,7 +1491,7 @@ var momWidget = {
 			
 			  for(var j=3;j<searchItem.length;j++){	    
 		       if(j==(searchItem.length-1)){
-			       midHtml2 +=  '<li class='+classItem[0].searchItemClass+' style="width:auto;">' 
+			       midHtml2 +=  '<li class='+classItem[0].searchItemClass+'>' 
 					+'       <div class='+classItem[0].labelBoxClass+'>'
 					+'        <div class='+searchItem[j].circelClass+'></div>'
 					+        searchItem[j].headerField
@@ -1560,7 +1573,7 @@ var momWidget = {
 			
 			  for(var j=6;j<searchItem.length;j++){	    
 		       if(j==(searchItem.length-1)){
-			       midHtml3 +=  '<li class='+classItem[0].searchItemClass+' style="width:auto;">' 
+			       midHtml3 +=  '<li class='+classItem[0].searchItemClass+'>' 
 					+'       <div class='+classItem[0].labelBoxClass+'>'
 					+'        <div class='+searchItem[j].circelClass+'></div>'
 					+        searchItem[j].headerField
@@ -1669,17 +1682,17 @@ var momWidget = {
 		},
 	createGridArea: {
 		h00 : function(index,gridId,gridSizeClass) {
-	    var html   =	'<div class='+gridSizeClass+'>'
-	               +     '<div class = "card">'
+	    var html   =	'<div class='+'"col-xl-12 px-0 '+gridSizeClass+'">'
+	               +     '<div class = "card" id="main-box'+index+'">'
 		           +     '<div class = "card-header ps-0 pe-2 pb-1 gridTab'+index+'></div>'
-	               +     '<div class = "grid-box'+index+'-h00">'
+	               +     '<div class = "card-body grid-box'+index+'-h00">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
 	        	   +     '</div></div></div>';
 			return html;
 		},
 		h01 : function(index,gridId,gridSizeClass) {
 	    var html   =	'<div class='+'"col-xl-12 px-0 '+gridSizeClass+'">'
-	               +     '<div class = "card">'
+	               +     '<div class = "card" id="main-box'+index+'">'
 		           +     '<div class = "card-header  ps-0 pe-2 pb-1 gridTab'+index+'"></div>'
 	               +     '<div class = "card-body grid-box'+index+'-h01">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
@@ -1687,19 +1700,19 @@ var momWidget = {
 			return html;
 		},
 		h02 : function(index,gridId,gridSizeClass) {
-	    var html   =	'<div class='+gridSizeClass+'>'
+	    var html   =	'<div class='+'"col-xl-12 px-0 '+gridSizeClass+'">'
 	      		   +     '<div class = "card">'
 		           +     '<div class = "card-header  ps-0 pe-2 pb-1 gridTab'+index+'"></div>'
-	               +     '<div class = "grid-box'+index+'-h02">'
+	               +     '<div class = "card-body grid-box'+index+'-h02">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
 	        	  +     '</div></div></div>';
 			return html;
 		},
 		h03 : function(index,gridId,gridSizeClass) {
-	    var html   =	'<div class='+gridSizeClass+'>'
+	    var html   =	'<div class='+'"col-xl-12 px-0 '+gridSizeClass+'">'
 	      		   +     '<div class = "card">'
 		           +     '<div class = "card-header  ps-0 pe-2 pb-1 gridTab'+index+'"></div>'
-	               +     '<div class = "grid-box'+index+'-h03">'
+	               +     '<div class = "card-body grid-box'+index+'-h03">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
 	        	   +     '</div></div></div>';
 			return html;
@@ -2555,11 +2568,11 @@ var momWidget = {
 			    	  }
 			    	  
 		    		  if(popupProperty[i]['popupType']=='S' || popupProperty[i]['popupType'] == 'M'){
-		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1) +' class="searchSelectField"></select>';
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1) +' class="popupSelectField"></select>';
 		    			  
 			    	  }
 			    	  else if(popupProperty[i]['popupType']=='SS'){
-		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="searchSelectField-popup-combo"></select>';
+		    			   labelField = '<select id='+popupProperty[i]['popupId']+'DP'+(index+1)+' class="popupSelectField-popup-combo"></select>';
 		    			   
 			    	  }
 		    		  else if (popupProperty[i]['popupType']=='C'){
@@ -2579,7 +2592,7 @@ var momWidget = {
 		    			  remarkYn    = 'Y';
 		    		  }
 		    		  else if(popupProperty[i]['popupType']=='DG'){			  
-			    		  labelField  = '<select maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'  class="grid-popup searchSelectField"></select>';
+			    		  labelField  = '<select maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+'  class="grid-popup popupSelectField"></select>';
 			    	  }
 			    	  else {
 			    		  labelField  = '<input maxlength="256" id='+popupProperty[i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
@@ -4144,7 +4157,7 @@ var momWidget = {
 			     
 				}
 				else if(searchType == 'S'){
-				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '210px', height: 27,dropDownHeight: 120,disabled: false,searchMode: 'none'});
+				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: 210, height: 27,dropDownHeight: 120,disabled: false,searchMode: 'none'});
 				    	$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {	
 					if($("#innerListBox" + e.owner.id + " div[role=option] span")[0]==undefined){
 						 

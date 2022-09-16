@@ -9,6 +9,7 @@ var XUMD1070= {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1, menuId, XUMD1070);
 	XUMD1070.init();
 });
