@@ -573,6 +573,13 @@
     border: none;
    /*  width: 160.8rem; */
 }
+.gridArea-tm1st-h01-01-footer{
+	background: #f0f0f5;
+    height: 94vh;
+    border: none;
+    height:96%;
+   /*  width: 160.8rem; */
+}
 .gridArea-tm1st-h01-02{
 	background: #f0f0f5;
     height: 98%;
@@ -603,13 +610,8 @@
     border: none;
 /*     width: 160.8rem; */
 }
+
 .gridArea-tm1st-h02-01-footer{
-	background: #f0f0f5;
-    height: 98.5%;
-    border: none;
-/*     width: 160.8rem; */
-}
-.gridArea-tm1st-h02-01-footer-paging{
 	background: #f0f0f5;
     height: 91%;
     border: none;
