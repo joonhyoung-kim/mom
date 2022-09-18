@@ -353,7 +353,22 @@ var momWidget = {
 			     // searchAreaHtml = searchAreaHtml.replace(/#{searchAreaClass}/gi, classItem[0].searchAreaClass).replace(/#{searchItemClass}/gi, classItem[0].searchItemClass).replace(/#{labelBoxClass}/gi, classItem[0].labelBoxClass).replace(/#{circelClass}/gi, classItem[0].circelClass).replace(/#{labelTextClass}/gi, classItem[0].labelTextClass)replace(/#{searchNm}/gi, classItem[0].searchNm).replace(/#{labelField}/gi, classItem[0].labelField);
 			 
 				   if(that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['usePaging']== true){
-					if(searchStyle =='h00'){
+					   if(that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['showFooter']== true){
+						   if(searchStyle =='h00'){
+						      var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+					        }
+						   else if(searchStyle =='h01'){
+							      var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						  } 
+						  else if(searchStyle =='h02'){
+							 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						  } 
+						    else if(searchStyle =='h03'){
+							 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						    } 
+					   }
+					else{
+							if(searchStyle =='h00'){
 						 var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
 					}
 					else if(searchStyle =='h01'){
@@ -365,6 +380,8 @@ var momWidget = {
 					else if(searchStyle =='h03'){
 						 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
 					} 
+					}
+				
 					
 				
 				 
