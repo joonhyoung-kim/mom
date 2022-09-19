@@ -43,6 +43,7 @@ var VIEW= {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1, menuId, VIEW);	
 	momWidget.init(2, menuId, VIEW);	
 	VIEW.init();

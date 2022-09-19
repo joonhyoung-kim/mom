@@ -148,8 +148,16 @@ var momWidget = {
 				  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
 			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
 			      var searchBtn      =  '';
-			      var gridPopYn      ='';
+			      var gridPopYn      = '';
 			      var templateInfo   = '';
+			      var searchRowcnt   = that.searchProperty[index].length;
+			      var searchBtnColSize = "col-xl-3";
+			      if(searchRowcnt%3 == 1 ){
+				      searchBtnColSize = "col-xl-9";
+			      }
+			      else if(searchRowcnt%3 == 2 ){
+				      searchBtnColSize = "col-xl-6";
+			      }
 			      for(var i=0,max=gridExceptList.length; i<max;i++){
 			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[index][0][gridExceptList[i]];			    	  
 			    	   delete that.gridProperty[index][0][gridExceptList[i]];
@@ -162,7 +170,7 @@ var momWidget = {
 				      templateInfo = that.pageProperty[index]['templateId'].split('-');
 			      }
 			      else{
-				        searchBtn = '<div class="col-xl-3  align-self-center search-btn-group "><button type="button"  class="col-xl-3  align-self-center w-auto  px-4 py-2  searchField-Btn find btn-info" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button></div>';
+				        searchBtn = '<div class=" '+ searchBtnColSize+' align-self-center search-btn-group "><button type="button"  class=" align-self-center w-auto  px-4 py-2  searchField-Btn find btn-search" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button></div>';
 				        templateInfo = that.pageProperty[index]['templateId'].split('-');
 			     }
 			
@@ -175,7 +183,7 @@ var momWidget = {
 			
 	              
 	              
-			      var searchRowcnt = that.searchProperty[index].length;
+			      //var searchRowcnt = that.searchProperty[index].length;
 			      var searchLineCnt = 0;
 			      var searchStyle   = 'h00';
 			      var remarkYn      = 'N'
@@ -214,7 +222,7 @@ var momWidget = {
 			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="mt-2 searchSelectField"></select>';
 			    	  }
 			    	   else if (that.searchProperty[index][i]['searchType']=='C'){
-			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField"></div>';
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField mt-2"></div>';
 			    	  }
 			    	  else if (that.searchProperty[index][i]['searchType']=='CP'){
 			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+(index+1)+' class="fromDateField searchSelectField"></div>' +'<div id="fromToIcon" class="fromToIcon" >~</div>'+ '<div id='+that.searchProperty[index][i]['searchId']+'ED'+(index+1)+' class="toDateField searchSelectField"></div>';
@@ -369,16 +377,16 @@ var momWidget = {
 					   }
 					   else{
 							if(searchStyle =='h00'){
-						    var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer-paging'); 
+						    var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
 					        }
 					        else if(searchStyle =='h01'){
-						    var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						    var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
 					        } 
 							else if(searchStyle =='h02'){
-								 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+								 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
 							} 
 							else if(searchStyle =='h03'){
-								 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+								 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
 							} 
 						}
 
@@ -1471,7 +1479,7 @@ var momWidget = {
 		       }
 					
 		}
-	           botHtml  = '</ul>'
+	           botHtml  = '</ul>';
 	        	    + '</div>';
 			return topHtml + midHtml + botHtml;
 		},		
@@ -1698,7 +1706,7 @@ var momWidget = {
 		h00 : function(index,gridId,gridSizeClass) {
 	    var html   =	'<div class='+'"col-xl-12 px-0 '+gridSizeClass+'">'
 	               +     '<div class = "card" id="main-box'+index+'">'
-		           +     '<div class = "card-header ps-0 pe-2 pb-1 gridTab'+index+'></div>'
+		           +     '<div class = "card-header ps-0 pe-2 pb-1 gridTab'+index+'"></div>'
 	               +     '<div class = "card-body grid-box'+index+'-h00">'
 	               +      '<div id='+gridId+' class="grid" data-name="페이지정보"></div>'
 	        	   +     '</div></div></div>';
@@ -1747,10 +1755,10 @@ var momWidget = {
                +     '<div multi-lang="" class="textblock gridRightTab">'+btnItem[i].buttonNm+'</div>'
         	   +     '</a>';		*/        	  
 					if(btnItem[i].buttonId.indexOf('customBtn')>=0){
-						 midHtml += '<button type="button" class="custom-btn btn btn-info" id='+ btnItem[i].buttonId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+						 midHtml += '<button type="button" class="custom-btn btn btn-search" id='+ btnItem[i].buttonId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
 					}
 					else{
-						 midHtml += '<button type="button" class="btn btn-info" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+						 midHtml += '<button type="button" class="btn btn-search" id='+ btnItem[i].buttonId+index+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
 					}
 	               
                
