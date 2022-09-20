@@ -225,7 +225,7 @@ var momWidget = {
 			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField mt-2"></div>';
 			    	  }
 			    	  else if (that.searchProperty[index][i]['searchType']=='CP'){
-			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+(index+1)+' class="fromDateField searchSelectField"></div>' +'<div id="fromToIcon" class="fromToIcon" >~</div>'+ '<div id='+that.searchProperty[index][i]['searchId']+'ED'+(index+1)+' class="toDateField searchSelectField"></div>';
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+(index+1)+' class="mt-3 fromDateField searchSelectField"></div>' +'<div id="fromToIcon" class="mt-3 fromToIcon" >~</div>'+ '<div id='+that.searchProperty[index][i]['searchId']+'ED'+(index+1)+' class="mt-3 toDateField searchSelectField"></div>';
 			    	  }
 			    	  else{
 			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' input-type="text" type="text" class="form-control w-input searchInputField" date-format="date"></input>';
@@ -281,7 +281,7 @@ var momWidget = {
 			    	 searchLineCnt = 3;
 			    	 searchStyle = 'h03';
 			    	   classItem[0] = {
-			    		         searchAreaClass:'searchArea-h03', 
+			    		         searchAreaClass:'"col-xl-12'+' searchArea-h03'+' pt-2"', 
 			    		         searchItemClass:'"col-xl-3 mb-2 align-self-center searchItem-h03"',
 			    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	,
 			    		         index:index+1
@@ -1454,11 +1454,11 @@ var momWidget = {
 	    var botHtml = '';
 	    topHtml =	'<div id="searchArea" class='+classItem[0].searchAreaClass+'>'
 		  // +'<ul id="ul" class="w-list-unstyled w-clearfix b1">';
-	    +'<ul id="ul" class="row pe-3 pt-1  searchRowBox h01">';
+	    +'<ul id="ul" class="row pe-3 searchRowBox h01">';
 		  for(var i=0;i<searchItem.length;i++){	    
 		       if(i== (searchItem.length-1)){
 			       midHtml +=  '<li class='+classItem[0].searchItemClass+'>'+ 
-					       '<div class='+classItem[0].labelBoxClass+'>'+
+					       '<div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'+
 					       '<div class='+searchItem[i].circelClass+'></div>'+
 					        searchItem[i].headerField+
 					       '</div>'+
@@ -1470,7 +1470,7 @@ var momWidget = {
 		       }
 		       else{
 		    	   midHtml +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[i].circelClass+'></div>'
 					+        searchItem[i].headerField
 					+'       </div>'
@@ -1492,7 +1492,7 @@ var momWidget = {
 	    var botHtml2 = '';
 	    var searchHtml = '';
 	    topHtml =	'<div id="searchArea" class='+classItem[0].searchAreaClass+'>'
-	                  +'<ul id="ul" class="row pe-3 pt-1 searchRowBox h02">';
+	                  +'<ul id="ul" class="row pe-3  searchRowBox h02">';
 		  for(var i=0;i<3;i++){	    
 		    	   midHtml +=  '<li class='+classItem[0].searchItemClass+'>' 
 					+'       <div class='+classItem[0].labelBoxClass+'>'
@@ -1508,7 +1508,7 @@ var momWidget = {
 	        	   // + '</div>';
 			searchHtml = topHtml + midHtml + botHtml;
 	
-				topHtml2 =	'<ul id="ul" class="row pe-3 pt-1 searchRowBox h02" style="padding-top: 0.4rem;">';
+				topHtml2 =	'<ul id="ul" class="row pe-3  searchRowBox h02" style="padding-top: 0.4rem;">';
 			
 			
 			  for(var j=3;j<searchItem.length;j++){	    
@@ -1667,10 +1667,10 @@ var momWidget = {
 			return html;
 		},
 		tm3hv : function(index,splitRatio,content,target) {
-		      var html     = '<div id = "split1" class="splitGrid">'
+		      var html     = '<div id = "split1" class="row splitGrid">'
 		                 +    '<div id = '+ content+index+' class = "row tabcontentarea1"></div>'
                          +    '<div>'
-                         +      '<div id = "split2" class="splitGrid">'
+                         +      '<div id = "split2" class="row splitGrid">'
                          +       '<div id = '+ content+(index+1)+' class = "row tabcontentarea55"></div>'
                          +       '<div id = '+ content+(index+2)+' class = "row tabcontentarea55"></div>'	
                          +      '</div>'
