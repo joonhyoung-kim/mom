@@ -9,8 +9,8 @@
 	     , MPM.PO_REFERENCE_TYPE
 	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0005', MPM.PO_REFERENCE_TYPE, 'KR') FROM DUAL)  AS PO_REFERENCE_TYPE_NM
 	     , MPM.PO_TITLE
-	     , MPM.PO_CATEGORY
-	     , (SELECT MOM_COMMON_PKG.FN_GET_PO_TYPE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.PO_CATEGORY) FROM DUAL) AS PO_CATEGORY_NM
+	     , MPM.PO_TYPE
+	     , (SELECT MOM_COMMON_PKG.FN_GET_PO_TYPE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.PO_TYPE) FROM DUAL) AS PO_CATEGORY_NM
 	     , MPM.VENDOR_CD
 	     , MPM.VENDOR_CD || '(' || (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPM.COMPANY_CD,MPM.DIVISION_CD,MPM.VENDOR_CD) FROM DUAL) || ')'  AS VENDOR_NM
 	     , MPM.PO_DUE_DATE
@@ -18,7 +18,7 @@
 	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'SM0017', MPM.CURRENCY_CD, 'KR') FROM DUAL)  AS CURRENCY_NM
 	     , MPM.EXCHANGE_RATE
 	     , MPM.PO_AMOUNT
-	     , MPM.PAYMENT_METHOD
+	     , MPM.PAYMENT_METHOD 
 	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0006', MPM.PAYMENT_METHOD, 'KR') FROM DUAL)  AS PAYMENT_METHOD_NM
 	     , MPM.PRICE_TERMS
 	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0007', MPM.PRICE_TERMS, 'KR') FROM DUAL)  AS PRICE_TERMS_NM
@@ -55,7 +55,7 @@
 	AND MPM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
 	</if>	
 	<if test="poCategory != null and poCategory != ''">
-	AND MPM.PO_CATEGORY = #{poCategory, jdbcType=VARCHAR}
+	AND MPM.PO_TYPE = #{poCategory, jdbcType=VARCHAR}
 	</if>	
 	ORDER BY MPM.PO_NO
 	</select>
@@ -115,7 +115,7 @@
                 , PO_NO
                 , PO_REFERENCE_TYPE
                 , PO_TITLE
-                , PO_CATEGORY
+                , PO_TYPE
                 , VENDOR_CD
                 , PO_DUE_DATE
                 , DO_INVOICE_YN
@@ -180,7 +180,7 @@
                 , PO_NO
                 , PO_REFERENCE_TYPE
                 , PO_TITLE
-                , PO_CATEGORY
+                , PO_TYPE
                 , VENDOR_CD
                 , PO_DUE_DATE
                 , DO_INVOICE_YN
@@ -245,7 +245,7 @@
                 , PO_NO
                 , PO_REFERENCE_TYPE
                 , PO_TITLE
-                , PO_CATEGORY
+                , PO_TYPE
                 , VENDOR_CD
                 , PO_DUE_DATE
                 , DO_INVOICE_YN
@@ -310,7 +310,7 @@
                 , PO_NO
                 , PO_REFERENCE_TYPE
                 , PO_TITLE
-                , PO_CATEGORY
+                , PO_TYPE
                 , VENDOR_CD
                 , PO_DUE_DATE
                 , DO_INVOICE_YN

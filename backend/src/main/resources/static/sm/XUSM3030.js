@@ -2366,6 +2366,5 @@ var XUSM3030 = {
 };
 
 $(document).ready(function(event) {
-   //momWidget.init(1, 'XUSM3030', XUSM3030,undefined);
    XUSM3030.init();
 });

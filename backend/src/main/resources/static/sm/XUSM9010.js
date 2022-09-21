@@ -284,6 +284,7 @@ var XUSM9010 = {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1, menuId, XUSM9010);
 	XUSM9010.init();
 });

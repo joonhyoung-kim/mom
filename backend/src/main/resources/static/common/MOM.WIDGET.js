@@ -292,8 +292,8 @@ var momWidget = {
 			     else{
 			  	       classItem[0] = {
 		    		        // searchAreaClass:'searchArea-h01',
-		    		         searchAreaClass:'"card'+' searchArea-h01'+' pt-2"',
-		    		         searchItemClass:'"col-xl-3 mb-2  align-self-center searchItem-h01"',
+		    		         searchAreaClass:'"col-xl-12'+' searchArea-h03'+' pt-2"', 
+		    		         searchItemClass:'"col-xl-3 mb-2 align-self-center searchItem-h03"',
 		    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	 ,
 		    		         index:index+1
 		              }
@@ -1495,7 +1495,7 @@ var momWidget = {
 	                  +'<ul id="ul" class="row pe-3  searchRowBox h02">';
 		  for(var i=0;i<3;i++){	    
 		    	   midHtml +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[i].circelClass+'></div>'
 					+        searchItem[i].headerField
 					+'       </div>'
@@ -1508,13 +1508,13 @@ var momWidget = {
 	        	   // + '</div>';
 			searchHtml = topHtml + midHtml + botHtml;
 	
-				topHtml2 =	'<ul id="ul" class="row pe-3  searchRowBox h02" style="padding-top: 0.4rem;">';
+				topHtml2 =	'<ul id="ul" class="row pe-3  searchRowBox h02">';
 			
 			
 			  for(var j=3;j<searchItem.length;j++){	    
 		       if(j==(searchItem.length-1)){
 			       midHtml2 +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+						+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[j].circelClass+'></div>'
 					+        searchItem[j].headerField
 					+'       </div>'
@@ -1527,7 +1527,7 @@ var momWidget = {
 		       }
 		       else{
 		    	   midHtml2 +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[j].circelClass+'></div>'
 					+        searchItem[j].headerField
 					+'       </div>'
@@ -1557,10 +1557,10 @@ var momWidget = {
 	    var searchHtml = '';
 	    var searchHtml2 = '';
 	    topHtml =	'<div id="searchArea" class='+classItem[0].searchAreaClass+'>'
-	                  +'<form id="ul" class="searchRowBox h03">';
+	                  +'<ul id="ul" class="row pe-3  searchRowBox h03">';
 		  for(var i=0;i<3;i++){	    
 		    	   midHtml +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[i].circelClass+'></div>'
 					+        searchItem[i].headerField
 					+'       </div>'
@@ -1573,11 +1573,11 @@ var momWidget = {
 	        	   // + '</div>';
 			searchHtml = topHtml + midHtml + botHtml;
 			
-		topHtml2 =	'<form id="ul" class="searchRowBox h03" style="padding-top: 1.2rem;">';
+		topHtml2 =	'<ul id="ul" class="row pe-3  searchRowBox h03">';
 		
 		for(var k=3;k<6;k++){	    
 		    	   midHtml2 +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[k].circelClass+'></div>'
 					+        searchItem[k].headerField
 					+'       </div>'
@@ -1590,13 +1590,13 @@ var momWidget = {
 	        	   // + '</div>';
 			searchHtml2 = topHtml2 + midHtml2 + botHtml2;
 		
-				topHtml3 =	'<form id="ul" class="searchRowBox h03" style="padding-top: 1.2rem;">';
+				topHtml3 =	'<ul id="ul" class="row pe-3  searchRowBox h03">';
 			
 			
 			  for(var j=6;j<searchItem.length;j++){	    
 		       if(j==(searchItem.length-1)){
 			       midHtml3 +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[j].circelClass+'></div>'
 					+        searchItem[j].headerField
 					+'       </div>'
@@ -1609,7 +1609,7 @@ var momWidget = {
 		       }
 		       else{
 		    	   midHtml3 +=  '<li class='+classItem[0].searchItemClass+'>' 
-					+'       <div class='+classItem[0].labelBoxClass+'>'
+					+'       <div class='+classItem[0].labelBoxClass+'style="align-self: center!important;"'+'>'
 					+'        <div class='+searchItem[j].circelClass+'></div>'
 					+        searchItem[j].headerField
 					+'       </div>'
@@ -2496,24 +2496,26 @@ var momWidget = {
 			
 		gridPop : function(index,gridPopIndex,menuId,btnId,popupTitle) {
 			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal grid-pop gridPop-'+menuId+'">'
-	        +    '<div class="panelheader-gridPop">' 
-	        +     '<div class="modal-header-title-gridPop">'
-	        +       '<div class ="fa fa-edit"></div>'
+			+    '<div class="modal-dialog custom-dialog" role="document">' 
+			+      '<div class="modal-content custom-content">'
+	        +    '<div class="modal-header panelheader-gridPop">' 
+	        +     '<div class="modal-title modal-header-title-gridPop">'
+	        +       '<div class ="fa fa-edit gridPop-title-icon"></div>'
 	        +       '<div id="popupTitle'+gridPopIndex+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
 	        +     '</div>'
-	        +     '<div class = "modal-header-xbtn">'
-	        +     '<a href="#" class="bntpopclose"></a>'
-	        +     '</div>'
+	        +     '<button type="button" class="close gridPop-x-btn" data-dismiss="modal" aria-label="Close">'
+	        +     '<span aria-hidden="true">×</span></button>'
+	        /*+     '</div>'*/
 	        +    '</div>'
-	        +    '<div class = "gridPop-searcharea-'+menuId+'">'
-			+     '<div class = "popup_main" id="popup_main'+gridPopIndex+'"></div>';			
+	        +    '<div class = "modal-body gridPop-searcharea-'+menuId+'">'
+			+     '<div class = "container-fluid popup_main" id="popup_main'+gridPopIndex+'"></div>';			
 			botHtml  =     '</div>'
-    	    +     '<div class="gridpop-panelfooter">'
+    	    +     '<div class="py-2 modal-footer gridpop-panelfooter">'
     	   	+      '<div class="footer-pop-btn-area">'
     	    +       '<button  id = "saveBtnCP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
     	    +       '<button  id = "cancelBtnCP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG00036')+'</button>'
     	    +      '</div>'       
-    	    +    '</div>';
+    	    +    '</div></div>';
 			   return topHtml+botHtml;
 		},
 			dropDownGridPop : function(index,colNum,rowNum,popupTitle,target,rowIndex){
@@ -2787,7 +2789,7 @@ var momWidget = {
 	    var checkSearchParam = {};
         var totalParam = {};
         let searchParam = {};
-        var queryId = menuId == undefined ? that.pageProperty[index]['programId']+'.findBtn'+(index+1) : menuId+'.findBtn'+(index+1);
+        var queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.findBtn'+(index+1) : menuId+'.findBtn'+(index+1);
 		var that= this;	
 	
 		var menuParam = that.pageProperty[index] == undefined ? []: that.pageProperty[index]['param'] == undefined ? undefined:JSON.parse(that.pageProperty[index]['param']);
@@ -8535,6 +8537,7 @@ var momWidget = {
 							}
 								 AUIGrid.setGridData(that.grid[gridPopIndex-1], data1); 
 								 $('#'+'gridPop-'+btnId).momModal('show');
+								// $('#'+'gridPop-'+btnId).modal('show');
 								AUIGrid.resize(that.grid[gridPopIndex-1]);
 								$( ".grid-pop").draggable();
 									 let  callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customBtn'+btnIndex, your,data1);     	
@@ -14433,7 +14436,8 @@ var momWidget = {
         
         if(that.options.draggable) {
             that.$element.children().first().draggable({
-                handle: '.panel-heading'
+                //handle: '.panel-heading'
+                handle: '.modal-dialog'
             });
         }
 

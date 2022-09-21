@@ -43,6 +43,7 @@ var XUSM1030 = {
 };
 
 $(document).ready(function(event){
+	momSetup.init();
 	momWidget.init(1, menuId, XUSM1030);
 	XUSM1030.init();
 });

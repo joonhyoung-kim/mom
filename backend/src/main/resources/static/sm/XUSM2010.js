@@ -417,7 +417,5 @@ var XUSM2010 = {
 };
 
 $(document).ready(function(event){
-	//momWidget.init(1, 'XUSM2010', XUSM2010);
-	//momWidget.init(99, 'XUSM2010', XUSM2010,'excelUpload');
 	XUSM2010.init();
 });

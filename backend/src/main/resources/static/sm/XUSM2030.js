@@ -107,6 +107,7 @@ delCallBack	: function(index,your,action,btnId,param,result) {
 };
 
 $(document).ready(function(event){
+	momSetup.init();
 	momWidget.init(1, menuId, XUSM2030);
 	momWidget.init(2, menuId, XUSM2030);
 	momWidget.init(3, menuId, XUSM2030);

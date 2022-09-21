@@ -63,6 +63,7 @@ var XUSM1020 = {
 };
 
 $(document).ready(function(event){	
+	momSetup.init();
 	momWidget.init(1, menuId, XUSM1020);
 	momWidget.init(2, menuId, XUSM1020);
 	//multiLang.transAll();
