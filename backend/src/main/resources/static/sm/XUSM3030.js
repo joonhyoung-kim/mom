@@ -1860,25 +1860,25 @@ var XUSM3030 = {
 			var mapList = [];
 			var queryId = 'gridProp';
 			var queryId2 = 'gridInfo';
-			let customCnt = 0;
+			let customCnt = 1;
 			if(chooseTab == 'button'){
-				for(var i=0,max=checkedItems.length;i<max;i++){	
+				/*for(var i=0,max=checkedItems.length;i<max;i++){	
 			        mapList[i] = checkedItems[i];
 					if(mapList[i].buttonId.indexOf('customBtn')>=0){
 						customCnt ++;		
 						
 					}
 
-			   }
+			   }*/
 				for(var i=0,max=checkedItems.length;i<max;i++){	
 					//mapList[i] = checkedItems[i]['item'];
 					mapList[i] = checkedItems[i];
 					mapList[i].menuId       = prevMenuId;
 					mapList[i].gridId       = $('#gridId').val();
 					mapList[i].actionType   ='CU';
-				    if(mapList[i].buttonId=='customBtn'){
+				    if(mapList[i].buttonId=='customBtn'){					    
 						mapList[i].buttonId = 'customBtn' + $('#gridId').val() + '-'+ customCnt;
-						
+						customCnt++;
 					}
 				
 			

@@ -1819,7 +1819,7 @@ var momWidget = {
 			    '<div class="modal-dialog" role="document">'+
 			        '<div class="modal-content excelUploadPop">'+
 			            '<div class="modal-header-excelUp">'+
-			                '<h6 class="modal-title">엑셀 업로드</h6> <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>'+
+			                '<div class="textblock modal-header-title-text excelUpPop-title">엑셀 업로드</div> <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>'+
 			            '</div>'+
 			            '<div class="modal-body">'+
 			                '<div class="excel-input-box">'+ 
@@ -2512,7 +2512,7 @@ var momWidget = {
 			botHtml  =     '</div>'
     	    +     '<div class="py-2 modal-footer gridpop-panelfooter">'
     	   	+      '<div class="footer-pop-btn-area">'
-    	    +       '<button  id = "saveBtnCP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'
+    	  /*  +       '<button  id = "saveBtnCP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'*/
     	    +       '<button  id = "cancelBtnCP'+index+'" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> '+multiLang.transText('MESSAGE','MSG00036')+'</button>'
     	    +      '</div>'       
     	    +    '</div></div>';
@@ -5311,7 +5311,7 @@ var momWidget = {
 		    }	
 		    else{
 			  //momWidget.findBtnClicked(1, {}, true, 'CELLCLICK',menuId,VIEW);
-			  that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['programId'],your);
+			  that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
 		    }	    	
 			
 			// e.preventDefault();

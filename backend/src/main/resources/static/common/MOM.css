@@ -74,17 +74,20 @@
  
 }
 .modal-header-excelUp {
-    /* min-height: 16.43px; */
-    padding: 15px;
     border-bottom: 1px solid #e5e5e5;
-    height: 10%;
+    /* height: 10%; */
     margin-top: 1.7rem;
+    padding-left: 1.5rem;
 }
 /* .modal-body {
     position: relative;
     padding: 15px;
     height: 90%;
 } */
+.excelUpPop-title{
+	font-size: 1.5rem;
+    margin-top: -0.3rem;
+}
 .dropdown-menu.show {
     display: block;
     margin: 0;
@@ -459,7 +462,7 @@
 	margin-top: 0.6rem;
 }
 .grid-box-widget{
-	height: 89%;
+	height: 79vh;
     width:100%;
 	position: absolute; 
 }
@@ -3964,12 +3967,13 @@ border-color: #d8dce3 !important;
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 45rem !important;
-    margin-top: -64rem !important;
+    margin-left: 30vw !important;
+    margin-top: -87vh !important;
     background: white !important; 
     height: 47rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
+    
    
 }
 .defaultPop-C3-R5-remark-in {
@@ -4252,6 +4256,12 @@ input:focus{
 /*     margin-left: -1rem;
     line-height: 2.4; */
     font-size:1.6rem;
+}
+.modal-header-title-excelUpPop{
+/*     margin-left: -1rem;
+    line-height: 2.4; */
+    font-size:1.6rem;
+    
 }
 .modal-header-title-text{
     margin-left: 0.4rem;
@@ -4816,6 +4826,13 @@ input:focus{
 .databottom.blue {}
 .tabcontentarea {
     height: 97vh ;
+	margin-bottom: 0px;
+	background: #f0f0f5;	
+/*  	border-top: 1px solid #b7b0b0; */
+    margin-top: 0.2rem; 
+}
+.tabcontentarea-widget{
+    height: 86vh ;
 	margin-bottom: 0px;
 	background: #f0f0f5;	
 /*  	border-top: 1px solid #b7b0b0; */
