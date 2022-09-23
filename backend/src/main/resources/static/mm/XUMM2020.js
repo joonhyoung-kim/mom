@@ -11,7 +11,7 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-	editCallInit: function(index,your,action,btnId,param,result) {
+	editCallInit: function(index,your,action,btnId,param,result) { // 수정팝업 뜨기전에 호출
 		if(index ==0 && btnId =='editBtn'){	
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
               VIEW.partnerCd = checkedItem[0]['vendorCd'];
@@ -19,7 +19,7 @@ var VIEW= {
 	 
 
 	},
-	copyCallInit: function(index,your,action,btnId,param,result) {
+	copyCallInit: function(index,your,action,btnId,param,result) { // 복사팝업 뜨기전에 호출
 		if(index ==0 && btnId =='copyBtn'){	
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
               VIEW.partnerCd = checkedItem[0]['vendorCd'];
@@ -27,7 +27,7 @@ var VIEW= {
 	 
 
 	},
-	savePopCallInit: function(index,your,action,btnId,param,result) {
+	savePopCallInit: function(index,your,action,btnId,param,result) { // 팝업저장 직전 호출
 	     if(index ==0 && btnId =='saveBtnDP'){		    			
 			 param[0].partnerCd =VIEW.partnerCd;
 			 result.param =  param;
@@ -54,8 +54,9 @@ var VIEW= {
 		
 	},
     cellClickCallBack: function(index,rowIndex,target,e) {				
-		if(index==100 && target=='vendorNm'){
-			$('#vendorNmDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
+		if(index==100 ){ //드롭다운 그리드 100번고정
+			$('#vendorCdDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
+			$('#doInvoiceYnDP1').val(e.item.doInvoiceYn);
             VIEW.partnerCd = e.item.partnerCd;
 		}
 		else if(index==0){

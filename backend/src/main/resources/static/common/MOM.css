@@ -75,8 +75,6 @@
 }
 .modal-header-excelUp {
     border-bottom: 1px solid #e5e5e5;
-    /* height: 10%; */
-    margin-top: 1.7rem;
     padding-left: 1.5rem;
 }
 /* .modal-body {
@@ -85,8 +83,8 @@
     height: 90%;
 } */
 .excelUpPop-title{
-	font-size: 1.5rem;
-    margin-top: -0.3rem;
+    font-size: 1.6rem !important;
+    margin-top: -0.8rem;
 }
 .dropdown-menu.show {
     display: block;
@@ -102,7 +100,7 @@
 	padding: 1px;
     border-radius: 3px;
     display: inline-block;
-    height: 2.4rem;
+    height: 2.7rem;
 }
 .bar { background-color: #6bac3d; width:0%; height:100%; border-radius: 3px; }
 .percent { position:absolute; display:inline-block; top:25%; left:48%; }
@@ -136,7 +134,7 @@
 }
 .excel-input-box{
 	height: 4.5%;
-    border: 1px solid #cfcbcb;
+   /*  border: 1px solid #cfcbcb; */
     margin-bottom: 0.5%;
     width: 100%;
 }
@@ -151,10 +149,14 @@
     border: 1px solid #b2aeae;
     margin-bottom: -rem;
 }
+.modal-footer.excelUp{
+	border:none;
+	padding-top: 2rem;
+}
 .excel-grid-box{
-    height: 88%;
+    height: 55.5rem; 
     width: 100%;
-    width: 100%;
+   /*  width: 100%; */
     /* border: 1px solid #cfcbcb; */
 }
 .excel-input-text {
@@ -1620,8 +1622,7 @@ border-color: #d8dce3 !important;
 
 .footer-pop-btn-area {
     float: right;
-  /*   margin-top: 0.5rem;
-    z-index: 999999; */
+    padding-top: 0.5rem;
 }
 .gridpop-panelfooter {
     position: relative;
@@ -1679,6 +1680,21 @@ border-color: #d8dce3 !important;
 	background-attachment: scroll;
 	box-shadow: rgba(255, 255, 255, 0.41) 0px 1px 0px 0px inset;
 } */
+.searcharea-gridPop-C3-R4 {
+    border: none;
+    padding-bottom: 15px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin-bottom: 8px;
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+}
 .searcharea-gridPop-C5-R5 {
     /* padding-left: 1.2rem; */
     border: none;
@@ -1889,7 +1905,7 @@ border-color: #d8dce3 !important;
     height: 38rem;
 }
 .searcharea-pop.R5-remark-out {
-    height: 38.2rem;
+    height: 33.5rem;
 }
 .searcharea-pop.R6-remark-in {
 	padding-left: 3.4rem !important; 
@@ -3528,18 +3544,16 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C2-R5-remark-out {
     z-index: 1050;
-/* 	display: none ; */
 	float: none !important;
-/* 	background-color: rgba(0, 0, 0, 0.1); */
 	overflow: hidden !important; 
     width: 40rem !important;
     position: relative !important;
-    margin-left: 35% !important;
-    margin-top: -36% !important;
     background: white !important; 
-    height: 47rem !important;
+    height: 42rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
+    margin-left: 34vw !important;
+    margin-top: -86vh !important;
    
 }
 .defaultPop-C2-R6 {
@@ -3667,6 +3681,21 @@ border-color: #d8dce3 !important;
     padding-left: 0.7rem !important;
 }
 .gridPop-C3-R3{
+	z-index: 1050;
+    /* display: none; */
+    float: none !important;
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    overflow: hidden !important;
+    width: 55rem !important;
+    position: relative !important;
+    margin-left: 30% !important;
+    margin-top: -37.5% !important;
+    background: white !important;
+    height: 25rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #4d4d4e !important;
+}
+.gridPop-C3-R4{
 	z-index: 1050;
     /* display: none; */
     float: none !important;
@@ -3970,7 +3999,7 @@ border-color: #d8dce3 !important;
     margin-left: 30vw !important;
     margin-top: -87vh !important;
     background: white !important; 
-    height: 47rem !important;
+    height: 42rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
     
@@ -4531,9 +4560,7 @@ input:focus{
 .panelfooter {
     text-align: center;
     position: relative;
-    top: -0rem;
     border-top: 1px solid #bcbdbd; 
-    padding-top: 0.1rem;
     height: 4.5rem;
 }
 .alert-pop-img{	

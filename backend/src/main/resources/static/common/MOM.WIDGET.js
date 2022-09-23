@@ -1818,7 +1818,7 @@ var momWidget = {
 			var html  = '<div class="modal" id="excelUpPop'+(index+1)+'" style="z-index: 9999;display: none;" aria-hidden="true">'+
 			    '<div class="modal-dialog" role="document">'+
 			        '<div class="modal-content excelUploadPop">'+
-			            '<div class="modal-header-excelUp">'+
+			            '<div class="modal-header-excelUp pt-3 pb-1">'+
 			                '<div class="textblock modal-header-title-text excelUpPop-title">엑셀 업로드</div> <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>'+
 			            '</div>'+
 			            '<div class="modal-body">'+
@@ -1834,7 +1834,7 @@ var momWidget = {
 			                  '<div id ="excelUpGrid'+(index+1)+'" class="excel-up-grid">'+
 			                '</div>'+
 			            '</div>'+
-			            '<div class="modal-footer"><div class="excel-up-footer"><button class="btn excel-up-pop-btn " disabled="disabled" type="button" id="exUpCheck'+(index+1)+'"><i class="mdi mdi-file-find"></i>검사</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="exUpCheckDown'+(index+1)+'" "><i class="mdi mdi-cloud-download"></i>검사결과</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="saveBtnExUp'+(index+1)+'"><i class="mdi mdi-file-upload-outline"></i>업로드</button> <button class="btn excel-up-pop-btn" type="button" id="cancelBtnExUp'+(index+1)+'"><i class="mdi mdi-window-close"></i>'+multiLang.transText('MESSAGE','MSG00036')+'</button></div</div>'+
+			            '<div class="modal-footer excelUp"><div class="excel-up-footer"><button class="btn excel-up-pop-btn " disabled="disabled" type="button" id="exUpCheck'+(index+1)+'"><i class="mdi mdi-file-find"></i>검사</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="exUpCheckDown'+(index+1)+'" "><i class="mdi mdi-cloud-download"></i>검사결과</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="saveBtnExUp'+(index+1)+'"><i class="mdi mdi-file-upload-outline"></i>업로드</button> <button class="btn excel-up-pop-btn" type="button" id="cancelBtnExUp'+(index+1)+'"><i class="mdi mdi-window-close"></i>'+multiLang.transText('MESSAGE','MSG00036')+'</button></div</div>'+
 			        '</div>'+
 			    '</div>'+
 			'</div>';
@@ -7718,38 +7718,118 @@ var momWidget = {
 			$(document).on('click', '#' + delBtnId, function(e) {	
 				var param = [];
 				var callBackParam = {};
+				let buttonId = e.target.id;
+				let eventType = 'D';
+				let tmpYn = 'N';
+				let queryId = that.pageProperty[index]['programId']+'.delBtn'+(index+1);
+				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['buttonId']+(index+1) == buttonId){
+						eventType = that.buttonProperty[index][i]['eventType'];
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+					}
+				}
 				param = that.getCheckedRowItems(that.grid[index]);
 				if(param.length ==0) {
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
 					  momWidget.splashHide();
 					  return;	
 				}
-				callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,param,e);
-				if(callInitResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+				
+				  if(tmpYn=='Y'){
+					   callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,e);
+						   if(callInitResult['result'] != 'SUCCESS') {
+							          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+					       }
+			               mom_ajax('D', queryId,[], function(result1, data1) {
+			               if(result1!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
+							  momWidget.splashHide();
+				              return;
+			               }
+			               callInitResult = that.checkActionCallInit(index, 'C', param, 'delBtn', your,e);
+						   if(callInitResult['result'] != 'SUCCESS') {
+							          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+					       }
+			    	
+			     
+				 		     param = callInitResult['param'];   	
+			                 mom_ajax('C', queryId,param, function(result2, data2) {                                                                                                      
+				 		     if(result2!='SUCCESS') {
+			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
+							  momWidget.splashHide();
+				              return;
+			              }    	
+			                  callInitResult = that.checkActionCallInit(index, 'P', {}, 'delBtn', your,e);
+				              if(callInitResult['result'] != 'SUCCESS') {
+					          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
 							  momWidget.splashHide();
 						      return;
-			    }
-				  param = callInitResult['param'];	
-				  mom_ajax('D', that.pageProperty[index]['programId']+'.delBtn'+(index+1),param, function(result, data) {
+			       			}
+			    	
+			     
+				             param = callInitResult['param'];
+				             if(param['actionMode'] != undefined && param['actionMode'] != ''){
+							     actionMode = param['actionMode'];
+							 }
+			                 mom_ajax('P', queryId,param, function(result3, data3) {
+							    if(data3[0]['p_err_code']=='E') {
+						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
+										  momWidget.splashHide();
+							              return;
+						         }    	
+			                 }, undefined, undefined, this, false,undefined,'D'); 
+			                    
+						 }, undefined, undefined, this, false);    
+						                      							  						
+			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'procBtn', your);
+						if(callBackResult['result'] != 'SUCCESS') {
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			    		}
+									 
+			        	  momWidget.findBtnClicked(index, {}, true, 'findBtn',momWidget.pageProperty[index]['menuId'],your);			        	  
+			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
+						  momWidget.splashHide();
+					      return;
+		          }, undefined, undefined, this, false);
+				  }
+				  else {
+					    callInitResult = that.checkActionCallInit(index, eventType, param, 'delBtn', your,param,e);
+						if(callInitResult['result'] != 'SUCCESS') {
+									  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+					    }
+				      param = callInitResult['param'];	
+					  mom_ajax(eventType, queryId,param, function(result, data) {
 			              if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
 				              return;
 			            }    				                         							  						
 			  
-						callBackResult = that.checkActionCallBack(index, 'D', {}, 'delBtn', your,param);
+						callBackResult = that.checkActionCallBack(index, eventType, {}, 'delBtn', your,param);
 				        if(callBackResult['result']  != 'SUCCESS') {
 							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
 							  momWidget.splashHide();
 						      return;
 						}	
 						  callBackParam = callBackResult['param'];	
-			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn',momWidget.pageProperty[index]['programId'],your);
+			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
 					      return;
 		          }, undefined, undefined, this, false) ;
+			     }
+				 
 				  	
 			});
 			$(document).on('click', '.bntpopclose, '+'#'+cancelBtnId, function() {
