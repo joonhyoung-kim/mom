@@ -1827,6 +1827,7 @@ function excelUploadGrid(file, index,grid,validate) {
         
     	var headerInfo = [];
     	var columnInfo = [];
+    	var nowExcelData ='';
         var grid_column_origin = AUIGrid.getColumnLayout(grid);
         for(var i = 0; i < grid_column_origin.length; i++) {
     		var key = grid_column_origin[i].headerText;
@@ -1841,12 +1842,14 @@ function excelUploadGrid(file, index,grid,validate) {
         	for(var key in excelData[i]) {
         		if(headerInfo[key] != undefined) {
         			if(columnInfo[key] == "string"){
+	                   nowExcelData = excelData[i][key]+'';
+	                   excelData[i][key] = nowExcelData.replace(/\"/gi, "");
 	                    if(isNaN(excelData[i][key])==false){
 		                        
 		                        excelData[i][key] = excelData[i][key]+''.replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
 	                   }
 	                   else{
-		                   if(!isNaN(Date.parse(excelData[i][key]))){
+		                   if(!isNaN(Date.parse(excelData[i][key].replace(/ /g,"")))){
 			                   let date = moment(excelData[i][key]);  			        //'YYYY-MM-DD HH:mm:ss'          			                  			            			                   
 			                   excelData[i][key] = moment(date).add(52, "seconds").format('YYYY-MM-DD 00:00:00'); 
 			                 

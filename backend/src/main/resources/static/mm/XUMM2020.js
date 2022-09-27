@@ -3,7 +3,8 @@ var widget = momWidget;
 var that = undefined;
 var VIEW= {
 	initParam		: undefined, 
-	partnerCd       : undefined,
+	popupParam1     : {},
+	popupParam2     : {},
 	init: function() {	
 		that = this;	
 		that.event();
@@ -14,39 +15,68 @@ var VIEW= {
 	editCallInit: function(index,your,action,btnId,param,result) { // 수정팝업 뜨기전에 호출
 		if(index ==0 && btnId =='editBtn'){	
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
+              VIEW.popupParam1.partnerCd = checkedItem[0]['vendorCd'];
 		}
+		
 	 
 
 	},
 	copyCallInit: function(index,your,action,btnId,param,result) { // 복사팝업 뜨기전에 호출
 		if(index ==0 && btnId =='copyBtn'){	
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
+              VIEW.popupParam1.partnerCd = checkedItem[0]['vendorCd'];
 		}
-	 
+		else if(index ==1 && btnId =='copyBtn'){	
+		 VIEW.popupParam2.itemId = $('#itemIdDP2').val();
+		}
+	   
 
 	},
 	savePopCallInit: function(index,your,action,btnId,param,result) { // 팝업저장 직전 호출
 	     if(index ==0 && btnId =='saveBtnDP'){		    			
-			 param[0].partnerCd =VIEW.partnerCd;
+			 param[0].partnerCd =VIEW.popupParam1.partnerCd;
 			 result.param =  param;
 		    
 	     }
+	     else if(index ==1 && btnId =='saveBtnDP'){
+		     
+			 param[0].itemId =VIEW.popupParam2.itemId;
+			 result.param =  param;
+	     }
+	  
 	
 	  
 	},
 	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
-		if(index ==0 && btnId =='createBtn1'){			
-			$('#poReferenceTypeDP1').val('10');
-	        
-					
+		if(index ==0 && btnId =='createBtn'){			
+		
 		}
+	
 
+	},
+	 createCallBack: function(index,your,action,btnId,param,result,data) {  //등록버튼 팝업띄우고나서 호출되는 함수 
+		if(index ==1 && btnId =='createBtn'){
+			let checkedItem = widget.getCheckedRowItems(widget.grid[0]);	
+			if(checkedItem.length==0){
+                widget.messageBox({type: 'warning', width: '400', height: '145', html: '상단에서 데이터 발주번호 선택해주세요! '});
+                $('#' +'defaultPop'+(index+1)).momModal('hide');
+                return;
+			}
+			
+				$('#poNoDP'+(index+1)).val(checkedItem[0]['poNo']);
+			
+			
+		}
 	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
         if(index==1){
-			
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			result.param = {poNo:checkItem[0].poNo};
+			  					
+		} 
+        if(index==200){
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			result.param = {currencyCd:checkItem[0].currencyCd,partnerCd:checkItem[0].vendorCd};
 			  					
 		} 
 	
@@ -54,14 +84,27 @@ var VIEW= {
 		
 	},
     cellClickCallBack: function(index,rowIndex,target,e) {				
-		if(index==100 ){ //드롭다운 그리드 100번고정
+		if(index==100){ //드롭다운 그리드 100번고정
 			$('#vendorCdDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
 			$('#doInvoiceYnDP1').val(e.item.doInvoiceYn);
-            VIEW.partnerCd = e.item.partnerCd;
+            VIEW.popupParam1.partnerCd = e.item.partnerCd;
+		}
+		else if(index==200){
+			$('#itemIdDP'+(2)).val(e.item.itemId+'('+e.item.itemNm+')');
+			$('#departureLocationCdDP'+(2)).val(e.item.departureLocationCd);
+			$('#unitPriceDP'+(2)).val(e.item.unitPrice);
+			$('#testReportFlagDP'+(2)).val(e.item.testReportFlag);
+			$('#iqcFlagDP'+(2)).val(e.item.iqcFlag);
+			$('#lotManagementYnDP'+(2)).val(e.item.lotManagementYn);
+			$('#priceSyncYnDP'+(2)).val(e.item.priceSyncYn);
+			$('#poOverReceiptRateDP'+(2)).val(e.item.poOverReceiptRate);
+			VIEW.popupParam2.itemId = e.item.itemId;
+		
 		}
 		else if(index==0){
 			widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);
 		}
+		
 			
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {

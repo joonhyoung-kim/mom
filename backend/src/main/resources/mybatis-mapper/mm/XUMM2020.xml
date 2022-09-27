@@ -10,7 +10,7 @@
 	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0005', MPM.PO_REFERENCE_TYPE, 'KR') FROM DUAL)  AS PO_REFERENCE_TYPE_NM
 	     , MPM.PO_TITLE
 	     , MPM.PO_TYPE
-	     , (SELECT MOM_COMMON_PKG.FN_GET_PO_TYPE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.PO_TYPE) FROM DUAL) AS PO_CATEGORY_NM
+	     , (SELECT MOM_COMMON_PKG.FN_GET_PO_TYPE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.PO_TYPE) FROM DUAL) AS PO_TYPE_NM
 	     , MPM.VENDOR_CD
 	     , MPM.VENDOR_CD || '(' || (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPM.COMPANY_CD,MPM.DIVISION_CD,MPM.VENDOR_CD) FROM DUAL) || ')'  AS VENDOR_NM
 	     , MPM.PO_DUE_DATE
@@ -39,8 +39,8 @@
 	WHERE  MPM.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
 	AND    MPM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}	
 	AND    MPM.CREATE_DATE  BETWEEN TO_DATE(#{createDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{createDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
-	<if test="prNo != null and prNo != ''">
-	AND (UPPER(MPM.PR_NO) LIKE '%' || UPPER(#{prNo, jdbcType=VARCHAR}) || '%')	  
+	<if test="poNo != null and poNo != ''">
+	AND (UPPER(MPM.PO_NO) LIKE '%' || UPPER(#{poNo, jdbcType=VARCHAR}) || '%')	  
 	</if>
 	<if test="poDeptCd != null and poDeptCd != ''">
 	 AND MPM.CREATE_DEPT_CD = #{poDeptCd, jdbcType=VARCHAR}
@@ -55,7 +55,7 @@
 	AND MPM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
 	</if>	
 	<if test="poType != null and poType != ''">
-	AND MPM.PO_TYPE = #{poType, jdbcType=VARCHAR}
+	AND MPM.PO_TYPE IN (${poType}) 
 	</if>	
 	ORDER BY MPM.PO_NO
 	</select>
@@ -84,7 +84,8 @@
 		     , MPD.PO_OVER_RECEIPT_RATE
 		     , MPD.DESCRIPTION
 		     , MPD.PO_REFERENCE_NO        AS PUCHASE_REQUEST_ID
-		     , MPD.PUCHASE_ORDER_ID
+		     , MPD.PURCHASE_ORDER_ID
+		     , MPD.PURCHASE_ORDER_ID AS KEY_ID
 		FROM   MOM_PO_DTL MPD
 		     , MOM_ITEM MI
 		WHERE  MPD.COMPANY_CD = MI.COMPANY_CD
@@ -198,7 +199,7 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.poNo, jdbcType=VARCHAR}
+                , ''
                 , #{item.poReferenceType, jdbcType=VARCHAR}
                 , #{item.poTitle, jdbcType=VARCHAR}
                 , #{item.poType, jdbcType=VARCHAR}
@@ -402,7 +403,7 @@
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}
                 , #{item.refUnitPrice, jdbcType=NUMERIC}
-                , #{item.confirmUnitPrice, jdbcType=NUMERIC}
+                , #{item.unitPrice, jdbcType=NUMERIC}
                 , #{item.departureLocationCd, jdbcType=VARCHAR}
                 , #{item.testReportFlag, jdbcType=VARCHAR}
                 , #{item.iqcFlag, jdbcType=VARCHAR}
@@ -465,13 +466,13 @@
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.poNo, jdbcType=VARCHAR}
-                , #{item.poSeq, jdbcType=NUMERIC}
+                , ''
                 , #{item.puchaseOrderId, jdbcType=VARCHAR}
                 , #{item.poReferenceNo, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}
                 , #{item.refUnitPrice, jdbcType=NUMERIC}
-                , #{item.confirmUnitPrice, jdbcType=NUMERIC}
+                , #{item.unitPrice, jdbcType=NUMERIC}
                 , #{item.departureLocationCd, jdbcType=VARCHAR}
                 , #{item.testReportFlag, jdbcType=VARCHAR}
                 , #{item.iqcFlag, jdbcType=VARCHAR}
@@ -540,7 +541,7 @@
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}
                 , #{item.refUnitPrice, jdbcType=NUMERIC}
-                , #{item.confirmUnitPrice, jdbcType=NUMERIC}
+                , #{item.unitPrice, jdbcType=NUMERIC}
                 , #{item.departureLocationCd, jdbcType=VARCHAR}
                 , #{item.testReportFlag, jdbcType=VARCHAR}
                 , #{item.iqcFlag, jdbcType=VARCHAR}
@@ -609,7 +610,7 @@
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}
                 , #{item.refUnitPrice, jdbcType=NUMERIC}
-                , #{item.confirmUnitPrice, jdbcType=NUMERIC}
+                , #{item.unitPrice, jdbcType=NUMERIC}
                 , #{item.departureLocationCd, jdbcType=VARCHAR}
                 , #{item.testReportFlag, jdbcType=VARCHAR}
                 , #{item.iqcFlag, jdbcType=VARCHAR}
