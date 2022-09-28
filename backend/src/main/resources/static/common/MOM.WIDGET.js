@@ -3852,8 +3852,17 @@ var momWidget = {
 					    }
 				     }
 				 else if(checkCount>1){
+					let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);
 					AUIGrid.setAllCheckedRows(e.pid, false);
 					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+				/*	if(ischeck==true){
+						AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
+					}
+					else{
+						AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					}*/
+					
+				
 					  if(customCheckBox=='Y'){
 						  // that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], '');
 					  }
@@ -3914,8 +3923,16 @@ var momWidget = {
 					
 				}
 				else if(checkCount>1){
+						let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);
 					AUIGrid.setAllCheckedRows(e.pid, false);
 					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+				/*	if(ischeck==true){
+						AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
+					}
+					else{
+						AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					}*/
+					
 					
 				}
 				
@@ -3938,7 +3955,7 @@ var momWidget = {
 					
 				}
 				else if(checkCount==1){
-					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					//AUIGrid.setCheckedRowsByIds(e.pid, rowId);
 				}
 				else if(checkCount>1){
 					//AUIGrid.setAllCheckedRows(e.pid, false);
@@ -4852,12 +4869,60 @@ var momWidget = {
 			let calendarPopCloseBtnId = 'closeBtnDT'+(index + 1);
 			let gridPopSaveBtnId   = 'saveBtnCP';
 			let gridPopCancelBtnId = 'cancelBtnCP';
+			let moveBtnId = 'moveBtn'+(index + 1);
 			
 			
 		/*	var isExist = document.getElementById(findBtnId);
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
+			$(document).on('click', '#'+moveBtnId  , function(e) {				
+				 let fromIndex = index; //복사할 인덱스
+				 let toIndex = fromIndex+1; //이동할 인덱스
+				 let param = {fromIndex:fromIndex,toIndex:toIndex};
+				 let isCheckCol = that.gridProperty[fromIndex ][0]['showRowCheckColumn']; //체크 여부
+			     let fromItem	= {};	
+			     let callInitResult = that.checkActionCallInit(fromIndex, 'GM', param, 'moveBtn', your,e);
+				 if(callInitResult['result'] != 'SUCCESS') {
+				          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+						  momWidget.messageBox({type:msgType, width:'400', height: '145', html: multiLang.transText('MESSAGE',callInitResult['msg'])});
+						  momWidget.splashHide();
+					      return;
+			    }
+			
+			    param = Object.assign(param, callInitResult['param']);  
+			    fromIndex = param.fromIndex;
+			    toIndex = param.toIndex;
+			    isCheckCol = that.gridProperty[fromIndex][0]['showRowCheckColumn'];;
+				if(isCheckCol == true){
+					 fromItem = that.getCheckedRowItems(that.grid[fromIndex]);
+					 if(fromItem.length == 0){
+						fromItem = {};
+					     momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+						 momWidget.splashHide();
+						 return;
+				    }
+				    else{
+					fromItem = fromItem;
+				    }
+										
+				}
+				else{
+				     fromItem = AUIGrid.getSelectedItems(that.grid[fromIndex])[0];
+				    if(fromItem == undefined){
+					     fromItem = {};
+					    /* momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00052')});
+						 momWidget.splashHide();
+						 return;*/
+				    }
+				    else{
+					fromItem = fromItem['item'];
+					}
+				}
+
+				AUIGrid.addRow(that.grid[toIndex], fromItem, "last");
+				
+			});	
 			$(document).on('click', '#'+cancelCustomPopBtnId , function(e) {
 				$('.' + 'customPop').momModal('hide');	
 			
@@ -10691,7 +10756,10 @@ var momWidget = {
 		} 
 		else if(your.addRowCallInit != undefined&& btnId=='addBtn') {
 				your.addRowCallInit(index,your,action,btnId,param,result);			
-		} 		
+		}
+		else if(your.moveRowCallInit != undefined&& btnId=='moveBtn') {
+				your.moveRowCallInit(index,your,action,btnId,param,result);			
+		} 		 		
 		else if(your.delCallInit != undefined && btnId=='delBtn') {		
 			 your.delCallInit(index,your,action,btnId,param,result);			
 		}
@@ -10739,6 +10807,9 @@ var momWidget = {
 		} 
 		else if(your.addRowCallBack != undefined && btnId.indexOf('addBtn')>=0) {
 				your.addRowCallBack(index,your,action,btnId,param,result,data);				
+		} 
+		else if(your.moveRowCallBack != undefined && btnId.indexOf('moveBtn')>=0) {
+				your.moveRowCallBack(index,your,action,btnId,param,result,data);				
 		} 
 		else if(your.delCallBack != undefined && btnId.indexOf('delBtn')>=0) {		
 			     your.delCallBack(index,your,action,btnId,param,result,data);				
@@ -14960,3 +15031,36 @@ var momWidget = {
     // ==============
  
 })(jQuery);
+
+function newFunction(callInitResult, fromIndex, toIndex, that) {
+    param = Object.assign(param, callInitResult['param']);
+    fromIndex = param.fromIndex;
+    toIndex = param.toIndex;
+    isCheckCol = that.gridProperty[fromIndex][0]['showRowCheckColumn'];;
+    if (isCheckCol == tr) {
+        targetItem = that.getCheckedRowItems(that.grid[targetIndex]);
+        if (targetItem.length == 0) {
+            targetItem = {};
+            /* momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
+             momWidget.splashHide();
+             return;*/
+        }
+        else {
+            targetItem = targetItem[0];
+        }
+
+    }
+    else {
+        fromItem = AUIGrid.getSelectedItems(that.grid[fromIndex])[0];
+        if (fromItem == undefined) {
+            fromItem = {};
+            /* momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00052')});
+             momWidget.splashHide();
+             return;*/
+        }
+        else {
+            fromItem = fromItem['item'];
+        }
+    }
+    return { fromIndex, toIndex };
+}

@@ -11,39 +11,6 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-	editCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==0 && btnId =='editBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
-		}
-	 
-
-	},
-	copyCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==0 && btnId =='copyBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
-		}
-	 
-
-	},
-	savePopCallInit: function(index,your,action,btnId,param,result) {
-	     if(index ==0 && btnId =='saveBtnDP'){		    			
-			 param[0].partnerCd =VIEW.partnerCd;
-			 result.param =  param;
-		    
-	     }
-	
-	  
-	},
-	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
-		if(index ==0 && btnId =='createBtn1'){			
-			$('#poReferenceTypeDP1').val('10');
-	        
-					
-		}
-
-	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
         if(index==1){
 			
@@ -53,15 +20,24 @@ var VIEW= {
 
 		
 	},
-    cellClickCallBack: function(index,rowIndex,target,e) {				
-		if(index==100 && target=='vendorNm'){
-			$('#vendorNmDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
-            VIEW.partnerCd = e.item.partnerCd;
-		}
-		else if(index==0){
-			widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);
-		}
-			
+	moveRowCallInit: function(index,your,action,btnId,param,result){
+		if(index == 0 && btnId == 'moveBtn'){
+			   let toItem = AUIGrid.getGridData(widget.grid[1]);	
+			   if(toItem.length==0){				
+				 return;
+			   }		   
+			   let fromItem = widget.getCheckedRowItems(widget.grid[0]);
+			  		
+			   for(var i=0,max=toItem.length; i<max;i++){
+				 for(var j=0,max2=fromItem.length; j<max2;j++){
+				   if(toItem[i]['purchaseOrderId'] == fromItem[j]['purchaseOrderId']){
+				    result.msg = '중복데이터 존재!';
+					result.result = 'WARN';
+					return;
+				   }	
+			     }
+		       }
+	   }
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 0 ){
