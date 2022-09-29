@@ -7001,11 +7001,12 @@ var momWidget = {
 					}
 				}
 				for(var j=0,max2=buttonParam.length;j<max2;j++){
-						if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
+					if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
 					
 						extraParam['typeMap'] = buttonParam[j]['typeMap'];
 						extraParam['typeList'] = buttonParam[j]['typeList'];
 					}
+				
 						
 					
 					
@@ -7021,6 +7022,10 @@ var momWidget = {
 				
 				}
 				else{
+					   let buttonParamText = {};
+					    let buttonParamList = [];
+					   let buttonParamMap = {};
+					  
 					    param = that.getPopupParam(index,your,extraParam);
 					    callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
 							if(callInitResult['result'] != 'SUCCESS') {
@@ -7037,11 +7042,25 @@ var momWidget = {
 					else{
 						// param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
 					}
+					
+					for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+						if(buttonId == that.buttonProperty[index][i]['buttonId']+(index+1)){
+							buttonParamText = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
+							buttonParamList = buttonParamText.split(',');
+							 for(let j=0,max2=that.buttonParamList.length;j<max2;j++){
+								   buttonParamMap[buttonParamList[j].split('=')[0]]=buttonParamList[j].split('=')[1];
+							 }
+							 var totalParam = {};
+ 						   totalParam = Object.assign(checkSearchParam,totalParam,initParam,param);   
+						}
+					}
+					
 				
 				
 				}
 				if(tmpYn=='Y'){
-					 mom_ajax('D', queryId,[], function(result1, data1) {
+					
+					 mom_ajax('D', queryId,param[0], function(result1, data1) {
 						 if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
 							  momWidget.splashHide();
