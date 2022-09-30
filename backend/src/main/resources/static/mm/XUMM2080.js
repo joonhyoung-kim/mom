@@ -12,48 +12,15 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-	editCallInit: function(index,your,action,btnId,param,result) { // 수정팝업 뜨기전에 호출
-		if(index ==0 && btnId =='editBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.popupParam1.partnerCd = checkedItem[0]['vendorCd'];
-		}
-		
-	 
-
-	},
 	copyCallInit: function(index,your,action,btnId,param,result) { // 복사팝업 뜨기전에 호출
 		if(index ==0 && btnId =='copyBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.popupParam1.partnerCd = checkedItem[0]['vendorCd'];
+			$('#departureNoDP1').val('');
 		}
-		else if(index ==1 && btnId =='copyBtn'){	
-		 VIEW.popupParam2.itemId = $('#itemIdDP2').val();
-		}
+	
 	   
 
 	},
-	savePopCallInit: function(index,your,action,btnId,param,result) { // 팝업저장 직전 호출
-	     if(index ==0 && btnId =='saveBtnDP'){		    			
-			 param[0].partnerCd =VIEW.popupParam1.partnerCd;
-			 result.param =  param;
-		    
-	     }
-	     else if(index ==1 && btnId =='saveBtnDP'){
-		     
-			 param[0].itemId =VIEW.popupParam2.itemId;
-			 result.param =  param;
-	     }
-	  
-	
-	  
-	},
-	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
-		if(index ==0 && btnId =='createBtn'){			
-		
-		}
-	
 
-	},
 	 createCallBack: function(index,your,action,btnId,param,result,data) {  //등록버튼 팝업띄우고나서 호출되는 함수 
 		if(index ==1 && btnId =='createBtn'){
 			let checkedItem = widget.getCheckedRowItems(widget.grid[0]);	
@@ -71,7 +38,7 @@ var VIEW= {
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
         if(index==1){
 			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
-			result.param = {poNo:checkItem[0].poNo};
+			result.param = {departureNo:checkItem[0].departureNo};
 			  					
 		} 
 		
@@ -105,5 +72,6 @@ $(document).ready(function(event){
 	momSetup.init();
 	momWidget.init(1, menuId, VIEW,'GRID');	
 	momWidget.init(2, menuId, VIEW,'GRID');	
+	momWidget.init(11, 'XUSM8080', VIEW,'DG');
 	VIEW.init();
 });

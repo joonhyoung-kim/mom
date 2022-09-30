@@ -63,6 +63,36 @@
 				          )		             
 	            </foreach>			               
    </insert>   
+    <insert id="create_copyBtn1" parameterType="java.util.List">  
+        INSERT INTO MOM_PROGRAM(
+					           PROGRAM_ID
+					         , PROGRAM_NM
+					         , PROGRAM_TYPE
+					         , TEMPLATE_ID
+					         , LOG_YN
+					         , USE_YN
+					         , DESCRIPTION
+					         , CREATE_BY
+					         , CREATE_DATE
+					         , UPDATE_BY
+					         , UPDATE_DATE
+					         )     
+        VALUES
+                <foreach item="item" collection="list" index="i" separator=" , " open="">
+				          (    TRIM(#{item.programId, jdbcType=VARCHAR})
+				             , #{item.programNm, jdbcType=VARCHAR}
+				             , TRIM(#{item.programType, jdbcType=VARCHAR})
+				             , TRIM(#{item.templateId, jdbcType=INTEGER})
+				             , TRIM(#{item.logYn, jdbcType=VARCHAR})
+				             , TRIM(#{item.useYn, jdbcType=VARCHAR})
+				             , TRIM(#{item.description, jdbcType=VARCHAR})     
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  
+				          )		             
+	            </foreach>			               
+   </insert>   
    <update id="modify_editBtn1" parameterType="java.util.List">     
       <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
         UPDATE MOM_PROGRAM SET 

@@ -474,7 +474,7 @@ var momWidget = {
                      for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
 					    
 						if(that.buttonProperty[index][i]['buttonType']=='DG'){
-							 popupAreaHtml = that.createPopup.gridPop(index+1,gridPopIndex,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.gridExtraProperty[index]['popupTitle']);							 								    		 
+							 popupAreaHtml = that.createPopup.gridPop(index+1,gridPopIndex,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],'팝업타이틀');							 								    		 
 			    		    $('body').append(popupAreaHtml);
 			    		    gridPopIndex = ($('.grid-pop').length +1)*10 +1;
 			    		    //that.buttonProperty[index][i]['customType'] = 'DG';
@@ -2495,8 +2495,8 @@ var momWidget = {
 		},	
 			
 		gridPop : function(index,gridPopIndex,menuId,btnId,popupTitle) {
-			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal grid-pop gridPop-'+menuId+'">'
-			+    '<div class="modal-dialog custom-dialog" role="document">' 
+			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal  gridPop-'+menuId+'">'
+			+    '<div class="modal-dialog custom-dialog" role="document">'  
 			+      '<div class="modal-content custom-content">'
 	        +    '<div class="modal-header panelheader-gridPop">' 
 	        +     '<div class="modal-title modal-header-title-gridPop">'
@@ -7022,10 +7022,10 @@ var momWidget = {
 				
 				}
 				else{
-					   let buttonParamText = {};
+					    let buttonParamText = {};
 					    let buttonParamList = [];
-					   let buttonParamMap = {};
-					  
+					    let buttonParamMap = {};
+					    
 					    param = that.getPopupParam(index,your,extraParam);
 					    callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
 							if(callInitResult['result'] != 'SUCCESS') {
@@ -7045,13 +7045,15 @@ var momWidget = {
 					
 					for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
 						if(buttonId == that.buttonProperty[index][i]['buttonId']+(index+1)){
-							buttonParamText = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
+							buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
 							buttonParamList = buttonParamText.split(',');
-							 for(let j=0,max2=that.buttonParamList.length;j<max2;j++){
+							 for(let j=0,max2=buttonParamList.length;j<max2;j++){
 								   buttonParamMap[buttonParamList[j].split('=')[0]]=buttonParamList[j].split('=')[1];
 							 }
-							 var totalParam = {};
- 						   totalParam = Object.assign(checkSearchParam,totalParam,initParam,param);   
+							 for(let k=0,max3=param.length;k<max3;k++){
+								 param[k] = Object.assign(param[k],buttonParamMap);   
+							}
+ 						 
 						}
 					}
 					
@@ -7060,7 +7062,7 @@ var momWidget = {
 				}
 				if(tmpYn=='Y'){
 					
-					 mom_ajax('D', queryId,param[0], function(result1, data1) {
+					 mom_ajax('D', queryId,param, function(result1, data1) {
 						 if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
 							  momWidget.splashHide();
@@ -7072,7 +7074,7 @@ var momWidget = {
 							  momWidget.splashHide();
 				              return;
 			            }   
-							 mom_ajax('P', queryId,[], function(result3, data3) {
+							 mom_ajax('P', queryId,param, function(result3, data3) {
 			            	     if(data3[0]['p_err_code']=='E') {
 				                    if(data3[0]['p_err_msg'] == null || data3[0]['p_err_msg'] ==''){
 					                             data3[0]['p_err_msg'] = '프로시저에러입니다!';
@@ -7815,18 +7817,33 @@ var momWidget = {
 				let eventType = 'D';
 				let tmpYn = 'N';
 				let queryId = that.pageProperty[index]['programId']+'.delBtn'+(index+1);
-				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-					if(that.buttonProperty[index][i]['buttonId']+(index+1) == buttonId){
-						eventType = that.buttonProperty[index][i]['eventType'];
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-					}
-				}
-				param = that.getCheckedRowItems(that.grid[index]);
+			    let buttonParamText = {};
+			    let buttonParamList = [];
+			    let buttonParamMap = {};
+			    
+			    
+			    param = that.getCheckedRowItems(that.grid[index]);
 				if(param.length ==0) {
 					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
 					  momWidget.splashHide();
 					  return;	
 				}
+				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['buttonId']+(index+1) == buttonId){
+						eventType = that.buttonProperty[index][i]['eventType'];
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+						buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
+						buttonParamList = buttonParamText.split(',');
+						for(let j=0,max2=buttonParamList.length;j<max2;j++){
+							 buttonParamMap[buttonParamList[j].split('=')[0]]=buttonParamList[j].split('=')[1];
+						}
+						for(let k=0,max3=param.length;k<max3;k++){
+							 param[k] = Object.assign(param[k],buttonParamMap);   
+						}
+					}
+					
+				}
+		
 				
 				  if(tmpYn=='Y'){
 					   callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,e);
@@ -7836,7 +7853,7 @@ var momWidget = {
 									  momWidget.splashHide();
 								      return;
 					       }
-			               mom_ajax('D', queryId,[], function(result1, data1) {
+			               mom_ajax('D', queryId,param, function(result1, data1) {
 			               if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
 							  momWidget.splashHide();
@@ -7858,7 +7875,7 @@ var momWidget = {
 							  momWidget.splashHide();
 				              return;
 			              }    	
-			                  callInitResult = that.checkActionCallInit(index, 'P', {}, 'delBtn', your,e);
+			                  callInitResult = that.checkActionCallInit(index, 'P', param, 'delBtn', your,e);
 				              if(callInitResult['result'] != 'SUCCESS') {
 					          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
 							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
