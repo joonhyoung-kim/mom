@@ -71,6 +71,7 @@ var momWidget = {
 			  //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');			  
 		  }
 		  else if(index>0 &&  widgetType=='DG' ){
+			index = (index+1)*10;
 			gridId = 1;
 		  }
 		  let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
@@ -441,7 +442,8 @@ var momWidget = {
 		          var groupHeader = 'N';
 			      var popupAreaHtml = '';
 			      var isCellMerge = false;
-			      let gridPopIndex = ($('.grid-pop').length +1)*10 +1;
+			     // let gridPopIndex = ($('.grid-pop').length +1)*10 +1;
+			        let gridPopIndex = (index +1)*10 +1;
 			      if(index == 0 ){				    
 			    		 var createFrontArea ={};  
 			    			createFrontArea["tm1st"] = that.tm1st;
@@ -477,6 +479,7 @@ var momWidget = {
 							 popupAreaHtml = that.createPopup.gridPop(index+1,gridPopIndex,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],'팝업타이틀');							 								    		 
 			    		    $('body').append(popupAreaHtml);
 			    		    gridPopIndex = ($('.grid-pop').length +1)*10 +1;
+			    		    // gridPopIndex = (index+1)*10 +1;
 			    		    //that.buttonProperty[index][i]['customType'] = 'DG';
 			    		    //break;
 						}
@@ -1755,6 +1758,14 @@ var momWidget = {
                +     '<div multi-lang="" class="textblock gridRightTab">'+btnItem[i].buttonNm+'</div>'
         	   +     '</a>';		*/        	  
 					if(btnItem[i].buttonId.indexOf('customBtn')>=0){
+						//let btnSeq = btnItem[i].buttonId.split('-')[1];
+						//let customBtnId = 'customBtn'+index+'-'+btnSeq;
+						/* if(index>10&&index%10<10){
+							midHtml += '<button type="button" class="custom-btn btn btn-search" id='+ customBtnId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+						}
+						else{
+							midHtml += '<button type="button" class="custom-btn btn btn-search" id='+ btnItem[i].buttonId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
+						}*/
 						 midHtml += '<button type="button" class="custom-btn btn btn-search" id='+ btnItem[i].buttonId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
 					}
 					else{
@@ -2495,13 +2506,13 @@ var momWidget = {
 		},	
 			
 		gridPop : function(index,gridPopIndex,menuId,btnId,popupTitle) {
-			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal  gridPop-'+menuId+'">'
+			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal  grid-pop'+index+'"gridPop-'+menuId+'">'
 			+    '<div class="modal-dialog custom-dialog" role="document">'  
 			+      '<div class="modal-content custom-content">'
 	        +    '<div class="modal-header panelheader-gridPop">' 
 	        +     '<div class="modal-title modal-header-title-gridPop">'
 	        +       '<div class ="fa fa-edit gridPop-title-icon"></div>'
-	        +       '<div id="popupTitle'+gridPopIndex+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
+	        +       '<div id="popupTitle'+index+'" class ="textblock modal-header-title-text">'+popupTitle+'</div>'
 	        +     '</div>'
 	        +     '<button type="button" class="close gridPop-x-btn" data-dismiss="modal" aria-label="Close">'
 	        +     '<span aria-hidden="true">×</span></button>'
@@ -4868,7 +4879,7 @@ var momWidget = {
 			let calendarPopSaveBtnId = 'saveBtnDT'+(index + 1);
 			let calendarPopCloseBtnId = 'closeBtnDT'+(index + 1);
 			let gridPopSaveBtnId   = 'saveBtnCP';
-			let gridPopCancelBtnId = 'cancelBtnCP';
+			let gridPopCancelBtnId = 'cancelBtnCP'+(index + 1);
 			let moveBtnId = 'moveBtn'+(index + 1);
 			
 			
@@ -4927,8 +4938,8 @@ var momWidget = {
 				$('.' + 'customPop').momModal('hide');	
 			
 			});
-			$(document).on('click', '#'+gridPopCancelBtnId + (index + 1) , function(e) {
-				$('.' + 'grid-pop').momModal('hide');	
+			$(document).on('click', '#'+gridPopCancelBtnId , function(e) {
+				$(".grid-pop"+(index+1)).momModal('hide');	
 			});
 			$(document).on('click', '#'+gridPopSaveBtnId + (index + 1) , function(e) {
 				that.wait(0.5);
@@ -5411,6 +5422,7 @@ var momWidget = {
 				var fieldValue = $('#'+clickedElment).val();
 				var activeTop = $('#'+clickedElment).offset().top;
 				var activeLeft = $('#'+clickedElment).offset().left;
+				
 			    var dropdownGridId = (index+1)*100;
 			    let dropdownGridQueryId = that.popupProperty[index][dropDownGridIndex]['dropdownGridList'];
 				
@@ -8691,14 +8703,18 @@ var momWidget = {
 				let that = momWidget;	
 				//that.wait(0.5);
 				let totalParam = {};
-				let gridPopIndex = $('#'+'gridPop-'+btnId).attr('gridIndex') == undefined ? 10:Number($('#'+'gridPop-'+btnId).attr('gridIndex'));
+				let gridPopIndex = $('#'+'gridPop-'+btnId).attr('gridIndex') == undefined ? 10:Number($('#'+'gridPop-'+btnId).attr('gridIndex')); //r그리드 id
 				let actionType = 'R';
 				let popupTitle = '';
-				let queryId = that.pageProperty[index]['menuId'];
+				let buttonNm ='팝업타이틀';
+                let popupBtnIndex = $('#grid'+gridPopIndex).length; //그리드 개수
+				let queryId = that.pageProperty[index]['menuId']+'.findBtn'+popupBtnIndex;
+		
 						  for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 							 if(that.buttonProperty[index][i]['buttonId']=='customBtn'+btnIndex){
-								queryId = that.buttonProperty[index][i]['popupGridId'];
+								queryId = that.buttonProperty[index][i]['popupGridId']+'.findBtn'+ popupBtnIndex;
 								actionType = that.buttonProperty[index][i]['eventType'];
+								buttonNm = that.buttonProperty[index][i]['buttonNm'];
 								if(actionType =='C'){
 									$('#popupTitle'+gridPopIndex).append('('+multiLang.transText('MESSAGE','MSG00039')+')');
 								}
@@ -8720,16 +8736,19 @@ var momWidget = {
 						      return;
 			 			 }
 			 			 totalParam = callInitResult['param'];
-						 mom_ajax('R', 'DG.'+queryId, totalParam, function(result1, data1) {
+						 mom_ajax('R', queryId, totalParam, function(result1, data1) {
 							if(result1 != 'SUCCESS') {
 								    	  momWidget.splashHide();
 									      return;							     
 							}
 								 AUIGrid.setGridData(that.grid[gridPopIndex-1], data1); 
+							
+								 $('#findBtn'+gridPopIndex).attr('id','findBtn'+popupBtnIndex)
+								 $('#popupTitle'+(index+1)).text(buttonNm);
 								 $('#'+'gridPop-'+btnId).momModal('show');
 								// $('#'+'gridPop-'+btnId).modal('show');
 								AUIGrid.resize(that.grid[gridPopIndex-1]);
-								$( ".grid-pop").draggable();
+								$('#'+'gridPop-'+btnId).draggable();
 									 let  callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customBtn'+btnIndex, your,data1);     	
 		    					            if(callBackResult['result'] != 'SUCCESS') {
 												  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
@@ -8738,19 +8757,7 @@ var momWidget = {
 					 						}   						   	
 							}, undefined, undefined, that, false);
 					
-				   
-						
-					
-			
-				
-			   
-			  
-		      
-			      
-		        
-		      
-		        	
-				
+
 		           
 			},
 		/*	setCustomBtn: function(index,btnId,your) {

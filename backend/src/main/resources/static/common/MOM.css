@@ -476,14 +476,17 @@
     border-bottom: none;    */
      border-bottom: none; 
 }
-.gridTab21 {
+/* .gridTab21 {
     border-bottom: 1px solid #bdbdbd;
     background-color: #ececf2; 
     height: 7%; 
-   /*  height: 3.5%; */
+    height: 3.5%;
     padding-top: 0.62rem;
     border-bottom: none;   
-}
+} */
+.gridTab21 {
+    border-bottom: none;   
+} 
 .gridTab31 {
     border-bottom: 1px solid #bdbdbd;
     background-color: #ececf2; 
