@@ -11,39 +11,6 @@ var VIEW= {
 	event: function(e) {
 	
 	},
-	editCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==0 && btnId =='editBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
-		}
-	 
-
-	},
-	copyCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==0 && btnId =='copyBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
-		}
-	 
-
-	},
-	savePopCallInit: function(index,your,action,btnId,param,result) {
-	     if(index ==0 && btnId =='saveBtnDP'){		    			
-			 param[0].partnerCd =VIEW.partnerCd;
-			 result.param =  param;
-		    
-	     }
-	
-	  
-	},
-	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
-		if(index ==0 && btnId =='createBtn1'){			
-			$('#poReferenceTypeDP1').val('10');
-	        
-					
-		}
-
-	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
         if(index==1){
 			
@@ -53,14 +20,11 @@ var VIEW= {
 
 		
 	},
-    cellClickCallBack: function(index,rowIndex,target,e) {				
-		if(index==100 && target=='vendorNm'){
-			$('#vendorNmDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
-            VIEW.partnerCd = e.item.partnerCd;
+ cellClickCallBack: function(index,rowIndex,target,e) {				
+		 if(index==0){
+			widget.findBtnClicked(1, {departureNo:e.item['departureNo']}, true, 'CELLCLICK',menuId,VIEW);
 		}
-		else if(index==0){
-			widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);
-		}
+		
 			
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
@@ -85,6 +49,5 @@ $(document).ready(function(event){
 	momSetup.init();
 	momWidget.init(1, menuId, VIEW,'GRID');	
 	momWidget.init(2, menuId, VIEW,'GRID');	
-	momWidget.init(11, 'XUSM8060', VIEW,'DG');
 	VIEW.init();
 });

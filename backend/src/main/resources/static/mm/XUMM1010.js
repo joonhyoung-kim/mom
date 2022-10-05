@@ -41,7 +41,7 @@ var VIEW= {
 
 	},
 	 createCallBack: function(index,your,action,btnId,param,result,data) {  //등록버튼 팝업띄우고나서 호출되는 함수 
-		if(index ==1 && btnId =='createBtn2'){
+		if(index ==1 && btnId =='createBtn'){
 			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
 		    $('#prNoDP2').val(checkItem[0]['prNo']);
 		

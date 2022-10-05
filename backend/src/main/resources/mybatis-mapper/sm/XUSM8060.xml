@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM8060">
  <!-- 구매요청 미발주 현황 -->
- <select id="get_findBtn11" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-    SELECT  MPD.PUCHASE_REQUEST_ID     
+ <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    SELECT  MPD.PURCHASE_REQUEST_ID     
 	      , MPM.PR_TYPE
 	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0001', MPM.PR_TYPE, 'KR') FROM DUAL)  AS PR_TYPE_NM
 	      , MPM.PR_TITLE
@@ -108,7 +108,7 @@
                 , DIVISION_CD
                 , PR_NO
                 , PR_SEQ
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , ITEM_ID
                 , DUE_DATE
                 , REQUEST_QTY
@@ -125,7 +125,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.prNo, jdbcType=VARCHAR}
                 , #{item.prSeq, jdbcType=NUMERIC}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
                 , #{item.requestQty, jdbcType=NUMERIC}

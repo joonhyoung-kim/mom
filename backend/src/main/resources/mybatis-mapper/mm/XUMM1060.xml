@@ -3,7 +3,7 @@
 <mapper namespace="com.mom.XUMM1060">
 	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 		SELECT  MPD.PR_NO
-	  , MPD.PR_NO || '_' || MPD.PUCHASE_REQUEST_ID AS KEY_ID
+	  , MPD.PR_NO || '_' || MPD.PURCHASE_REQUEST_ID AS KEY_ID
       , MPD.PR_SEQ
       , MPM.PR_TYPE
       , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0001', MPM.PR_TYPE, 'KR') FROM DUAL)  AS PR_TYPE_NM
@@ -53,7 +53,7 @@
       , MPD.DESCRIPTION
       , MPD.COMPANY_CD
       , MPD.DIVISION_CD
-      , MPD.PUCHASE_REQUEST_ID    
+      , MPD.PURCHASE_REQUEST_ID    
       , 'PR'   AS CATEGORY                         
 		FROM    MOM_PR_DTL MPD
 		      , MOM_PR_MST MPM   
@@ -103,7 +103,7 @@
      INTO MOM_PROC_RECEIVE_SAVE (
                   COMPANY_CD
                 , DIVISION_CD
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , ITEM_TYPE
                 , PO_USER_NO
                 , DESCRIPTION
@@ -114,7 +114,7 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemType, jdbcType=VARCHAR}
                 , #{item.poUserNo, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
@@ -148,7 +148,7 @@
      INTO MOM_PROC_PR_RECEIVE (
                   COMPANY_CD
                 , DIVISION_CD
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , VAL_MSG
                 , MULTI_MSG
                 , CREATE_BY
@@ -156,7 +156,7 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}
                 , #{item.multiMsg, jdbcType=VARCHAR}
                 , #{item.userId, jdbcType=VARCHAR}

@@ -51,21 +51,44 @@ var VIEW= {
 			
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 0 ){
-			if(action =='D' || btnId == 'customBtn2-1'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  
-			   /* for(var i=0,max=param.length; i<max;i++){
-					 if(param[i].poUserNo == undefined || param[i].poUserNo == ''){
-							result.msg = '발주담당자를 지정하지 않은 데이터가 있습니다!';
-							result.result = 'WARN';
-							return;
-					 }		    
-			    }*/
-	
+			var checkItem = widget.getCheckedRowItems(widget.grid[0]);
+		if(index == 1){
+			if(btnId == 'customGridPopBtn2-1'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
+			if(checkItem.length==0){
+				//$('#' +'gridPop-'+btnId).momModal('hide');
+				result.msg = '상단에서 납품서 선택필수!';
+				result.result = 'WARN';
+				return;
+				//widget.messageBox({type: 'warning', width: '400', height: '145', html: '상단에서 납품서 선택필수!'});				 
+			    //return;
+			}
+	           
+					   param['vendorCd'] = checkItem[0]['vendorCd'];
+					   param['departureLocationCd'] = checkItem[0]['departureLocationCd'];
+					   param['iqcFlag'] = checkItem[0]['iqcFlag'];
+					   param['currencyCd'] = checkItem[0]['currencyCd'];			
+					   
+					   //result.param = param;		 
+			 
+		   }
+		   else if(btnId == 'customBtn2-2'){
+			 for(var i=0,max=param.length; i<max;i++){
+					 param[i]['inoutNo'] = checkItem[0]['departureNo'];
+					 
+			 }
 		   }
 		}
-		
-	}
 	
+	    else if(index == 20){			    
+			    if(action='C'&& btnId == 'customBtn21-1'){ 
+				    for(var i=0,max=param.length; i<max;i++){
+					 param[i]['inoutNo'] = checkItem[0]['departureNo'];
+					 
+			        }
+		}
+		
+	    }
+	}
 };
 
 $(document).ready(function(event){	

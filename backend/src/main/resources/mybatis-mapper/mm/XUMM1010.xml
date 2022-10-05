@@ -83,8 +83,8 @@
 	      , MPD.DESCRIPTION
 	      , MPD.COMPANY_CD
 	      , MPD.DIVISION_CD
-	      , MPD.PUCHASE_REQUEST_ID
-	      , MPD.PUCHASE_REQUEST_ID AS KEY_ID
+	      , MPD.PURCHASE_REQUEST_ID
+	      , MPD.PURCHASE_REQUEST_ID AS KEY_ID
 	FROM    MOM_PR_DTL MPD
 	      , MOM_ITEM MI
 	WHERE   MPD.COMPANY_CD   = MI.COMPANY_CD
@@ -316,7 +316,7 @@
                 , DIVISION_CD
                 , PR_NO
                 , PR_SEQ
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , ITEM_ID
                 , DUE_DATE
                 , REQUEST_QTY
@@ -333,7 +333,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.prNo, jdbcType=VARCHAR}
                 , #{item.prSeq, jdbcType=NUMERIC}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.requestQty, jdbcType=NUMERIC}
@@ -373,7 +373,7 @@
                 , DIVISION_CD
                 , PR_NO
                 , PR_SEQ
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , ITEM_ID
                 , DUE_DATE
                 , REQUEST_QTY
@@ -430,7 +430,7 @@
                 , DIVISION_CD
                 , PR_NO
                 , PR_SEQ
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , ITEM_ID
                 , DUE_DATE
                 , REQUEST_QTY
@@ -487,7 +487,7 @@
                 , DIVISION_CD
                 , PR_NO
                 , PR_SEQ
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , ITEM_ID
                 , DUE_DATE
                 , REQUEST_QTY
@@ -504,7 +504,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.prNo, jdbcType=VARCHAR}
                 , #{item.prSeq, jdbcType=NUMERIC}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.requestQty, jdbcType=NUMERIC}
@@ -544,7 +544,7 @@
                 , DIVISION_CD
                 , PR_NO
                 , PR_SEQ
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , ITEM_ID
                 , DUE_DATE
                 , REQUEST_QTY
@@ -561,7 +561,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.prNo, jdbcType=VARCHAR}
                 , #{item.prSeq, jdbcType=NUMERIC}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , TO_DATE(#{item.requestDueDate, jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS')
                 , #{item.requestQty, jdbcType=NUMERIC}

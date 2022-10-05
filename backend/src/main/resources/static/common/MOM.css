@@ -281,6 +281,11 @@
 	position:relative;
 	margin-top: 0.6rem;
 }
+.grid-box21-h02{
+   width:calc(100% - 0.3rem); 
+	position:relative;
+	margin-top: 0.6rem;
+}
 .grid-box31-h01{
 	/* height: 63rem; */
 	/* height: 95.5%; */
@@ -605,7 +610,20 @@
     height:83vh;
 }
 }
-
+@media (min-width:800px) and (max-width:1920px) {
+	.gridArea-tm1st-h02-021{
+	background: #f0f0f5;
+    border: none;
+     height:50vh;
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+	.gridArea-tm1st-h02-021{
+	background: #f0f0f5;
+    border: none;
+    height:83vh;
+}
+}
 .gridArea-tm1st-h02-011{
 	background: #f0f0f5;
     height: 40vh;
