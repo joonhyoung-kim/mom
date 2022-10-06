@@ -111,7 +111,7 @@
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.inoutType, jdbcType=VARCHAR}
-                , #{item.inoutNo, jdbcType=VARCHAR}
+                , #{item.departureNo, jdbcType=VARCHAR}
                 , #{item.iqcFlag, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
                 , #{item.description, jdbcType=VARCHAR}

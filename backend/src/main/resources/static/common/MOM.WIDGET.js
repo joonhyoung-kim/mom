@@ -1025,7 +1025,7 @@ var momWidget = {
 				      }		
 				      
 				        if(headerDropdownId != '' && headerDropdownId != undefined){
-				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({source: data});
+				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({source: data}); 
 				        	 $('#'+searchId+'Header'+'SP'+(index+1)).prev().prev().attr('class','circle-dh')
 				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({selectedIndex: 0 });
 				        }
@@ -4211,7 +4211,7 @@ var momWidget = {
 			     
 				}
 				else if(searchType == 'S'){
-				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: 210, height: 27,dropDownHeight: 120,disabled: false,searchMode: 'none'});
+				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: 210, height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});
 				    	$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {	
 					if($("#innerListBox" + e.owner.id + " div[role=option] span")[0]==undefined){
 						 
@@ -8569,7 +8569,7 @@ var momWidget = {
 			    for(var i=0,max=that.columnProperty[index].length;i<max;i++){
 				     if(that.columnProperty[index][i]['columnRequire']=='Y'){
 					      for(var j=0,max2=param.length;j<max2;j++){
-						     if(param[j][that.columnProperty[index][i]['columnId']]==''){
+						     if(param[j][that.columnProperty[index][i]['columnId']]=='' || param[j][that.columnProperty[index][i]['columnId']]==undefined){
 							     momWidget.messageBox({type:'warning', width:'400', height: '145', html: that.columnProperty[index][i]['columnNm']+'필수입력!'});
 								 return;
 						     }

@@ -67,7 +67,10 @@ var VIEW= {
 					   param['departureLocationCd'] = checkItem[0]['departureLocationCd'];
 					   param['iqcFlag'] = checkItem[0]['iqcFlag'];
 					   param['currencyCd'] = checkItem[0]['currencyCd'];			
-					   
+					   $('#vendorCdSP21').val(checkItem[0]['vendorCd']);
+					   $('#departureLocationCdSP21').val(checkItem[0]['departureLocationCd']);
+					   $('#iqcFlagSP21').val(checkItem[0]['iqcFlag']);
+					   $('#currencyCdSP21').val(checkItem[0]['currencyCd']);
 					   //result.param = param;		 
 			 
 		   }
