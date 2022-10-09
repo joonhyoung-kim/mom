@@ -7,6 +7,9 @@
     top: 0.95rem;
     position: relative;
 }
+.menuContent{
+	height:85vh;
+}
 /* .modal-title{
 	font-size: 1.8rem;
     line-height: 0.6;
@@ -1950,7 +1953,7 @@ border-color: #d8dce3 !important;
     height: 38rem;
 }
 .searcharea-pop.R5-remark-out {
-    height: 33.5rem;
+    height: 37.6rem;
 }
 .searcharea-pop.R6-remark-in {
 	padding-left: 3.4rem !important; 
@@ -1958,7 +1961,7 @@ border-color: #d8dce3 !important;
 }
 .searcharea-pop.R6-remark-out {
 	padding-left: 3.4rem !important; 
-    height: 38rem;
+    height: 38.5rem;
 }
 .searcharea-pop.R7-remark-in {
     height: 38rem;
@@ -4044,7 +4047,7 @@ border-color: #d8dce3 !important;
     margin-left: 30vw !important;
     margin-top: -87vh !important;
     background: white !important; 
-    height: 42rem !important;
+    height: 46rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
     
@@ -4321,10 +4324,10 @@ input:focus{
 	overflow: hidden !important; 
     width: 58rem !important;
     position: relative !important;
-    margin-left: 45rem !important;
-    margin-top: -64rem !important;
+    margin-left: 30vw !important;
+    margin-top: -90vh !important;
     background: white !important; 
-    height: 53rem !important;
+    height: 47rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
     
