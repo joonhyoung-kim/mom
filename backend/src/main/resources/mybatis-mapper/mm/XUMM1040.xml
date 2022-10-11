@@ -29,7 +29,7 @@
 	    AND (UPPER(MPR.PR_NO) LIKE '%' || UPPER(#{prNo, jdbcType=VARCHAR}) || '%')	  
 	    </if>	
 	    <if test="referenceNo != null and referenceNo != ''">
-		AND MPR.REFERENCE_NO = #{referenceNo, jdbcType=VARCHAR}
+		AND (UPPER(MPR.REFERENCE_NO) LIKE '%' || UPPER(#{referenceNo, jdbcType=VARCHAR}) || '%')	  
 		</if>	
 		<if test="requestDeptCd != null and requestDeptCd != ''">
 		AND MPR.REQUEST_DEPT_CD IN (${requestDeptCd})
@@ -77,8 +77,8 @@
 	      , MPD.DESCRIPTION
 	      , MPD.COMPANY_CD
 	      , MPD.DIVISION_CD
-	      , MPD.PUCHASE_REQUEST_ID
-	      , MPD.PUCHASE_REQUEST_ID AS KEY_ID
+	      , MPD.PURCHASE_REQUEST_ID
+	      , MPD.PURCHASE_REQUEST_ID AS KEY_ID
 	FROM    MOM_PR_DTL MPD
 	      , MOM_ITEM MI
 	WHERE   MPD.COMPANY_CD   = MI.COMPANY_CD
@@ -146,7 +146,7 @@
                   COMPANY_CD
                 , DIVISION_CD
                 , PR_NO
-                , PUCHASE_REQUEST_ID
+                , PURCHASE_REQUEST_ID
                 , CONFIRM_QTY
                 , VAL_MSG
                 , MULTI_MSG
@@ -157,7 +157,7 @@
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.prNo, jdbcType=VARCHAR}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.confirmQty, jdbcType=NUMERIC}
                 , #{item.valMsg, jdbcType=VARCHAR}
                 , #{item.multiMsg, jdbcType=VARCHAR}

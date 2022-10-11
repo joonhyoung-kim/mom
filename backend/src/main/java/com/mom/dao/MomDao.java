@@ -105,6 +105,7 @@ public class MomDao {
      
 			// sqlSession.select(query.trim(), paramMap.get(paramMap), new TestInnerResultHandler(result));
 			if(param.size()>1) {
+				//System.out.println("파람체크"+param);
 				sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
 			}
 			else {

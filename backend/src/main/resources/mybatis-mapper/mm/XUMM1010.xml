@@ -41,7 +41,10 @@
 	    AND (UPPER(MPR.REFERENCE_NO) LIKE '%' || UPPER(#{referenceNo, jdbcType=VARCHAR}) || '%')	  
 	    </if>	
 		<if test="requestDeptCd != null and requestDeptCd != ''">
-	    AND (UPPER(MPR.REQUEST_DEPT_CD) LIKE '%' || UPPER(#{requestDeptCd, jdbcType=VARCHAR}) || '%')	  
+	    AND MPR.REQUEST_DEPT_CD = #{requestDeptCd, jdbcType=VARCHAR}
+	    </if>
+	    <if test="prTitle != null and prTitle != ''">
+	    AND (UPPER(MPR.PR_TITLE) LIKE '%' || UPPER(#{prTitle, jdbcType=VARCHAR}) || '%')	  
 	    </if>	
 	
     ORDER BY  MPR.REQUEST_DATE , MPR.PR_TYPE

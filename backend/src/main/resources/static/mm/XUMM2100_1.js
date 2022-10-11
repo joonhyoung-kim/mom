@@ -58,8 +58,8 @@ var VIEW= {
 		   }
 		   else if(btnId == 'customBtn2-2'){
 			 for(var i=0,max=param.length; i<max;i++){
-					 param[i]['inoutNo'] = checkItem[0]['departureNo'];
-					 
+					  param[i]['inoutNo'] = checkItem[0]['receiveNo'];					 
+					  param[i]['inoutType'] = 'RO';
 			 }
 		   }
 		}
@@ -68,7 +68,7 @@ var VIEW= {
 			    if(action='C'&& btnId == 'customBtn21-1'){ 
 				    for(var i=0,max=param.length; i<max;i++){
 					 param[i]['inoutNo'] = checkItem[0]['receiveNo'];
-					 
+					 param[i]['inoutType'] = 'RO';
 			        }
 		}
 		

@@ -8522,7 +8522,7 @@ var momWidget = {
 		        let buttonParamText = {};
 			    let buttonParamList = [];
 			    let buttonParamMap = {};
-				
+				let isProcess = 'Y';
 				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']==btnId){
 						targetParam = that.buttonProperty[index][i]['checkType'];	
@@ -8595,7 +8595,7 @@ var momWidget = {
 				}
 				
 				
-				
+			
 		       if(tmpYn =='Y'){
 			  			   callInitResult = that.checkActionCallInit(index, 'D', param, btnId, your,e);
 						   if(callInitResult['result'] != 'SUCCESS') {
@@ -8604,7 +8604,7 @@ var momWidget = {
 									  momWidget.splashHide();
 								      return;
 					       }
-			        mom_ajax('D', queryId,param, function(result1, data1) {
+			        mom_ajax('D', queryId,[param[0]], function(result1, data1) {
 			               if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
 							  momWidget.splashHide();
@@ -8639,12 +8639,13 @@ var momWidget = {
 				             if(param['actionMode'] != undefined && param['actionMode'] != ''){
 							     actionMode = param['actionMode'];
 							 }
-			                 mom_ajax('P', queryId,param, function(result3, data3) {
+			                 mom_ajax('P', queryId,param[0], function(result3, data3) {
 							    if(data3[0]['p_err_code']=='E') {
-						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
+						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
 										  momWidget.splashHide();
 							              return;
-						         }    	
+						         }
+						         isProcess = 'N';    	
 			                 }, undefined, undefined, this, false,undefined,actionMode); 
 			                    
 						 }, undefined, undefined, this, false);    
@@ -8655,7 +8656,9 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 			    		}
-									 
+					      if( isProcess =='Y'){
+						       return;
+					      }	 
 			        	  momWidget.findBtnClicked(index, {}, true, btnId,momWidget.pageProperty[index]['programId'],your);			        	  
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -8680,6 +8683,7 @@ var momWidget = {
 											  momWidget.splashHide();
 								              return;
 							      }
+							          isProcess = 'N';    	
 							          momWidget.findBtnClicked(index, {}, true, btnId,momWidget.pageProperty[index]['programId'],your);			        	  
 						        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 									  momWidget.splashHide();

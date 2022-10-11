@@ -103,6 +103,7 @@
      INTO MOM_PROC_RECEIVE_SAVE (
                   COMPANY_CD
                 , DIVISION_CD
+                , PR_NO
                 , PURCHASE_REQUEST_ID
                 , ITEM_TYPE
                 , PO_USER_NO
@@ -114,6 +115,7 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.prNo, jdbcType=VARCHAR}
                 , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemType, jdbcType=VARCHAR}
                 , #{item.poUserNo, jdbcType=VARCHAR}
@@ -144,11 +146,15 @@
       </where>
    </delete>  
    <insert id="create_customBtn1-2" parameterType="java.util.List">
-      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_PROC_PR_RECEIVE (
                   COMPANY_CD
                 , DIVISION_CD
+                , PR_NO
                 , PURCHASE_REQUEST_ID
+                , ITEM_TYPE
+                , PO_USER_NO
+                , DESCRIPTION
                 , VAL_MSG
                 , MULTI_MSG
                 , CREATE_BY
@@ -156,7 +162,11 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.prNo, jdbcType=VARCHAR}
                 , #{item.purchaseRequestId, jdbcType=VARCHAR}
+                , #{item.itemType, jdbcType=VARCHAR}
+                , #{item.poUserNo, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}
                 , #{item.multiMsg, jdbcType=VARCHAR}
                 , #{item.userId, jdbcType=VARCHAR}

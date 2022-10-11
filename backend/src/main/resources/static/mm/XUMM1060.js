@@ -33,9 +33,20 @@ var VIEW= {
 		
 	
 	},
+	 cellEditCallBack: function(index,rowIndex,columnIndex,dataField,item,e) {
+		if(index == 0){	
+			    if(item.poUserNoNm!='' && item.poUserNoNm!=undefined){
+				      AUIGrid.setCellValue(widget.grid[0], rowIndex, "poUserNo", item['poUserNoNm']);
+		    	}
+         
+			
+         
+		}
+
+	},	
 	customCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 0 ){
-			if(action =='D' || btnId == 'customBtn1-2'){
+			if(action =='D' && btnId == 'customBtn1-2'){
 			    for(var i=0,max=param.length; i<max;i++){
 					 if(param[i].poUserNo == undefined || param[i].poUserNo == ''){
 							result.msg = '발주담당자를 지정하지 않은 데이터가 있습니다!';
