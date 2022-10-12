@@ -9,7 +9,7 @@
 	     , MPM.PO_REFERENCE_TYPE
 	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0005', MPM.PO_REFERENCE_TYPE, 'KR') FROM DUAL)  AS PO_REFERENCE_TYPE_NM
 	     , MPM.PO_TITLE
-	     , MPM.PO_TYPE
+	     , MPM.PO_TYPE AS PO_CATEGORY
 	     , (SELECT MOM_COMMON_PKG.FN_GET_PO_TYPE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.PO_TYPE) FROM DUAL) AS PO_CATEGORY_NM
 	     , MPM.VENDOR_CD
 	     , MPM.VENDOR_CD || '(' || (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPM.COMPANY_CD,MPM.DIVISION_CD,MPM.VENDOR_CD) FROM DUAL) || ')'  AS VENDOR_NM
@@ -39,8 +39,9 @@
 	WHERE  MPM.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
 	AND    MPM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}	
 	AND    MPM.CREATE_DATE  BETWEEN TO_DATE(#{createDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{createDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
-	<if test="prNo != null and prNo != ''">
-	AND (UPPER(MPM.PR_NO) LIKE '%' || UPPER(#{prNo, jdbcType=VARCHAR}) || '%')	  
+	AND    MPM.PO_REFERENCE_TYPE = '10'
+	<if test="poNo != null and poNo != ''">
+	AND (UPPER(MPM.PO_NO) LIKE '%' || UPPER(#{poNo, jdbcType=VARCHAR}) || '%')	  
 	</if>
 	<if test="poDeptCd != null and poDeptCd != ''">
 	 AND MPM.CREATE_DEPT_CD = #{poDeptCd, jdbcType=VARCHAR}
@@ -55,7 +56,7 @@
 	AND MPM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
 	</if>	
 	<if test="poCategory != null and poCategory != ''">
-	AND MPM.PO_TYPE = #{poCategory, jdbcType=VARCHAR}
+	AND MPM.PO_TYPE IN (${poCategory})
 	</if>	
 	ORDER BY MPM.PO_NO
 	</select>
@@ -83,8 +84,8 @@
 		     , MPD.PRICE_SYNC_YN
 		     , MPD.PO_OVER_RECEIPT_RATE
 		     , MPD.DESCRIPTION
-		     , MPD.PO_REFERENCE_NO        AS PUCHASE_REQUEST_ID
-		     , MPD.PUCHASE_ORDER_ID
+		     , MPD.PO_REFERENCE_NO        AS PURCHASE_REQUEST_ID
+		     , MPD.PURCHASE_ORDER_ID
 		FROM   MOM_PO_DTL MPD
 		     , MOM_ITEM MI
 		WHERE  MPD.COMPANY_CD = MI.COMPANY_CD

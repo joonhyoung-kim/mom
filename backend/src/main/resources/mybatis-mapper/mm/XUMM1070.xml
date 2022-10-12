@@ -53,8 +53,8 @@
 		      , MPD.DESCRIPTION
 		      , MPD.COMPANY_CD
 		      , MPD.DIVISION_CD
-		      , MPD.PUCHASE_REQUEST_ID         
-		      , MPD.PUCHASE_REQUEST_ID AS KEY_ID                   
+		      , MPD.PURCHASE_REQUEST_ID         
+		      , MPD.PURCHASE_REQUEST_ID AS KEY_ID                   
 		FROM    MOM_PR_DTL MPD
 		      , MOM_PR_MST MPM   
 		      , MOM_ITEM MI
@@ -81,7 +81,7 @@
 	      AND MPM.REQUEST_DEPT_CD = #{requestDeptCd, jdbcType=VARCHAR}
 		</if>	
 		<if test="itemType != null and itemType != ''">
-	      AND MI.ITEM_TYPE = #{itemType, jdbcType=VARCHAR}
+	      AND MI.ITEM_TYPE IN (${itemType})
 		</if>	
 		ORDER BY MPD.PR_NO
        , MPD.PR_SEQ
@@ -103,7 +103,8 @@
      INTO MOM_PROC_PR_CLOSE (
                   COMPANY_CD
                 , DIVISION_CD
-                , PUCHASE_REQUEST_ID
+                , PR_NO
+                , PURCHASE_REQUEST_ID
                 , DESCRIPTION
                 , VAL_MSG
                 , MULTI_MSG
@@ -112,7 +113,8 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.puchaseRequestId, jdbcType=VARCHAR}
+                , #{item.prNo, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}
                 , #{item.multiMsg, jdbcType=VARCHAR}

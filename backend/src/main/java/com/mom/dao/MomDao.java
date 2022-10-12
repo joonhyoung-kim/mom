@@ -155,7 +155,7 @@ public class MomDao {
 		ProgressInfo.successCount = 0;
 		PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
 		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
-		 System.out.println("크리에이트!");
+		 //System.out.println("크리에이트!");
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
@@ -164,10 +164,14 @@ public class MomDao {
         long startTime = System.currentTimeMillis();   		
 		int resultCount = 0;	
 		int paramSize = param.size();
-        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
-        defaultTransactionDefinition.setName("Transaction");
-        defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);        	
-        TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
+		/*
+		 * DefaultTransactionDefinition defaultTransactionDefinition = new
+		 * DefaultTransactionDefinition();
+		 * defaultTransactionDefinition.setName("Transaction");
+		 * defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.
+		 * PROPAGATION_REQUIRED); TransactionStatus transactionStatus =
+		 * dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
+		 */
         SqlSession sqlSession1 = null;
         	try {
         	      sqlSession1 = sqlSessionFactory.openSession(); 		
@@ -180,26 +184,29 @@ public class MomDao {
 	        				//sqlSession1.commit();
 	        				if(param.get(0).get("commitYn")!=null) {
 	        					if(param.get(0).get("commitYn").toString().equals("Y")) {
-	        			
-		        					dataSourceTransactionManager.commit(transactionStatus);
+	        						//sqlSession1.commit();
+		        					//dataSourceTransactionManager.commit(transactionStatus);
 		        					sqlSession1.flushStatements();          	
-		        	            	sqlSession1.close();  
+		        	            	//sqlSession1.close();  
 		        		        	System.out.println("커밋성공!");
 		        				} 
 	        				}
 	        			       	        	
-	        				System.out.println("커밋안함!");
+	        			
 	            		}
 	        			else {	   
 	        				   System.out.println("실패 카운트="+resultCount); 
+	        				//dataSourceTransactionManager.rollback(transactionStatus);
+	        				   //sqlSession1.rollback();
 	        			 	   sqlSession1.flushStatements();
-	                    	   sqlSession1.close();  
+	                    	   //sqlSession1.close();  
 	        				   return FrameworkUtil.createResponseMap(false,"DB수정 실패");      		 
 	            		}            		       				        			       			
             }	
 
         	catch(Exception e) {
-        		dataSourceTransactionManager.rollback(transactionStatus);
+        		//dataSourceTransactionManager.rollback(transactionStatus);
+        		sqlSession1.rollback();
         		CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
         		throw cdae;
             	//System.out.println("에러?"+e);
@@ -345,7 +352,7 @@ public class MomDao {
 	        				System.out.println("성공!");
 	        				//System.out.println("파람갯수"+param.size());
 	        				//System.out.println("resultcount"+resultCount);
-	        				sqlSession1.commit();
+	        				//sqlSession1.commit();
 	        				//sqlSession1.flushStatements();          	
 	                    	//sqlSession1.close();
 	                    	//sqlSession1.clearCache();
@@ -355,7 +362,7 @@ public class MomDao {
 	            		}
 	        			else {	
 	        				   System.out.println("성공!");
-	        				   sqlSession1.commit();
+	        				   //sqlSession1.commit();
 	        				   //ProgressInfo.successCount = 0;
 	        				   //sqlSession1.rollback();
 	        				   //System.out.println("UPSERT 실패 카운트="+resultCount);
@@ -364,7 +371,7 @@ public class MomDao {
             } catch(Exception e) {
             	ProgressInfo.successCount = 0;
             	//System.out.println("실패행?");
-            	sqlSession1.rollback();
+            	//sqlSession1.rollback();
             	//dataSourceTransactionManager.rollback(transactionStatus);
             	//CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
             	
@@ -397,11 +404,16 @@ public class MomDao {
         long startTime = System.currentTimeMillis();
         int resultCount = 0;
         
-    	DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
-    	defaultTransactionDefinition.setName("Transaction");
-    	defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-    	
-    	TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
+		/*
+		 * DefaultTransactionDefinition defaultTransactionDefinition = new
+		 * DefaultTransactionDefinition();
+		 * defaultTransactionDefinition.setName("Transaction");
+		 * defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.
+		 * PROPAGATION_REQUIRED);
+		 * 
+		 * TransactionStatus transactionStatus =
+		 * dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
+		 */
     	SqlSession sqlSession1 = null;
     	try {
     		sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);  	
@@ -409,17 +421,21 @@ public class MomDao {
     		resultCount = sqlSession1.delete(query, param);
     		System.out.println("리절트카운트="+resultCount);
     		if(resultCount != 0 ) {
-				sqlSession1.flushStatements();
-	        	dataSourceTransactionManager.commit(transactionStatus);
+    			//sqlSession1.commit();
+	        	//dataSourceTransactionManager.commit(transactionStatus);
 			} else { 
-				      return FrameworkUtil.createResponseMap(false,"DB삭제 실패");      				
+				//sqlSession1.rollback();
+				//dataSourceTransactionManager.rollback(transactionStatus);
+				      return FrameworkUtil.createResponseMap(false,"삭제할 데이터 없음!");      				
 			}
         } catch(Exception e) {
         	System.out.println("에러="+resultCount);
-        	dataSourceTransactionManager.rollback(transactionStatus);
+        	//dataSourceTransactionManager.rollback(transactionStatus);
+        	//sqlSession1.rollback();
         	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
     		throw cdae;
         } finally {
+        	sqlSession1.flushStatements();
         	sqlSession1.close();  
         	long endTime = System.currentTimeMillis();
             long resutTime = endTime - startTime;            

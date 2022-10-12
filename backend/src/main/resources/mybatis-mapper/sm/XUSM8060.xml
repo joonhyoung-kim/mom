@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM8060">
  <!-- 구매요청 미발주 현황 -->
- <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-    SELECT  MPD.PURCHASE_REQUEST_ID     
+ <select id="get_findBtn21" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    SELECT  MPD.PURCHASE_REQUEST_ID   
+          , MPD.PURCHASE_REQUEST_ID  AS KEY_ID  
 	      , MPM.PR_TYPE
 	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0001', MPM.PR_TYPE, 'KR') FROM DUAL)  AS PR_TYPE_NM
 	      , MPM.PR_TITLE
@@ -18,7 +19,7 @@
 	      , MPD.CONFIRM_QTY - NVL(MPD.PO_QTY, 0)  AS REMAIN_QTY
 	      , MPD.CONFIRM_QTY - NVL(MPD.PO_QTY, 0)  AS PO_REQUEST_QTY
 	      , MPD.UNIT_PRICE  AS REF_UNIT_PRICE
-	      , ( SELECT  MOM_COMMON_PKG.FN_GET_UNIT_PRICE(MPD.COMPANY_CD, MPD.DIVISION_CD,'P', 'MAIN 화면의VENDOR_CD',MPD.ITEM_ID,MPD.CURRENCY_CD, 'F', MOM_COMMON_PKG.FN_GET_LOCAL_TIME(MPD.COMPANY_CD,MPD.DIVISION_CD)) FROM DUAL) AS CONFIRM_UNIT_PRICE
+	      , ( SELECT  MOM_COMMON_PKG.FN_GET_UNIT_PRICE(MPD.COMPANY_CD, MPD.DIVISION_CD,'P', #{vendorCd, jdbcType=VARCHAR},MPD.ITEM_ID,MPD.CURRENCY_CD, 'F', MOM_COMMON_PKG.FN_GET_LOCAL_TIME(MPD.COMPANY_CD,MPD.DIVISION_CD)) FROM DUAL) AS CONFIRM_UNIT_PRICE
 	      , MI.VENDOR_CD  AS REF_VENDOR_CD
 	      , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPD.COMPANY_CD,MPD.DIVISION_CD,MI.VENDOR_CD) FROM DUAL) AS REF_VENDOR_NM
 	      , MPD.CURRENCY_CD
@@ -70,12 +71,12 @@
 	AND     MPD.DIVISION_CD  = MI.DIVISION_CD
 	AND     MPD.ITEM_ID      = MI.ITEM_ID
 	AND     MPD.STATE        = 'PRR'       -- 접수건 
-	AND     MPD.RECEIVE_DATE  BETWEEN TO_DATE(#{createDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{createDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
+	AND     MPD.RECEIVE_DATE  BETWEEN TO_DATE(#{receiveDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{receiveDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
 	<if test="prNo != null and prNo != ''">
 	AND (UPPER(MPM.PR_NO) LIKE '%' || UPPER(#{prNo, jdbcType=VARCHAR}) || '%')	  
 	</if>
-	<if test="poDeptCd != null and poDeptCd != ''">
-	AND MPM.REQUEST_DEPT_CD = #{poDeptCd, jdbcType=VARCHAR}
+	<if test="requestDeptCd != null and requestDeptCd != ''">
+	AND MPM.REQUEST_DEPT_CD = #{requestDeptCd, jdbcType=VARCHAR}
 	</if>	
 	<if test="itemIdNm != null and itemIdNm != ''">
 	AND (UPPER(MD.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
@@ -88,9 +89,8 @@
 	</if>	
 	ORDER BY MPD.PR_NO
 	       , MPD.PR_SEQ
-
  </select>
-   <delete id="remove_customBtn1-1" parameterType="java.util.List">
+   <delete id="remove_customBtn21-1" parameterType="java.util.List">
        DELETE FROM MOM_PROC_PO_DTL
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
@@ -101,19 +101,25 @@
        </foreach>
       </where>
    </delete>  
-   <insert id="create_customBtn1-1" parameterType="java.util.List">
-        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
-     INTO MOM_PROC_PR_DTL (
+   <insert id="create_customBtn21-1" parameterType="java.util.List">
+      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PROC_PO_DTL (
                   COMPANY_CD
                 , DIVISION_CD
-                , PR_NO
-                , PR_SEQ
-                , PURCHASE_REQUEST_ID
+                , PO_NO
+                , PO_SEQ
+                , PURCHASE_ORDER_ID
+                , PO_REFERENCE_NO
                 , ITEM_ID
-                , DUE_DATE
-                , REQUEST_QTY
-                , CURRENCY_CD
-                , UNIT_PRICE
+                , PO_REQUEST_QTY
+                , REF_UNIT_PRICE
+                , CONFIRM_UNIT_PRICE
+                , DEPARTURE_LOCATION_CD
+                , TEST_REPORT_FLAG
+                , IQC_FLAG
+                , LOT_MANAGEMENT_YN
+                , PRICE_SYNC_YN
+                , PO_OVER_RECEIPT_RATE
                 , DESCRIPTION
                 , DEL_YN
                 , VAL_MSG
@@ -123,14 +129,20 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.prNo, jdbcType=VARCHAR}
-                , #{item.prSeq, jdbcType=NUMERIC}
+                , #{item.poNo, jdbcType=VARCHAR}
+                , #{item.poSeq, jdbcType=NUMERIC}
+                , #{item.purchaseOrderId, jdbcType=VARCHAR}
                 , #{item.purchaseRequestId, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , #{item.requestQty, jdbcType=NUMERIC}
-                , #{item.currencyCd, jdbcType=VARCHAR}
-                , #{item.unitPrice, jdbcType=NUMERIC}
+                , #{item.poRequestQty, jdbcType=NUMERIC}
+                , #{item.refUnitPrice, jdbcType=NUMERIC}
+                , #{item.confirmUnitPrice, jdbcType=NUMERIC}
+                , #{item.departureLocationCd, jdbcType=VARCHAR}
+                , #{item.testReportFlag, jdbcType=VARCHAR}
+                , #{item.iqcFlag, jdbcType=VARCHAR}
+                , #{item.lotManagementYn, jdbcType=VARCHAR}
+                , #{item.priceSyncYn, jdbcType=VARCHAR}
+                , #{item.poOverReceiptRate, jdbcType=NUMERIC}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.delYn, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}
@@ -140,7 +152,7 @@
               )
    </foreach>
   </insert>
-    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn21-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MATERIAL_PKG.sp_upsert_po_dtl(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}

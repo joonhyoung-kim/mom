@@ -2799,7 +2799,6 @@ var momWidget = {
 	    var callInitResult = undefined;
 	    var callBackResult = undefined; 
 	    var checkSearchParam = {};
-	    var checkSearchParam = {};
         var totalParam = {};
         let searchParam = {};
         var queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.findBtn'+(index+1) : menuId+'.findBtn'+(index+1);
@@ -8765,7 +8764,7 @@ var momWidget = {
 					      return;
 			             }
 			 			 totalParam = callInitResult['param'];
-			 		  
+                         totalParam = Object.assign(totalParam, that.checkSearchParam(gridPopIndex-1,{},your));  
 						 mom_ajax('R', queryId, totalParam, function(result1, data1) {
 							if(result1 != 'SUCCESS') {
 								    	  momWidget.splashHide();

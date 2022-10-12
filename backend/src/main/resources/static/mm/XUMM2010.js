@@ -44,9 +44,11 @@ var VIEW= {
 		}
 
 	},
+
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
         if(index==1){
-			
+		/*	let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			result.param = {vendorCd:checkItem[0].vendorCd};*/
 			  					
 		} 
 	
@@ -56,6 +58,7 @@ var VIEW= {
     cellClickCallBack: function(index,rowIndex,target,e) {				
 		if(index==100 && target=='vendorNm'){
 			$('#vendorNmDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
+			$('#doInvoiceYnDP1').val(e.item.doInvoiceYn);
             VIEW.partnerCd = e.item.partnerCd;
 		}
 		else if(index==0){
@@ -63,20 +66,40 @@ var VIEW= {
 		}
 			
 	},
-	customCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 0 ){
-			if(action =='D' || btnId == 'customBtn1-2'){
-			   /* for(var i=0,max=param.length; i<max;i++){
-					 if(param[i].poUserNo == undefined || param[i].poUserNo == ''){
-							result.msg = '발주담당자를 지정하지 않은 데이터가 있습니다!';
-							result.result = 'WARN';
-							return;
-					 }		    
-			    }*/
-	
+
+		customCallInit: function(index,your,action,btnId,param,result) {
+			var checkItem = widget.getCheckedRowItems(widget.grid[0]);
+		if(index == 1){
+			if(btnId == 'customGridPopBtn2-3'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
+			if(checkItem.length==0){
+				result.msg = '상단에서 발주서 선택필수!';
+				result.result = 'WARN';
+				return;
+				
+				//widget.messageBox({type: 'warning', width: '400', height: '145', html: '상단에서 납품서 선택필수!'});				 
+			    //return;
+			}
+	           param['vendorCd'] = checkItem[0]['vendorCd'];
+		
+			 
+		   }
+		   else if(btnId == 'customBtn2-2'){
+			 for(var i=0,max=param.length; i<max;i++){
+					 param[i]['inoutNo'] = checkItem[0]['departureNo'];
+					 
+			 }
 		   }
 		}
+	
+	    else if(index == 20){			    
+			    if(action='C'&& btnId == 'customBtn21-1'){ 
+				    for(var i=0,max=param.length; i<max;i++){
+					 param[i]['poNo'] = checkItem[0]['poNo'];
+					
+			        }
+		}
 		
+	    }
 	}
 	
 };
