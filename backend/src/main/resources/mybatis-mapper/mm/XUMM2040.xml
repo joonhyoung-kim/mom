@@ -35,10 +35,12 @@
 	     , (SELECT MOM_COMMON_PKG.FN_GET_DEPARTMENT_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.CREATE_DEPT_CD) FROM DUAL) AS CREATE_DEPT_NM
 	     , MPM.DO_INVOICE_YN
 	     , MPM.DESCRIPTION
+	    
 	FROM   MOM_PO_MST MPM
 	WHERE  MPM.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
 	AND    MPM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}	
 	AND    MPM.CREATE_DATE  BETWEEN TO_DATE(#{createDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{createDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
+	AND MPM.PO_STATE = 'POG'
 	<if test="poNo != null and poNo != ''">
 	AND (UPPER(MPM.PO_NO) LIKE '%' || UPPER(#{poNo, jdbcType=VARCHAR}) || '%')	  
 	</if>
@@ -55,7 +57,7 @@
 	AND MPM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
 	</if>	
 	<if test="poCategory != null and poCategory != ''">
-	AND MPM.PO_TYPE IN (${poType}) 
+	AND MPM.PO_TYPE IN (${poCategory}) 
 	</if>	
 	<if test="poReferenceType != null and poReferenceType != ''">
 	AND MPM.PO_REFERENCE_TYPE = #{poReferenceType, jdbcType=VARCHAR}

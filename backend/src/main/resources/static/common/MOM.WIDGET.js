@@ -2793,18 +2793,31 @@ var momWidget = {
 			}
 		});*/
 	},
-	
+	isJson: function(obj){
+	var isjson = typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length; 
+	return isjson;
+    },
 	// 검색버튼을 누른 효과
 	findBtnClicked: function(index, param, splash, btnId, menuId, your, callBackFunc,event) { 	//momWidget.findBtnClicked(1, [], true, 'findBtn1', 'PGIDXX002', MOMXX000, function(result, data)
+	    var that= this;	
 	    var callInitResult = undefined;
 	    var callBackResult = undefined; 
 	    var checkSearchParam = {};
         var totalParam = {};
         let searchParam = {};
+        let menuParamText = that.pageProperty[index] == undefined ? {}: that.pageProperty[index]['param'] == undefined ? {}:that.pageProperty[index]['param'].split(',');
+
+	    let menuParamMap = {};
         var queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.findBtn'+(index+1) : menuId+'.findBtn'+(index+1);
-		var that= this;	
+		
+		if(Array.isArray([])==true){
+			 for(let j=0,max2=menuParamText.length;j<max2;j++){
+				 menuParamMap[menuParamText[j].split('=')[0]]=menuParamText[j].split('=')[1];
+			 }
+		}
+	   
+							 
 	
-		var menuParam = that.pageProperty[index] == undefined ? []: that.pageProperty[index]['param'] == undefined ? undefined:JSON.parse(that.pageProperty[index]['param']);
 		   if(splash==true){
 			that.splashShow();
 		   }
@@ -2817,8 +2830,8 @@ var momWidget = {
         	return;   
         	}
 
-	         if(menuParam != undefined){
-			    totalParam = Object.assign(menuParam, checkSearchParam);   	 
+	         if(menuParamMap != undefined){
+			    totalParam = Object.assign(menuParamMap, checkSearchParam);   	 
 	            totalParam = Object.assign(totalParam,initParam,param);  
 		    }
 	        else{
@@ -4881,12 +4894,13 @@ var momWidget = {
 			let gridPopSaveBtnId   = 'saveBtnCP';
 			let gridPopCancelBtnId = 'cancelBtnCP'+(index + 1);
 			let moveBtnId = 'moveBtn'+(index + 1);
-			
+			let gridPopXBtnId = 'gridPop-x-btn';
 			
 		/*	var isExist = document.getElementById(findBtnId);
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
+		
 			$(document).on('click', '#'+moveBtnId  , function(e) {				
 				 let fromIndex = index; //복사할 인덱스
 				 let toIndex = fromIndex+1; //이동할 인덱스
@@ -4937,6 +4951,9 @@ var momWidget = {
 			$(document).on('click', '#'+cancelCustomPopBtnId , function(e) {
 				$('.' + 'customPop').momModal('hide');	
 			
+			});
+			$(document).on('click', '.'+gridPopXBtnId , function(e) {
+				$(".grid-pop"+(index+1)).momModal('hide');	
 			});
 			$(document).on('click', '#'+gridPopCancelBtnId , function(e) {
 				$(".grid-pop"+(index+1)).momModal('hide');	
@@ -8765,6 +8782,13 @@ var momWidget = {
 			             }
 			 			 totalParam = callInitResult['param'];
                          totalParam = Object.assign(totalParam, that.checkSearchParam(gridPopIndex-1,{},your));  
+                         callInitResult = that.checkActionCallInit(index, 'R',  totalParam, 'customGridPopBtn'+btnIndex, your,e);     	
+        	              if(callInitResult['result'] != 'SUCCESS') { 
+							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
+							  momWidget.splashHide();
+						      return;
+			              }
+			             totalParam = Object.assign(callInitResult['param'], totalParam);   
 						 mom_ajax('R', queryId, totalParam, function(result1, data1) {
 							if(result1 != 'SUCCESS') {
 								    	  momWidget.splashHide();

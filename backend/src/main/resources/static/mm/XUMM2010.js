@@ -46,11 +46,14 @@ var VIEW= {
 	},
 
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
+        let checkItem = widget.getCheckedRowItems(widget.grid[0]);
         if(index==1){
-		/*	let checkItem = widget.getCheckedRowItems(widget.grid[0]);
-			result.param = {vendorCd:checkItem[0].vendorCd};*/
-			  					
+		param['vendorCd'] = checkItem[0]['vendorCd'];
+		param['poNo'] = checkItem[0]['poNo'];  					
 		} 
+		else if (index==20){
+			param['vendorCd'] = checkItem[0]['vendorCd'];
+		}
 	
 
 		
@@ -79,7 +82,7 @@ var VIEW= {
 				//widget.messageBox({type: 'warning', width: '400', height: '145', html: '상단에서 납품서 선택필수!'});				 
 			    //return;
 			}
-	           param['vendorCd'] = checkItem[0]['vendorCd'];
+	           
 		
 			 
 		   }

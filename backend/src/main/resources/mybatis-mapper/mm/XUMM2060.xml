@@ -34,7 +34,7 @@
 		     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.CREATE_BY) FROM DUAL ) AS PO_USER_NM
 		     , MPM.CREATE_DEPT_CD     AS PO_DEPT_CD
 		     , (SELECT MOM_COMMON_PKG.FN_GET_DEPARTMENT_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.CREATE_DEPT_CD) FROM DUAL) AS PO_DEPT_NM
-		     , TO_CHAR(MPM.CONFIRM_DATE ,'YYYY-MM-DD')   AS CONFIRM_DATE
+		     , TO_CHAR(MPM.CONFIRM_DATE ,'YYYY-MM-DD')   AS PO_CONFIRM_DATE
 		     , MI.ITEM_NM
 		     , MI.ITEM_SPEC
 		     , MPD.TEST_REPORT_FLAG
@@ -99,6 +99,7 @@
      INTO MOM_PROC_PO_RECEIVE (
                   COMPANY_CD
                 , DIVISION_CD
+                , PO_NO
                 , PURCHASE_ORDER_ID
                 , DELIVER_CONFIRM_DATE
                 , VAL_MSG
@@ -108,8 +109,9 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.poNo, jdbcType=VARCHAR}
                 , #{item.purchaseOrderId, jdbcType=VARCHAR}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , TO_DATE(#{item.deliverConfirmDate, jdbcType=VARCHAR} ,'YYYY-MM-DD HH24:MI:SS')           
                 , #{item.valMsg, jdbcType=VARCHAR}
                 , #{item.multiMsg, jdbcType=VARCHAR}
                 , #{item.userId, jdbcType=VARCHAR}

@@ -35,10 +35,13 @@
 	     , (SELECT MOM_COMMON_PKG.FN_GET_DEPARTMENT_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, MPM.CREATE_DEPT_CD) FROM DUAL) AS CREATE_DEPT_NM
 	     , MPM.DO_INVOICE_YN
 	     , MPM.DESCRIPTION
+	     , 'P'    AS PRICE_CATEGORY     
 	FROM   MOM_PO_MST MPM
 	WHERE  MPM.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
 	AND    MPM.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}	
 	AND    MPM.CREATE_DATE  BETWEEN TO_DATE(#{createDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{createDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
+	AND    MPM.PO_REFERENCE_TYPE = '20'
+	AND    MPM.PO_STATE = 'POG'
 	<if test="poNo != null and poNo != ''">
 	AND (UPPER(MPM.PO_NO) LIKE '%' || UPPER(#{poNo, jdbcType=VARCHAR}) || '%')	  
 	</if>
@@ -83,7 +86,7 @@
 		     , MPD.PRICE_SYNC_YN
 		     , MPD.PO_OVER_RECEIPT_RATE
 		     , MPD.DESCRIPTION
-		     , MPD.PO_REFERENCE_NO        AS PUCHASE_REQUEST_ID
+		     , MPD.PO_REFERENCE_NO        AS PURCHASE_REQUEST_ID
 		     , MPD.PURCHASE_ORDER_ID
 		     , MPD.PURCHASE_ORDER_ID AS KEY_ID
 		FROM   MOM_PO_DTL MPD
@@ -375,7 +378,7 @@
                 , DIVISION_CD
                 , PO_NO
                 , PO_SEQ
-                , PUCHASE_ORDER_ID
+                , PURCHASE_ORDER_ID
                 , PO_REFERENCE_NO
                 , ITEM_ID
                 , PO_REQUEST_QTY
@@ -398,7 +401,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.poNo, jdbcType=VARCHAR}
                 , #{item.poSeq, jdbcType=NUMERIC}
-                , #{item.puchaseOrderId, jdbcType=VARCHAR}
+                , #{item.purchaseOrderId, jdbcType=VARCHAR}
                 , #{item.poReferenceNo, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}
@@ -444,7 +447,7 @@
                 , DIVISION_CD
                 , PO_NO
                 , PO_SEQ
-                , PUCHASE_ORDER_ID
+                , PURCHASE_ORDER_ID
                 , PO_REFERENCE_NO
                 , ITEM_ID
                 , PO_REQUEST_QTY
@@ -467,7 +470,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.poNo, jdbcType=VARCHAR}
                 , ''
-                , #{item.puchaseOrderId, jdbcType=VARCHAR}
+                , #{item.purchaseOrderId, jdbcType=VARCHAR}
                 , #{item.poReferenceNo, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}
@@ -513,7 +516,7 @@
                 , DIVISION_CD
                 , PO_NO
                 , PO_SEQ
-                , PUCHASE_ORDER_ID
+                , PURCHASE_ORDER_ID
                 , PO_REFERENCE_NO
                 , ITEM_ID
                 , PO_REQUEST_QTY
@@ -536,7 +539,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.poNo, jdbcType=VARCHAR}
                 , #{item.poSeq, jdbcType=NUMERIC}
-                , #{item.puchaseOrderId, jdbcType=VARCHAR}
+                , #{item.purchaseOrderId, jdbcType=VARCHAR}
                 , #{item.poReferenceNo, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}
@@ -582,7 +585,7 @@
                 , DIVISION_CD
                 , PO_NO
                 , PO_SEQ
-                , PUCHASE_ORDER_ID
+                , PURCHASE_ORDER_ID
                 , PO_REFERENCE_NO
                 , ITEM_ID
                 , PO_REQUEST_QTY
@@ -605,7 +608,7 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.poNo, jdbcType=VARCHAR}
                 , #{item.poSeq, jdbcType=NUMERIC}
-                , #{item.puchaseOrderId, jdbcType=VARCHAR}
+                , #{item.purchaseOrderId, jdbcType=VARCHAR}
                 , #{item.poReferenceNo, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.poRequestQty, jdbcType=NUMERIC}

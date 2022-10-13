@@ -20,6 +20,12 @@ var VIEW= {
 
 		
 	},
+	 searchCallBack: function(index,your,action,btnId,param,result,data) {
+		if(index==0){
+			AUIGrid.clearGridData(widget.grid[1]);		
+		}
+
+    },
 	moveRowCallInit: function(index,your,action,btnId,param,result){
 		if(index == 0 && btnId == 'moveBtn'){
 			   let toItem = AUIGrid.getGridData(widget.grid[1]);	
@@ -50,6 +56,15 @@ var VIEW= {
 					 }		    
 			    }*/
 	
+		   }
+		}
+		
+	},
+	customCallBack: function(index,your,action,btnId,param,result,data) {
+		if(index == 1 ){
+			if(action =='P' || btnId == 'customBtn2-1'){
+		    AUIGrid.clearGridData(widget.grid[1]);			
+		    widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);
 		   }
 		}
 		

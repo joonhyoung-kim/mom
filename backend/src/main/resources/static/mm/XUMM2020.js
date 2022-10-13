@@ -76,7 +76,7 @@ var VIEW= {
 		} 
         if(index==200){
 			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
-			result.param = {currencyCd:checkItem[0].currencyCd,partnerCd:checkItem[0].vendorCd};
+			result.param = {currencyCd:checkItem[0].currencyCd,partnerCd:checkItem[0].vendorCd,priceCategory:checkItem[0].priceCategory};
 			  					
 		} 
 	

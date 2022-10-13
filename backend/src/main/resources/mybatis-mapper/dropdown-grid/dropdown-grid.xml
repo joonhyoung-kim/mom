@@ -240,16 +240,12 @@ AND    MUP.DIVISION_CD    = MI.DIVISION_CD(+)
 AND    MUP.ITEM_ID        = MI.ITEM_ID(+)
 AND    MUP.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
 AND    MUP.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR} 
-<if test="priceCategory != null and priceCategory != ''">
 AND    MUP.PRICE_CATEGORY = #{priceCategory, jdbcType=VARCHAR} 
-</if>
 AND    MUP.PARTNER_CD     = #{partnerCd, jdbcType=VARCHAR} 
 AND    MUP.CURRENCY_CD    = #{currencyCd, jdbcType=VARCHAR} 
 AND    TRUNC(MOM_COMMON_PKG.FN_GET_LOCAL_TIME(MUP.COMPANY_CD, MUP.DIVISION_CD)) BETWEEN MUP.START_DATE AND MUP.END_DATE
 ORDER BY MUP.ITEM_ID
 
-
-	 
  </select>
  
  <!-- 구매발주접수현황 -->
