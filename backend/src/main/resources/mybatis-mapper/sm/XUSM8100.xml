@@ -11,7 +11,8 @@
      , A.PO_QTY
      , A.PO_OVER_RECEIPT_QTY
      , A.DEPATURE_QTY
-     , (A.PO_OVER_RECEIPT_QTY - A.DEPATURE_QTY) AS REMAIN_QTY
+     , A.RECEIVE_QTY
+     , (A.PO_OVER_RECEIPT_QTY -  A.RECEIVE_QTY) AS REMAIN_QTY
      , ''                              AS DEPARTURE_REQUEST_QTY
      , A.VENDOR_CD
      , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(A.COMPANY_CD,A.DIVISION_CD,A.VENDOR_CD) FROM DUAL) AS VENDOR_NM
@@ -94,6 +95,7 @@ FROM  ( SELECT MPM.PO_NO
              , MPD.PO_OVER_RECEIPT_RATE
              , MPD.COMPANY_CD
              , MPD.DIVISION_CD
+             , NVL(MPD.PROGRESS_QTY,0)    AS  RECEIVE_QTY
              , DECODE(MPC.MARKET_CD, 'D', 'RD', 'O', 'RO') AS INOUT_TYPE
         FROM   MOM_PO_MST MPM 
              , MOM_PO_DTL MPD  
@@ -110,10 +112,8 @@ FROM  ( SELECT MPM.PO_NO
         AND    MPM.PO_TYPE       = MPC.PO_TYPE 
         AND    MPM.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
         AND    MPM.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}
-        AND    MPM.DO_INVOICE_YN = 'Y'
-        <if test="marketCd != null and marketCd != ''">
-        AND    MPC.MARKET_CD     = #{marketCd, jdbcType=VARCHAR}
-        </if>
+        AND    MPM.DO_INVOICE_YN = 'N'
+         AND    MPC.MARKET_CD = DECODE(#{inoutType, jdbcType=VARCHAR}, 'RD', 'D', 'O')
         AND    MPD.STATE         = 'POF'  --확정
         <if test="vendorCd != null and vendorCd != ''">
         AND    MPM.VENDOR_CD     = #{vendorCd, jdbcType=VARCHAR}

@@ -13,45 +13,52 @@ var VIEW= {
 	},
 	editCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='editBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
+			
 		}
 	 
 
 	},
 	copyCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='copyBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.partnerCd = checkedItem[0]['vendorCd'];
+			$('#receiveNoDP1').val('');	
 		}
 	 
+
 
 	},
 	savePopCallInit: function(index,your,action,btnId,param,result) {
 	     if(index ==0 && btnId =='saveBtnDP'){		    			
-			 param[0].partnerCd =VIEW.partnerCd;
-			 result.param =  param;
+			
 		    
 	     }
 	
 	  
 	},
 	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
-		if(index ==0 && btnId =='createBtn1'){			
-			$('#poReferenceTypeDP1').val('10');
-	        
-					
+		if(index ==1 && btnId =='createBtn'){					     
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			$('#receiveNoDP2').val(checkItem[0].receiveNo);   
 		}
 
 	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
         if(index==1){
-			
+	        let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			param.receiveNo = checkItem[0].receiveNo;
 			  					
 		} 
 	
 
 		
+	},
+	 savePopCallInit: function(index,your,action,btnId,param,result) {
+	     if(index ==1 && $('#defaultPop2').attr('btnid')=='editBtn'){
+		   let checkItem = widget.getCheckedRowItems(widget.grid[1]);
+		   result.param = {purchaseInoutId:checkItem[0]['purchaseInoutId']};
+		   
+	     }
+	    
+	  
 	},
     cellClickCallBack: function(index,rowIndex,target,e) {				
 		if(index==100 && target=='vendorNm'){

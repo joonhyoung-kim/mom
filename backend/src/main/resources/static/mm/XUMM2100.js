@@ -12,11 +12,13 @@ var VIEW= {
 	
 	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
-        if(index==1){
-				let checkItem = widget.getCheckedRowItems(widget.grid[0]);
-			    result.param = {receiveNo:checkItem[0].receiveNo};	
+    let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+        if(index==1){				
+			    result.param = {receiveNo:checkItem[0].receiveNo,inoutType:'RD',vendorCd:checkItem[0]['vendorCd'],departureLocationCd:checkItem[0]['departureLocationCd'],iqcFlag:checkItem[0]['iqcFlag'],currencyCd:checkItem[0]['currencyCd']};	
 		} 
-	
+	  else if(index==20){		
+			   result.param = {receiveNo:checkItem[0].receiveNo,inoutType:'RD',vendorCd:checkItem[0]['vendorCd'],departureLocationCd:checkItem[0]['departureLocationCd'],iqcFlag:checkItem[0]['iqcFlag'],currencyCd:checkItem[0]['currencyCd']};	
+		} 
 
 		
 	},
@@ -45,14 +47,16 @@ var VIEW= {
 			    //return;
 			}
 	           
-					   param['vendorCd'] = checkItem[0]['vendorCd'];
-					   param['departureLocationCd'] = checkItem[0]['departureLocationCd'];
-					   param['iqcFlag'] = checkItem[0]['iqcFlag'];
-					   param['currencyCd'] = checkItem[0]['currencyCd'];			
+						
 					   $('#vendorCdSP21').val(checkItem[0]['vendorCd']);
 					   $('#departureLocationCdSP21').val(checkItem[0]['departureLocationCd']);
 					   $('#iqcFlagSP21').val(checkItem[0]['iqcFlag']);
 					   $('#currencyCdSP21').val(checkItem[0]['currencyCd']);
+					   $('#vendorCdSP21').jqxComboBox({disabled: true});
+					   $('#departureLocationCdSP21').jqxComboBox({disabled: true});
+					   $('#currencyCdSP21').jqxComboBox({disabled: true});
+					   $('#iqcFlagSP21').jqxComboBox({disabled: true});
+					  // $('#vendorCdSP21').css('background','#ededed');
 					   //result.param = param;		 
 			 
 		   }

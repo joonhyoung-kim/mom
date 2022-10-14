@@ -32,11 +32,11 @@
 		AND    MPIM.CREATE_DATE BETWEEN TO_DATE(#{createDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{createDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
 		AND    MPIM.STATE     = 'PIG'  -- 등록 
 		AND   MPIM.INOUT_TYPE = 'DD'   -- 납품서-내자거래
-		<if test="inoutNo != null and inoutNo != ''">
-		AND    UPPER(MPIM.INOUT_NO) LIKE '%' || UPPER(#{inoutNo, jdbcType=VARCHAR}) || '%'
+		<if test="departureNo != null and departureNo != ''">
+		AND    UPPER(MPIM.INOUT_NO) LIKE '%' || UPPER(#{departureNo, jdbcType=VARCHAR}) || '%'
 		</if>
 		<if test="vendorCd != null and vendorCd != ''">
-		AND MPM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
+		AND MPIM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
 		</if>	
 	    <if test="departureTitle != null and departureTitle != ''">
 		AND    UPPER(MPIM.TITLE) LIKE '%' || UPPER(#{departureTitle, jdbcType=VARCHAR}) || '%'

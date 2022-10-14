@@ -64,7 +64,7 @@ var VIEW= {
 		if(index == 1 ){
 			if(action =='P' || btnId == 'customBtn2-1'){
 		    AUIGrid.clearGridData(widget.grid[1]);			
-		    widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);
+		    widget.findBtnClicked(0, {}, true, 'CELLCLICK',menuId,VIEW);
 		   }
 		}
 		

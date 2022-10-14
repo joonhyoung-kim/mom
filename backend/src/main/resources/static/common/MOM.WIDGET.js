@@ -2810,7 +2810,7 @@ var momWidget = {
 	    let menuParamMap = {};
         var queryId = menuId == undefined ? that.pageProperty[index]['menuId']+'.findBtn'+(index+1) : menuId+'.findBtn'+(index+1);
 		
-		if(Array.isArray([])==true){
+		if(Array.isArray(menuParamText)==true){
 			 for(let j=0,max2=menuParamText.length;j<max2;j++){
 				 menuParamMap[menuParamText[j].split('=')[0]]=menuParamText[j].split('=')[1];
 			 }
@@ -7056,14 +7056,22 @@ var momWidget = {
 					    let buttonParamMap = {};
 					    
 					    param = that.getPopupParam(index,your,extraParam);
-					    callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
+					    let actionBtnId =  buttonId.split('Btn')[0] +'saveBtnDP';
+					    callInitResult = that.checkActionCallInit(index, actionType, param, actionBtnId, your,e);
 							if(callInitResult['result'] != 'SUCCESS') {
 								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
 									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
 									  momWidget.splashHide();
 								      return;
 							}	
-				  	           param = callInitResult['param'];	
+				param = param.map(function(item1){
+			    var obj = callInitResult['param'].find(function(item2){
+		        return item2;
+		    })
+		    $.extend(item1, obj);               
+			    return item1;
+			});
+				  	         //  param = callInitResult['param'];	
 					if(Array.isArray(param)==true){
 					    param = param.length == 0 ? {}:param;					    
 						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
@@ -10803,7 +10811,14 @@ var momWidget = {
 		if(action == 'R' && your.searchCallInit != undefined) {
 			 your.searchCallInit(index,your,action,btnId,param,result,event);	
 		}
-		if(your.savePopCallInit != undefined && (btnId=='saveBtnDP' || btnId=='saveBtnCP')) {
+		if(your.savePopCallInit != undefined && (btnId.indexOf('saveBtnDP')>=0 || btnId.indexOf('saveBtnCP')>=0)) {
+			if(btnId.indexOf('saveBtnDP')>=0){
+				btnId = btnId.split('saveBtnDP')[0] + 'Btn';
+			}
+			else{
+					btnId = btnId.split('saveBtnCP')[0] + 'Btn';
+			}
+			
 			 your.savePopCallInit(index,your,action,btnId,param,result);			
 	    } 
 

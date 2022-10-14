@@ -1385,11 +1385,16 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
     var sessionId = '';
     var interval = undefined;
     var paramSize = param.length;
+    var that = momWidget;
     if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
-		 var menuParam = JSON.parse(momWidget.pageProperty[index_info]['param']);
-         var keys = Object.keys(menuParam); 
-	  
-	   
+		 var menuParamMap = {};
+         var menuParamText = that.pageProperty[index_info] == undefined ? {}: that.pageProperty[index_info]['param'] == undefined ? {}:that.pageProperty[index_info]['param'].split(',');
+	  	 if(Array.isArray(menuParamText)==true){
+			 for(let j=0,max2=menuParamText.length;j<max2;j++){
+				 menuParamMap[menuParamText[j].split('=')[0]]=menuParamText[j].split('=')[1];
+			 }
+			var keys = Object.keys(menuParamMap);
+		}  
     }
 
 	if(actionMode == undefined || actionMode == ''){
@@ -1502,7 +1507,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[i].p_err_msg   = '';
 				if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
 					   for(var k=0,max=keys.length;k<max;k++){
-					   param[i][keys[k]] = menuParam[keys[k]];
+					   param[i][keys[k]] = menuParamMap[keys[k]];
 				       }
 				}
 
@@ -1533,7 +1538,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[i].p_err_msg   = '';
 					if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
 					   for(var k=0,max=keys.length;k<max;k++){
-					   param[i][keys[k]] = menuParam[keys[k]];
+					   param[i][keys[k]] = menuParamMap[keys[k]];
 				       }
 				}
 				
@@ -1562,7 +1567,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				param[i].p_err_msg   = '';
 				if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
 					   for(var k=0,max=keys.length;k<max;k++){
-					   param[i][keys[k]] = menuParam[keys[k]];
+					   param[i][keys[k]] = menuParamMap[keys[k]];
 				       }
 				}
 				
