@@ -155,7 +155,7 @@
                 , #{item.exchangeRate, jdbcType=NUMERIC}
                 , #{item.vendorInvoice, jdbcType=VARCHAR}
                 , #{item.freeYn, jdbcType=VARCHAR}
-                , #{item.expRcvreasonCd, jdbcType=VARCHAR}
+                , #{item.expRcvReasonCd, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.delYn, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}
@@ -238,7 +238,7 @@
                 , #{item.exchangeRate, jdbcType=NUMERIC}
                 , #{item.vendorInvoice, jdbcType=VARCHAR}
                 , #{item.freeYn, jdbcType=VARCHAR}
-                , #{item.expRcvreasonCd, jdbcType=VARCHAR}
+                , #{item.expRcvReasonCd, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.delYn, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}
@@ -321,7 +321,7 @@
                 , #{item.exchangeRate, jdbcType=NUMERIC}
                 , #{item.vendorInvoice, jdbcType=VARCHAR}
                 , #{item.freeYn, jdbcType=VARCHAR}
-                , #{item.expRcvreasonCd, jdbcType=VARCHAR}
+                , #{item.expRcvReasonCd, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.delYn, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}
@@ -404,7 +404,7 @@
                 , #{item.exchangeRate, jdbcType=NUMERIC}
                 , #{item.vendorInvoice, jdbcType=VARCHAR}
                 , #{item.freeYn, jdbcType=VARCHAR}
-                , #{item.expRcvreasonCd, jdbcType=VARCHAR}
+                , #{item.expRcvReasonCd, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.delYn, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}

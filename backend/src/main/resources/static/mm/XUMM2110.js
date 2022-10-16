@@ -37,6 +37,12 @@ var VIEW= {
 	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
 		if(index ==1 && btnId =='createBtn'){					     
 			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			if(checkItem.length==0){
+				result.msg = '상단에서 입고서 선택필수!';
+				result.result = 'WARN';
+				return;
+			
+			}
 			$('#receiveNoDP2').val(checkItem[0].receiveNo);   
 		}
 
@@ -51,10 +57,18 @@ var VIEW= {
 
 		
 	},
-	 savePopCallInit: function(index,your,action,btnId,param,result) {
-	     if(index ==1 && $('#defaultPop2').attr('btnid')=='editBtn'){
+	delCallInit: function(index,your,action,btnId,param,result) {		
+		  if(index ==1 && btnId=='delBtn'){
 		   let checkItem = widget.getCheckedRowItems(widget.grid[1]);
-		   result.param = {purchaseInoutId:checkItem[0]['purchaseInoutId']};
+		   result.param = [{purchaseInoutId:checkItem[0]['purchaseInoutId']}];
+		   
+	     }
+		
+	},	
+	 savePopCallInit: function(index,your,action,btnId,param,result) {
+	     if(index ==1 && btnId=='editBtn'){
+		   let checkItem = widget.getCheckedRowItems(widget.grid[1]);
+		   result.param = [{purchaseInoutId:checkItem[0]['purchaseInoutId']}];
 		   
 	     }
 	    
@@ -84,8 +98,16 @@ var VIEW= {
 		   }
 		}
 		
-	}
-	
+	},
+	/*customCallBack: function(index,your,action,btnId,param,result,data) {
+		if(index == 1 ){
+			if(action =='P'){
+		   // AUIGrid.clearGridData(widget.grid[1]);			
+		    widget.findBtnClicked(0, {}, true, 'CELLCLICK',menuId,VIEW);
+		   }
+		}
+		
+	}*/
 };
 
 $(document).ready(function(event){	

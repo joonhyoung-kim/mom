@@ -7857,7 +7857,7 @@ var momWidget = {
 			    let buttonParamText = {};
 			    let buttonParamList = [];
 			    let buttonParamMap = {};
-			    
+			    var obj =[];
 			    
 			    param = that.getCheckedRowItems(that.grid[index]);
 				if(param.length ==0) {
@@ -7904,8 +7904,14 @@ var momWidget = {
 								      return;
 					       }
 			    	
-			     
-				 		     param = callInitResult['param'];   	
+			     		param = param.map(function(item1){
+					    obj = callInitResult['param'].find(function(item2){
+				        return item2;
+				    })
+				    $.extend(item1, obj);               
+					    return item1;
+					});
+				 		    // param = callInitResult['param'];   	
 			                 mom_ajax('C', queryId,param, function(result2, data2) {                                                                                                      
 				 		     if(result2!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
@@ -7920,8 +7926,13 @@ var momWidget = {
 						      return;
 			       			}
 			    	
-			     
-				             param = callInitResult['param'];
+			                    param = param.map(function(item1){
+				                obj = callInitResult['param'].find(function(item2){
+						        return item2;
+						    })
+						    $.extend(item1, obj);               
+							    return item1;
+							});
 				             if(param['actionMode'] != undefined && param['actionMode'] != ''){
 							     actionMode = param['actionMode'];
 							 }
