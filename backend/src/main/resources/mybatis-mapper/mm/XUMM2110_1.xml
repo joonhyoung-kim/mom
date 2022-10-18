@@ -461,7 +461,7 @@
    </foreach>
   </insert>
     <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_MATERIAL_PKG.sp_upsert_pi_mst(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+          { CALL MOM_MATERIAL_PKG.sp_pi_confirm(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}		
