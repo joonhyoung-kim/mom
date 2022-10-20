@@ -52,13 +52,25 @@ var XUSM2010 = {
 					, icon        : icon
 					, useYn       : useYn
 					, description : description}];
-								
-			if(parentMenuId == '' || menuId == '' || url == '' || menuNm == ''){
-				  momWidget.messageBox({type:'warning', width:'400', height: '145', html: '필수값 미입력!'});
-				  momWidget.splashHide();	
-				  return;
+			if($('#menuType-popUp').val()=='M' || $('#menuType-popUp').val()=='P'){
+				 if(parentMenuId == '' || menuId == '' || url == '' || menuNm == ''){
+				    momWidget.messageBox({type:'warning', width:'400', height: '145', html: '필수값 미입력!'});
+				    momWidget.splashHide();	
+				    return;
 				
-			}			
+			     }	
+			}
+			else{
+				  if(parentMenuId == '' || menuId == '' ||  menuNm == ''){
+				     momWidget.messageBox({type:'warning', width:'400', height: '145', html: '필수값 미입력!'});
+				     momWidget.splashHide();	
+				     return;
+				
+			      }	
+			}
+				
+								
+				
 			for(var i = 0; i < grid1Data.length; i++) {	
 				if(grid1Data[i].id == menuId){
 					 count ++;
@@ -113,6 +125,15 @@ var XUSM2010 = {
 			}, undefined, undefined, this, false);	
 			}
 
+		});
+		$(document).on('change','#menuType-popUp', function(e) {
+		     if($('#menuType-popUp').val()=='M' || $('#menuType-popUp').val()=='P'){
+			    $('#menuUrl').attr('class', 'textblock orange');
+		     }
+		     else{
+			  $('#menuUrl').attr('class', 'textblock');
+		     }
+			  
 		});
 		$(document).on('click', '#resetBtnPop1' , function(e) {					
 			//$('#parentMenuId-popUp').val('');
@@ -171,8 +192,8 @@ var XUSM2010 = {
 		});
 		
 		$(document).on('change', '#actType-popUp', function() {
-			   // var checkedItem = AUIGrid.getCheckedRowItems('#grid1')[0].item;
-			   var checkedItem =  AUIGrid.getSelectedItems('#grid1')[0]['item'];
+			 //  var checkedItem = AUIGrid.getCheckedRowItems('#grid1')[0].item;
+			  var checkedItem =  AUIGrid.getSelectedItems('#grid1')[0]['item'];
                 if($('#actType-popUp').val() == 'C'){		
                 	
 					$("#menuId-popUp").removeAttr("readonly");
@@ -379,7 +400,7 @@ var XUSM2010 = {
 						                 }	
 						       		var comboBoxOpt1  = {local: [{'value':'Y','label':'사용'},{'value':'N','label':'미사용'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
 		var comboBoxOpt2  = {local: [{'value':'U','label':'수정'},{'value':'C','label':'신규등록'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
-		var comboBoxOpt3  = {local: [{'value':'P','label':'프로그램'},{'value':'M','label':'메뉴'},{'value':'D','label':'드롭다운그리드'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
+		var comboBoxOpt3  = {local: [{'value':'P','label':'프로그램'},{'value':'M','label':'메뉴'},{'value':'DG','label':'드롭다운그리드'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
 		var comboBoxOpt4  = {local: data3,textName : "label", valueName : "code", readonly : false, selectedIndex : 0};
 		momWidget.setComboBox.set("#useYn-popUp"  , {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt1);
 		momWidget.setComboBox.set("#actType-popUp", {width : 250, dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, comboBoxOpt2);

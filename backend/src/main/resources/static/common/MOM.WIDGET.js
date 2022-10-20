@@ -8653,8 +8653,16 @@ var momWidget = {
 								      return;
 					       }
 			    	
-			     
-				 		     param = callInitResult['param'];   	
+			     				param = param.map(function(item1){
+							    var obj = callInitResult['param'].find(function(item2){
+						        return item2;
+						    })
+						    $.extend(item1, obj);               
+							    return item1;
+							});
+				 		     //param = callInitResult['param'];  
+				 		     
+				 		      	
 			                 mom_ajax('C', queryId,param, function(result2, data2) {                                                                                                      
 				 		     if(result2!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
