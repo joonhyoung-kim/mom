@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUSM8110">
- <!-- 구매요청 미발주 현황 -->
+ <!-- 구매입고 현황 -->
  <select id="get_findBtn21" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
    SELECT A.COMPANY_CD
      , A.DIVISION_CD
      , A.GR_NO
+     , A.GR_NO || '_' || A.ITEM_INOUT_ID  AS KEY_ID
      , A.GR_SEQ
      , A.IO_TYPE
      , A.IO_TYPE_NM
@@ -20,8 +21,8 @@
      , A.CONVERSION_UNIT_NM
      , A.CONVERSION_UNIT_QTY
      , A.RETURN_QTY
-     , A.CONVERSION_UNIT_QTY - NVL(A.ISSUE_QTY, 0) AS REMAIN_QTY
-     , ''            AS RETURN_REQUEST_QTY
+     , A.CONVERSION_UNIT_QTY - NVL(A.RETURN_QTY, 0) AS REMAIN_QTY						     
+     , 0            AS RETURN_REQUEST_QTY
      , A.UNIT_PRICE
      , A.AMOUNT
      , A.LOCAL_AMOUNT
@@ -37,6 +38,7 @@
      , A.ITEM_TYPE   
      , A.ITEM_TYPE_NM
      , A.ITEM_INOUT_ID  
+     
 FROM   (SELECT MII.COMPANY_CD
              , MII.DIVISION_CD
              , MII.ITEM_INOUT_NO    AS GR_NO
@@ -88,13 +90,13 @@ FROM   (SELECT MII.COMPANY_CD
         AND    MII.PARTNER_CD  = #{vendorCd, jdbcType=VARCHAR}	
         AND    MII.CURRENCY_CD = #{currencyCd, jdbcType=VARCHAR}
         AND    MII.IO_CATEGORY = 'I'
-        AND    IN ( SELECT  MIC.IO_TYPE
-                                    FROM    MOM_IO_CATEGORY MIC
-                                    WHERE   MIC.COMPANY_CD  = MII.COMPANY_CD
-                                    AND     MIC.DIVISION_CD = MII.DIVISION_CD
-                                    AND     MIC.PUR_RECEIVE_YN  = 'Y'
-                                    AND     MIC.USE_YN        = 'Y' )  ) A
-WHERE  A.GR_QTY  - A.RETURN_QTY  > 0                                  
+        AND    MII.IO_TYPE IN ( SELECT  MIC.IO_TYPE				
+                                FROM    MOM_IO_CATEGORY MIC
+                                WHERE   MIC.COMPANY_CD  = MII.COMPANY_CD
+                                AND     MIC.DIVISION_CD = MII.DIVISION_CD
+                                AND     MIC.PUR_RECEIVE_YN  = 'Y'
+                                AND     MIC.USE_YN        = 'Y' )  ) A
+WHERE  A.GR_QTY  - NVL(A.RETURN_QTY,0)  > 0                                  
 ORDER BY A.GR_NO
        , A.GR_SEQ                                   
 
@@ -136,12 +138,12 @@ ORDER BY A.GR_NO
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{item.inoutType, jdbcType=VARCHAR}
                 , #{item.inoutNo, jdbcType=VARCHAR}
-                , #{item.seq, jdbcType=NUMERIC}
-                , #{item.purchaseInoutId, jdbcType=VARCHAR}
+                , ''
+                , ''
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}	 
-			    , #{item.receiveRequestQty, jdbcType=NUMERIC}
-                , #{item.purchaseOrderId, jdbcType=VARCHAR}
+			    , #{item.returnRequestQty, jdbcType=NUMERIC}
+                , #{item.itemInoutID, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.delYn, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}

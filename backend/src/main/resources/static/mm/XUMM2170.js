@@ -75,6 +75,15 @@ var VIEW= {
 			 }
 		   }
 		}
+		else if(index == 20){
+		  if(action='C'&& btnId == 'customBtn21-1'){ 
+			  for(var i=0,max=param.length; i<max;i++){
+					param[i]['inoutNo'] = checkItem[0]['receiveNo'];
+					param[i]['inoutType'] = 'RD';
+			  }
+		 }
+			
+	    }
 		
 	}
 	
