@@ -2853,7 +2853,8 @@ var momWidget = {
 							  momWidget.splashHide();
 						      return;
 			 }
-			 totalParam = callInitResult['param'];
+			// totalParam = callInitResult['param'];
+		    totalParam = Object.assign(totalParam,callInitResult['param']);  
         	/*  param.startPage = that.startPage[index]; 
               praram.endPage  = that.endPage[index];*/
               if(btnId=='TOTAL'){
