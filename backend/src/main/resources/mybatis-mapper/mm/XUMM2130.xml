@@ -4,10 +4,10 @@
   <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
 	SELECT MPIM.COMPANY_CD					
 	     , MPIM.DIVISION_CD					
-	     , MPIM.INOUT_NO     					
+	     , MPIM.INOUT_NO   
+	     , MPIM.INOUT_NO AS KEY_ID  					
 	     , MPIM.INOUT_TYPE					
-	     --, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0012', MPIM.CURRENCY_CD, 'KR') FROM DUAL)  AS INOUT_TYPE_NM  					
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0012', MPIM.INOUT_TYPE, 'KR') FROM DUAL)  AS INOUT_TYPE_NM  					
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0012', MPIM.INOUT_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS INOUT_TYPE_NM  					
 	     , MPIM.TITLE          AS INOUT_TITLE					
 	     , MPIM.VENDOR_CD					
 	     , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPIM.COMPANY_CD,MPIM.DIVISION_CD,MPIM.VENDOR_CD) FROM DUAL) AS VENDOR_NM					
@@ -20,21 +20,20 @@
 	     , MPIM.BL_NO					
 	     , MPIM.IP_NO					
 	     , MPIM.IP_CURRENCY_CD					
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'SM0017', MPIM.IP_CURRENCY_CD, 'KR') FROM DUAL)  AS IP_CURRENCY_NM					
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'SM0017', MPIM.IP_CURRENCY_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS IP_CURRENCY_NM					
 	     , MPIM.IP_EXCHANGE_RATE					
 	     , TO_CHAR(MPIM.CC_DATE ,'YYYY-MM-DD')     AS CC_DATE					
 	     , MPIM.LC_NO					
 	     , MPIM.CURRENCY_CD					
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'SM0017', MPIM.CURRENCY_CD, 'KR') FROM DUAL)  AS CURRENCY_NM					
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'SM0017', MPIM.CURRENCY_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS CURRENCY_NM					
 	     , MPIM.EXCHANGE_RATE					
 	     , MPIM.AMOUNT                                    AS INOUT_AMOUNT					
 	     , TO_CHAR(MPIM.DEPARTURE_DATE ,'YYYY-MM-DD')     AS DEPARTURE_DATE					
 	     , MPIM.VENDOR_INVOICE					
 	     , MPIM.FREE_YN         AS FREE_YN					
-	     --, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0015', MPIM.REASON_CD, 'KR') FROM DUAL)  AS FREE_YN_NM					
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0015', MPIM.FREE_YN, 'KR') FROM DUAL)  AS FREE_YN_NM					
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0015', MPIM.FREE_YN, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS FREE_YN_NM					
 	     , MPIM.REASON_CD   AS EXP_RCV_REASON_CD					
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0016', MPIM.REASON_CD, 'KR') FROM DUAL)  AS EXP_RCV_REASON_NM					
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, 'MM0016', MPIM.REASON_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS EXP_RCV_REASON_NM					
 	     , MPIM.DESCRIPTION					
 	     , MPIM.CREATE_BY   AS CREATE_USER_NO					
 	     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MPIM.COMPANY_CD, MPIM.DIVISION_CD, MPIM.CREATE_BY) FROM DUAL ) AS CREATE_USER_NM					
@@ -46,28 +45,28 @@
 	AND    MPIM.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}				
 	AND    MPIM.IQC_RECEIVE_DATE  BETWEEN TO_DATE(#{iqcReceiveDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{iqcReceiveDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999 		
    <if test="inoutNo != null and inoutNo != ''">
-    AND (UPPER(MPIM.INOUT_NO) LIKE '%' || UPPER(#{inoutNo, jdbcType=VARCHAR}) || '%')	  
+    AND    (UPPER(MPIM.INOUT_NO) LIKE '%' || UPPER(#{inoutNo, jdbcType=VARCHAR}) || '%')	  
    </if>						
    <if test="vendorCd != null and vendorCd != ''">
-   AND MPIM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
+   AND     MPIM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
    </if>					
    <if test="inoutType != null and inoutType != ''">
-   AND MPIM.INOUT_TYPE = #{inoutType, jdbcType=VARCHAR}
+   AND     MPIM.INOUT_TYPE = #{inoutType, jdbcType=VARCHAR}
    </if>				
    <if test="inoutTitle != null and inoutTitle != ''">
-   AND (UPPER(MPIM.TITLE) LIKE '%' || UPPER(#{inoutTitle, jdbcType=VARCHAR}) || '%')	  
+   AND     (UPPER(MPIM.TITLE) LIKE '%' || UPPER(#{inoutTitle, jdbcType=VARCHAR}) || '%')	  
    </if>		
    <if test="departureLocationCd != null and departureLocationCd != ''">
-   AND MPIM.DEPARTURE_LOCATION_CD = #{departureLocationCd, jdbcType=VARCHAR}
+   AND      MPIM.DEPARTURE_LOCATION_CD = #{departureLocationCd, jdbcType=VARCHAR}
    </if>							
-   AND    MPIM.STATE       = 'PIR'  -- 접수		
-   AND    MPIM.IQC_FLAG    = 'Y'				
-   AND    EXISTS (SELECT '*'					
-                           FROM    MOM_PURCHASE_INOUT_DTL MPD					
-                           WHERE  MPD.COMPANY_CD   = MPIM.COMPANY_CD					
-                           AND       MPD.DIVISION_CD      = MPIM.DIVISION_CD					
-                           AND       MPD.INOUT_NO         = MPIM.INOUT_NO					
-                           AND       MPD.STATE            = MPIM.STATE)					
+   AND      MPIM.STATE       = 'PIR'  -- 접수		
+   AND      MPIM.IQC_FLAG    = 'Y'				
+   AND      EXISTS (SELECT '*'					
+                    FROM   MOM_PURCHASE_INOUT_DTL MPD					
+                    WHERE  MPD.COMPANY_CD   = MPIM.COMPANY_CD					
+                    AND    MPD.DIVISION_CD      = MPIM.DIVISION_CD					
+                    AND    MPD.INOUT_NO         = MPIM.INOUT_NO					
+                    AND    MPD.STATE            = MPIM.STATE)					
 				
    ORDER BY MPIM.INOUT_NO				
 	</select>
@@ -79,7 +78,7 @@
 		     , MI.ITEM_NM			
 		     , MI.ITEM_SPEC 			
 		     , MI.ITEM_TYPE			
-		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPID.COMPANY_CD, MPID.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM			
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPID.COMPANY_CD, MPID.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS ITEM_TYPE_NM			
 		     , MI.PURCHASE_UNIT			
 		     , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MPID.COMPANY_CD, MPID.DIVISION_CD, MI.PURCHASE_UNIT) FROM DUAL) AS PURCHASE_UNIT_NM			
 		     , MPID.INOUT_QTY        			
@@ -95,7 +94,7 @@
              , DECODE(MPID.IQC_RESULT, NULL, 'Y', 'N') AS UPDATE_FLAG			
 		FROM   MOM_PURCHASE_INOUT_DTL MPID			
 		     , MOM_ITEM MI			
-		WHERE  MPID.COMPANY_CD = MI.COMPANY_CD			
+		WHERE  MPID.COMPANY_CD  = MI.COMPANY_CD			
 		AND    MPID.DIVISION_CD = MI.DIVISION_CD			
 		AND    MPID.ITEM_ID     = MI.ITEM_ID			
 		AND    MPID.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}			
@@ -146,10 +145,10 @@
    </foreach>
     </insert>
     <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_MATERIAL_PKG.sp_pi_iqc_result(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
-					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
-					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
-					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+          { CALL MOM_MATERIAL_PKG.sp_pi_iqc_result( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                              , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                              , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                              , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                              , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
     </select>  
 </mapper>

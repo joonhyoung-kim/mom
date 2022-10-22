@@ -44,7 +44,7 @@ var VIEW= {
 		}
 
 	},
-    searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
+    /*searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
         if(index==1){
 			
 			  					
@@ -52,14 +52,16 @@ var VIEW= {
 	
 
 		
-	},
+	},*/ 
     cellClickCallBack: function(index,rowIndex,target,e) {				
 		if(index==100 && target=='vendorNm'){
 			$('#vendorNmDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
             VIEW.partnerCd = e.item.partnerCd;
 		}
 		else if(index==0){
-			widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);
+			let checkItem = widget.getCheckedRowItems(widget.grid[0]);                                                //20221021 LCS 추가
+			widget.findBtnClicked(1, {inoutNo:checkItem[0].inoutNo }, true, 'CELLCLICK', menuId, VIEW);               //20221021 LCS 추가 
+			//widget.findBtnClicked(1, {poNo:e.item['poNo']}, true, 'CELLCLICK',menuId,VIEW);	                      //20221021 LCS 삭제 
 		}
 			
 	},
