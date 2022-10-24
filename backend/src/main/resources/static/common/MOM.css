@@ -274,6 +274,16 @@
 	position:relative;
 	margin-top: 0.6rem;
 }
+.grid-box11-h00{
+     width:calc(100% - 0.3rem); 
+	position:relative;
+	margin-top: 0.6rem;
+}
+.grid-box12-h00{
+   width:calc(100% - 0.3rem); 
+	position:relative;
+	margin-top: 0.6rem;
+}
 .grid-box21-h01{
 	/* height: 63rem; */
 	/* height: 95.5%; */
@@ -553,6 +563,17 @@
     height:calc(100% - 0.9rem);
     border: none;
 }
+.gridArea-tm2v-h00-011{
+	background: #f0f0f5;
+    border: none;
+    height:auto; 
+}
+.gridArea-tm2v-h00-12{
+	background: #f0f0f5;
+    height:70vh; 
+    border: none;
+}
+
 .gridArea-tm2v-h01-01{
 	background: #f0f0f5;
     height:93.6%;
@@ -617,7 +638,7 @@
 	.gridArea-tm1st-h02-021{
 	background: #f0f0f5;
     border: none;
-     height:50vh;
+    /*  height:50vh; */
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
@@ -798,6 +819,24 @@
       margin-left: -15px !important;
       width:auto !important;
 	/* height:100% !important */
+}
+}
+@media (min-width:800px) and (max-width:1920px) {
+#split11{
+
+	  margin-right: -15px !important;
+      margin-left: -15px !important;
+      width:auto !important;
+	  height:100% !important 
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+#split11{
+	/*   height:89vh !important;   */
+	  margin-right: -15px !important;
+      margin-left: -15px !important;
+      width:auto !important;
+	  height:100% !important
 }
 }
 .gridArea-tm3vh-h00-01{
@@ -1907,6 +1946,19 @@ border-color: #d8dce3 !important;
     background-attachment: scroll;
     box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
   /*   height: 47vh; */
+}
+.gridPop-searcharea-XXDG0110 {
+    border: none;
+    width: 100%;
+    position: relative;
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+     height: 70vh; 
 }
 .gridPop-x-btn{
   opacity: 0.6;
@@ -4942,7 +4994,13 @@ input:focus{
     /* height: 100vh; */
 	margin-bottom: 0px;
 	background: #f0f0f5;	
-	height: calc(100% - 14vh);
+	/* height: calc(100% - 14vh) !important; */
+}
+.tabcontentarea11 {
+    /* height: 100vh; */
+	margin-bottom: 0px;
+	background: #f0f0f5;	
+	 height: auto !important; 
 }
 @media (min-width:800px) and (max-width:1920px) {
 .custom-dialog {
@@ -4996,7 +5054,7 @@ input:focus{
 	/* height: 97%; */
 	height: 100%;
 	background-color: #d8dce3;
-	 background:#f0f0f5;
+	background:#f0f0f5;
 }
 .tabcontentarea {}
 @media screen and (max-width : 1024px) {

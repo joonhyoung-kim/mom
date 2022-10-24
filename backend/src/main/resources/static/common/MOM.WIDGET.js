@@ -957,14 +957,15 @@ var momWidget = {
 				AUIGrid.resize(momWidget.grid[index]);  모르겠는데 두번 resize해야 정상resizing됨..
 			});*/
 	},	
-   customGrid: {
-		popup : function(buttonIndex,gridIndex, menuId, your, widgetType) {
+   gridPopup: {
+		init : function(buttonIndex,gridIndex, menuId, your, widgetType) {
 		  var that = momWidget;	 
+		  
 		  let gridId = gridIndex;
-		  let index = buttonIndex*10+gridIndex;
-
+		  let index = (buttonIndex*10+gridIndex)-1;
+          that.your[index] = your; //스크립트 객체주입	
 	      
-		  that.your[index] = your; //스크립트 객체주입	
+		 
 		  /*
 		  ----------------------------------------------------------------------------------------------------------------------------------     
 	      * 위젯 전역변수에 위젯정보 세팅 
@@ -1329,20 +1330,11 @@ var momWidget = {
 			      var popupAreaHtml = '';
 			      var isCellMerge = false;
 			     // let gridPopIndex = ($('.grid-pop').length +1)*10 +1;
-			        let gridPopIndex = (index +1)*10 +1;
-			      if(index == 0 ){				    
-			    		 var createFrontArea ={};  
-			    			createFrontArea["tm1st"] = that.tm1st;
-			    			createFrontArea["tm2h"]  = that.tm2h;
-			    			createFrontArea["tm2v"]  = that.tm2v;  
-			    			createFrontArea["tm3vh"]  = that.tm3vh; 
-			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
-			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
-			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',"#front_main");
-			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
-			    	 }
-			    	  else if(index >0 && index%10 ==0){				    
-			    		 var createFrontArea ={};  
+			        let gridPopIndex = (index +1) ;
+			  			    
+			    			
+			    	if(gridPopIndex%10==1){
+				 			var createFrontArea ={};  
 			    			createFrontArea["tm1st"] = that.tm1st;
 			    			createFrontArea["tm2h"]  = that.tm2h;
 			    			createFrontArea["tm2v"]  = that.tm2v;  
@@ -1350,8 +1342,10 @@ var momWidget = {
 			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
 			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
 			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',"#popup_main"+(index+1));
+			        }				    
+			    		
 			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
-			    	 }
+			    	 
 			    		    				    	
 				     
 			    	 if(that.popupProperty[index].length > 0){	
@@ -2462,12 +2456,12 @@ var momWidget = {
 		return html;
 		},
 		tm2v : function(index,splitRatio,content,target) {
-		    var html     =	 '<div id = "split1" class="splitGrid">'
-			           +     '<div id = "contentArea1" class = "row tabcontentarea1"></div>'
-		               +     '<div id = "contentArea2" class = "row tabcontentarea1"></div>'	               
+		    var html     =	 '<div id = "split'+index+'" class="splitGrid">'
+			           +     '<div id = "contentArea'+index+'" class = "row tabcontentarea'+index+'"></div>'
+		               +     '<div id = "contentArea'+(index+1)+'" class = "row tabcontentarea'+index+'"></div>'	               
 		        	   +     '</div>';	  
 			$(target).append(html);  
-			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
+			$('#split'+index).jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
 			return html;
 		},
 		tm3vh : function(index,splitRatio,content,target) {
@@ -3323,7 +3317,7 @@ var momWidget = {
 		},	
 			
 		gridPop : function(index,gridPopIndex,menuId,btnId,popupTitle) {
-			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal  grid-pop'+index+'"gridPop-'+menuId+'">'
+			var topHtml =	'<div id="gridPop-'+btnId+'" gridIndex="'+gridPopIndex+'" class="modal  grid-pop'+index+' gridPop-'+menuId+'">'
 			+    '<div class="modal-dialog custom-dialog" role="document">'  
 			+      '<div class="modal-content custom-content">'
 	        +    '<div class="modal-header panelheader-gridPop">' 

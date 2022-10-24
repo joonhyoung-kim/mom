@@ -58,7 +58,7 @@ $(document).ready(function(event){
 	momSetup.init();
 	momWidget.init(1, menuId, VIEW);
 	momWidget.init(2, menuId, VIEW);
-	momWidget.customGrid.popup(1,1,'XXDG0110', VIEW);
-	momWidget.customGrid.popup(1,2,'XXDG0110', VIEW);
+	momWidget.gridPopup.init(1,1,'XXDG0110', VIEW);
+	momWidget.gridPopup.init(1,2,'XXDG0110', VIEW);
 	VIEW.init();
 });
