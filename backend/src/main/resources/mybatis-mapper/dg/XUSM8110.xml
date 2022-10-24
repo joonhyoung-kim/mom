@@ -20,7 +20,7 @@
      , A.CONVERSION_UNIT 
      , A.CONVERSION_UNIT_NM
      , A.CONVERSION_UNIT_QTY
-     , A.RETURN_QTY
+     , NVL(A.RETURN_QTY,0) AS RETURN_QTY
      , A.CONVERSION_UNIT_QTY - NVL(A.RETURN_QTY, 0) AS REMAIN_QTY						     
      , 0            AS RETURN_REQUEST_QTY
      , A.UNIT_PRICE
@@ -143,7 +143,7 @@ ORDER BY A.GR_NO
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.unitPrice, jdbcType=NUMERIC}	 
 			    , #{item.returnRequestQty, jdbcType=NUMERIC}
-                , #{item.itemInoutID, jdbcType=VARCHAR}
+                , #{item.itemInoutId, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.delYn, jdbcType=VARCHAR}
                 , #{item.valMsg, jdbcType=VARCHAR}

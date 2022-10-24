@@ -51,7 +51,7 @@ var momWidget = {
 	upsertFlag:             'Y',
 	//background: #6c5ffc !important;
 	init: function(index, menuId, your, widgetType) {		  
-		  var that = this;	 
+		  var that = momWidget;	 
 		  let gridId = index;
 		  index--;
 
@@ -59,7 +59,7 @@ var momWidget = {
 		
 	
 				  
-		  if(index == 0){
+		  if(index == 0 && widgetType!='DG'){
  			  //let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
 			  //$('body').append(uploadPop);
 			  //$('body').append(fileUpProgressBar);
@@ -70,7 +70,7 @@ var momWidget = {
 			 
 			  //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');			  
 		  }
-		  else if(index>0 &&  widgetType=='DG' ){
+		  else if(index>=0 && widgetType=='DG' ){
 			index = (index+1)*10;
 			gridId = 1;
 		  }
@@ -957,7 +957,822 @@ var momWidget = {
 				AUIGrid.resize(momWidget.grid[index]);  모르겠는데 두번 resize해야 정상resizing됨..
 			});*/
 	},	
-   
+   customGrid: {
+		popup : function(buttonIndex,gridIndex, menuId, your, widgetType) {
+		  var that = momWidget;	 
+		  let gridId = gridIndex;
+		  let index = buttonIndex*10+gridIndex;
+
+	      
+		  that.your[index] = your; //스크립트 객체주입	
+		  /*
+		  ----------------------------------------------------------------------------------------------------------------------------------     
+	      * 위젯 전역변수에 위젯정보 세팅 
+		  ----------------------------------------------------------------------------------------------------------------------------------
+		  */
+		  mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:menuId,gridId:gridId}, function(result1, data1) { //해당 페이지의 위젯정보 조회
+		      if(result1 != 'SUCCESS' || data1.length == 0) {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }
+		      var columnProp = []; // 메인그리드 컬럼정보
+		      var excelDownProp = []; //엑셀다운그리드 컬럼정보
+		      var excelUploadProp = []; // 엑셀업로드그리드 컬럼정보
+		      var columnType = 'default';  //컬럼타입
+		      var classItem  = []; // 클래스 정보
+		      var searchItem = []; // 검색 필드 클래스 정보
+		      var popupItem = []; // 팝업 필드 클래스 정보
+		      var labelField = ''; 
+		      var headerField = '';
+		      var createPop = '';
+		      var editPop = '';
+		      var searchPop = '';	
+		      var circleClass = '';
+		      var textClass   = '';
+		      var dropdownTmp = {};           
+		      var gridString   = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
+		      var columnString = data1[0]['columnProperty'] == undefined ? '[]':data1[0]['columnProperty'];
+		      var searchString = data1[0]['searchProperty'] == undefined ? '[]':data1[0]['searchProperty'];
+		      var buttonString = data1[0]['buttonProperty'] == undefined ? '[]':data1[0]['buttonProperty'];
+		      var popupString  = data1[0]['popupProperty']  == undefined ? '[]':data1[0]['popupProperty'];
+		      that.searchComboItems = {};
+		      that.editItem[index] = {};
+		     // that.preComboItems[index] = {};
+		
+			  gridString   = gridString =='[]'   ? gridString   : gridString.substr(1,    gridString.length-2);
+			  columnString = columnString =='[]' ? columnString : columnString.substr(1,  columnString.length-2);
+			  searchString = searchString =='[]' ? searchString : searchString.substr(1,  searchString.length-2);
+			  buttonString = buttonString =='[]' ? buttonString : buttonString.substr(1,  buttonString.length-2);
+		      popupString  = popupString =='[]'  ? popupString  : popupString.substr(1,   popupString.length-2);
+			
+						 
+			       
+		    	  that.pageProperty[index]     = {programId:data1[0].programId,menuId:data1[0].menuId,templateId:data1[0].templateId,param:data1[0].param};
+			      that.gridProperty[index]     = JSON.parse(gridString);
+			      that.columnProperty[index]   = JSON.parse(columnString);
+			      
+			      that.searchProperty[index]   = JSON.parse(searchString);
+			      that.buttonProperty[index]   = JSON.parse(buttonString);
+			      that.popupProperty[index]    = JSON.parse(popupString);
+			 /*   that.dropdownProperty[index] = JSON.parse(data[0].dropdownProperty);
+			      that.popUpProperty[index]    = JSON.parse(data[0].popUpProperty);*/
+			      
+			 /*
+			 ----------------------------------------------------------------------------------------------------------------------------------     
+			 * 위젯 속성  seq 순으로 정렬 
+			 ----------------------------------------------------------------------------------------------------------------------------------
+			 */
+			      that.columnProperty[index].sort(function(a,b){ return a.columnSeq-b.columnSeq});
+			      that.buttonProperty[index].sort(function(a,b){ return a.buttonSeq-b.buttonSeq});
+			      that.popupProperty[index].sort(function(a,b){ return a.popupSeq-b.popupSeq});		      
+			  /*
+			  ----------------------------------------------------------------------------------------------------------------------------------     
+			  * 위젯세팅 정보 이용해 html 동적생성 
+			  ----------------------------------------------------------------------------------------------------------------------------------			  
+			  */ 
+			  
+			  if(Array.isArray(that.gridProperty[index]) == true && that.gridProperty[index].length !=0){
+				  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
+			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
+			      var searchBtn      =  '';
+			      var gridPopYn      = '';
+			      var templateInfo   = '';
+			      var searchRowcnt   = that.searchProperty[index].length;
+			      var searchBtnColSize = "col-xl-3";
+			      if(searchRowcnt%3 == 1 ){
+				      searchBtnColSize = "col-xl-9";
+			      }
+			      else if(searchRowcnt%3 == 2 ){
+				      searchBtnColSize = "col-xl-6";
+			      }
+			      for(var i=0,max=gridExceptList.length; i<max;i++){
+			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[index][0][gridExceptList[i]];			    	  
+			    	   delete that.gridProperty[index][0][gridExceptList[i]];
+			      }
+			      that.gridExtraProperty[index] = gridExtraProp;
+			      if(that.gridExtraProperty[index]['showFindBtn']==false){
+			
+				
+				      searchBtn = '';
+				      templateInfo = that.pageProperty[index]['templateId'].split('-');
+			      }
+			      else{
+				        searchBtn = '<div class=" '+ searchBtnColSize+' align-self-center search-btn-group "><button type="button"  class=" align-self-center w-auto  px-4 py-2  searchField-Btn find btn-search" id=findBtn'+(index+1)+'><i class="fe fe-search me-2"></i>'+multiLang.transText('MESSAGE','MSG00042')+'</button></div>';
+				        templateInfo = that.pageProperty[index]['templateId'].split('-');
+			     }
+			
+			     // var popupTemplateInfo = ;
+			      var splitNum     = Number(templateInfo[1]);
+			      var splitType    = templateInfo[2];
+			      var splitRatio   = templateInfo[3];			      			      
+	              var templateName = 'tm'+splitNum+splitType;   
+			  }
+			
+	              
+	              
+			      //var searchRowcnt = that.searchProperty[index].length;
+			      var searchLineCnt = 0;
+			      var searchStyle   = 'h00';
+			      var remarkYn      = 'N'
+			      var remarkInline  = 'Y';
+			      var popupTotalNum   = that.popupProperty[index].length;
+			      var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupColNum']);
+			      var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[index]['popupRowNum']);
+			      if(popupTotalNum % popupColNum == 1 ){
+				     remarkInline  = 'N';
+			      }
+
+			      for(var i=0,max=searchRowcnt; i<max;i++){	
+		    		  if(that.searchProperty[index][i]['headerType']=='S'){
+			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+'SP'+(index+1)+' class="searchSelectField"></select>';
+			    	  }
+			    	  
+			    	  else if (that.searchProperty[index][i]['headerType']=='M'){
+			    		  headerField = '<select id='+that.searchProperty[index][i]['searchId']+'Header'+'SP'+(index+1)+' class="searchSelectField"></select>';
+			    	  }
+			    	  else {
+			    		  headerField = that.searchProperty[index][i]['columnRequire'] != 'Y' ? '<div multi-lang="" class="textblock">'+that.searchProperty[index][i]['searchNm']+'</div>': '<div multi-lang="" class="textblock orange">'+that.searchProperty[index][i]['searchNm']+'</div>';
+			    	  }
+			    		    		   
+			    	  if(that.searchProperty[index][i]['searchType']=='S'){
+			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="mt-2 searchSelectField"></select>';
+			    	  }
+			    	  else if(that.searchProperty[index][i]['searchType']=='SS'){
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="mt-2 searchSelectField-search-combo"></select>';
+		    			   
+			    	  }
+			    	  else if(that.searchProperty[index][i]['searchType']=='MS'){
+		    			        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) + ' class="mt-2 searchSelectField-search-combo"></select>';
+		    			   
+			    	  }
+			    	  else if (that.searchProperty[index][i]['searchType']=='M'){
+			    		        labelField = '<select id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="mt-2 searchSelectField"></select>';
+			    	  }
+			    	   else if (that.searchProperty[index][i]['searchType']=='C'){
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' class="searchSelectField mt-2"></div>';
+			    	  }
+			    	  else if (that.searchProperty[index][i]['searchType']=='CP'){
+			    		        labelField = '<div id='+that.searchProperty[index][i]['searchId']+'SD'+(index+1)+' class="mt-3 fromDateField searchSelectField"></div>' +'<div id="fromToIcon" class="mt-3 fromToIcon" >~</div>'+ '<div id='+that.searchProperty[index][i]['searchId']+'ED'+(index+1)+' class="mt-3 toDateField searchSelectField"></div>';
+			    	  }
+			    	  else{
+			    		    labelField = '<input maxlength="256" id='+that.searchProperty[index][i]['searchId']+'SP'+(index+1) +' input-type="text" type="text" class="form-control w-input searchInputField" date-format="date"></input>';
+			    	  }
+			    	  searchItem[i] =  {	  			    	  
+				    	  searchId:         that.searchProperty[index][i]['searchId'],
+				    	  searchNm:         that.searchProperty[index][i]['searchNm'],
+				    	  labelTextClass:   that.searchProperty[index][i]['columnRequire'] == 'N' ? 'textblock' : 'textblock orange',
+				    	  circelClass:      that.searchProperty[index][i]['columnRequire'] == 'N' ? 'circle' : 'circle bg-orange',
+				      	  searchSeq:        that.searchProperty[index][i]['searchSeq'],
+				    	  defaultValue:     that.searchProperty[index][i]['defaultValue'],
+				    	  searchType:       that.searchProperty[index][i]['searchType'],
+				    	  dropdownId:       that.searchProperty[index][i]['dropdownId'],
+				    	  headerLabelType:  that.searchProperty[index][i]['headerType'],
+				    	  headerDropdownId: that.searchProperty[index][i]['headerDropdownId'],
+				    	  columnRequire:    that.searchProperty[index][i]['columnRequire'],
+				    	  headerField:      headerField,
+				    	  labelField:       labelField
+		              };
+			      }
+			      searchItem.sort(function(a,b){ return a.searchSeq-b.searchSeq});
+			      
+			      if(searchRowcnt == 0){
+			    	    searchLineCnt = 0;
+			    	    searchStyle = 'h00';
+			    	    $('body').css('top','-0.2rem');
+			      } 
+			      else if(searchRowcnt > 0 && searchRowcnt <=3){
+			    	    searchLineCnt = 1;
+			    	    searchStyle = 'h01';
+			    	    classItem[0] = {
+					    		        // searchAreaClass:'searchArea-h01',
+					    		         searchAreaClass:'"col-xl-12'+' searchArea-h01'+' pt-2"',
+					    		         searchItemClass:'"col-xl-3 mb-2  align-self-center searchItem-h01"',
+					    			     labelBoxClass:'"mx-4 mt-2 labelbox-col3"',
+					    			     index:index+1
+			             }
+			        var searchAreaHtml  = that.createSearchArea.h01(classItem,searchItem,searchBtn);	      
+			     }
+			     else if (searchRowcnt > 3 && searchRowcnt <=6){
+			    	 searchLineCnt = 2;
+			    	 searchStyle = 'h02';
+			    	   classItem[0] = {
+			    		         searchAreaClass:'"col-xl-12'+' searchArea-h02'+' pt-2"', 
+			    		         searchItemClass:'"col-xl-3 mb-2 mt-2 align-self-center searchItem-h02"',
+			    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	,
+			    		         index:index+1
+			    				
+			             }
+			    	var searchAreaHtml  = that.createSearchArea.h02(classItem,searchItem,searchBtn);	 
+			     }
+			       else if (searchRowcnt > 6 && searchRowcnt <=9){
+			    	 searchLineCnt = 3;
+			    	 searchStyle = 'h03';
+			    	   classItem[0] = {
+			    		         searchAreaClass:'"col-xl-12'+' searchArea-h03'+' pt-2"', 
+			    		         searchItemClass:'"col-xl-3 mb-2 align-self-center searchItem-h03"',
+			    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	,
+			    		         index:index+1
+			    				
+			             }
+			    	var searchAreaHtml  = that.createSearchArea.h03(classItem,searchItem,searchBtn);	 
+			     }
+			     else{
+			  	       classItem[0] = {
+		    		        // searchAreaClass:'searchArea-h01',
+		    		         searchAreaClass:'"col-xl-12'+' searchArea-h03'+' pt-2"', 
+		    		         searchItemClass:'"col-xl-3 mb-2 align-self-center searchItem-h03"',
+		    		         labelBoxClass:'"mx-4 mt-2 labelbox-col3"'	 ,
+		    		         index:index+1
+		              }
+		             var searchAreaHtml  = that.createSearchArea.h01(classItem,searchItem,searchBtn);	  
+			    	 
+			     }
+			     
+			     for(var i=0,max=that.popupProperty[index].length;i<max;i++){
+			    	  if(that.popupProperty[index][i]['columnRequire']== "Y"){
+			    		    circleClass = 'circle-bg-orange';
+			    		    textClass   =  'textblock-orange';
+			    		    
+			    	  }
+			    	  else{
+			      		    circleClass = 'circle';
+			    		    textClass   = 'textblock';
+			    	  }
+			    	  
+		    		  if(that.popupProperty[index][i]['popupType']=='S' || that.popupProperty[index][i]['popupType'] == 'M'){
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="popupSelectField"></select>';
+		    			  
+			    	  }
+			    	  else if(that.popupProperty[index][i]['popupType']=='SS'){
+		    			   labelField = '<select id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' class="popupSelectField-popup-combo"></select>';
+		    			   
+			    	  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='C'){
+		    			  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="datepicker"  class="w-input popupInputField" date-format="date"></input>';
+		    			  
+		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='C-HM'){
+		    			  labelField  = '<input  id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="time"  class="w-input popupInputField"></input>';
+		    			  
+		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='P'){
+		    			  labelField  = '<input maxlength="50" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn'+(index+1)+'" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
+		    			  
+		    		  }
+		    		  else if (that.popupProperty[index][i]['popupType']=='DS'){
+		    			  labelField  = '<textarea class="remark C'+popupColNum+'"  rows="5" maxlength="500" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'></textarea>';
+		    			  remarkYn    = 'Y';
+		    		  }
+		    		  else if(that.popupProperty[index][i]['popupType']=='DG'){			  
+			    		  labelField  = '<select maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+'  class="gridPop'+(index+1)+ ' grid-popup popupSelectField"></select>';
+			    	  }
+			    	  else {
+			    		  labelField  = '<input maxlength="256" id='+that.popupProperty[index][i]['popupId']+'DP'+(index+1)+' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
+			    	  }
+			    
+		    		  			    	  
+			    	  popupItem[i] =  {	  			    	  
+				    	  popupId:          that.popupProperty[index][i]['popupId'],
+				    	  popupNm:          that.popupProperty[index][i]['popupNm'],
+				      	  popupSeq:         that.popupProperty[index][i]['popupSeq'],
+				    	  defaultVlue:      that.popupProperty[index][i]['defaultValue'],
+				    	  columnRequire:    that.popupProperty[index][i]['columnRequire'],
+				    	  popupType:        that.popupProperty[index][i]['popupType'],
+				    	  labelField:       labelField,
+				    	  circleClass:      circleClass,
+				          textClass:        textClass
+		              };
+		              
+			      }
+			      
+			     // searchAreaHtml = searchAreaHtml.replace(/#{searchAreaClass}/gi, classItem[0].searchAreaClass).replace(/#{searchItemClass}/gi, classItem[0].searchItemClass).replace(/#{labelBoxClass}/gi, classItem[0].labelBoxClass).replace(/#{circelClass}/gi, classItem[0].circelClass).replace(/#{labelTextClass}/gi, classItem[0].labelTextClass)replace(/#{searchNm}/gi, classItem[0].searchNm).replace(/#{labelField}/gi, classItem[0].labelField);
+			 
+				   if(that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['usePaging']== true){
+					   if(that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['showFooter']== true){
+						   if(searchStyle =='h00'){
+						       var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer-paging'); 
+					        }
+						    else if(searchStyle =='h01'){
+							   var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer-paging'); 
+						    } 
+						    else if(searchStyle =='h02'){
+							 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer-paging'); 
+						    } 
+						    else if(searchStyle =='h03'){
+							 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer-paging'); 
+						    } 
+					   }
+					   else{
+							if(searchStyle =='h00'){
+						    var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+					        }
+					        else if(searchStyle =='h01'){
+						    var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+					        } 
+							else if(searchStyle =='h02'){
+								 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+							} 
+							else if(searchStyle =='h03'){
+								 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'paging'); 
+							} 
+						}
+
+				 }
+				 else{
+					   if(momWidget.gridProperty[index][0]['showFooter']){
+						  if(searchStyle =='h00'){
+						    var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						  }
+						  else if(searchStyle =='h01'){
+								  var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+					      } 
+						  else if(searchStyle =='h02'){
+							 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						  } 
+						  else if(searchStyle =='h03'){
+							 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)+'-'+'footer'); 
+						  } 
+					   }
+					   else{
+						if(searchStyle =='h00'){
+						 var gridAreaHtml    = that.createGridArea.h00(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+						}
+						else if(searchStyle =='h01'){
+							  var gridAreaHtml    = that.createGridArea.h01(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+						} 
+						else if(searchStyle =='h02'){
+							 var gridAreaHtml    = that.createGridArea.h02(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+						} 
+						else if(searchStyle =='h03'){
+							 var gridAreaHtml    = that.createGridArea.h03(index+1,'grid'+(index+1),'gridArea-'+templateName+'-'+searchStyle+'-'+'0'+(index+1)); 
+						} 
+					 }
+					
+					
+				}
+				
+				
+			   
+			    
+			      var gridTabRightHtml = that.createGridTabArea.rightTab(index+1,that.buttonProperty[index]);
+			      var gridTabLeftHtml  = that.createGridTabArea.leftTab(index+1,that.gridExtraProperty[index]['gridTitle'],that.buttonProperty[index]);			      
+			      var widthUse = 'Y';
+			      var excelShow = 'N';
+			      var excelTmpShow = 'N';
+			      var gridShow = 'Y';
+			      var isCheckBox = 'N';
+			      var isDropDown ='N';
+			      var columnId = '';
+			      var isRequire = 'N';
+			      var sortTmp   = [];
+		          var groupHeader = 'N';
+			      var popupAreaHtml = '';
+			      var isCellMerge = false;
+			     // let gridPopIndex = ($('.grid-pop').length +1)*10 +1;
+			        let gridPopIndex = (index +1)*10 +1;
+			      if(index == 0 ){				    
+			    		 var createFrontArea ={};  
+			    			createFrontArea["tm1st"] = that.tm1st;
+			    			createFrontArea["tm2h"]  = that.tm2h;
+			    			createFrontArea["tm2v"]  = that.tm2v;  
+			    			createFrontArea["tm3vh"]  = that.tm3vh; 
+			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
+			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
+			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',"#front_main");
+			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
+			    	 }
+			    	  else if(index >0 && index%10 ==0){				    
+			    		 var createFrontArea ={};  
+			    			createFrontArea["tm1st"] = that.tm1st;
+			    			createFrontArea["tm2h"]  = that.tm2h;
+			    			createFrontArea["tm2v"]  = that.tm2v;  
+			    			createFrontArea["tm3vh"]  = that.tm3vh; 
+			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
+			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
+			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',"#popup_main"+(index+1));
+			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
+			    	 }
+			    		    				    	
+				     
+			    	 if(that.popupProperty[index].length > 0){	
+					      popupAreaHtml = that.createPopup.defaultPop(index+1,popupColNum,popupRowNum,popupItem,that.gridExtraProperty[index]['popupTitle'],remarkYn,remarkInline);		    		 
+			    		  $('body').append(popupAreaHtml);
+			    	 }  
+			    		
+                     for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+					    
+						if(that.buttonProperty[index][i]['buttonType']=='DG'){
+							 popupAreaHtml = that.createPopup.gridPop(index+1,gridPopIndex,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],'팝업타이틀');							 								    		 
+			    		    $('body').append(popupAreaHtml);
+			    		    gridPopIndex = ($('.grid-pop').length +1)*10 +1;
+			    		    // gridPopIndex = (index+1)*10 +1;
+			    		    //that.buttonProperty[index][i]['customType'] = 'DG';
+			    		    //break;
+						}
+						else if(that.buttonProperty[index][i]['buttonType']=='CP'){	
+												
+							that.createCustomPop(index,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.buttonProperty[index][i]['eventType']);
+							//that.buttonProperty[index][i]['customType'] = 'CP';
+						}
+						
+				        else{
+									//that.buttonProperty[index][i]['customType'] = 'GRID';
+				        }
+					 }
+					 $('#contentArea'+(index+1)).append(gridAreaHtml); 
+				  	
+			         $('.gridTab'+(index+1)).append(gridTabLeftHtml);
+			         $('.gridTab'+(index+1)).append(gridTabRightHtml);
+			
+			         $('body').append('<div id="excelArea' + (index + 1) + '" style="width:100%; position:fixed; height:100%; z-index: -999; top:0px"><div id="excelGrid' + (index + 1)  + '"></div><div id="excelTmpGrid' + (index + 1)  + '"></div></div>');					
+			         for(var i=0,max=that.columnProperty[index].length;i<max;i++){	
+			    	   columnType = that.columnProperty[index][i]['columnEditable'] == 'N' ? 'default':'edit';	
+			    	   widthUse = that.columnProperty[index][i]['columnWidth']  == 0 ? 'N': 'Y';
+			    	   excelShow = that.columnProperty[index][i]['excelShow']  == 'Y' ? 'Y': 'N';
+			    	   excelTemplateShow = that.columnProperty[index][i]['excelTemplateShow']  == 'Y' ? 'Y': 'N';
+			    	   gridShow = that.columnProperty[index][i]['columnShow']  == 'Y' ? true: false;
+			    	   excelDownShow   = that.columnProperty[index][i]['excelShow'] == 'Y' ? true: false;
+			    	   excelUploadShow = that.columnProperty[index][i]['excelTemplateShow'] == 'Y' ? true: false;
+			    	   isCheckBox = that.columnProperty[index][i]['columnType'] == 'CK' ? 'Y': 'N';
+			    	   isDropDown = that.columnProperty[index][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
+			    	   isCalendar = that.columnProperty[index][i]['columnType'] == 'C' ? 'Y': 'N';
+			    	   columnId = that.columnProperty[index][i]['columnId'];
+			    	   isRequire = that.columnProperty[index][i]['columnRequire'] == 'Y' ? 'Y': 'N';
+			    	   sortType = that.columnProperty[index][i]['sortMethod'] == 'ASC' ? 1: -1;
+			    	   sortNo   = that.columnProperty[index][i]['sortNo'] == '' ? 0: that.columnProperty[index][i]['sortNo'];
+			    	   isCellMerge = that.columnProperty[index][i]['cellMerge'] == '' ? false : that.columnProperty[index][i]['cellMerge'] == 'Y' ? true: false;
+			    	  // groupHeader  = that.columnProperty[index][i]['columnType'] == 'G' ? 'Y': 'N';
+			    	   
+			    	   if(sortNo > 0){
+							sortTmp.push({dataField : columnId, sortType : sortType,sortNo:sortNo}) ;
+					   }
+			    	   
+			    	 //that.columnProperty[index].splice(i,1);
+			    	
+							  columnProp[i] =  {
+								    	      dataField 	: columnId 
+								  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
+									   		, dataType      : that.columnProperty[index][i]['dataType'] 
+											, formatString  : that.columnProperty[index][i]['dataFormat']											
+				    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : that.columnProperty[index][i]['columnCreate']  == 'Y' ? true : false
+								  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
+								  			, visible       : gridShow 
+								  			, mergePolicy : "restrict" 
+								  			, cellMerge : isCellMerge 
+								  			, filter : {
+										      showIcon : true
+											}
+								  		
+				                    };
+							
+				
+			    	 
+	                    if(excelDownShow){
+						    excelDownProp.push({
+									    	      dataField 	: columnId 
+									  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
+										   		, dataType      : that.columnProperty[index][i]['dataType'] 
+												, formatString  : that.columnProperty[index][i]['dataFormat']
+					    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false  
+					    	                    , headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
+									  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
+									  			, visible       : excelDownShow
+									  			, mergePolicy : "restrict"
+									  			, cellMerge : isCellMerge 
+									  		 
+					                    });
+					      if(widthUse == 'Y'){
+			    		  excelDownProp[excelDownProp.length - 1].width  = that.columnProperty[index][i]['columnWidth'];
+			    		
+			    	   }
+						}
+			    	
+	                    if(excelUploadShow){
+		 			/*	if(excelUploadProp.length==0){
+				      		excelUploadProp.push({
+										    	      dataField 	: 'valMsg' 
+										  			, headerText 	: 'Result'
+										  			, headerStyle   : "my-header-style-default"
+											   		, dataType      : "string"
+													, formatString  : ""
+						    	                    , editable      : false
+										  			, style			: 'aui-grid-default-column-left'
+										  		    , visible       : false
+						                     }); 
+								}*/
+							   excelUploadProp.push({
+										    	      dataField 	: columnId 
+										  			, headerText 	: that.columnProperty[index][i]['columnNm'] 
+										  			, headerStyle   : isRequire == 'Y' ? "my-header-style-require":"my-header-style-default"
+											   		, dataType      : that.columnProperty[index][i]['dataType'] 
+													, formatString  : that.columnProperty[index][i]['dataFormat']
+						    	                    , editable      : that.columnProperty[index][i]['columnEditable']  == 'Y' ? true : false
+										  			, style			: that.columnProperty[index][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'
+										  		    , visible       : true
+						                     }); 
+						 
+				
+			    	         if(widthUse == 'Y'){			    		  
+			    		     excelUploadProp[excelUploadProp.length - 1].width = that.columnProperty[index][i]['columnWidth'];
+			    	   }
+			    	         
+						}
+			    	 
+			    	   if(widthUse == 'Y'){
+			    		   columnProp[i].width      = that.columnProperty[index][i]['columnWidth'];
+			    		
+			    	   }
+			    	   if(isCheckBox =='Y'){
+			    		   columnProp[i].renderer = {
+									          type: 'CheckBoxEditRenderer'
+											, editable: true
+											, checkValue : 'Y' 
+											, unCheckValue : 'N'
+											
+										};
+			    		   
+			    		 /*  columnProp[i].headerRenderer = { 
+			    				type : "CheckBoxHeaderRenderer",
+			    				position : "right",
+			    				dependentMode : true
+			    				//onClick : myHeaderCheckClick 
+			    			};*/
+			    	   }
+			    	   if(isDropDown =='Y'){
+			    		   let dropDownQueryId = that.columnProperty[index][i]['dropdownId'];		    		   
+			    		   //var nameSpace = 'DD' + that.pageProperty[index]['programId'].substr(2,2);
+			    		   let nameSpace = 'DD';
+			    		   let param = {};
+			    		   let dropdownParamArry =[];
+			    		   let dropdownParamText = that.columnProperty[index][i]['dropdownParam'];
+			    		   //var dropdownTmp = {};			    		 
+			    		   	
+				                  dropdownParamArry = dropdownParamText.split(',');
+				                  for(let i=0;i<dropdownParamArry.length;i++){
+										param[dropdownParamArry[i].split('=')[0]]=dropdownParamArry[i].split('=')[1];
+							     }
+							   							
+							     if(dropDownQueryId == 'DD00001'){
+			    			          dropDownQueryId = 'DD.DD00001';
+
+			    		   }
+			    		   else{			    			  
+			    			   dropDownQueryId = nameSpace +'.'+dropDownQueryId;
+			    			   
+			    		   }
+			    		   mom_ajax('R', dropDownQueryId, param, function(result2, data2) {
+			    			   if(data2.length==0) {
+			    				      return;
+			    				      momWidget.splashHide();
+			    			      } 
+			    			    dropdownTmp[columnId] = data2;
+			    			   // that.columnDropdown[index]= dropdownTmp;
+			    			    columnProp[i].labelFunction = function(rowIndex, columnIndex, value, item) { 
+					               	 var retStr = "";
+					               	 
+					               	 var comboList = that.columnDropdown[index][that.columnProperty[index][columnIndex]['columnId']];
+					       			 for(var i=0,len=comboList.length; i<len; i++) {
+					       					  if(comboList[i]["code"] == value) {
+					           					retStr = comboList[i]["label"];
+					           					break;
+					           				  } 				    				
+					       			 }
+					       			return retStr == "" ? value : retStr;			                  
+					   			   };	
+					    		   columnProp[i].editRenderer = {			    				   
+								   				type: 'ComboBoxRenderer',
+								   				autoCompleteMode : true,  // 자동완성 모드 설정
+								   				matchFromFirst : true,  // 처음부터 매치가 아닌 단순 포함되는 자동완성
+								   				autoEasyMode : false,     // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+								   				showEditorBtnOver: true, // 에디터 버튼 마우스 올릴시 보여줄지
+								   				listAlign:'left',        // 라벨 정렬
+								   				/*list: that.columnDropdown[index][that.columnProperty[index][columnIndex]['columnId']],*/
+								   				keyField: 'code', 
+								   				valueField: 'label' ,
+								   			    listFunction : function(rowIndex, columnIndex, item, dataField) {											    					   			    
+								   			                /*if(that.columnDropdownReSearch[index][that.columnProperty[index][columnIndex]['columnId']]){
+									                                   
+															}*/
+									                        return that.columnDropdown[index][that.columnProperty[index][columnIndex]['columnId']];									 
+								                           
+								                }
+							/*validator : function(oldValue, newValue, item) {
+								var isValid = false;
+								for(var i=0, len=that.columnDropdown[index][columnId].length; i<len; i++) { // keyValueList 있는 값만..
+									if(that.columnDropdown[index][columnId][i]["code"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+								// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+								return { "validate" : isValid, "message"  : "리스트에 있는 값만 선택(입력) 가능합니다." };
+				} */                                                                 
+						           };
+					    		
+			    		   }, undefined, undefined, this, false,'Y');
+			    	
+			    	   }
+			    	   else if(isCalendar =='Y'){
+				 				/*columnProp[i].dateInputFormat = "yyymmdd"; // 실제 데이터의 형식 지정
+				 				columnProp[i].formatString = "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
+				 				columnProp[i].dateType = 'date';
+				 				columnProp[i].width = 160;
+				 				columnProp[i].renderer = {
+																type : "IconRenderer",
+																iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+																iconHeight : 16,
+																iconPosition : "aisleRight",
+																iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+																	"default" : "../content/icon/calendar-icon.png" // default
+																},
+																onClick : function(event) {
+																	// 달력 아이콘 클릭하면 실제로 달력을 띄움.
+																	// 즉, 수정으로 진입함.
+																	AUIGrid.openInputer(event.pid);
+															    }
+
+								};
+								columnProp[i].editRenderer = {
+																	type : "JQCalendarRenderer", // jquery-datepicker 달력 렌더러 사용
+																	defaultFormat : "yyyymmdd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+																	uncheckDateValue : "-", // Clear 버턴 클릭 시 적용될 값.
+																	showEditorBtn : false,
+																	showEditorBtnOver : false,
+																	onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+																	openDirectly : true, // 에디팅 진입 시 바로 달력 열기
+																	
+																	jqOpts : {
+																		changeMonth: true,
+																		changeYear: true,
+																		selectOtherMonths : true,
+																		showOtherMonths: true,
+																		dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+																		monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
+																	} 
+							   };*/
+								
+					   }
+			    	   
+			    /*	  if(groupHeader =='Y'){
+				          var childrenTmp =[];
+				          var childrenColumn = JSON.parse(momWidget.columnProperty[index][i]['groupingColumn'].replace(/\'/gi, '"'));
+				          for(var k=0,max4=that.columnProperty[index].length;k<max4;k++){	
+					           for(var k2=0,max5=Object.keys(childrenColumn[0]).length;k2<max5;k2++){
+						             if(that.columnProperty[index][k]['columnId'] == childrenColumn[0]['columnId'+(k2+1)] ){
+							             childrenTmp.push(columnProp[k]);
+										 delete columnProp[k];
+										 
+										 		
+									 }
+					           }
+						  }
+						  columnProp.children = childrenTmp;
+								
+						} */
+			    	   
+			    	   
+			    	   	
+			      } 	
+			      		    that.columnDropdown[index]= dropdownTmp;
+			      		    
+				          var childrenTmp =[];
+				          var childrenColumn = [];
+				          var parentId = '';
+				          var deleteColumn = [];
+				         
+				          for(var k=0,max4=that.columnProperty[index].length;k<max4;k++){	
+					               if(that.columnProperty[index][k]['columnType'] != 'G' ){
+						                  continue;
+										}
+										parentId = that.columnProperty[index][k]['columnId'];
+										//Object.keys(childrenColumn[0]).lengt
+									childrenColumn = JSON.parse(momWidget.columnProperty[index][k]['groupingColumn'].replace(/\'/gi, '"'));
+							for(var k2=0,max5=columnProp.length;k2<max5;k2++){		
+					           for(var k3=0,max6=Object.keys(childrenColumn[0]).length;k3<max6;k3++){
+						             if(columnProp[k2]['dataField'] == childrenColumn[0]['columnId'+(k3+1)] ){
+							             childrenTmp.push(columnProp[k2]);
+							             deleteColumn.push({index:k2});
+										
+										 
+										 		
+									 }
+					           }
+					            
+					        }
+					        	for(var k4=0,max7=columnProp.length;k4<max7;k4++){		
+					              if(parentId == columnProp[k4]['dataField']){
+											columnProp[k4].children = childrenTmp;
+										}
+					            
+					        }
+					    
+					         
+					        childrenTmp =[];
+					        parentId = '';
+						  }
+						   for(var k5=0,max8=deleteColumn.length;k5<max8;k5++){		
+					            delete columnProp[deleteColumn[k5]['index']];
+					            
+					        }
+						var filteredColumnProp = columnProp.filter(function (el) {
+							  return el != null;
+							});		
+						 	
+			         sortTmp.sort(function(a,b){ return a.sortNo-b.sortNo});	
+			         for(var k=0,max5=sortTmp.length;k<max5;k++){	
+				         delete sortTmp[k]['sortNo'];
+					}
+			        that.sortingInfo[index] = sortTmp;		     
+	          	    that.excelDownProperty[index]   = excelDownProp; 
+				/*	excelUploadProp.unshift({
+										    	      dataField 	: 'validateYn'
+										  			, headerText 	: '검사여부' 
+										  			, headerStyle   : "my-header-style-default"
+											   		, dataType      : 'string'
+						    	                    , editable      :  false
+										  			, style			: 'aui-grid-default-column-center'
+										  		    , visible       : false
+						                     }); */
+			    		
+			    	   
+			   	    that.excelUploadProperty[index] = excelUploadProp; 
+					var excelUploadProp = that.excelUploadProperty[index];				
+					that.excelDownGrid[index]   = AUIGrid.create('#excelGrid' + (index + 1), that.excelDownProperty[index], that.gridProperty[index]);	
+					that.excelTmpGrid[index]     = AUIGrid.create('#excelTmpGrid' + (index + 1), that.excelUploadProperty[index], that.gridProperty[index]);	
+			  	    var isExist = document.getElementById('grid' + (index + 1));
+				    if(isExist == undefined) {
+					/* that.messageBox({type:'danger', width:'400', height: '145', html: 'grid' + (index + 1) + '가 존재하지 않습니다.'});
+					 return;*/
+					 
+				    }
+                    else{
+	                      if(momWidget.gridProperty[index][0]['usePaging']){
+		                  /*   that.gridProperty[index][0]['pagingInfoLabelFunction'] = 	function(currentPage, totalPageCount, currentTopNumber, currentBottomNumber, dataLen) {
+							 return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + dataLen + " 개 )";
+						     };	*/
+						  }
+	     					 that.columnProp[index] = filteredColumnProp;
+	     					
+							 that.grid[index] = AUIGrid.create('#grid'+(index+1), filteredColumnProp, that.gridProperty[index][0]); 
+					}
+		
+	           
+			     
+			      
+			      $('td').removeClass('aui-grid-default-column');
+			      that.startPage[index]    = 1;
+			      that.endPage[index]      = momWidget.gridProperty[0][0]['pageRowCount'] == undefined ? 20:momWidget.gridProperty[0][0]['pageRowCount'];
+	}, undefined, undefined, this, false);
+	
+		
+			
+			 
+			  
+			 
+		  									
+		  /*
+		  ----------------------------------------------------------------------------------------------------------------------------------     
+		  * 화면별 이벤트 세팅 
+		  ----------------------------------------------------------------------------------------------------------------------------------
+		  */																							
+			
+			//that.setAddBtnEvent(index, your);				    // 행추가버튼 이벤트 핸들러 등록
+			that.setComboBoxSet(index,your);                    // 콤보박스 공통 이벤트 처리
+		    that.setSearchSet(index, your);                     // 검색조건 세팅
+		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
+		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
+		    that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
+		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
+		    if(that.gridProperty[index][0]['usePaging'] ==true){ //페이징사용
+				if(that.gridExtraProperty[index]['initSearch']=='Y'){
+				 // that.backWork[index] = 'Y';		
+				  that.findBtnClicked(index,  {startPage:1,endPage:1}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);	
+		    	  that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',momWidget.pageProperty[0]['programId'],your);
+		    	//  that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
+		    	}
+		    	else{
+			      that.backWork[index] = 'Y';
+			      that.findBtnClicked(index,  {startPage:1,endPage:1}, true, 'TOTAL',momWidget.pageProperty[0]['programId'],your);			
+			  	  that.findBtnClicked(index, {}, true, 'BACK',momWidget.pageProperty[0]['programId'],your);
+				}
+			  
+		    }
+		    else{//페이징 미사용
+				if(that.gridExtraProperty[index]['initSearch']=='Y'){
+					if(index>0 && index%10 == 0){
+						  						
+					}
+					else{
+						that.findBtnClicked(index, {}, true, 'INIT',momWidget.pageProperty[0]['programId'],your);
+					}
+						
+					
+		    	    
+		        }
+			}
+			}
+
+	},	
 	setSearchSet: function(index,your){
 		var that = this;
 		var searchId = undefined;
@@ -1448,8 +2263,9 @@ var momWidget = {
 			else{
 				
 			}
-		}	
-	},
+		}
+		},	
+
 	createSearchArea: {
 		h01 : function(classItem,searchItem,searchBtn) {
 		var topHtml  = '';
@@ -8703,7 +9519,7 @@ var momWidget = {
 					      if( isProcess =='Y'){
 						       return;
 					      }	 
-			        	  momWidget.findBtnClicked(index, {}, true, btnId,momWidget.pageProperty[index]['programId'],your);			        	  
+			        	  momWidget.findBtnClicked(index, {}, true, btnId,momWidget.pageProperty[index]['menuId'],your);			        	  
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
 					      return;

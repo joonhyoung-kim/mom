@@ -3,7 +3,8 @@ var widget = momWidget;
 var that = undefined;
 var VIEW= {
 	initParam		: undefined, 
-	partnerCd       : undefined,
+	inoutNo         : undefined,
+	inoutType       : undefined,
 	init: function() {	
 		that = this;	
 		that.event();
@@ -42,9 +43,9 @@ var VIEW= {
 			
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 0 ){
+	    if(index == 0 ){
 			if(action =='D' || btnId == 'customBtn1-2'){
-		
+		        
 	
 		   }
 		}
@@ -55,9 +56,10 @@ var VIEW= {
 				result.msg = '상단에서 반품서 선택필수!';
 				result.result = 'WARN';
 				return;
-			}
+		}
 	           
-						
+						VIEW.inoutNo   = checkItem[0]['returnNo'];
+						VIEW.inoutType = checkItem[0]['inoutType'];
 					   $('#vendorCdSP21').val(checkItem[0]['vendorCd']);
 					   $('#currencyCdSP21').val(checkItem[0]['currencyCd']);
 					   $('#grDateSD21').val($('#createDateSD1').val());
@@ -78,8 +80,8 @@ var VIEW= {
 		else if(index == 20){
 		  if(action='C'&& btnId == 'customBtn21-1'){ 
 			  for(var i=0,max=param.length; i<max;i++){
-					param[i]['inoutNo'] = checkItem[0]['receiveNo'];
-					param[i]['inoutType'] = 'RD';
+					param[i]['inoutNo']   = VIEW.inoutNo;
+					param[i]['inoutType'] = VIEW.inoutType;
 			  }
 		 }
 			

@@ -4946,18 +4946,21 @@ input:focus{
 }
 @media (min-width:800px) and (max-width:1920px) {
 .custom-dialog {
-    width:150vh !important;
-    max-width:500vh !important;
+   /*  width:150vh !important; */
+    width:auto;
+    max-width:150vh !important;
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
 .custom-dialog {
-
+    width:auto;
+    max-width:150vh !important;
 }
 }
 @media (min-width:800px) and (max-width:1920px) {
 .custom-content {
-    
+      width:auto;
+      max-width:150vh !important;
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {

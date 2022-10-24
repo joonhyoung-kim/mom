@@ -1,7 +1,6 @@
 var menuId = 'XUMD1080';
-var that  = XUMD1080;
 var widget = momWidget;
-var XUMD1080= {
+var VIEW= {
 	initParam		: undefined,
 	columnProperty1	: undefined,
 	createdFlag		: undefined,
@@ -28,7 +27,7 @@ var XUMD1080= {
 			var checkedItems =AUIGrid.getSelectedItems(momWidget.grid[0])[0];
 				if (checkedItems==undefined){
 					 /* result.result = 'FAIL';
-					  result.msg    =  '상단에서 Routin Id 선택 필요!';*/
+					  result.msg    =  '상단에서 Routin Id 선택 필요!';*/ 
 					  widget.splashHide();
 					  return;	
 				}
@@ -40,14 +39,14 @@ var XUMD1080= {
 	},
 	searchCallBack: function(index,your,action,btnId,param,result,data) {
 		if(index == 0){				
-			AUIGrid.clearGridData(widget.grid[1]);
+			//AUIGrid.clearGridData(widget.grid[1]);
 	    }
 
 	},		
     cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index == 0){
 			var item = e.item;		
-			momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080);
+			momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,VIEW);
 			//that.initParam = {routingId:item.routingId}; 
 		}
 	
@@ -57,7 +56,9 @@ var XUMD1080= {
 
 $(document).ready(function(event){	
 	momSetup.init();
-	momWidget.init(1, menuId, XUMD1080);
-	momWidget.init(2, menuId, XUMD1080);
-	XUMD1080.init();
+	momWidget.init(1, menuId, VIEW);
+	momWidget.init(2, menuId, VIEW);
+	momWidget.customGrid.popup(1,1,'XXDG0110', VIEW);
+	momWidget.customGrid.popup(1,2,'XXDG0110', VIEW);
+	VIEW.init();
 });
