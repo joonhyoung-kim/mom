@@ -3,7 +3,7 @@
 <mapper namespace="com.mom.XXDG0120">
  <!-- Routing 현황 -->
  <select id="get_findBtn11" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-    SELECT MR.ROUTING_ID
+    SELECT MR.ROUTING_ID         
 	     , MR.ROUTING_NM
 	     , MR.ROUTING_SHORT_NM
 	     , MRP.OPERATION_SEQ    
