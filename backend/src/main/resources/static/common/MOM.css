@@ -255,14 +255,10 @@
     height:33%;
 }
 .grid-box11-h01{
-	/* height: 63rem; */
-	/* height: 95.5%; */
+	 height: 100%; 
      width:calc(100% - 0.3rem); 
-  /*    height:calc(100% - 6rem);   */
-     height:82%;
-	/* position: absolute;  */
-	position:relative;
-	margin-top: 0.6rem;
+	 position:relative;
+	 margin-top: 0.6rem;
 }
 .grid-box11-h02{
 	/* height: 63rem; */
@@ -332,8 +328,8 @@
 .grid-box1-h01{
 	 height: 100%; 
      width:calc(100% - 0.3rem); 
-	position:relative;
-	margin-top: 0.6rem;
+	 position:relative;
+	 margin-top: 0.6rem;
 }
 .grid-box1-h02{
 	/* height: 63rem; */
@@ -591,9 +587,8 @@
 }
 .gridArea-tm1st-h01-011{
 	background: #f0f0f5;
-    height: 98%;
+    height: 64.5vh;
     border: none;
-   /*  width: 160.8rem; */
 }
 .gridArea-tm1st-h01-021{
 	background: #f0f0f5;
@@ -5014,10 +5009,9 @@ input:focus{
     margin-top: 0.2rem; 
 }
 .tabcontentarea1 {
-    /* height: 100vh; */
 	margin-bottom: 0px;
 	background: #f0f0f5;	
-	/* height: calc(100% - 14vh) !important; */
+	height:100%
 }
 .tabcontentarea11 {
     /* height: 100vh; */
