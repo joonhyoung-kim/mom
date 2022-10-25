@@ -12,8 +12,11 @@ var VIEW= {
 	    if(index==0){				
 			   AUIGrid.clearGridData(widget.grid[1]);
 		} 
-        else if(index==1){				
-			    result.param = {routingId:checkItem[0].routingId};	
+        else if(index==1){	
+				if(checkItem.length>0){
+					result.param = {routingId:checkItem[0].routingId};	
+				}			
+			    
 		} 
 
 
