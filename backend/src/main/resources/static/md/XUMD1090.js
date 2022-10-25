@@ -18,7 +18,7 @@ var VIEW= {
 
 		
 	},
-	/*customCallInit: function(index,your,action,btnId,param,result) {
+	customCallInit: function(index,your,action,btnId,param,result) {
 	  var checkItem = widget.getCheckedRowItems(widget.grid[0]);
 	  if (index == 0){
 	    if(btnId == 'customGridPopBtn1-1'){
@@ -26,10 +26,14 @@ var VIEW= {
 	        result.msg = '상단에서 품목별 작업장 관리 선택필수!';
 					result.result = 'WARN';
 					return;
-	      } 
+	      }
+	      else {
+		    let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+		    result.param = {borId:checkItem[0].borId}; 
+		  } 
 	    }  
 	  }
-    },	*/
+    },	
 	cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index==0){
 			var item = e.item;	
@@ -65,6 +69,6 @@ $(document).ready(function(event){
 	momWidget.init(1, menuId, VIEW);
 	momWidget.init(2, menuId, VIEW);
 	momWidget.gridPopup.init(1,1,'XXDG0120', VIEW);
-	momWidget.gridPopup.init(1,2,'XXDG0120', VIEW);
+	/*momWidget.gridPopup.init(1,2,'XXDG0120', VIEW);*/
 	VIEW.init();
 });

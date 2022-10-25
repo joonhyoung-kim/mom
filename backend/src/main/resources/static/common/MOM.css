@@ -559,6 +559,8 @@
     height:calc(100% - 0.9rem);
     border: none;
 }
+
+
 .gridArea-tm2v-h00-011{
 	background: #f0f0f5;
     border: none;
@@ -569,7 +571,6 @@
     height:70vh; 
     border: none;
 }
-
 .gridArea-tm2v-h01-01{
 	background: #f0f0f5;
     height:93.6%;
@@ -1821,6 +1822,9 @@ border-color: #d8dce3 !important;
 	    height: 100%;
         width: 100%;
 }
+.gridPop-XXDG0110{
+	    margin-top: -0.8vh !important;
+}
 .searcharea-gridPop-C8-R6 {
 	border: none;
 	background-color: white;
@@ -1963,7 +1967,34 @@ border-color: #d8dce3 !important;
     background-repeat: repeat;
     background-attachment: scroll;
     box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
-     height: 70vh; 
+    height: 70vh; 
+    padding: 0.5rem !important;
+}
+.gridPop-searcharea-XXDG0120{
+	 border: none;
+    width: 100%;
+    position: relative;
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    height: 70vh; 
+}
+.gridPop-searcharea-XXDG0120{
+	 border: none;
+    width: 100%;
+    position: relative;
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    height: 70vh; 
 }
 .gridPop-searcharea-XXDG0120{
 	 border: none;

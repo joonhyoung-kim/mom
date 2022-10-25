@@ -597,6 +597,7 @@ var momWidget = {
 			    		
 			    	   }
 			    	   if(isCheckBox =='Y'){
+				           columnProp[i].mergeRef =columnProp[i].formatString;
 			    		   columnProp[i].renderer = {
 									          type: 'CheckBoxEditRenderer'
 											, editable: true
@@ -1476,6 +1477,7 @@ var momWidget = {
 			    		
 			    	   }
 			    	   if(isCheckBox =='Y'){
+						   columnProp[i].mergeRef =columnProp[i].formatString;
 			    		   columnProp[i].renderer = {
 									          type: 'CheckBoxEditRenderer'
 											, editable: true
@@ -4423,7 +4425,7 @@ var momWidget = {
 			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'CK'){
 				if(e.dataField == "checkBox") {
 			// 체크박스 클릭 했을 때, 병합된 모든 행의 체크박스를 동기화 시킴.
-			that.syncData(index,e.item, e.rowIndex, e.dataField, that.columnProperty[0][1]['columnId'], e.value);
+			that.syncData(index,e.item, e.rowIndex, e.dataField, that.columnProperty[index][e.columnIndex]['dataFormat'], e.value);
 		     }
 			}		
 			if(your != undefined && your.cellEditCallBack != undefined) {
