@@ -18,13 +18,24 @@ var VIEW= {
 
 		
 	},
-		
+	/*customCallInit: function(index,your,action,btnId,param,result) {
+	  var checkItem = widget.getCheckedRowItems(widget.grid[0]);
+	  if (index == 0){
+	    if(btnId == 'customGridPopBtn1-1'){
+	      if(checkItem.length==0){
+	        result.msg = '상단에서 품목별 작업장 관리 선택필수!';
+					result.result = 'WARN';
+					return;
+	      } 
+	    }  
+	  }
+    },	*/
 	cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index==0){
 			var item = e.item;	
 			
 			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
-			  setTimeout(function() {
+			 setTimeout(function() {
 			 mom_ajax('R', 'DD.DD00023', {workCenterCd:item['workCenterCd']}, function(result, data) {
 		      if(result != 'SUCCESS') {
 		    	  momWidget.splashHide();
@@ -35,6 +46,8 @@ var VIEW= {
 						 widget.columnDropdown[1][widget.columnProperty[1][i]['columnId']]=data;
 					   }
 					}
+					
+  					
   widget.findBtnClicked(1, {borId:item['borId']}, true, 'CELLCLICK',menuId,VIEW);
 	}, undefined, undefined, this, false);	
 				
@@ -51,6 +64,7 @@ $(document).ready(function(event){
 	momSetup.init();
 	momWidget.init(1, menuId, VIEW);
 	momWidget.init(2, menuId, VIEW);
-	
+	momWidget.gridPopup.init(1,1,'XXDG0120', VIEW);
+	momWidget.gridPopup.init(1,2,'XXDG0120', VIEW);
 	VIEW.init();
 });

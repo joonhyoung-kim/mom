@@ -597,6 +597,7 @@ var momWidget = {
 			    		
 			    	   }
 			    	   if(isCheckBox =='Y'){
+				           columnProp[i].mergeRef ='';
 			    		   columnProp[i].renderer = {
 									          type: 'CheckBoxEditRenderer'
 											, editable: true

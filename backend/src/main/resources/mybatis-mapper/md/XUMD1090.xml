@@ -3,125 +3,119 @@
 <mapper namespace="com.mom.XUMD1090">
 
   <select id="get_validateEx1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-      SELECT NVL(VAL_MSG,'PASS') AS VAL_MSG
-           , MULTI_MSG      
-     FROM    MOM_PROC_BOR
-     WHERE   COMPANY_CD  = #{companyCd , jdbcType=VARCHAR}
-     AND     DIVISION_CD = #{divisionCd , jdbcType=VARCHAR}
-     AND     CREATE_BY    = #{userId , jdbcType=VARCHAR}
+    SELECT NVL(VAL_MSG,'PASS') AS VAL_MSG
+         , MULTI_MSG      
+    FROM    MOM_PROC_BOR
+    WHERE   COMPANY_CD  = #{companyCd , jdbcType=VARCHAR}
+    AND     DIVISION_CD = #{divisionCd , jdbcType=VARCHAR}
+    AND     CREATE_BY    = #{userId , jdbcType=VARCHAR}
   </select>
-   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-		  SELECT * 
-		FROM
-		    (
-		        SELECT
-		            COUNT(*) OVER() AS TOTAL_COUNT,
-		            A.*,
-		            ROWNUM AS KEY_ID,
-		             ROWNUM AS ID
-		           
-		        FROM
-		            (
-		                SELECT MCD.COMPANY_CD
+  <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	SELECT * 
+	FROM   ( SELECT COUNT(*) OVER() AS TOTAL_COUNT
+	              , A.*
+	              , ROWNUM AS KEY_ID
+	              , ROWNUM AS ID
+             FROM ( SELECT MCD.COMPANY_CD
+		                 , MCD.COMPANY_NM
+		                 , MCD.DIVISION_CD
+		                 , MCD.DIVISION_NM
+		                 , MB.ITEM_ID
+		                 , MI.ITEM_NM
+		                 , MI.ITEM_SPEC
+		                 , MI.ITEM_TYPE
+		                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD,'MD0002',MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_TYPE_NM  
+		                 , MB.ROUTING_ID
+		                 , MR.ROUTING_SHORT_NM                                                                                                          <!-- 20221024 LCS 추가 --> 
+		                 <!-- , (SELECT MOM_COMMON_PKG.FN_GET_ROUTING_NAME(MB.COMPANY_CD,MB.DIVISION_CD,MB.ROUTING_ID) FROM DUAL) AS ROUTING_NM         20221021 LCS 삭제-->                                   
+                         , MR.ROUTING_NM		                                                                                                        <!-- 20221024 LCS 추가 -->
+		                 , MB.WORK_CENTER_CD
+		                 , (SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(MB.COMPANY_CD,MB.DIVISION_CD,MB.WORK_CENTER_CD) FROM DUAL) AS WORK_CENTER_NM
+		                 , MB.TACT_TIME
+		                 , MB.TACT_TIME_UOM
+		                 , MB.PROCESS_LT_UOM
+		                 , MB.PROCESS_LT
+		                 , MB.PRIORITY
+		                 , MB.YIELD
+		                 , MB.BOR_ID
+		                 , MB.CONSUME_LOCATION_CD
+		                 , MB.GOOD_LOCATION_CD
+		                 , MB.DEFECT_LOCATION_CD
+		                 ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.CONSUME_LOCATION_CD) FROM DUAL ) AS CONSUME_LOCATION_NM
+		                 ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.GOOD_LOCATION_CD) FROM DUAL ) AS GOOD_LOCATION_NM
+		                 ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.DEFECT_LOCATION_CD) FROM DUAL ) AS DEFECT_LOCATION_NM
+		                 , MB.USE_YN
+		                 , MB.DESCRIPTION
+		                 , MB.CREATE_BY
+		                 ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
+		                 , TO_CHAR(MB.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+		                 , MB.UPDATE_BY
+		                 ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		                 , TO_CHAR(MB.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		            FROM   MOM_COM_DIV_V MCD
+		                 , MOM_BOR MB
+		                 , MOM_ITEM MI
+		                 , MOM_ROUTING MR                                            <!-- 20221024 LCS 추가 -->
+		            WHERE  MCD.COMPANY_CD   = MB.COMPANY_CD
+		            AND    MCD.DIVISION_CD  = MB.DIVISION_CD     
+		            AND    MB.COMPANY_CD    = MI.COMPANY_CD
+		            AND    MB.DIVISION_CD   = MI.DIVISION_CD     
+		            AND    MB.ITEM_ID       = MI.ITEM_ID
+		            AND    MB.COMPANY_CD    = MR.COMPANY_CD                          <!-- 20221024 LCS 추가 -->
+                    AND    MB.DIVISION_CD   = MR.DIVISION_CD     	                 <!-- 20221024 LCS 추가 -->													
+                    AND    MB.ROUTING_ID    = MR.ROUTING_ID	                         <!-- 20221024 LCS 추가 -->
+		            AND    MB.COMPANY_CD    = #{companyCd , jdbcType=VARCHAR}
+		            AND    MB.DIVISION_CD   = #{divisionCd , jdbcType=VARCHAR}
+		            <if test="itemIdNm != null and itemIdNm != ''">
+		            AND    (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+		            </if>
+		            <if test="workCenterCd != null and workCenterCd != ''">
+		            AND    MB.WORK_CENTER_CD = #{workCenterCd , jdbcType=VARCHAR}
+		            </if>
+		            <if test="routingId != null and routingId != ''">
+		            AND    MB.ROUTING_ID = #{routingId , jdbcType=VARCHAR}
+		            </if>
+		            <if test="useYn != null and useYn != ''">
+		            AND MB.USE_YN = #{useYn , jdbcType=VARCHAR}
+		            </if>
+		            ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MB.ITEM_ID, MB.ROUTING_ID  ) A
+		   )
+	<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
+    WHERE  KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
+    </if>	
+
+	</select>
+	  <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+		SELECT MCD.COMPANY_CD
 		     , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
 		     , MCD.DIVISION_NM
-		     , MB.ITEM_ID
-		     , MI.ITEM_NM
-		     , MI.ITEM_SPEC
-		     , MI.ITEM_TYPE
-		     , MI.LOT_MANAGEMENT_YN
-		     , MI.PRICE_SYNC_YN  
-		     , MI.PO_OVER_RECEIPT_RATE 
-		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD,'MD0002',MI.ITEM_TYPE, 'KR') FROM DUAL) AS ITEM_TYPE_NM  
-		     , MB.ROUTING_ID
-		     , (SELECT MOM_COMMON_PKG.FN_GET_ROUTING_NAME(MB.COMPANY_CD,MB.DIVISION_CD,MB.ROUTING_ID) FROM DUAL) AS ROUTING_NM
-		     , MB.WORK_CENTER_CD
-		     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(MB.COMPANY_CD,MB.DIVISION_CD,MB.WORK_CENTER_CD) FROM DUAL) AS WORK_CENTER_NM
-		     , MB.TACT_TIME
-		     , MB.TACT_TIME_UOM
-		     , MB.PROCESS_LT_UOM
-		     , MB.PROCESS_LT
-		     , MB.PRIORITY
-		     , MB.YIELD
-		     , MB.BOR_ID
-		     , MB.CONSUME_LOCATION_CD
-		     , MB.GOOD_LOCATION_CD
-		     , MB.DEFECT_LOCATION_CD
-		     ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.CONSUME_LOCATION_CD) FROM DUAL ) AS CONSUME_LOCATION_NM
-		     ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.GOOD_LOCATION_CD) FROM DUAL ) AS GOOD_LOCATION_NM
-		     ,(SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.DEFECT_LOCATION_CD) FROM DUAL ) AS DEFECT_LOCATION_NM
-		     , MB.USE_YN
-		     , MB.DESCRIPTION
-		     , MB.CREATE_BY
-		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
-		     , TO_CHAR(MB.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
-		     , MB.UPDATE_BY
-		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MB.COMPANY_CD, MB.DIVISION_CD, MB.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
-		     , TO_CHAR(MB.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		     , MBP.BOR_ID
+		   <!--   , MBP.BOR_ID AS KEY_ID -->
+		     , MBP.OPERATION_SEQ
+		     , MBP.OPERATION_ID
+		   <!--   , MBP.BOR_ID || '_' || MBP.OPERATION_ID AS KEY_ID -->
+		     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MBP.COMPANY_CD,MBP.DIVISION_CD,MBP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
+		     , MBP.WORK_STATION_CD
+		     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MBP.COMPANY_CD,MBP.DIVISION_CD,MBP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
+		     , MBP.INSPECTION_YN
+		     , MBP.FINAL_OPERATION_YN
+		     , MBP.MILESTONE
+		     , MBP.DESCRIPTION
+		     , MBP.CREATE_BY
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
+		     , TO_CHAR(MBP.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+		     , MBP.UPDATE_BY
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		     , TO_CHAR(MBP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
 		FROM   MOM_COM_DIV_V MCD
-		     , MOM_BOR MB
-		     , MOM_ITEM MI
-		WHERE  MCD.COMPANY_CD   = MB.COMPANY_CD
-		AND    MCD.DIVISION_CD  = MB.DIVISION_CD     
-		AND    MB.COMPANY_CD    = MI.COMPANY_CD
-		AND    MB.DIVISION_CD   = MI.DIVISION_CD     
-		AND    MB.ITEM_ID       = MI.ITEM_ID
-		AND    MB.COMPANY_CD    = #{companyCd , jdbcType=VARCHAR}
-		AND    MB.DIVISION_CD   = #{divisionCd , jdbcType=VARCHAR}
-		<if test="itemIdNm != null and itemIdNm != ''">
-		AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
-		</if>
-		<if test="workCenterCd != null and workCenterCd != ''">
-		AND MB.WORK_CENTER_CD = #{workCenterCd , jdbcType=VARCHAR}
-		</if>
-		<if test="routingId != null and routingId != ''">
-		AND MB.ROUTING_ID = #{routingId , jdbcType=VARCHAR}
-		</if>
-		<if test="useYn != null and useYn != ''">
-		AND MB.USE_YN = #{useYn , jdbcType=VARCHAR}
-		</if>
-		ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MB.ITEM_ID, MB.ROUTING_ID           
-		            ) A
-		           
-		
-		    )
-	 <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
-     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
-     </if>	
-
-	</select>
-	 <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-		    SELECT     MCD.COMPANY_CD
-				     , MCD.COMPANY_NM
-				     , MCD.DIVISION_CD
-				     , MCD.DIVISION_NM
-				     , MBP.BOR_ID
-				     , MBP.BOR_ID AS KEY_ID
-				     , MBP.OPERATION_SEQ
-				     , MBP.OPERATION_ID
-				     , MBP.BOR_ID || '_' || MBP.OPERATION_ID AS KEY_ID
-				     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MBP.COMPANY_CD,MBP.DIVISION_CD,MBP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
-				     , MBP.WORK_STATION_CD
-				     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MBP.COMPANY_CD,MBP.DIVISION_CD,MBP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
-				     , MBP.INSPECTION_YN
-				     , MBP.FINAL_OPERATION_YN
-				     , MBP.MILESTONE
-				     , MBP.DESCRIPTION
-				     , MBP.CREATE_BY
-				      ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
-				     , TO_CHAR(MBP.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
-				     , MBP.UPDATE_BY
-				     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MBP.COMPANY_CD, MBP.DIVISION_CD, MBP.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
-				     , TO_CHAR(MBP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-			FROM   MOM_COM_DIV_V MCD
-			     , MOM_BOR_PATH MBP
-			WHERE  MCD.COMPANY_CD   = MBP.COMPANY_CD
-			AND    MCD.DIVISION_CD  = MBP.DIVISION_CD     
-			AND    MBP.COMPANY_CD   = #{companyCd , jdbcType=VARCHAR}
-			AND    MBP.DIVISION_CD  = #{divisionCd , jdbcType=VARCHAR}
-			AND    MBP.BOR_ID       = #{borId , jdbcType=VARCHAR}
-			ORDER BY  MBP.OPERATION_ID
+		     , MOM_BOR_PATH MBP
+		WHERE  MCD.COMPANY_CD   = MBP.COMPANY_CD
+		AND    MCD.DIVISION_CD  = MBP.DIVISION_CD     
+		AND    MBP.COMPANY_CD   = #{companyCd , jdbcType=VARCHAR}
+		AND    MBP.DIVISION_CD  = #{divisionCd , jdbcType=VARCHAR}
+		AND    MBP.BOR_ID       = #{borId , jdbcType=VARCHAR}
+		ORDER BY  MBP.OPERATION_SEQ
 	</select>
 
 
