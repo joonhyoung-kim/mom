@@ -5658,7 +5658,7 @@ var momWidget = {
 				}
 				else if( that.buttonProperty[index][i]['buttonType']=='ST' || that.buttonProperty[index][i]['buttonType']=='EX'){
 					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
-					     that.setCustomBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
+					     that.setCustomBtn(index,e.currentTarget.id.split('customBtn')[1],e.currentTarget.id,your,e);				
 			         });	
 					
 				}
@@ -9376,11 +9376,12 @@ var momWidget = {
 				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']==btnId){
 						targetParam = that.buttonProperty[index][i]['checkType'];	
+						actionType = that.buttonProperty[index][i]['eventType'];
 						break;	
 					}
 				}
 				if(actionType !='R'){
-					if(targetParam=='GRID_CHECK'){
+				  if(targetParam=='GRID_CHECK'){
 					    param = that.getCheckedRowItems(that.grid[index],true);
 					    if(param.length==0){
 						     return;
@@ -9407,8 +9408,6 @@ var momWidget = {
 														
 						}
 						else{	
-							
-				          		
 							    param = AUIGrid.getGridData(that.grid[index]);
 							    if(param.length==0){
 								momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
@@ -9433,7 +9432,7 @@ var momWidget = {
 				}
 		 		for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['buttonId']=='customBtn'+btnIndex){
-						actionType = that.buttonProperty[index][i]['eventType'];
+						//actionType = that.buttonProperty[index][i]['eventType'];
 						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
 						buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
 						buttonParamList = buttonParamText.split(',');
@@ -9457,7 +9456,9 @@ var momWidget = {
 									  momWidget.splashHide();
 								      return;
 					       }
-			        mom_ajax('D', queryId,[param[0]], function(result1, data1) {
+					      
+					       	param = callInitResult['param'];
+			        mom_ajax('D', queryId,[param[0]==undefined ? {}:param[0]], function(result1, data1) {
 			               if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
 							  momWidget.splashHide();
@@ -9471,13 +9472,7 @@ var momWidget = {
 								      return;
 					       }
 			    	
-			     				param = param.map(function(item1){
-							    var obj = callInitResult['param'].find(function(item2){
-						        return item2;
-						    })
-						    $.extend(item1, obj);               
-							    return item1;
-							});
+			     				param = callInitResult['param'];
 				 		     //param = callInitResult['param'];  
 				 		     
 				 		      	
