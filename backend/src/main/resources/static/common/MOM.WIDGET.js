@@ -1342,8 +1342,7 @@ var momWidget = {
 			    		    createFrontArea["tm3hv"]  = that.tm3hv; 
 			    			createFrontArea["tm4vvh"]  = that.tm4vvh;
 			    		    createFrontArea[templateName](index+1,splitRatio,'contentArea',"#popup_main"+(index+1));
-			        }				    
-			    		
+			        }				    			    		
 			    		    $('#contentArea'+(index+1)).append(searchAreaHtml); 	
 			    	 
 			    		    				    	
@@ -4439,6 +4438,11 @@ var momWidget = {
 			}				
       // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
 			});
+			AUIGrid.bind(that.grid[index], "dropEnd", function(e) {
+   			if(your != undefined && your.dropCallBack != undefined) {
+				 your.dropCallBack(index,e.pid,e.pidToDrop,e.fromRowIndex,e.toRowIndex,e.dropColumnIndex,e.items); 		
+			}	
+    });
 		$(document).on('click', '#upBtn1', function() {
 			AUIGrid.moveRowsToUp(momWidget.grid[index]);
 		
@@ -4808,7 +4812,7 @@ var momWidget = {
 			}
 	
 		});	
-		AUIGrid.bind(that.grid[index], "dropEnd", function(event ) {
+	/*	AUIGrid.bind(that.grid[index], "dropEnd", function(event ) {
 			var childColumn    = that.gridProperty[index][0]['treeIdField']
 			var childId        = event['toRowIndex'];
 			var parentColumn   = that.gridProperty[index][0]['treeIdRefField'];
@@ -4816,7 +4820,7 @@ var momWidget = {
 			var toRowIndex     = event['toRowIndex'];
 			var nowParentId    = event.items[0]['_$parent'];
 			AUIGrid.setCellValue(that.grid[index], toRowIndex, parentColumn, nowParentId);
-		});
+		});*/
 	},
 	setKeyEvent: function(index, your) {
 		var that =  this;	
@@ -5642,7 +5646,7 @@ var momWidget = {
 				}
 				if(that.buttonProperty[index][i]['buttonType']=='DG'){				   	
 				   	 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {		//커스텀 그리드랍업			     
-					     that.setCustomGridPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
+					     that.setCustomGridPopBtn(index,e.currentTarget.id.split('customBtn')[1],e.currentTarget.id,your,e);				
 			         });	
 					
 				}
@@ -9375,7 +9379,8 @@ var momWidget = {
 						break;	
 					}
 				}
-				if(targetParam=='GRID_CHECK'){
+				if(actionType !='R'){
+					if(targetParam=='GRID_CHECK'){
 					    param = that.getCheckedRowItems(that.grid[index],true);
 					    if(param.length==0){
 						     return;
@@ -9412,6 +9417,8 @@ var momWidget = {
 							   
 						}
 				}
+				}
+				
 			    for(var i=0,max=that.columnProperty[index].length;i<max;i++){
 				     if(that.columnProperty[index][i]['columnRequire']=='Y'){
 					      for(var j=0,max2=param.length;j<max2;j++){
@@ -9632,14 +9639,24 @@ var momWidget = {
 								    	  momWidget.splashHide();
 									      return;							     
 							}
-								 AUIGrid.setGridData(that.grid[gridPopIndex-1], data1); 
 							
+								 AUIGrid.setGridData(that.grid[gridPopIndex-1], data1); 
+					
 								// $('#findBtn'+gridPopIndex).attr('id','findBtn'+popupBtnIndex)
 								 $('#popupTitle'+(index+1)).text(buttonNm);
+								 for(let i=0;i<=10;i++){
+									 if($('#grid'+(gridPopIndex+i)).length >0){
+										 AUIGrid.clearFilterAll('#grid'+(gridPopIndex+i));
+										 AUIGrid.clearSortingAll('#grid'+(gridPopIndex+i));
+										 AUIGrid.resize('#grid'+(gridPopIndex+i));
+									 }
+								}
+								 
+								   
 								 $('#'+'gridPop-'+btnId).momModal('show');
+								 
 								// $('#'+'gridPop-'+btnId).modal('show');
-								AUIGrid.resize(that.grid[gridPopIndex-1]);
-								$('#'+'gridPop-'+btnId).draggable();
+								//$('#'+'gridPop-'+btnId).draggable();
 									 let  callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customBtn'+btnIndex, your,data1);     	
 		    					            if(callBackResult['result'] != 'SUCCESS') {
 												  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});

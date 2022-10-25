@@ -3,7 +3,8 @@
 <mapper namespace="com.mom.XXDG0110">
  <!-- routing조회 -->
  <select id="get_findBtn11" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-  	SELECT MO.OPERATION_ID				
+  	SELECT MO.OPERATION_ID	
+  	     , TO_CHAR(ROWNUM) AS KEY_ID			
 	     , MO.OPERATION_NM				
 	     , MO.INSPECTION_YN				
 	FROM   MOM_OPERATION MO				

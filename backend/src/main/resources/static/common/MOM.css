@@ -280,7 +280,7 @@
 	margin-top: 0.6rem;
 }
 .grid-box12-h00{
-   width:calc(100% - 0.3rem); 
+     width:100%; 
 	position:relative;
 	margin-top: 0.6rem;
 }
@@ -5000,7 +5000,7 @@ input:focus{
     /* height: 100vh; */
 	margin-bottom: 0px;
 	background: #f0f0f5;	
-	 height: auto !important; 
+	height: 100% !important; 
 }
 @media (min-width:800px) and (max-width:1920px) {
 .custom-dialog {

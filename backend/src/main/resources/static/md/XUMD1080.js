@@ -51,7 +51,32 @@ var VIEW= {
 		}
 	
 	},
+	 dropCallBack: function(index,fromGrid,toGrid,fromRowIndex,toRowIndex,dropColumnIndex,item) {
+		if(index == 10){	
+			          let totalCount = AUIGrid.getRowCount(widget.grid[11]);
+				      AUIGrid.setCellValue(widget.grid[11], toRowIndex, "operationSeq", totalCount+'');
+	
+         
+		}
+		if(index == 11){
+			          let totalCount = AUIGrid.getRowCount(widget.grid[11]);	
+			          for(let i=0,max=totalCount; i<max;i++){
+							AUIGrid.setCellValue(widget.grid[11], i, "operationSeq", (i+1)+'');
+			          }
+				      
+	
+         
+		}
 
+	},
+
+
+	customCallInit: function(index,your,action,btnId,param,result) {
+		if(index == 11 &&btnId=='customBtn12-1'){
+			AUIGrid.clearGridData(widget.grid[11]);
+		   }	
+		
+	}	  
 };
 
 $(document).ready(function(event){	

@@ -1577,7 +1577,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	}
 	
 	else{
-		  momWidget.messageBox({type:'warning', width:'400', height: '145', html: 'C,R,U,D 범위에서 가능합니다!'});
+		 // momWidget.messageBox({type:'warning', width:'400', height: '145', html: 'C,R,U,D 범위에서 가능합니다!'});
 		  momWidget.splashHide();	
 		  return;		
 	}	
