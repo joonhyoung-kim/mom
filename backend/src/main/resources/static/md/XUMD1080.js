@@ -22,6 +22,16 @@ var VIEW= {
 	
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
+	   let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+	    if(index==0){				
+			   AUIGrid.clearGridData(widget.grid[1]);
+		} 
+        else if(index==1){	
+				if(checkItem.length>0){
+					result.param = {routingId:checkItem[0].routingId};	
+				}			
+			    
+		} 
 		if(index == 1 && (btnId=='findBtn' ||  btnId=='EXCEL_DOWN')){	
 			var item = param;
 			var checkedItems =AUIGrid.getSelectedItems(momWidget.grid[0])[0];
