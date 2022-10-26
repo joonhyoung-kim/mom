@@ -3,7 +3,8 @@
 <mapper namespace="com.mom.XXDG0120">
  <!-- Routing 현황 -->
  <select id="get_findBtn11" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
-    SELECT MR.ROUTING_ID         
+    SELECT 'N'  as CHECK_BOX 
+         , MR.ROUTING_ID         
 	     , MR.ROUTING_NM
 	     , MR.ROUTING_SHORT_NM
 	     , MRP.OPERATION_SEQ    
@@ -37,25 +38,25 @@
 	                AND    MRP.ROUTING_ID  = MR.ROUTING_ID
 	                AND    MRP.OPERATION_ID LIKE '%' || UPPER(#{operationId, jdbcType=VARCHAR}) || '%')
 	</if>                
-	AND    MR.USE_YN      = 'Y'
+	AND    MR.USE_YN   = 'Y'
 	AND    MRP.USE_YN  = 'Y'   
     AND    MO.USE_YN   = 'Y'
 	ORDER BY MR.ROUTING_ID 
 	       , MRP.OPERATION_SEQ      
   </select>
   <delete id="remove_customBtn11-1" parameterType="java.util.List">
-       DELETE FROM MOM_PROC_BOR_ROUTING
-      <where>
+    DELETE FROM MOM_PROC_BOR_ROUTING
+    <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
         (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
            AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
            AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
         )
        </foreach>
-      </where>
+    </where>
    </delete>  
    <insert id="create_customBtn11-1" parameterType="java.util.List">
-      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_PROC_BOR_ROUTING( COMPANY_CD
                               , DIVISION_CD
                               , BOR_ID
@@ -73,13 +74,13 @@
              , #{item.userId, jdbcType=VARCHAR}
              , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
              )
-   </foreach>
-  </insert>
-    <select id="proc_customBtn11-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-          { CALL MOM_MATERIAL_PKG.sp_upsert_po_dtl(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
-					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
-					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
-					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
-					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
-    </select>    
+     </foreach>
+   </insert>
+   <select id="proc_customBtn11-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+     { CALL MOM_MASTER_INFO_PKG.SP_BOR_ROUTING_PATH_MAPPING( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+	    		                                           , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                       , #{companyCd,   jdbcType=VARCHAR, mode=IN}
+					                                       , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                                       , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+   </select>    
 </mapper>

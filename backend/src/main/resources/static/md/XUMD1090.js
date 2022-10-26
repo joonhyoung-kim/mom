@@ -15,8 +15,6 @@ var VIEW= {
 		      result.param = {borId:checkItem[0].borId};
 			  					
 		}
-
-		
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
 	  var checkItem = widget.getCheckedRowItems(widget.grid[0]);
@@ -27,41 +25,48 @@ var VIEW= {
 					result.result = 'WARN';
 					return;
 	      }
-	      else {
-		    let checkItem = widget.getCheckedRowItems(widget.grid[0]);
-		    result.param = {borId:checkItem[0].borId}; 
-		  } 
+	      // 검색조건 초기화 
+	      $('#routingIdSP11').val('');
+	      $('#operationIdSP11').val('');
 	    }  
+	  }
+	  else if(index == 10){			    
+		if(action=='D'&& btnId == 'customBtn11-1'){ 		
+		  let checkedItem = [];  
+		  for(var i=0,max=param.length; i<max;i++){
+			if(param[i]['checkBox']=='Y'){
+			  checkedItem.push(param[i]);
+			}
+	      }
+	      result.param = checkedItem;
+		}
+		else if(action=='C'&& btnId == 'customBtn11-1'){ 
+		  for(var i=0,max=param.length; i<max;i++){
+			param[i]['borId'] = checkItem[0]['borId'];
+	      }
+		}
 	  }
     },	
 	cellClickCallBack: function(index,rowIndex,target,e) {
-		if(index==0){
-			var item = e.item;	
-			
-			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
-			 setTimeout(function() {
-			 mom_ajax('R', 'DD.DD00023', {workCenterCd:item['workCenterCd']}, function(result, data) {
-		      if(result != 'SUCCESS') {
-		    	  momWidget.splashHide();
-			      return;							     
-		      }					       
-			    for(var i=0;i<widget.columnProperty[1].length;i++){
-					   if(widget.columnProperty[1][i]['columnId'] =='workStationCd'){
-						 widget.columnDropdown[1][widget.columnProperty[1][i]['columnId']]=data;
-					   }
-					}
-					
-  					
-  widget.findBtnClicked(1, {borId:item['borId']}, true, 'CELLCLICK',menuId,VIEW);
-	}, undefined, undefined, this, false);	
-				
-				  
-	             
-    			   },200);
-
-	}
+	  if(index==0){
+		var item = e.item;	
+		//var param = momWidget.getSelectedItems(momWidget.grid[0]);
+		setTimeout(function(){
+		  mom_ajax('R', 'DD.DD00023', {workCenterCd:item['workCenterCd']}, function(result, data) {
+		    if(result != 'SUCCESS') {
+		      momWidget.splashHide();
+			  return;							     
+		    }					       
+			for(var i=0;i<widget.columnProperty[1].length;i++){
+			  if(widget.columnProperty[1][i]['columnId'] =='workStationCd'){
+				widget.columnDropdown[1][widget.columnProperty[1][i]['columnId']]=data;
+			  }
+			}
+			widget.findBtnClicked(1, {borId:item['borId']}, true, 'CELLCLICK',menuId,VIEW);
+	      }, undefined, undefined, this, false);	
+		}, 200);
+	  }
 	},
-	
 };
 
 $(document).ready(function(event){	
