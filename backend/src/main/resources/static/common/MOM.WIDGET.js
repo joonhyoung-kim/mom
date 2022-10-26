@@ -852,11 +852,14 @@ var momWidget = {
 		  */																							
 			
 			//that.setAddBtnEvent(index, your);				    // 행추가버튼 이벤트 핸들러 등록
+			if(index==0){
+				 that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
+			}
 			that.setComboBoxSet(index,your);                    // 콤보박스 공통 이벤트 처리
 		    that.setSearchSet(index, your);                     // 검색조건 세팅
 		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-		    that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
+		   
 		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
 		    if(that.gridProperty[index][0]['usePaging'] ==true){ //페이징사용
 				if(that.gridExtraProperty[index]['initSearch']=='Y'){
@@ -888,75 +891,7 @@ var momWidget = {
 		  
 		    
 		
-		   // multiLang.transLang();
-			//that.procProcessTran(index, your);					// 자리 이동
-			
-			//setTimeout(that.backProc, 0, index, your, pageId);			
-			/*that.procAddDelSaveBtn(index, your);				// 등록버튼 이벤트 핸들러 등록
-																// 설정
-			that.procEditBtn(index, your);						// Edit 버튼 이벤트, 수정
-																// 팝업 생성 및 데이터 복사
-			that.procCopyBtn(index, your);						// 복사 버튼 이벤트, 내리기 버튼
-			that.procExcelDown(index, pageId, your);			// Excel Download 버튼
-																// 이벤트
-			that.procExcelDownAll(index, pageId, your);			// Excel Download
-																// All 버튼 이벤트
-			that.procExcelTemplateDown(index, pageId, your);	// Excel Template
-																// Download 버튼 이벤트
-			
-			that.procExcelUpload(index, pageId, your);			// Excel Upload 버튼
-			
-			that.procNewExcelUpload(index, pageId, your);		// Excel Upload 삭제기능추가
-																// 이벤트
-			that.procCellClick(index, your);					// 셀클릭, 단일선택, 다중선택
-																// 설정
-			that.clickCancelBtn2(index, your);					// 추가셀 취소 이벤트
-			
-			if(index == 0) {
-				that.procCalendar(index);
-				
-			} else if(index == 2 || index == 4 || index == 98) {
-				that.procPopUpCancelBtn(index, your);
-			}
-			
-		    that.procGridWidget(index, pageId); //간편위젯 임시 주석
-			that.procEnterKeyEvent(index, your);
-
-			// 필터 사용시 전체 선택시 필터링 된 데이터 선택
-			if(that.gridProperty[index]['independentAllCheckBox']) {
-				// 전체 체크박스 클릭 이벤트 바인딩
-				AUIGrid.bind('#grid' + (index + 1), "rowAllChkClick", function(event) {
-					if(event.checked) {
-						// 현재 데이터 얻기
-						var gridData = AUIGrid.getGridData(event.pid);
-						// rowIdField 값 얻기
-						var rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); 
-						
-						// 현재 데이터의 rowId 값들 ids 배열에 보관
-						var ids = [];
-						gridData.forEach(function(item) {
-							ids.push(item[rowIdField]);
-						});
-						// 현재 그리드 데이터(필터링된 경우 필터링 된 데이터)만 전체 체크하기
-						AUIGrid.setCheckedRowsByIds(that.grid[index], ids);
-					} else {
-						// 체크 초기화
-						AUIGrid.setCheckedRowsByIds(event.pid, []);
-					}
-				});
-
-				// 필터링 이벤트
-				AUIGrid.bind('#grid' + (index + 1), "filtering", function(evt) {
-					// 체크 초기화
-					AUIGrid.setCheckedRowsByIds(evt.pid, []);
-				});
-			}
-		
-			
-			$(window).resize(function(){
-				AUIGrid.resize(momWidget.grid[index]); 
-				AUIGrid.resize(momWidget.grid[index]);  모르겠는데 두번 resize해야 정상resizing됨..
-			});*/
+	
 	},	
    gridPopup: {
 		init : function(buttonIndex,gridIndex, menuId, your, widgetType) {
@@ -1736,7 +1671,7 @@ var momWidget = {
 		    that.setSearchSet(index, your);                     // 검색조건 세팅
 		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-		    that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
+		  //  that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
 		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
 		    if(that.gridProperty[index][0]['usePaging'] ==true){ //페이징사용
 				if(that.gridExtraProperty[index]['initSearch']=='Y'){
@@ -4827,19 +4762,45 @@ var momWidget = {
 	setKeyEvent: function(index, your) {
 		var that =  this;	
 		//$(document).on('keydown', '.searchInputField, .searchSelectField, .searchSelectField-search-combo', function(e) {
-			$(document).on('keydown', 'searchInputField, .searchSelectField, body', function(e) {
-			if(e.keyCode == 113){ //엔터
-				$('#findBtn'+(index+1)).click();
+			$(document).on('keydown', '.searchSelectField.jqx-combobox', function(e) {
+			if(e.keyCode == 13){ //엔터
+			 let gridIndex= Number(e.currentTarget.id.split('SP')[1]);
+			 momWidget.findBtnClicked(gridIndex-1, {}, false, 'findBtn',momWidget.pageProperty[gridIndex-1]['menuId'],your);
+				
 			} 
 			else if(e.keyCode == 8 || e.keyCode == 46){
-				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+				var searchId = e.currentTarget.id;
 				$('#'+searchId).jqxComboBox('clearSelection');
 				$('#'+searchId).jqxComboBox('uncheckAll');
 			}
 		});
+		$(document).on('keydown', '.form-control.w-input.searchInputField', function(e) {
+			if(e.keyCode == 13){ //엔터
+			 let gridIndex= Number(e.currentTarget.id.split('SP')[1]);
+			 momWidget.findBtnClicked(gridIndex-1, {}, false, 'findBtn',momWidget.pageProperty[gridIndex-1]['menuId'],your);
+				
+			} 
+			else if(e.keyCode == 46){
+				var searchId = e.currentTarget.id;
+				$('#'+searchId).val('');
+			}
+		});
 		$(document).on('keydown','.searchSelectField.jqx-datetimeinput', function(e) {
-			if(e.keyCode == 113){ //엔터
-				$('#findBtn'+(index+1)).click();
+			if(e.keyCode == 13){ //엔터
+			    let gridIndex = 1;
+			    if(e.currentTarget.id.split('SD')[1]!=undefined){
+				   gridIndex= Number(e.currentTarget.id.split('SD')[1]);
+			    }
+			    else  if(e.currentTarget.id.split('ED')[1]!=undefined){
+				   gridIndex= Number(e.currentTarget.id.split('ED')[1]);
+			    }
+			    else{
+				   gridIndex= Number(e.currentTarget.id.split('SP')[1]);
+			    }
+				
+			
+				
+			     momWidget.findBtnClicked(gridIndex-1, {}, false, 'findBtn',momWidget.pageProperty[gridIndex-1]['menuId'],your);
 			} 
 			else if(e.keyCode == 8 || e.keyCode == 46){
 				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
@@ -9499,7 +9460,7 @@ var momWidget = {
 							 }
 			                 mom_ajax('P', queryId,param[0], function(result3, data3) {
 							    if(data3[0]['p_err_code']=='E') {
-						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
+						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'] == null ? '프로시저 에러발생!':data3[0]['p_err_msg'])});
 										  momWidget.splashHide();
 							              return;
 						         }
