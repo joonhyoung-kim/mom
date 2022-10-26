@@ -249,7 +249,7 @@
    /*  height:100%; */
 }
 .searchRowBox.h02{
-    height:44%;
+    /* height:44%; */
 }
 .searchRowBox.h03{
     height:33%;
@@ -603,11 +603,20 @@
     border: none;
    /*  width: 160.8rem; */
 }
-.gridArea-tm1st-h01-01{
+
+@media (min-width:800px) and (max-width:1920px) {
+	.gridArea-tm1st-h01-01{
 	background: #f0f0f5;
     border: none;
-    height:82vh;  
-    
+    height:83vh;  
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+	.gridArea-tm1st-h01-01{
+	background: #f0f0f5;
+    border: none;
+    height:88vh;
+}
 }
 .gridArea-tm1st-h01-01-footer{
 	background: #f0f0f5;
@@ -674,14 +683,24 @@
 /*     width: 160.8rem; */
 }
 
+
+
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm1st-h02-01-footer-paging{
 	background: #f0f0f5;
     border: none;
     height: auto;
-    height: 77vh;
+    height: 79vh;
 }
-/*     width: 160.8rem; */
-
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm1st-h02-01-footer-paging{
+	background: #f0f0f5;
+    border: none;
+    height: auto;
+    height: 85vh;
+}
+}
 
 @media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm2h-h00-01{
@@ -3822,8 +3841,8 @@ border-color: #d8dce3 !important;
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 35% !important;
-    margin-top: -36% !important;
+    margin-left: 32vw !important;
+    margin-top: -85vh !important;
     background: white !important; 
     height: 25rem !important;
     border-radius: 0.5rem;
@@ -3913,8 +3932,8 @@ border-color: #d8dce3 !important;
     overflow: hidden !important;
     width: 55rem !important;
     position: relative !important;
-    margin-left: 30% !important;
-    margin-top: -37.5% !important;
+    margin-left: 33vw !important;
+    margin-top: -80vh !important;
     background: white !important;
     height: 36rem !important;
     border-radius: 0.5rem;
@@ -5042,7 +5061,7 @@ input:focus{
 .tabcontentarea1 {
 	margin-bottom: 0px;
 	background: #f0f0f5;	
-	height:100%
+	height:auto !important; 
 }
 .tabcontentarea11 {
     /* height: 100vh; */

@@ -27,6 +27,7 @@
 			     , ML.CREATE_DATE
 			     , ML.UPDATE_BY
 			     , ML.UPDATE_DATE 
+			     , ML.DESCRIPTION
 			FROM   MOM_COM_DIV_V MCD  
 			     , MOM_LOCATION ML
 			WHERE  MCD.COMPANY_CD  = ML.COMPANY_CD
@@ -88,6 +89,41 @@
               )
    </foreach>
   </insert>
+   <insert id="create_copyBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_LOCATION (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PLANT_CD
+                , LOCATION_CD
+                , LOCATION_NM
+                , LOCATION_GROUP_CD
+                , LOCATION_TYPE
+                , PARTNER_CD
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY4518
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.plantCd, jdbcType=VARCHAR}
+                , #{item.locationCd, jdbcType=VARCHAR}
+                , #{item.locationNm, jdbcType=VARCHAR}
+                , #{item.locationGroupCd, jdbcType=VARCHAR}
+                , #{item.locationType, jdbcType=VARCHAR}
+                , #{item.partnerCd, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
   <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_LOCATION
@@ -115,7 +151,7 @@
        <foreach collection="list" item="item" open="" close="" separator="OR">
         (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
            AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           AND  PLANT_CD = #{item.plantCd, jdbcType=VARCHAR}
+           AND  LOCATION_CD = #{item.locationCd, jdbcType=VARCHAR}
         )
        </foreach>
       </where>

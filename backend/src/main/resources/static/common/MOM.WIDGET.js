@@ -11705,17 +11705,25 @@ var momWidget = {
 			}
 		} else {
 			const i = index;
-			$(window).resize(function() {
+			$(window).resize(function(e) {
+			/*	let targetId = e.currentTarget.name;
+				let iframId = 'iframe#'+targetId;
+				let nowLoc = $(iframId).attr('src');
+				$(iframId).attr('src',nowLoc)*/
 				setTimeout(function() {
 					AUIGrid.resize(that.grid[i]);
 					
-					var height = document.getElementById('grid' + (i + 1)).children[0].clientHeight;
-					var width = document.getElementById('grid' + (i + 1)).children[0].clientWidth;
+					/*var height = document.getElementById('grid' + (i + 1)).children[0].clientHeight;
+					var width = document.getElementById('grid' + (i + 1)).children[0].clientWidth;*/
 					
-					$(that.grid[i]).find('.aui-grid').css('height', height + 17 + 'px');
-					$(that.grid[i]).find('.aui-grid').css('width', width + 17 + 'px');
+					var height = $('#grid'+(i+1)).height();
+					var width = $('#grid'+(i+1)).width();
+					
+					$(that.grid[i]).find('.aui-grid').css('height', (height-27)  + 'px');
+					$(that.grid[i]).find('.aui-grid').css('width', (width - 27) + 'px');
 	
 					AUIGrid.resize(that.grid[i]);
+					
 				}, 100);
 			});	
 			/*	for(var k = 0, max = that.grid.length; k < max; k++) {
