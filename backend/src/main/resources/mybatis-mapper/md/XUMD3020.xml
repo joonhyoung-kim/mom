@@ -113,21 +113,21 @@ FROM   (SELECT MCD.COMPANY_CD
                 , UPDATE_BY
                 , UPDATE_DATE )
       VALUES 
-              (   #{item.companyCd,     jdbcType=VARCHAR}
-                , #{item.divisionCd,    jdbcType=VARCHAR}
-                , #{item.priceType,     jdbcType=VARCHAR}
-                , #{item.venderCd,      jdbcType=VARCHAR}
-                , #{item.itemId,        jdbcType=VARCHAR}
-                , #{item.currencyCd,    jdbcType=VARCHAR}
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.priceType, jdbcType=VARCHAR}
+                , #{item.customerCd, jdbcType=VARCHAR}
+                , #{item.itemId, jdbcType=VARCHAR}
+                , #{item.currencyCd, jdbcType=VARCHAR}
                 , #{item.prevUnitPrice, jdbcType=NUMERIC}
-                , #{item.unitPrice,     jdbcType=NUMERIC}
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
-                , #{item.priceType,     jdbcType=VARCHAR}
+                , #{item.unitPrice, jdbcType=NUMERIC}
+                , TO_DATE(#{item.startDate, jdbcType=VARCHAR},'YYY-MM-DD')
+                , TO_DATE(#{item.endDdate, jdbcType=VARCHAR},'YYY-MM-DD')
+                , #{item.priceType, jdbcType=VARCHAR}
                 , #{item.mainPartnerYn, jdbcType=VARCHAR}
-                , #{item.useYn,         jdbcType=VARCHAR}
-                , #{item.description,   jdbcType=VARCHAR}
-                , #{item.userId,        jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
                 , #{item.userId, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})

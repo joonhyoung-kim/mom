@@ -639,7 +639,7 @@
 	.gridArea-tm1st-h02-01{
 	background: #f0f0f5;
     border: none;
-     height:77vh;
+     height:78vh;
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
@@ -678,7 +678,7 @@
 .gridArea-tm1st-h02-01-paging{
 	background: #f0f0f5;
     border: none;
-    height: calc(100% - 10vh)
+    height: 78vh;
     
 /*     width: 160.8rem; */
 }
@@ -3633,19 +3633,16 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C2-R2 {
     z-index: 1050;
-/* 	display: none ; */
 	float: none !important;
-/* 	background-color: rgba(0, 0, 0, 0.1); */
 	overflow: hidden !important; 
     width: 40rem !important;
     position: relative !important;
-    margin-left: 35% !important;
-    margin-top: -36% !important;
+    margin-left: 35vw !important;
+    margin-top: -80vh !important;
     background: white !important; 
     height: 19rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
-   
+    border: 1px solid #4d4d4e !important;  
 }
 .remark {
 	border: 1px solid darkgrey;
@@ -4234,11 +4231,8 @@ border-color: #d8dce3 !important;
     border: 1px solid #4d4d4e !important;
 }
 .defaultPop-C5-R9-remark-out {
-	   z-index: 1050;
-    /* display: none; */
+	z-index: 1050;
     float: none !important;
-    /* background-color: rgba(0, 0, 0, 0.1); */
-    /* overflow-y: auto !important; */
     width: 90rem !important;
     position: relative !important;
     margin-left: 58rem !important;
@@ -4247,6 +4241,8 @@ border-color: #d8dce3 !important;
     height: 63.5rem !important;
     border-radius: 0.5rem;
     border: 1px solid #4d4d4e !important;
+    margin-left: 18vw !important;
+    margin-top: -94vh !important;
 }
 .searchSelectField-search-main{
 	 display: inline-block;

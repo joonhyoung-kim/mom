@@ -102,7 +102,7 @@
                 , PARTNER_CD
                 , USE_YN
                 , DESCRIPTION
-                , CREATE_BY4518
+                , CREATE_BY
                 , CREATE_DATE
                 , UPDATE_BY
                 , UPDATE_DATE )

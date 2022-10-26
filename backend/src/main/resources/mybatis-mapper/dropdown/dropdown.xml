@@ -162,6 +162,9 @@
    <if test="locationType != null and locationType != ''">
    AND    LOCATION_TYPE = #{locationType, jdbcType=VARCHAR} 
    </if>
+   <if test="searchKey != null and searchKey != ''">
+   AND (TRIM(UPPER(LOCATION_CD)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR TRIM(UPPER(LOCATION_NM)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
    AND    USE_YN      = 'Y'
    ORDER BY LABEL 
 </select>
