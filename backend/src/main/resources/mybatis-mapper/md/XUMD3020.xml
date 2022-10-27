@@ -5,6 +5,7 @@
        SELECT A.COMPANY_CD
      , A.COMPANY_NM
      , A.DIVISION_CD
+     , TO_CHAR(ROWNUM) AS KEY_ID
      , PRICE_CATEGORY ||'_'|| PARTNER_CD || '_' || ITEM_ID || '_' || CURRENCY_CD AS KEY_ID
      , A.DIVISION_NM
      , A.PRICE_CATEGORY
@@ -58,8 +59,8 @@ FROM   (SELECT MCD.COMPANY_CD
              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'SM0017', MUP.CURRENCY_CD, 'KR') FROM DUAL) AS CURRENCY_NM   
              , MUP.PREV_UNIT_PRICE
              , MUP.UNIT_PRICE
-             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD HH24:MI:SS') AS START_DATE 
-             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS END_DATE
+             , TO_CHAR(MUP.START_DATE ,'YYYY-MM-DD' ) AS START_DATE 
+             , TO_CHAR(MUP.END_DATE ,'YYYY-MM-DD' )   AS END_DATE
              , MUP.PRICE_TYPE
              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MUP.COMPANY_CD,MUP.DIVISION_CD, 'MD0012', MUP.PRICE_TYPE, 'KR') FROM DUAL) AS PRICE_TYPE_NM     
              , MUP.MAIN_PARTNER_YN
@@ -77,15 +78,19 @@ FROM   (SELECT MCD.COMPANY_CD
         AND    MUP.DIVISION_CD = MI.DIVISION_CD
         AND    MUP.ITEM_ID     = MI.ITEM_ID
         AND    MUP.PRICE_CATEGORY = 'S'                  
+     <!--   AND    MUP.CREATE_DATE BETWEEN TO_DATE(#{basicDate, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND SYSDATE + 0.99999   -->
         <if test="customerCd != null and customerCd != ''">
 	    AND MUP.CUSTOMER_CD IN (${customerCd})
 	    </if>
-	    <if test="customerItemId != null and customerItemId != ''">
-	    AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
+	 	<if test="itemId != null and itemId != ''">
+	    AND (UPPER(MI.ITEM_ID) LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
 	    </if>
-        <if test="customerItemId != null and customerItemId != ''">
-	    AND (MUP.CUSTOMER_ITEM_ID LIKE '%' || TRIM(UPPER(#{customerItemId, jdbcType=VARCHAR})) || '%' )
-	    </if>         
+	    <if test="itemNm != null and itemNm != ''">
+	    AND (UPPER(MI.ITEM_NM) LIKE '%' || TRIM(UPPER(#{itemNm, jdbcType=VARCHAR})) || '%' )
+	    </if>  
+	    <if test="useYn != null and useYn != ''">
+	    AND MUP.USE_YN = #{useYn, jdbcType=VARCHAR}
+	    </if>      
        ) A    
 	
 	   ORDER BY A.COMPANY_NM , A.DIVISION_NM, A.PARTNER_NM, A.ITEM_ID    
@@ -115,14 +120,14 @@ FROM   (SELECT MCD.COMPANY_CD
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.priceType, jdbcType=VARCHAR}
+                , #{item.priceCategory, jdbcType=VARCHAR}
                 , #{item.customerCd, jdbcType=VARCHAR}
                 , #{item.itemId, jdbcType=VARCHAR}
                 , #{item.currencyCd, jdbcType=VARCHAR}
-                , #{item.prevUnitPrice, jdbcType=NUMERIC}
-                , #{item.unitPrice, jdbcType=NUMERIC}
-                , TO_DATE(#{item.startDate, jdbcType=VARCHAR},'YYY-MM-DD')
-                , TO_DATE(#{item.endDdate, jdbcType=VARCHAR},'YYY-MM-DD')
+                , NVL(#{item.prevUnitPrice, jdbcType=NUMERIC},0)
+                , NVL(#{item.unitPrice, jdbcType=NUMERIC},0)
+                , TO_DATE(#{item.startDate, jdbcType=VARCHAR},'YYYY-MM-DD')
+                , TO_DATE(#{item.endDate, jdbcType=VARCHAR},'YYYY-MM-DD')
                 , #{item.priceType, jdbcType=VARCHAR}
                 , #{item.mainPartnerYn, jdbcType=VARCHAR}
                 , #{item.useYn, jdbcType=VARCHAR}
@@ -158,8 +163,8 @@ FROM   (SELECT MCD.COMPANY_CD
       VALUES 
               (   #{item.companyCd,     jdbcType=VARCHAR}
                 , #{item.divisionCd,    jdbcType=VARCHAR}
-                , #{item.priceType,     jdbcType=VARCHAR}
-                , #{item.venderCd,      jdbcType=VARCHAR}
+                , #{item.priceCategory, jdbcType=VARCHAR}
+                , #{item.customerCd,      jdbcType=VARCHAR}
                 , #{item.itemId,        jdbcType=VARCHAR}
                 , #{item.currencyCd,    jdbcType=VARCHAR}
                 , #{item.prevUnitPrice, jdbcType=NUMERIC}
@@ -182,7 +187,7 @@ FROM   (SELECT MCD.COMPANY_CD
       UPDATE MOM_UNIT_PRICE
       SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
            , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           , PRICE_CATEGORY = #{item.priceType, jdbcType=VARCHAR}
+           , PRICE_CATEGORY = #{item.priceCategory, jdbcType=VARCHAR}
            , PARTNER_CD = #{item.venderCd, jdbcType=VARCHAR}
            , ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
            , CURRENCY_CD = #{item.currencyCd, jdbcType=VARCHAR}
@@ -191,7 +196,7 @@ FROM   (SELECT MCD.COMPANY_CD
            , START_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
            , END_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
            , PRICE_TYPE = #{item.priceType, jdbcType=VARCHAR}
-           , MAIN_PARTBER_YN = #{item.mainPartnerYn, jdbcType=VARCHAR}
+           , MAIN_PARTNER_YN = #{item.mainPartnerYn, jdbcType=VARCHAR}
            , USE_YN = #{item.useYn, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
@@ -211,14 +216,14 @@ FROM   (SELECT MCD.COMPANY_CD
       DELETE FROM MOM_UNIT_PRICE
       <where>
        <foreach collection="list" item="item" open="" close="" separator="OR">
-        (       COMPANY_CD = #{item.companyCd
-           AND  DIVISION_CD = #{item.divisionCd
-           AND  PRICE_CATEGORY = #{item.priceCategory
-           AND  PARTNER_CD = #{item.partnerCd
-           AND  ITEM_ID = #{item.itemId
-           AND  CURRENCY_CD = #{item.currencyCd
-           AND  PREV_UNIT_PRICE = #{item.prevUnitPrice
-           AND  UNIT_PRICE = #{item.unitPrice
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  PRICE_CATEGORY = #{item.priceCategory, jdbcType=VARCHAR}
+           AND  PARTNER_CD = #{item.partnerCd, jdbcType=VARCHAR}
+           AND  ITEM_ID = #{item.itemId, jdbcType=VARCHAR}
+           AND  CURRENCY_CD = #{item.currencyCd, jdbcType=VARCHAR}
+           AND  PREV_UNIT_PRICE = #{item.prevUnitPrice, jdbcType=VARCHAR}
+           AND  UNIT_PRICE = #{item.unitPrice, jdbcType=VARCHAR}
         )
        </foreach>
       </where>

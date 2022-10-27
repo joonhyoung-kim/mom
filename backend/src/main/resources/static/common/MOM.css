@@ -675,14 +675,6 @@
     border: none;
 /*     width: 160.8rem; */
 }
-.gridArea-tm1st-h02-01-paging{
-	background: #f0f0f5;
-    border: none;
-    height: 78vh;
-    
-/*     width: 160.8rem; */
-}
-
 
 
 @media (min-width:800px) and (max-width:1920px) {
@@ -691,6 +683,22 @@
     border: none;
     height: auto;
     height: 79vh;
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm1st-h02-01-paging{
+	background: #f0f0f5;
+    border: none;
+    height: 85vh;
+}
+}
+
+
+@media (min-width:800px) and (max-width:1920px) {
+.gridArea-tm1st-h02-01-paging{
+	background: #f0f0f5;
+    border: none;
+    height: 78vh;
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
@@ -3816,14 +3824,12 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C3-R2-remark-in {
     z-index: 1050;
-/* 	display: none ; */
 	float: none !important;
-/* 	background-color: rgba(0, 0, 0, 0.1); */
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 35% !important;
-    margin-top: -36% !important;
+    margin-left: 34vw !important;
+    margin-top: -87vh !important;
     background: white !important; 
     height: 31rem !important;
     border-radius: 0.5rem;
@@ -3969,14 +3975,12 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C3-R4-remark-in {
     z-index: 1050;
-/* 	display: none ; */
 	float: none !important;
-/* 	background-color: rgba(0, 0, 0, 0.1); */
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 45rem !important;
-    margin-top: -64rem !important;
+    margin-left: 32vw !important;
+    margin-top: -84vh !important;
     background: white !important; 
     height: 42rem !important;
     border-radius: 0.5rem;
@@ -4185,14 +4189,12 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C3-R5-remark-in {
     z-index: 1050;
-/* 	display: none ; */
 	float: none !important;
-/* 	background-color: rgba(0, 0, 0, 0.1); */
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 45rem !important;
-    margin-top: -64rem !important;
+    margin-left: 34vw !important;
+    margin-top: -80vh !important;
     background: white !important; 
     height: 46.7rem !important;
     border-radius: 0.5rem;

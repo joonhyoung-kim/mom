@@ -4760,12 +4760,21 @@ var momWidget = {
 		});*/
 	},
 	setKeyEvent: function(index, your) {
-		var that =  this;	
+		var that =  momWidget;	
 		//$(document).on('keydown', '.searchInputField, .searchSelectField, .searchSelectField-search-combo', function(e) {
 			$(document).on('keydown', '.searchSelectField.jqx-combobox', function(e) {
 			if(e.keyCode == 13){ //엔터
 			 let gridIndex= Number(e.currentTarget.id.split('SP')[1]);
-			 momWidget.findBtnClicked(gridIndex-1, {}, false, 'findBtn',momWidget.pageProperty[gridIndex-1]['menuId'],your);
+			  	 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
+			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
+		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
+		    }	
+		    else{
+			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
+		    }	    	
+			    
+			
+			
 				
 			} 
 			else if(e.keyCode == 8 || e.keyCode == 46){
@@ -4777,7 +4786,13 @@ var momWidget = {
 		$(document).on('keydown', '.form-control.w-input.searchInputField', function(e) {
 			if(e.keyCode == 13){ //엔터
 			 let gridIndex= Number(e.currentTarget.id.split('SP')[1]);
-			 momWidget.findBtnClicked(gridIndex-1, {}, false, 'findBtn',momWidget.pageProperty[gridIndex-1]['menuId'],your);
+			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
+			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
+		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
+		    }	
+		    else{
+			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
+		    }	    
 				
 			} 
 			else if(e.keyCode == 46){
@@ -4800,7 +4815,13 @@ var momWidget = {
 				
 			
 				
-			     momWidget.findBtnClicked(gridIndex-1, {}, false, 'findBtn',momWidget.pageProperty[gridIndex-1]['menuId'],your);
+			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
+			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
+		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
+		    }	
+		    else{
+			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
+		    }	      
 			} 
 			else if(e.keyCode == 8 || e.keyCode == 46){
 				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
@@ -4809,6 +4830,9 @@ var momWidget = {
 		});
 		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
 			if(e.keyCode == 13){ //엔터
+		
+		      
+			
 			var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
 			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
 			var minLength = that.searchComboMinLength[index][searchId] ;
@@ -6182,7 +6206,6 @@ var momWidget = {
 		    	 that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
 		    }	
 		    else{
-			  //momWidget.findBtnClicked(1, {}, true, 'CELLCLICK',menuId,VIEW);
 			  that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
 		    }	    	
 			
@@ -7307,10 +7330,9 @@ var momWidget = {
 					
 				
 			});
-				$(document).on('click', '#' + savePopBtnId, function(e) {
-				 
+				$(document).on('click', '#' + savePopBtnId, function(e) {				 
 		        momWidget.splashShow();
-	    		setTimeout(function() {	
+	    	
 				var param = [];
 				var initParam ={};
 		        let searchResult = true;
@@ -7324,7 +7346,7 @@ var momWidget = {
 				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
 				//var btnIndex   = index;
 				var queryId = that.pageProperty[index]['programId']+'.'+buttonId;
-				that.wait(0.5);
+			    that.wait(1);
 				var buttonParam = [];
 				var extraParam = {};
 				var validateCheck = true;
@@ -7947,11 +7969,11 @@ var momWidget = {
 					
 						
 							 
-				 },500);
+				 });
 				  
 			
 				
-			});
+			
 			$(document).on('click', '#' + saveCustomPopBtnId, function(e) {				 
 		        momWidget.splashShow();
 	    		setTimeout(function() {	
@@ -11688,7 +11710,7 @@ var momWidget = {
 		var that = momWidget;
 		
 		if(index == undefined) {
-			for(var i = 0; i < that.grid.length; i++) {
+		/*	for(var i = 0; i < that.grid.length; i++) {
 				if(that.grid[i] == undefined || document.getElementById('grid' + (index + 1)) == undefined) {
 	                  continue;
 	            }
@@ -11702,7 +11724,7 @@ var momWidget = {
 				$(that.grid[i]).find('.aui-grid').css('width', width + 17 + 'px');
 
 				AUIGrid.resize(that.grid[i]);
-			}
+			}*/
 		} else {
 			const i = index;
 			$(window).resize(function(e) {
@@ -11711,7 +11733,7 @@ var momWidget = {
 				let nowLoc = $(iframId).attr('src');
 				$(iframId).attr('src',nowLoc)*/
 				setTimeout(function() {
-					AUIGrid.resize(that.grid[i]);
+					//AUIGrid.resize(that.grid[i]);
 					
 					/*var height = document.getElementById('grid' + (i + 1)).children[0].clientHeight;
 					var width = document.getElementById('grid' + (i + 1)).children[0].clientWidth;*/

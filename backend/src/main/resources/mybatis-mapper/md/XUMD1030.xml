@@ -2,15 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.XUMD1030">
    <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
-	     	SELECT * 
+	SELECT * 
 	  FROM ( SELECT ROWNUM AS KEY_ID,
-	                ROWNUM AS ID,
 	                COUNT(*) OVER() AS TOTAL_COUNT,
                     A.*
                  <!--  , COUNT(*) OVER() AS ROW_COUNT  -->
-      FROM (  
-		 
-		  SELECT MCD.COMPANY_CD
+      FROM (SELECT MCD.COMPANY_CD
 			     , MCD.COMPANY_NM
 			     , MCD.DIVISION_CD
 			     , MCD.DIVISION_NM

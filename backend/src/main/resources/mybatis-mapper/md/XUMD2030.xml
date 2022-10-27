@@ -43,7 +43,7 @@
 	   AND (UPPER(MCIM.CUSTOMER_ITEM_ID) LIKE '%' || UPPER(#{customerItemId, jdbcType=VARCHAR}) || '%' )
 	   </if>
 	   <if test="itemId != null and itemId != ''">
-	   AND (MCIM.ITEM_ID LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
+	   AND (UPPER(MCIM.ITEM_ID) LIKE '%' || TRIM(UPPER(#{itemId, jdbcType=VARCHAR})) || '%' )
 	   </if>
 	   <if test="useYn != null and useYn != ''">
 	   AND MCIM.USE_YN = #{useYn, jdbcType=VARCHAR}

@@ -94,7 +94,7 @@
 			ORDER BY MCD.COMPANY_NM,  MCD.DIVISION_NM, MI.ITEM_ID ) A
         )    
          <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">    
-     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
+          WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
          </if>				
  </select>
  <insert id="create_createBtn1" parameterType="java.util.List">
