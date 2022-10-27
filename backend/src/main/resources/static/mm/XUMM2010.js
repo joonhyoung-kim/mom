@@ -51,6 +51,9 @@ var VIEW= {
 		param['vendorCd'] = checkItem[0]['vendorCd'];
 		param['poNo'] = checkItem[0]['poNo'];  					
 		} 
+		else if(index ==0){                                            //20221027 LCS 추가 
+		  AUIGrid.clearGridData(widget.grid[1]);  	
+	    }
 		else if (index==20){
 			param['vendorCd'] = checkItem[0]['vendorCd'];
 		}

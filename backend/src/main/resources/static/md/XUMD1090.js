@@ -15,6 +15,9 @@ var VIEW= {
 		      result.param = {borId:checkItem[0].borId};
 			  					
 		}
+		else if(index==0){				                        //20221027 LCS 추가 
+		  AUIGrid.clearGridData(widget.grid[1]);
+		} 
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
 	  var checkItem = widget.getCheckedRowItems(widget.grid[0]);

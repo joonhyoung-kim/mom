@@ -12,7 +12,8 @@ var VIEW= {
 	
 	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
-        if(index==0 && btnId== "customBtn1-1"){
+        //if(index==0 && btnId== "customBtn1-1"){                      //20221027 LCS 삭제 
+	    if(index==0 ){	                                               //20221027 LCS 추가 
 			AUIGrid.clearGridData(widget.grid[1]);	
 			  					
 		} 

@@ -16,8 +16,6 @@ var VIEW= {
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
               VIEW.partnerCd = checkedItem[0]['vendorCd'];
 		}
-	 
-
 	},
 	copyCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='copyBtn'){	
@@ -39,20 +37,14 @@ var VIEW= {
 	createCallInit: function(index,your,action,btnId,param,result) { //등록버튼 팝업띄우기 전에 호출되는 함수 
 		if(index ==0 && btnId =='createBtn1'){			
 			$('#poReferenceTypeDP1').val('10');
-	        
-					
 		}
 
 	},
-    /*searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
-        if(index==1){
-			
-			  					
+    searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
+        if(index==0 ){	                                               //20221027 LCS 추가 
+		  AUIGrid.clearGridData(widget.grid[1]);
 		} 
-	
-
-		
-	},*/ 
+	},
     cellClickCallBack: function(index,rowIndex,target,e) {				
 		if(index==100 && target=='vendorNm'){
 			$('#vendorNmDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');

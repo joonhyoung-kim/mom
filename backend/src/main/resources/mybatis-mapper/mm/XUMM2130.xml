@@ -91,7 +91,8 @@
 		     , MPID.DESCRIPTION			
 		     , MPID.INOUT_NO          			
 		     , MPID.SEQ			
-             , DECODE(MPID.IQC_RESULT, NULL, 'Y', 'N') AS UPDATE_FLAG			
+             , DECODE(MPID.IQC_RESULT, NULL, 'Y', 'N') AS UPDATE_FLAG	
+             , (SELECT MOM_MATERIAL_PKG.FN_GET_PI_INOUT_TYPE(MPID.COMPANY_CD,MPID.DIVISION_CD,MPID.INOUT_NO) FROM DUAL)  AS INOUT_TYPE	
 		FROM   MOM_PURCHASE_INOUT_DTL MPID			
 		     , MOM_ITEM MI			
 		WHERE  MPID.COMPANY_CD  = MI.COMPANY_CD			
@@ -147,7 +148,7 @@
     <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MATERIAL_PKG.sp_pi_iqc_result( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                              , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
-					                              , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                              , #{companyCd,   jdbcType=VARCHAR , mode=IN}
 					                              , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                              , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
     </select>  

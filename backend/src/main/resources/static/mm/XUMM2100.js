@@ -12,27 +12,26 @@ var VIEW= {
 	
 	},
     searchCallInit: function(index,your,action,btnId,param,result,event) { //조회액션 실행 전에 호출되는 함수 
-    let checkItem = widget.getCheckedRowItems(widget.grid[0]);
-        if(index==1){				
-			    result.param = {receiveNo:checkItem[0].receiveNo,inoutType:'RD',vendorCd:checkItem[0]['vendorCd'],departureLocationCd:checkItem[0]['departureLocationCd'],iqcFlag:checkItem[0]['iqcFlag'],currencyCd:checkItem[0]['currencyCd']};	
-		} 
+      let checkItem = widget.getCheckedRowItems(widget.grid[0]);
+      if(index==1){				
+		result.param = {receiveNo:checkItem[0].receiveNo,inoutType:'RD',vendorCd:checkItem[0]['vendorCd'],departureLocationCd:checkItem[0]['departureLocationCd'],iqcFlag:checkItem[0]['iqcFlag'],currencyCd:checkItem[0]['currencyCd']};	
+	  } 
 	  else if(index==20){		
-			   result.param = {receiveNo:checkItem[0].receiveNo,inoutType:'RD',vendorCd:checkItem[0]['vendorCd'],departureLocationCd:checkItem[0]['departureLocationCd'],iqcFlag:checkItem[0]['iqcFlag'],currencyCd:checkItem[0]['currencyCd']};	
-		} 
-
-		
+		result.param = {receiveNo:checkItem[0].receiveNo,inoutType:'RD',vendorCd:checkItem[0]['vendorCd'],departureLocationCd:checkItem[0]['departureLocationCd'],iqcFlag:checkItem[0]['iqcFlag'],currencyCd:checkItem[0]['currencyCd']};	
+	  }
+	  else if(index==0 ){	                                               //20221027 LCS 추가 
+		  AUIGrid.clearGridData(widget.grid[1]);
+		}  
 	},
 	 copyCallBack: function(index,your,action,btnId,param,result,data) {  //등록버튼 팝업띄우고나서 호출되는 함수 
 		if(index ==0 && btnId =='copyBtn'){
 			$('#receiveNoDP1').val('');		
 		}
 	},
-  cellClickCallBack: function(index,rowIndex,target,e) {				
-		 if(index==0){
+    cellClickCallBack: function(index,rowIndex,target,e) {				
+		if(index==0){
 			widget.findBtnClicked(1, {receiveNo:e.item['receiveNo']}, true, 'CELLCLICK',menuId,VIEW);
 		}
-		
-			
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
 			var checkItem = widget.getCheckedRowItems(widget.grid[0]);

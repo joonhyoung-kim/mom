@@ -5,7 +5,7 @@
 	SELECT MPM.COMPANY_CD		
 	     , MPM.DIVISION_CD		
 	     , MPM.INOUT_TYPE		 		
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0012', MPM.INOUT_TYPE, 'KR') FROM DUAL)  AS INOUT_TYPE_NM  		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0012', MPM.INOUT_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS INOUT_TYPE_NM  		
 	     , MPM.TITLE            AS INOUT_TITLE		
 	     , MPD.PURCHASE_INOUT_ID		
 	     , MPM.VENDOR_CD		
@@ -17,7 +17,7 @@
 	     , MPM.BL_NO		
 	     , MPM.IP_NO		
 	     , MPM.IP_CURRENCY_CD		
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'SM0017', MPM.IP_CURRENCY_CD, 'KR') FROM DUAL)  AS IP_CURRENCY_NM		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'SM0017', MPM.IP_CURRENCY_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS IP_CURRENCY_NM		
 	     , MPM.IP_EXCHANGE_RATE		
 	     , TO_CHAR(MPM.CC_DATE ,'YYYY-MM-DD')     AS CC_DATE		
 	     , MPM.LC_NO		
@@ -25,7 +25,7 @@
 	     , MI.ITEM_NM		
 	     , MI.ITEM_SPEC		
 	     , MI.ITEM_TYPE		
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS ITEM_TYPE_NM		
 	     , MI.PURCHASE_UNIT		
 	     , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, MI.PURCHASE_UNIT) FROM DUAL) AS PURCHASE_UNIT_NM		
 	     , MPD.CONFIRM_QTY   AS INOUT_QTY		
@@ -43,9 +43,10 @@
 	     , MPD.INOUT_NO		
 	     , MPD.SEQ		
 	     , MPM.FREE_YN		
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0015', MPM.FREE_YN, 'KR') FROM DUAL)  AS FREE_YN_NM		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0015', MPM.FREE_YN, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS FREE_YN_NM		
 	     , MPM.REASON_CD		
-	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0016', MPM.REASON_CD, 'KR') FROM DUAL)  AS EXP_RCV_REASON_NM		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0016', MPM.REASON_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS EXP_RCV_REASON_NM		
+	     , TO_CHAR(ROWNUM) AS KEY_ID
 	FROM   MOM_PURCHASE_INOUT_MST  MPM		
 	     , MOM_PURCHASE_INOUT_DTL  MPD		
 	     , MOM_ITEM                MI		
@@ -58,7 +59,7 @@
 	AND    MPD.ITEM_ID     = MI.ITEM_ID		
 	AND    MPD.COMPANY_CD  = MM.COMPANY_CD(+)		
 	AND    MPD.DIVISION_CD = MM.DIVISION_CD(+)     		
-	AND    MPD.NCR_NO   = MM.NCR_NO(+) 		
+	AND    MPD.NCR_NO      = MM.NCR_NO(+) 		
 	AND    MPM.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}	
 	AND    MPM.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}	
 	AND    MPM.IQC_RECEIVE_DATE  BETWEEN TO_DATE(#{iqcReceiveDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{iqcReceiveDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999 
@@ -124,7 +125,7 @@
     <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
           { CALL MOM_MATERIAL_PKG.sp_pi_iqc_ncpc_result(     	#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
-					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{companyCd,   jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
 					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
     </select>  

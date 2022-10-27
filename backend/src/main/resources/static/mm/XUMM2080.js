@@ -40,8 +40,10 @@ var VIEW= {
 			let checkItem = widget.getCheckedRowItems(widget.grid[0]);
 			result.param = {departureNo:checkItem[0].departureNo};
 			  					
-		} 
-		
+		}
+		else if(index==0 ){	                                               //20221027 LCS 추가 
+		  AUIGrid.clearGridData(widget.grid[1]);
+		}
 	},
     cellClickCallBack: function(index,rowIndex,target,e) {				
 		 if(index==0){
