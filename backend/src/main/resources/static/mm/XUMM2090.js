@@ -16,9 +16,9 @@ var VIEW= {
 			
 			  					
 		} 
-	
-
-		
+		else if(index==0 ){	                                               //20221027 LCS 추가 
+		  AUIGrid.clearGridData(widget.grid[1]);
+		} 		
 	},
  cellClickCallBack: function(index,rowIndex,target,e) {				
 		 if(index==0){

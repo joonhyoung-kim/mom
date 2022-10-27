@@ -30,8 +30,9 @@ var VIEW= {
 			result.param = {prNo:checkItem[0].prNo};
 			  					
 		}
-
-		
+		else if(index ==0) {                                            //2022102 LCS 추가 
+		  AUIGrid.clearGridData(widget.grid[1]);  	
+	    }
 	},
 	cellClickCallBack: function(index,rowIndex,target,e) {  //셀클릭 액션 실행 전에 호출되는 함수 
 		if(index == 0 ){		

@@ -79,9 +79,10 @@ var VIEW= {
 			result.param = {currencyCd:checkItem[0].currencyCd,partnerCd:checkItem[0].vendorCd,priceCategory:checkItem[0].priceCategory};
 			  					
 		} 
-	
-
-		
+		if(index==0 ){	                                               //20221027 LCS 추가 
+			AUIGrid.clearGridData(widget.grid[1]);	
+			  					
+		} 
 	},
     cellClickCallBack: function(index,rowIndex,target,e) {				
 		if(index==100){ //드롭다운 그리드 100번고정
