@@ -42,9 +42,7 @@ var VIEW= {
 					  return;	
 				}
 			result.param = {routingId:checkedItems['item'].routingId};
-					
 	    }
-
 
 	},
 	searchCallBack: function(index,your,action,btnId,param,result,data) {
@@ -61,28 +59,30 @@ var VIEW= {
 		}
 	
 	},
-	 dropCallBack: function(index,fromGrid,toGrid,fromRowIndex,toRowIndex,dropColumnIndex,item) {
-		if(index == 10){	
+	dropCallBack: function(index,fromGrid,toGrid,fromRowIndex,toRowIndex,dropColumnIndex,item) {
+	    if(index == 10){	
 			          let totalCount = AUIGrid.getRowCount(widget.grid[11]);
 				      AUIGrid.setCellValue(widget.grid[11], toRowIndex, "operationSeq", totalCount+'');
-	
-         
 		}
 		if(index == 11){
 			          let totalCount = AUIGrid.getRowCount(widget.grid[11]);	
 			          for(let i=0,max=totalCount; i<max;i++){
 							AUIGrid.setCellValue(widget.grid[11], i, "operationSeq", (i+1)+'');
 			          }
-				      
-	
-         
 		}
-
 	},
-
-
 	customCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 11 &&btnId=='customBtn12-1'){
+		if(index == 0 && btnId=='customGridPopBtn1-1'){
+			AUIGrid.clearGridData(widget.grid[11]);			
+			mom_ajax('R', 'XXDG0110.findBtn11', {}, function(result1, data1) { 
+		        if(result1 != 'SUCCESS' || data1.length == 0) {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }			
+		          AUIGrid.setGridData(widget.grid[10], data1);
+			  	}, undefined, undefined, this, false);
+		   }
+		else if(index == 11 &&btnId=='customBtn12-1'){
 			AUIGrid.clearGridData(widget.grid[11]);
 			
 			mom_ajax('R', 'XXDG0110.findBtn11', {}, function(result1, data1) { 
@@ -92,9 +92,7 @@ var VIEW= {
 		      }			
 		          AUIGrid.setGridData(widget.grid[10], data1);
 			  	}, undefined, undefined, this, false);
-	
-		   }	
-		
+		   }
 	}	  
 };
 

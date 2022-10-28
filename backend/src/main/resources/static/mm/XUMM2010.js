@@ -83,7 +83,7 @@ var VIEW= {
 	  
 	},
 		customCallInit: function(index,your,action,btnId,param,result) {
-		 let = widget.getCheckedRowItems(widget.grid[0]);
+		 let checkItem = widget.getCheckedRowItems(widget.grid[0]);
 		   if(index == 0){			    
 
 		    
