@@ -21,7 +21,8 @@ var VIEW= {
 	},
 	copyCallInit: function(index,your,action,btnId,param,result) {
 		if(index ==0 && btnId =='copyBtn'){	
-			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
+			  $('#poNoDP1').val('');
+			  let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
               VIEW.partnerCd = checkedItem[0]['vendorCd'];
 		}
 	 
@@ -72,10 +73,23 @@ var VIEW= {
 		}
 			
 	},
-
+	savePopCallInit: function(index,your,action,btnId,param,result) {
+	     if(index ==0 && (btnId =='createBtn' || btnId =='editBtn' || btnId =='copyBtn')){		    			
+			 param[0].partnerCd =VIEW.partnerCd;
+			 result.param =  param;
+		    
+	     }
+	
+	  
+	},
 		customCallInit: function(index,your,action,btnId,param,result) {
-			var checkItem = widget.getCheckedRowItems(widget.grid[0]);
-		if(index == 1){
+		 let = widget.getCheckedRowItems(widget.grid[0]);
+		   if(index == 0){			    
+
+		    
+		
+	    }
+		else if(index == 1){
 			if(btnId == 'customGridPopBtn2-3'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
 			if(checkItem.length==0){
 				result.msg = '상단에서 발주서 선택필수!';

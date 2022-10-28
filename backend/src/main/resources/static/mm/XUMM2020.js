@@ -3,8 +3,8 @@ var widget = momWidget;
 var that = undefined;
 var VIEW= {
 	initParam		: undefined, 
-	popupParam1     : {},
-	popupParam2     : {},
+	partnerCd       : undefined,
+	itemId     : {},
 	init: function() {	
 		that = this;	
 		that.event();
@@ -15,7 +15,7 @@ var VIEW= {
 	editCallInit: function(index,your,action,btnId,param,result) { // 수정팝업 뜨기전에 호출
 		if(index ==0 && btnId =='editBtn'){	
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.popupParam1.partnerCd = checkedItem[0]['vendorCd'];
+              VIEW.partnerCd = checkedItem[0]['vendorCd'];
 		}
 		
 	 
@@ -23,24 +23,26 @@ var VIEW= {
 	},
 	copyCallInit: function(index,your,action,btnId,param,result) { // 복사팝업 뜨기전에 호출
 		if(index ==0 && btnId =='copyBtn'){	
+			 $('#poNoDP1').val('');
 			 let checkedItem = widget.getCheckedRowItems(widget.grid[index]);		
-              VIEW.popupParam1.partnerCd = checkedItem[0]['vendorCd'];
+              VIEW.partnerCd = checkedItem[0]['vendorCd'];
+              
 		}
 		else if(index ==1 && btnId =='copyBtn'){	
-		 VIEW.popupParam2.itemId = $('#itemIdDP2').val();
+		 VIEW.itemId = $('#itemIdDP2').val();
 		}
 	   
 
 	},
 	savePopCallInit: function(index,your,action,btnId,param,result) { // 팝업저장 직전 호출
-	     if(index ==0 && btnId =='saveBtnDP'){		    			
-			 param[0].partnerCd =VIEW.popupParam1.partnerCd;
+	      if(index ==0 && (btnId =='createBtn' || btnId =='editBtn' || btnId =='copyBtn')){	    			
+			 param[0].partnerCd =VIEW.partnerCd;
 			 result.param =  param;
 		    
 	     }
 	     else if(index ==1 && btnId =='saveBtnDP'){
 		     
-			 param[0].itemId =VIEW.popupParam2.itemId;
+			 param[0].itemId =VIEW.itemId;
 			 result.param =  param;
 	     }
 	  
@@ -88,7 +90,7 @@ var VIEW= {
 		if(index==100){ //드롭다운 그리드 100번고정
 			$('#vendorCdDP1').val(e.item.partnerCd+'('+e.item.partnerNm+')');
 			$('#doInvoiceYnDP1').val(e.item.doInvoiceYn);
-            VIEW.popupParam1.partnerCd = e.item.partnerCd;
+            VIEW.partnerCd = e.item.partnerCd;
 		}
 		else if(index==200){
 			$('#itemIdDP'+(2)).val(e.item.itemId+'('+e.item.itemNm+')');
@@ -99,7 +101,7 @@ var VIEW= {
 			$('#lotManagementYnDP'+(2)).val(e.item.lotManagementYn);
 			$('#priceSyncYnDP'+(2)).val(e.item.priceSyncYn);
 			$('#poOverReceiptRateDP'+(2)).val(e.item.poOverReceiptRate);
-			VIEW.popupParam2.itemId = e.item.itemId;
+			VIEW.itemId = e.item.itemId;
 		
 		}
 		else if(index==0){
