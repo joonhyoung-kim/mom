@@ -2404,11 +2404,11 @@ var momWidget = {
 		    var html     = '<div id = "split1" class="splitGrid">'
                          +    '<div>'
                          +      '<div id = "split2" class="splitGrid">'
-                         +       '<div id = '+ content+index+' class = "row tabcontentarea55"></div>'
+                         +       '<div id = '+ content+(index+1)+' class = "row tabcontentarea55"></div>'
                          +       '<div id = '+ content+(index+2)+' class = "row tabcontentarea55"></div>'	
                          +      '</div>'
                          +    '</div>'
-                         +    '<div id = '+ content+(index+1)+' class = "row tabcontentarea1"></div>'
+                         +    '<div id = '+ content+(index)+' class = "row tabcontentarea1"></div>'
                          + '</div>';
 			$(target).append(html);  
 			$('#split1').jqxSplitter({ width:'100%', height: '100%', orientation: 'vertical', panels: [{ size:Number(splitRatio.substring(0, 1))*10 + '%'}, {size: Number(splitRatio.substring(1, 2))*10 + '%'}]});
@@ -2416,10 +2416,21 @@ var momWidget = {
 			return html;
 		},
 		tm3hv : function(index,splitRatio,content,target) {
-		      var html     = '<div id = "split1" class="row splitGrid">'
-		                 +    '<div id = '+ content+index+' class = "row tabcontentarea1"></div>'
+		   /*   var html     = '<div id = "split1" class="row splitGrid">'
+		                 +    '<div id = '+ content+(index+2)+' class = "row tabcontentarea1"></div>'
                          +    '<div>'
                          +      '<div id = "split2" class="row splitGrid">'
+                         +       '<div id = '+ content+(index)+' class = "row tabcontentarea55"></div>'
+                         +       '<div id = '+ content+(index+1)+' class = "row tabcontentarea55"></div>'	
+                         +      '</div>'
+                         +    '</div>'
+                         + '</div>';*/
+                            var html     = '<div id = "split1" class="splitGrid">'
+                         +    '<div>'   
+		                 +    '<div id = '+ content+(index)+' class = "row tabcontentarea1 split-grid"></div>'
+		                 +    '</div>'
+                         +    '<div>'
+                         +      '<div id = "split2" class="splitGrid">'
                          +       '<div id = '+ content+(index+1)+' class = "row tabcontentarea55"></div>'
                          +       '<div id = '+ content+(index+2)+' class = "row tabcontentarea55"></div>'	
                          +      '</div>'

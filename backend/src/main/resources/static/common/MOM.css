@@ -5061,6 +5061,9 @@ input:focus{
 	background: #f0f0f5;	
 	height:auto !important; 
 }
+.split-grid{
+	margin: 0;
+}
 .tabcontentarea11 {
     /* height: 100vh; */
 	margin-bottom: 0px;

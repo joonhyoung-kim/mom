@@ -84,6 +84,15 @@ var VIEW= {
 	customCallInit: function(index,your,action,btnId,param,result) {
 		if(index == 11 &&btnId=='customBtn12-1'){
 			AUIGrid.clearGridData(widget.grid[11]);
+			
+			mom_ajax('R', 'XXDG0110.findBtn11', {}, function(result1, data1) { 
+		        if(result1 != 'SUCCESS' || data1.length == 0) {
+		    	  momWidget.splashHide();
+			      return;							     
+		      }			
+		          AUIGrid.setGridData(widget.grid[10], data1);
+			  	}, undefined, undefined, this, false);
+	
 		   }	
 		
 	}	  
