@@ -40,7 +40,7 @@ var VIEW= {
 			 result.param =  param;
 		    
 	     }
-	     else if(index ==1 && btnId =='saveBtnDP'){
+	     else if(index ==1 && (btnId =='createBtn' || btnId =='editBtn' || btnId =='copyBtn')){
 		     
 			 param[0].itemId =VIEW.itemId;
 			 result.param =  param;

@@ -1,8 +1,9 @@
 var menuId = 'XUMD4020';
 var widget = momWidget;
 var that = undefined;
+
 var VIEW= {
-	initParam		: undefined, 
+
 	init: function() {
 		that = this;	
 		that.event();
@@ -27,9 +28,8 @@ var VIEW= {
 		cellClickCallBack: function(index,rowIndex,target,e) {
 		if(index==0){
 			var item = e.item;	
-			//var param = momWidget.getSelectedItems(momWidget.grid[0]);
 			  setTimeout(function() {
-			  	   VIEW.initParam = {shiftCd:item['shiftCd']};
+			  	  
 	               momWidget.findBtnClicked(1, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
 			       momWidget.findBtnClicked(2, {shiftCd:item['shiftCd']}, true, 'CELLCLICK',menuId,VIEW);
     					},200);
@@ -60,13 +60,13 @@ var VIEW= {
 					  return;	
 				}
 		          $('#shiftCdDP3').val(checkedItems[0].shiftCd);
-		          that.initParam = {shiftCd:checkedItems[0].shiftCd};
+		      
 					 		
 		}
 	
 	},
 	savePopCallInit: function(index,your,action,btnId,param,result) {
-	     if(index == 0 && btnId =='saveBtnDP'){		           
+	     if(index == 0 && (btnId =='createBtn' || btnId =='editBtn' || btnId =='copyBtn')){		           
 					    var items = param;
 					    var startTime = items[0]['startTime'].split(':');
 					    var endTime   = items[0]['endTime'].split(':');
@@ -86,7 +86,7 @@ var VIEW= {
 					     result.param = items;
         
 	    }
-	    else if(index == 1 && btnId =='saveBtnDP'){		           
+	    else if(index == 1 && (btnId =='createBtn' || btnId =='editBtn' || btnId =='copyBtn')){		           
 				    var items = param;
 				    var startTime = items[0]['startTime'].split(':');
 				    var endTime   = items[0]['endTime'].split(':');
@@ -104,26 +104,22 @@ var VIEW= {
 			          
 					    }
 		            result.param = items;
-		            that.initParam = {shiftCd: items[0].shiftCd};
+		         
         
 	    }
 
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index == 1 && (btnId=='createBtn' || btnId=='editBtn')){	
-			 result.param = VIEW.initParam;
+		let checkedItem = widget.getCheckedRowItems(widget.grid[0]);
+		if(index == 1 && (btnId=='createBtn' || btnId=='editBtn' || btnId=='findBtn')){	
+			 result.param = {shiftCd:checkedItem[0]['shiftCd']};
 					
 	    }
-	/*    else if(index == 1 && btnId=='delBtn'){
-		result.param = {shiftCd:AUIGrid.getSelectedItems(widget.grid[index])[0]['item']['shiftCd']}
-		}*/
-		else if(index == 2 && (btnId=='createBtn' || btnId=='editBtn')){	
-			 result.param = VIEW.initParam;
+		else if(index == 2 && (btnId=='createBtn' || btnId=='editBtn' || btnId=='findBtn')){	
+			 result.param = {shiftCd:checkedItem[0]['shiftCd']};
 					
-	   }
-	/*   else if(index == 2 && btnId=='delBtn'){
-		result.param = {shiftCd:AUIGrid.getSelectedItems(widget.grid[index])[0]['item']['shiftCd']}
-	   }*/
+	    }
+	 
 
 	},
 	delCallBack	: function(index,your,action,btnId,param,result) {

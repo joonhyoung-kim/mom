@@ -11,11 +11,22 @@ var VIEW= {
 					    var endTime   = items[0]['endTime'].split(':');
 					    var startTimeToSec = Number(startTime[0])*3600 + Number(startTime[1])*60;
 					    var endTimeToSec = Number(endTime[0])*3600 + Number(endTime[1])*60;
-					    var restTime = (endTimeToSec - startTimeToSec )/60;
-
-					     items[0]['restTime'] = restTime;
-			             result.param = items;
+					    if(startTimeToSec>endTimeToSec){
+						items[0]['restTime'] = (86400 + (endTimeToSec - startTimeToSec ))/60
+					    }
+					    else if(startTimeToSec == endTimeToSec){
+						items[0]['restTime'] = 1440;
+			          
+					    }
+					    else{
+						items[0]['restTime'] = (endTimeToSec - startTimeToSec )/60;
+			          
+					    }
+					     result.param = items;
         
+        
+        
+					
 	    }
 
 	}
