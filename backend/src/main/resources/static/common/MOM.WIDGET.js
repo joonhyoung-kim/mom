@@ -483,8 +483,7 @@ var momWidget = {
 			    		    //that.buttonProperty[index][i]['customType'] = 'DG';
 			    		    //break;
 						}
-						else if(that.buttonProperty[index][i]['buttonType']=='CP'){	
-												
+						else if(that.buttonProperty[index][i]['buttonType']=='CP'){													
 							that.createCustomPop(index,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.buttonProperty[index][i]['eventType']);
 							//that.buttonProperty[index][i]['customType'] = 'CP';
 						}
@@ -2957,7 +2956,7 @@ var momWidget = {
 		var searchAreaClass = remarkYn == 'Y' ? 'R'+rowNum+'-remark-'+remarkInlineClass : 'R'+rowNum;
 		
 		
-		var topHtml =	'<div id="customPop-'+btnId+'" btnIndex = '+btnIndex+'" actionType ='+actionType+' class="modal customPop '+defaultPopClass+'">'
+		var topHtml =	'<div id="customPop-'+btnId+'" btnIndex = '+btnIndex+' actionType ='+actionType+' class="modal customPop '+defaultPopClass+'">'
 	        +    '<div class="panelheader">' 
 	        +     '<div class="modal-header-title">'
 	        +       '<div class ="fa fa-edit"></div>'
@@ -3411,7 +3410,7 @@ var momWidget = {
 				
 			  let popupAreaHtml = that.createPopup.customPop(btnId,index+1,btnIndex,popupColNum,popupRowNum,popupItem,gridExtraProperty['popupTitle'],remarkYn,remarkInline,actionType);				  			  	    		 
 			  $('body').append(popupAreaHtml);
-			  that.setCustomBoXSet(btnId,btnId);      
+			  that.setCustomBoXSet(index,btnId);      
 			               
 			  //that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 		     // that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
@@ -5161,8 +5160,9 @@ var momWidget = {
 					if(popupType == 'S' ){    
 						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'none'});       		
 					  	 $('#'+popupId).on('bindingComplete', function (e) {
-							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-							  maxItemWidthArry = maxItemWidth.split('px');
+							   //maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							   maxItemWidth = $("#innerListBox" + e.owner.id)[0].style["width"];
+							   maxItemWidthArry = maxItemWidth.split('px');
 							   maxItemWidthNum = Number(maxItemWidthArry[0]);
 							  if(maxItemWidthNum<160){
 								 maxItemWidth = '160px';
@@ -5307,7 +5307,8 @@ var momWidget = {
 			if ($('#'+e.target.id).jqxComboBox('isOpened' ) == false){
 				return;
 			}
-							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  // maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  maxItemWidth = $("#innerListBox" + e.owner.id)[0].style["width"];
 							  maxItemWidthArry = maxItemWidth.split('px');
 							   maxItemWidthNum = Number(maxItemWidthArry[0]);
 							  if(maxItemWidthNum<160){
@@ -5342,6 +5343,7 @@ var momWidget = {
 		setCustomBoXSet: function(index, btnId) {
 		var that =  momWidget;	
 		var btnIndex = btnId.split('customBtn')[1];
+		//var btnIndex = index+1;
         var searchId = '';
         var popupId = '';
         var searchType = '';
@@ -5371,15 +5373,15 @@ var momWidget = {
      
 		
 		if (that.customPopupProperty[btnId].length > 0){
-		  for(var j=0,max2=that.customPopupProperty[index].length; j<max2;j++){			
-				popupDropdownId       = that.customPopupProperty[index][j]['dropdownId'];
-				popupDropdownParam   = that.customPopupProperty[index][j]['dropdownParam'] == '' ? []:that.popupProperty[index][j]['dropdownParam'];
-			    popupType        = that.customPopupProperty[index][j]['popupType']; 
+		  for(var j=0,max2=that.customPopupProperty[btnId].length; j<max2;j++){			
+				popupDropdownId       = that.customPopupProperty[btnId][j]['dropdownId'];
+				popupDropdownParam   = that.customPopupProperty[btnId][j]['dropdownParam'] == '' ? []:that.popupProperty[btnId][j]['dropdownParam'];
+			    popupType        = that.customPopupProperty[btnId][j]['popupType']; 
 			    popupNameSpace   = popupDropdownId.substr(0, 2);  
 			    queryId          = '';
 			    paramMap.length  = 0;
 			  //  minLength        = 1;
-			    popupId = that.customPopupProperty[index][j]['popupId'] + 'DP' +btnIndex;
+			    popupId = that.customPopupProperty[btnId][j]['popupId'] + 'DP' +(index+1);
 					if(popupType == 'S' ){    
 						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'none'});       		
 					  	 $('#'+popupId).on('bindingComplete', function (e) {
@@ -7832,7 +7834,7 @@ var momWidget = {
 						
 					}					
 				 }
-				//if(btnIndex != undefined && btnPopYn == 'Y'){
+				
 					if(btnIndex != undefined && btnPopYn =='Y'){
 					for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
 					if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
@@ -7875,14 +7877,14 @@ var momWidget = {
 									  momWidget.splashHide();
 								      return;
 							}	
-				param = param.map(function(item1){
+			/*	param = param.map(function(item1){
 			    var obj = callInitResult['param'].find(function(item2){
 		        return item2;
 		    })
 		    $.extend(item1, obj);               
 			    return item1;
-			});
-				  	         //  param = callInitResult['param'];	
+			});*/
+				  	param = callInitResult['param'];	
 					if(Array.isArray(param)==true){
 					    param = param.length == 0 ? {}:param;					    
 						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
@@ -7908,8 +7910,7 @@ var momWidget = {
 				
 				
 				}
-				if(tmpYn=='Y'){
-					
+				if(tmpYn=='Y'){					
 					 mom_ajax('D', queryId,param, function(result1, data1) {
 						 if(result1!='SUCCESS') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
@@ -7978,8 +7979,7 @@ var momWidget = {
 		          }, undefined, index, this, false);
 				}
 					
-						
-							 
+					 
 				 });
 				  
 			
@@ -7987,16 +7987,16 @@ var momWidget = {
 			
 			$(document).on('click', '#' + saveCustomPopBtnId, function(e) {				 
 		        momWidget.splashShow();
-	    		setTimeout(function() {	
 				var param = [];
 				var initParam ={};
 		        let searchResult = true;
 		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
 		        let tmpYn = 'N';
-		        let buttonId = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
-				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
+		        let btnIndex = $('.customPop.in').attr('btnIndex');
+		        let buttonId = 'customBtn'+btnIndex;
+				var actionType = $('#customPop-'+(index+1)).attr('actionType');
 				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
-				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
+				//var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
 				var gridPopIndex   = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? index+1 : Number($('#defaultPop'+(index+1)).attr('gridPopIndex'));
 				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
 				//var btnIndex   = index;
@@ -8325,23 +8325,14 @@ var momWidget = {
 									       searchResult = true;
 									       break;
 										}
-										
-							    	  
-									 
-									  
-		                			
-	    						
+
 								 }
-							      
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
+
 		                		        momWidget.splashHide();
 		                			
 	    						
 							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
+
 							      		
 					if(!searchResult) {
 						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
@@ -8435,10 +8426,7 @@ var momWidget = {
 		                			
 	    						
 							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
-							      		
+
 					if(!searchResult) {
 						 momWidget.splashHide();
 						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
@@ -8470,14 +8458,13 @@ var momWidget = {
 					
 				}
 				}
-			   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
+			/*   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
 					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
 						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
 						
 					}					
 				 }
-				//if(btnIndex != undefined && btnPopYn == 'Y'){
-					//if(btnIndex != undefined && btnPopYn =='Y'){
+
 					  for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
 					    if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
 							buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
@@ -8501,9 +8488,51 @@ var momWidget = {
 		    })
 		    $.extend(item1, obj);               
 			    return item1;
-			});
+			});*/
 				
-				
+						let buttonParamText = {};
+					    let buttonParamList = [];
+					    let buttonParamMap = {};
+					    
+					    param = that.getPopupParam(index,your,extraParam);
+					   // let actionBtnId =  buttonId.split('Btn')[0] +'saveBtnDP';
+					    let actionBtnId =  buttonId;
+					    callInitResult = that.checkActionCallInit(index, actionType, param, actionBtnId, your,e);
+							if(callInitResult['result'] != 'SUCCESS') {
+								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
+									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
+									  momWidget.splashHide();
+								      return;
+							}	
+			/*	param = param.map(function(item1){
+			    var obj = callInitResult['param'].find(function(item2){
+		        return item2;
+		    })
+		    $.extend(item1, obj);               
+			    return item1;
+			});*/
+				  	param = callInitResult['param'];	
+					if(Array.isArray(param)==true){
+					    param = param.length == 0 ? {}:param;					    
+						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
+					}
+					else{
+						// param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
+					}
+					
+					for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
+						if(buttonId == that.buttonProperty[index][i]['buttonId']+(index+1)){
+							buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
+							buttonParamList = buttonParamText.split(',');
+							 for(let j=0,max2=buttonParamList.length;j<max2;j++){
+								   buttonParamMap[buttonParamList[j].split('=')[0]]=buttonParamList[j].split('=')[1];
+							 }
+							 for(let k=0,max3=param.length;k<max3;k++){
+								 param[k] = Object.assign(param[k],buttonParamMap);   
+							}
+ 						 
+						}
+					}
 			
 					  
 					    callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
@@ -8591,7 +8620,7 @@ var momWidget = {
 					
 						
 							 
-				 },500);
+	
 				  
 			
 				
@@ -9724,6 +9753,7 @@ var momWidget = {
 				var popupProperty = that.customPopupProperty;
 				index =  btnId;
 				btnIndex = btnId.split('customBtn')[1];
+				btnIndex = btnIndex.split('-')[0];
 			}
 			else{
 				var popupProperty = that.popupProperty;
@@ -9890,8 +9920,15 @@ var momWidget = {
 						
 				 var calendar = new Date();
                  calendar.setFullYear(year, month, date);
-				$('#'+popupId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
-				$('#'+popupId).jqxDateTimeInput('setDate', calendar);
+                if(customYn=='Y'){
+	 		        $('#customPop-'+btnId).find('#'+popupId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
+                    $('#customPop-'+btnId).find('#'+popupId).jqxDateTimeInput('setDate', calendar);
+				}
+				else{
+					$('#defaultPop'+(index+1)).find('#'+popupId).jqxDateTimeInput({ width: '150px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
+				    $('#defaultPop'+(index+1)).find('#'+popupId).jqxDateTimeInput('setDate', calendar);
+				}
+ 
 				}
 				else if (popupType == 'C-HM'){
 					//$('#'+popupId).attr('value', '13:30');

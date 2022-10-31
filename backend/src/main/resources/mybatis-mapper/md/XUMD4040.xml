@@ -187,6 +187,35 @@
               )
    </foreach>
   </insert>
+    <insert id="create_copyBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_SHIFT_SCHEDULE (
+                  COMPANY_CD
+                , DIVISION_CD
+                , WORK_CENTER_CD
+                , SHIFT_CD
+                , APPLY_DATE
+                , DAY_OFF_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.workCenterCd, jdbcType=VARCHAR}
+                , #{item.shiftCd, jdbcType=VARCHAR}
+                , #{item.applyDate, jdbcType=VARCHAR}
+                , #{item.dayOffYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
   <update id="modify_editBtn1" parameterType="java.util.List">
     <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_SHIFT_SCHEDULE

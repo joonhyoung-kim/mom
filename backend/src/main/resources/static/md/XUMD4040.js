@@ -24,9 +24,8 @@ var VIEW= {
 	},
 	
     savePopCallInit: function(index,your,action,btnId,param,result) {
-	     if(index == 0 && action == 'C' && btnId =='saveBtnDP'){		           
-					    var items = param;	
-					    	
+	     if(index == 0 && (btnId =='createBtn' || btnId =='editBtn' || btnId =='copyBtn')){		           
+					    var items = param;						    	
 					    let newParam = [];				   												
 						var date1 = new Date(items[0]['startDate']);
 						var date2 = new Date(items[0]['endDate']);
@@ -70,7 +69,8 @@ var VIEW= {
 						   
 						     
 					    }
-					    mom_ajax('R', 'XUMD4040.checkShift', {applyDate:newParam[0]['applyDate'],workCenterCd:newParam[0]['workCenterCd']}, function(result1, data1) { 
+					    if(btnId=='createBtn' || btnId=='copyBtn'){
+						   mom_ajax('R', 'XUMD4040.checkShift', {applyDate:newParam[0]['applyDate'],workCenterCd:newParam[0]['workCenterCd']}, function(result1, data1) { 
 							        if(result1 != 'SUCCESS' ) {
 							    		  result.result = 'FAIL';
 							              result.msg = '통신에러!';
@@ -80,25 +80,24 @@ var VIEW= {
 								  		  result.result = 'WARN';
 							              result.msg = '적용일 기간에 SHIFT 존재합니다!!';
 								          return;		
-									}			
+									}
+									
+												
 									  result.param = newParam;
 			  						}, undefined, undefined, this, false);
+					    }
+					 
 					    
 					    
 			            
         
 	    }
-	    else if(index == 0 && action == 'U' && btnId =='saveBtnDP'){
-			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[0],true);
-			var items = param;	
-			if(checkedItem =='FAIL'){
-        		result.result = 'FAIL';
-        		return;
-			}				           				        
-			    items[0]['applyDate'] =  checkedItem[0]['applyDate'];
-			    result.param = items;  
-                       
-	    }
+      else if(index == 0 && btnId =='customBtn1-1'){	
+	      	 for(var i=0,max=param.length; i<max;i++){
+				 param[i]['param1'] = $("#toWorkGroupCdDP1").jqxComboBox('getCheckedItems')[i]['value'];		     
+		     }	
+	             result.param = param;
+	  }
 
 	},
 	editCallInit: function(index,your,action,btnId,param,result) {
@@ -121,14 +120,15 @@ var VIEW= {
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
 			 if (btnId=='customBtn1-1'){
-				var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
+				var checkedItems = widget.getCheckedRowItems(widget.grid[0]);
 				if(checkedItems == 0){
 					 result.msg = '데이터를 체크해주세요!';
 					 result.result = 'FAIL';
 				}
-				  $('#startDateDP1-1').val($('#startDateSP1').val());
-				  $('#endDateDP1-1').val($('#endDateSP1').val());	
-				  $('#fromWorkCenterCdDP1-1').val(checkedItems[0]['workCenterCd']);
+				  //$('#'+'defaultPop-'+(index+1)).find('#startDateDP1').val()
+				  $('#'+'customPop-'+btnId).find('#startDateDP1').val($('#startDate'+'SP1').val());
+				  $('#'+'customPop-'+btnId).find('#endDateDP1').val($('#endDate'+'SP1').val());
+				  $('#'+'customPop-'+btnId).find('#fromWorkCenterCdDP1').val(checkedItems[0]['fromWorkCenterCd']);
 				  		
 			}
 			else if(btnId=='customBtn1-2'){
@@ -154,9 +154,9 @@ var VIEW= {
 $(document).ready(function(event){	
 	momSetup.init();
 	momWidget.init(1,   menuId,    VIEW,'GRID');
-	/*momWidget.init(91, 'XUSM8050', VIEW,'CP');
-	momWidget.init(92, 'XUSM8060', VIEW,'CP');
-	momWidget.init(93, 'XUSM8070', VIEW,'CP');
-	momWidget.init(94, 'XUSM8080', VIEW,'CP');	*/
+	/*momWidget.init(61, 'XUSM8050', VIEW,'CP');
+	momWidget.init(62, 'XUSM8060', VIEW,'CP');
+	momWidget.init(63, 'XUSM8070', VIEW,'CP');
+	momWidget.init(64, 'XUSM8080', VIEW,'CP');	*/
 	VIEW.init();
 });
