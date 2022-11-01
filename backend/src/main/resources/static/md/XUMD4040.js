@@ -92,9 +92,14 @@ var VIEW= {
 			            
         
 	    }
-      else if(index == 0 && btnId =='customBtn1-1'){	
-	      	 for(var i=0,max=param.length; i<max;i++){
-				 param[i]['param1'] = $("#toWorkGroupCdDP1").jqxComboBox('getCheckedItems')[i]['value'];		     
+      else if(index == 0 && btnId =='customBtn1-1'){
+	         let toWorkGroupItem = $("#toWorkGroupCdDP1").jqxComboBox('getCheckedItems');	
+	         let paramArray = [];
+	      	 for(var i=0,max1=toWorkGroupItem.length; i<max1;i++){
+				  paramArray.push({param1:toWorkGroupItem[i]['value'],typeList:'VARCHAR_ARRAY_LIST',typeMap:'VARCHAR_ARRAY_MAP'});	    				
+		     }	
+		     for(var i=0,max2=param.length; i<max2;i++){
+				 param[i]['arrayParam1'] = paramArray;		     
 		     }	
 	             result.param = param;
 	  }

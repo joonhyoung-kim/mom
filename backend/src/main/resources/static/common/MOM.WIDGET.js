@@ -7349,9 +7349,9 @@ var momWidget = {
 				var param = [];
 				var initParam ={};
 		        let searchResult = true;
-		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
+		        let popupTitle   ='#'+e.target.parentElement.parentElement.parentElement.id ;
 		        let tmpYn = 'N';
-		        let buttonId = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
+		        let buttonId   = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
 				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
 				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
@@ -7994,20 +7994,16 @@ var momWidget = {
 		        let tmpYn = 'N';
 		        let btnIndex = $('.customPop.in').attr('btnIndex');
 		        let buttonId = 'customBtn'+btnIndex;
-				var actionType = $('#customPop-'+(index+1)).attr('actionType');
-				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
-				//var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
-				var gridPopIndex   = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? index+1 : Number($('#defaultPop'+(index+1)).attr('gridPopIndex'));
-				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
-				//var btnIndex   = index;
-				var queryId = that.pageProperty[index]['programId']+'.'+buttonId;
+				let actionType = $('#customPop-'+buttonId).attr('actionType');
+				let gridPopYn= 'N';
+				let queryId = that.pageProperty[index]['programId']+'.'+buttonId;
 				that.wait(0.5);
 				var buttonParam = [];
 				var extraParam = {};
 				var validateCheck = true;
 				let actionMode = 'C';
-				
-				
+				let popupItem  = that.customPopupProperty[buttonId];
+				let comboBoxItems = [];
 					if(buttonId.indexOf('createBtn') >= 0) {
  				        actionMode = 'C';
 					}
@@ -8027,37 +8023,26 @@ var momWidget = {
 						actionMode = 'C';
 					}
 
-		    
-		    
-		    
-		/*
-				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
-					if(callInitResult['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-					  momWidget.splashHide();
-				      return;
-					}	
-				  	param = callInitResult['param'];	*/
+
 				
-				var popupCount = that.popupProperty[index].length;
-				var popupItem  = that.popupProperty[index];
+				
 				if(gridPopYn=='Y'){
 					
 				}
 				else{
-					for(var i=0,max2=popupCount;i<max2;i++){
+					for(var i=0,max2=popupItem.length;i<max2;i++){
 					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val() == undefined ? '':$('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
 					let fieldValues = [];
 					
 					if(actionType == 'C' ){		
 						 let containsYn = 'Y';		
-						if(that.popupProperty[index][i]['columnRequire']=='Y' && fieldValue ==''){
+						if(popupItem[i]['columnRequire']=='Y' && fieldValue ==''){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
 							 momWidget.splashHide();
 				             return;
 						}
-					if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+					if(popupItem[i]['popupType'] == 'S' && fieldValue !=''){
+						comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
 							if(comboBoxItems[j]['value'] == fieldValue){
@@ -8072,17 +8057,17 @@ var momWidget = {
 					}
 					
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M' && fieldValue !=''){
+					else if(popupItem[i]['popupType'] == 'M' && fieldValue !=''){
 						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
 							 momWidget.splashHide();
 				             return;
 						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						   comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						let containsYn = 'N';
 						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
 							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
+								for(var h=0,max4=fieldValues.length;h<max4;h++){
 										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
 										    containsYn = 'Y';
 										}
@@ -8096,7 +8081,7 @@ var momWidget = {
 				         return;
 					}
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS' && fieldValue !=''){
+					else if(popupItem[i]['popupType'] == 'SS' && fieldValue !=''){
 						
 							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
 							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
@@ -8142,7 +8127,7 @@ var momWidget = {
 				}
 				
 					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS' && fieldValue !=''){
+					else if(popupItem[i]['popupType'] == 'MS' && fieldValue !=''){
 						
 					}			
 					else{
@@ -8348,12 +8333,12 @@ var momWidget = {
 					}
 					}
 					else if (actionType == 'P' ){
-					if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
+					if(fieldValue =='' && popupItem[i]['columnRequire']=='Y'){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
 							 momWidget.splashHide();
 				             return;
 						} 
-							if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
+					if(popupItem[i]['popupType'] == 'S'&& fieldValue !=''){
 						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						let containsYn = 'N';
 						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
@@ -8369,17 +8354,17 @@ var momWidget = {
 					}
 					
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
+					else if(popupItem[i]['popupType'] == 'M'&& fieldValue !=''){
 						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
 							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
 							 momWidget.splashHide();
 				             return;
 						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
+						    comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
 						let containsYn = 'N';
 						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
 							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
+								for(var h=0,max4=fieldValues.length;h<max4;h++){
 										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
 										    containsYn = 'Y';
 										}
@@ -8387,13 +8372,13 @@ var momWidget = {
 						
 																			
 							}
-								if(containsYn == 'N'){
+					if(containsYn == 'N'){
 						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
 						 momWidget.splashHide();
 				         return;
 					}
 					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
+					else if(popupItem[i]['popupType'] == 'SS'&& fieldValue !=''){
 							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
 							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
 							var minLength = that.popupComboMinLength[index][popupId] ;
@@ -8401,7 +8386,7 @@ var momWidget = {
 				if(searchString.length < minLength)	{
 										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
 										return;
-							}
+				}
 							
 				else{
 	
@@ -8434,7 +8419,7 @@ var momWidget = {
 					}		      		
 				}
 					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
+					else if(popupItem[i]['popupType'] == 'MS'&& fieldValue !=''){
 						
 					}			
 					else{
@@ -8446,7 +8431,7 @@ var momWidget = {
 					}
 				
 					
-				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'&& fieldValue !=''){
+				   if(popupItem[i]['popupType']=='I' || popupItem[i]['popupType']=='D'&& fieldValue !=''){
 				
 						  if(isNaN(Number($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim()))==true){
 							  momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' 숫자입력!'});
@@ -8494,9 +8479,9 @@ var momWidget = {
 					    let buttonParamList = [];
 					    let buttonParamMap = {};
 					    
-					    param = that.getPopupParam(index,your,extraParam);
-					   // let actionBtnId =  buttonId.split('Btn')[0] +'saveBtnDP';
-					    let actionBtnId =  buttonId;
+					    param = that.getCustomPopupParam(index,buttonId,your,extraParam);
+					
+					    let actionBtnId =  buttonId +'saveBtnCP';
 					    callInitResult = that.checkActionCallInit(index, actionType, param, actionBtnId, your,e);
 							if(callInitResult['result'] != 'SUCCESS') {
 								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
@@ -8521,7 +8506,7 @@ var momWidget = {
 					}
 					
 					for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-						if(buttonId == that.buttonProperty[index][i]['buttonId']+(index+1)){
+						if(buttonId == that.buttonProperty[index][i]['buttonId']){
 							buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
 							buttonParamList = buttonParamText.split(',');
 							 for(let j=0,max2=buttonParamList.length;j<max2;j++){
@@ -8535,14 +8520,17 @@ var momWidget = {
 					}
 			
 					  
-					    callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
+					    callInitResult = that.checkActionCallInit(index, actionType, param, buttonId, your,e);
 							if(callInitResult['result'] != 'SUCCESS') {
 								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
 									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
 									  momWidget.splashHide();
 								      return;
+							}
+							 for(let i=0,maxSize=param.length;i<maxSize;i++){								
+								 param[i] = Object.assign(param[i],callInitResult['param'][i]);   
 							}	
-				  	           param = callInitResult['param'];	
+
 					if(Array.isArray(param)==true){
 					    param = param.length == 0 ? {}:param;					    
 						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
@@ -8947,6 +8935,62 @@ var momWidget = {
 				
 			
 			 if(Object.keys(extraParam).length >0 && i==(that.popupProperty[index].length)-1 ){
+				param['arrayParam']= [mapItem];
+			}
+			  
+			  if( popupType=='SS' || popupType=='MS'){
+				//$('#'+searchId).jqxComboBox({source:[]});
+				 // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
+             //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+			}
+		  }
+		  return [param];
+	},
+	// 커스텀팝업 파라미터 가져오기
+	getCustomPopupParam: function(index, btnId,your,extraParam) {
+		  var that = momWidget;
+		  var param = {};
+		  var popupId =  '';
+		  var searchId = '';
+		  var checkedItem = [];
+		  var listItem = [];
+		  var mapItem = {};
+	      let popupItem = that.customPopupProperty[btnId];
+
+		  for(var i=0;i<popupItem.length;i++){
+			    popupId   = popupItem[i]['popupId'];
+			    popupType = popupItem[i]['popupType'];
+				searchId = popupItem[i]['popupId']+'DP'+(index+1);
+				popupItem[i]['popupId']+'DP'+(index+1);
+		/*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
+				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
+				for(var j=0;j<checkedItem.length;j++){
+					 mapItem[popupId] = checkedItem[j]['value'];
+					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
+					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
+					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
+			
+				}
+			
+				param[popupId]= listItem;
+			}*/
+				if(Object.keys(extraParam).length >0 && i==0){			
+					 mapItem[popupId] = $('#'+searchId).val();
+					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
+					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
+					 //listItem[j] = JSON.parse(JSON.stringify(mapItem));
+
+				
+			}
+			else if(Object.keys(extraParam).length >0&&i>0){
+				 mapItem[popupId] = $('#'+searchId).val();
+			}
+		
+			
+				param[popupId]=$('#'+searchId).val(); 
+				
+			
+			 if(Object.keys(extraParam).length >0 && i==(popupItem.length)-1 ){
 				param['arrayParam']= [mapItem];
 			}
 			  
@@ -11691,7 +11735,7 @@ var momWidget = {
 				btnId = btnId.split('saveBtnDP')[0] + 'Btn';
 			}
 			else{
-					btnId = btnId.split('saveBtnCP')[0] + 'Btn';
+					btnId = btnId.split('saveBtnCP')[0] ;
 			}
 			
 			 your.savePopCallInit(index,your,action,btnId,param,result);			

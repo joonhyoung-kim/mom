@@ -124,7 +124,7 @@
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{toWorkGroupCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+					                                          , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select> 
   <select id="proc_customBtn1-2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
