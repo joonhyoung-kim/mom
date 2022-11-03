@@ -4797,8 +4797,8 @@ var momWidget = {
 			if(e.keyCode == 13){ //엔터
 			 let gridIndex= Number(e.currentTarget.id.split('SP')[1]);
 			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
-		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
+			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex-1]['programId'],your);
+		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex-1]['programId'],your);
 		    }	
 		    else{
 			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
