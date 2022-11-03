@@ -5636,6 +5636,21 @@ var momWidget = {
 	        now = Date.now();
 	    }
 	},
+/*	checkValidDate: function(value) {
+	var result = true;
+	try {
+	    var date = value.split("-");
+	    var y = parseInt(date[0], 10),
+	        m = parseInt(date[1], 10),
+	        d = parseInt(date[2], 10);
+	    // yyyy-mm-dd (윤달고려하여적용)
+	    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+	    result = dateRegex.test(d+'-'+m+'-'+y);
+	} catch (err) {
+		result = false;
+	}    
+    return result;
+},*/
 	// 등록버튼 이벤트 핸들러
 	setBtnEvent: function(index, your) {
 			var that = momWidget;
@@ -6650,8 +6665,9 @@ var momWidget = {
 				}	
 					 				
 				    var actionType = $('#excelUpPop'+(index+1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop'+(index+1)).attr('actiontype');
-				    let queryId    = actionType == 'CU' ? that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1) : that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1);
-				    let validateYn = $('#excelUpPop'+(index+1)).attr('validateYn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('validateYn');
+				    let validateYn = $('#excelUpPop'+(index+1)).attr('validateyn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('validateyn');
+				    let queryId    = validateYn == 'Y' ? that.pageProperty[index]['menuId']+'.excelUpBtnV'+(index+1) : that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1);
+				  
 				    let tmpYn = $('#excelUpPop'+(index+1)).attr('tmpYn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('tmpYn');
 					setTimeout(function() {
 						if(validateYn=='Y'){
@@ -6661,7 +6677,7 @@ var momWidget = {
 							   bar.width('100%');
 					           percent.text('100%'+' '+param.length+'/'+param.length);  
 							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
-					            if(data[0]['p_err_code']=='E') {
+					            if(data[0]['p_err_code']=='E' || data.length==0) {
 									  $("#pleaseWaitDialog").momModal('hide');
 					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00033')});
 									  momWidget.splashHide();

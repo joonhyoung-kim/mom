@@ -1833,6 +1833,7 @@ function excelUploadGrid(file, index,grid,validate) {
     	var headerInfo = [];
     	var columnInfo = [];
     	var nowExcelData ='';
+
         var grid_column_origin = AUIGrid.getColumnLayout(grid);
         for(var i = 0; i < grid_column_origin.length; i++) {
     		var key = grid_column_origin[i].headerText;
@@ -1846,26 +1847,30 @@ function excelUploadGrid(file, index,grid,validate) {
         for(var i = 0; i < excelData.length; i++) {
         	for(var key in excelData[i]) {
         		if(headerInfo[key] != undefined) {
-        			if(columnInfo[key] == "string"){
-	                   nowExcelData = excelData[i][key]+'';
-	                   excelData[i][key] = nowExcelData.replace(/\"/gi, "");
-	                    if(isNaN(excelData[i][key])==false){
-		                        
+	     		   nowExcelData = excelData[i][key]+'';
+	               excelData[i][key] = nowExcelData.replace(/\"/gi, "");
+        		   if(columnInfo[key] == "string"){
+					   excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').trim();
+
+        			}
+        			else if(columnInfo[key] == "numeric"){
+	    			  if(isNaN(excelData[i][key])==false){		                        
 		                        excelData[i][key] = excelData[i][key]+''.replace(/^\s+|\s+$/g,'').replace(/\,/g,'').replace(/\./g,'');
-	                   }
-	                   else{
-		                   if(!isNaN(Date.parse(excelData[i][key].replace(/ /g,"")))){
+	                  }
+	                  else{
+						excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').trim();
+					  }
+				    }
+        			else if(columnInfo[key] == "date"){
+	    				if(moment(excelData[i][key].replace(/ /g,""), 'YYYY-MM-DD',true).isValid() || moment(excelData[i][key].replace(/ /g,""), 'YYYYMMDD',true).isValid() || moment(excelData[i][key].replace(/ /g,""), 'YYYY/MM/DD',true).isValid()){
 			                   let date = moment(excelData[i][key]);  			        //'YYYY-MM-DD HH:mm:ss'          			                  			            			                   
 			                   excelData[i][key] = moment(date).add(52, "seconds").format('YYYY-MM-DD 00:00:00'); 
 			                 
-		                   }
-		                   else{
+		                }
+		                else{
 							excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').trim();
-						   }
-								
-	                   }
-        				
-        			}
+					    }
+				    }
         			excelData[i][headerInfo[key]] = excelData[i][key];
         			excelData[i]['NEW'] = 'Y';			
         			delete excelData[i][key];
