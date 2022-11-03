@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 var momWidget = {
 	your:				    [], // 화면별 스크립트객체
 	grid: 				    [], // 화면별 메인 그리드 ID
@@ -16062,7 +16062,6 @@ function newFunction(callInitResult, fromIndex, toIndex, that) {
     }
     return { fromIndex, toIndex };
 }
-=======
 var momWidget = {
 	your:				    [], // 화면별 스크립트객체
 	grid: 				    [], // 화면별 메인 그리드 ID
@@ -32126,4 +32125,4 @@ function newFunction(callInitResult, fromIndex, toIndex, that) {
     }
     return { fromIndex, toIndex };
 }
->>>>>>> branch 'master' of https://github.com/joonhyoung-kim/mom.git
+
