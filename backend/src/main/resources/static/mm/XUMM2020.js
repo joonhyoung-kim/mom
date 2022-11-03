@@ -29,7 +29,8 @@ var VIEW= {
               
 		}
 		else if(index ==1 && btnId =='copyBtn'){	
-		 VIEW.itemId = $('#itemIdDP2').val();
+		 //VIEW.itemId = $('#itemIdDP2').val();
+		 $('#itemIdDP2').val('');
 		}
 	   
 
