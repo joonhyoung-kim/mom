@@ -31,12 +31,12 @@
 	AND    (UPPER(MR.ROUTING_ID) LIKE '%' || UPPER(#{routingId, jdbcType=VARCHAR}) || '%' OR UPPER(MR.ROUTING_SHORT_NM) LIKE '%' || UPPER(#{routingId, jdbcType=VARCHAR}) || '%' OR UPPER(MR.ROUTING_NM) LIKE '%' || UPPER(#{routingId, jdbcType=VARCHAR}) || '%')	
 	</if>
 	<if test="operationId != null and operationId != ''">
-	AND   MRP.OPERATION_ID  IN ( SELECT MRP.OPERATION_ID 
+	AND    EXISTS ( SELECT '*'
 	                FROM   MOM_ROUTING_PATH MRP
 	                WHERE  MRP.COMPANY_CD  = MR.COMPANY_CD
 	                AND    MRP.DIVISION_CD = MR.DIVISION_CD
 	                AND    MRP.ROUTING_ID  = MR.ROUTING_ID
-	                AND    UPPER(MRP.OPERATION_ID) LIKE '%' || UPPER(#{operationId, jdbcType=VARCHAR}) || '%')
+	                AND    MRP.OPERATION_ID LIKE '%' || UPPER(#{operationId, jdbcType=VARCHAR}) || '%')
 	</if>                
 	AND    MR.USE_YN   = 'Y'
 	AND    MRP.USE_YN  = 'Y'   

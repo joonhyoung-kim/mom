@@ -265,6 +265,12 @@
    FROM   MOM_IO_CATEGORY   
    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   <if test="purReturnYn != null and purReturnYn != ''">
+   AND    PUR_RETURN_YN = #{purReturnYn, jdbcType=VARCHAR} 
+   </if>
+   <if test="purReceiveYn != null and purReceiveYn != ''">
+   AND    PUR_RECEIVE_YN = #{purReceiveYn, jdbcType=VARCHAR} 
+   </if>
    AND    USE_YN      = 'Y'
    ORDER BY LABEL
 </select>   
