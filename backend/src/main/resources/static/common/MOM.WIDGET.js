@@ -1664,11 +1664,13 @@ var momWidget = {
 		  * 화면별 이벤트 세팅 
 		  ----------------------------------------------------------------------------------------------------------------------------------
 		  */																							
-			
+			if(index==0){
+			   
+		    }	
 			//that.setAddBtnEvent(index, your);				    // 행추가버튼 이벤트 핸들러 등록
+			that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
 			that.setComboBoxSet(index,your);                    // 콤보박스 공통 이벤트 처리
-		    that.setSearchSet(index, your);                     // 검색조건 세팅
-		    that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
+		    that.setSearchSet(index, your);                     // 검색조건 세팅		 	   
 		    that.setGridEvent(index,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
 		  //  that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
 		    that.htmlResize(index,your);                        // 해상도 변경시 html 사이즈 조절 
@@ -4772,15 +4774,15 @@ var momWidget = {
 	setKeyEvent: function(index, your) {
 		var that =  momWidget;	
 		//$(document).on('keydown', '.searchInputField, .searchSelectField, .searchSelectField-search-combo', function(e) {
-			$(document).on('keydown', '.searchSelectField.jqx-combobox', function(e) {
+			$(document).on('keydown', '.searchSelectField.jqx-combobox', function(e) {//콤보박스 
 			if(e.keyCode == 13){ //엔터
-			 let gridIndex= Number(e.currentTarget.id.split('SP')[1]);
-			  	 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
-		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
+			 let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1;
+			  	 if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용		
+			     that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
+		    	 that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
 		    }	
 		    else{
-			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
+			  that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
 		    }	    	
 			    
 			
@@ -4795,15 +4797,15 @@ var momWidget = {
 		});
 		$(document).on('keydown', '.form-control.w-input.searchInputField', function(e) {
 			if(e.keyCode == 13){ //엔터
-			 let gridIndex= Number(e.currentTarget.id.split('SP')[1]);
-			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
-		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
+			 let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1; //
+			 if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용		
+			     that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
+		    	 that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
 		    }	
 		    else{
-			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
+			  that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
 		    }	    
-				
+				e.stopImmediatePropagation();
 			} 
 			else if(e.keyCode == 46){
 				var searchId = e.currentTarget.id;
