@@ -61,9 +61,9 @@
 		            AND    MB.COMPANY_CD    = MI.COMPANY_CD
 		            AND    MB.DIVISION_CD   = MI.DIVISION_CD     
 		            AND    MB.ITEM_ID       = MI.ITEM_ID
-		            AND    MB.COMPANY_CD    = MR.COMPANY_CD(+)                          <!-- 20221024 LCS 추가 -->
-                    AND    MB.DIVISION_CD   = MR.DIVISION_CD(+)     	                 <!-- 20221024 LCS 추가 -->													
-                    AND    MB.ROUTING_ID    = MR.ROUTING_ID(+)	                         <!-- 20221024 LCS 추가 -->
+		            AND    MB.COMPANY_CD    = MR.COMPANY_CD    (+)                          <!-- 20221024 LCS 추가 -->
+                    AND    MB.DIVISION_CD   = MR.DIVISION_CD   (+)    	                 <!-- 20221024 LCS 추가 -->													
+                    AND    MB.ROUTING_ID    = MR.ROUTING_ID	   (+)                         <!-- 20221024 LCS 추가 -->
 		            AND    MB.COMPANY_CD    = #{companyCd , jdbcType=VARCHAR}
 		            AND    MB.DIVISION_CD   = #{divisionCd , jdbcType=VARCHAR}
 		            <if test="itemIdNm != null and itemIdNm != ''">
