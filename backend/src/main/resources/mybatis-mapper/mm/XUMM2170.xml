@@ -422,7 +422,7 @@
         </foreach>
     </insert>
     <select id="proc_delBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
-    { CALL MOM_MATERIAL_PKG.sp_upsert_pi_mst( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+    { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_MST( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
                                             , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
                                             , #{companyCd,   jdbcType=VARCHAR, mode=IN}
                                             , #{divisionCd,  jdbcType=VARCHAR, mode=IN}	
@@ -511,11 +511,11 @@
 			                , #{item.inoutType, jdbcType=VARCHAR}
 			                , #{item.returnNo, jdbcType=VARCHAR}
 			                , #{item.seq, jdbcType=NUMERIC}
-			                , #{item.returnReferenceNo, jdbcType=VARCHAR}
+			                , #{item.returnInoutId, jdbcType=VARCHAR}
 			                , #{item.itemId, jdbcType=VARCHAR}
 			                , #{item.unitPrice, jdbcType=NUMERIC}
 			                , #{item.returnRequestQty, jdbcType=NUMERIC}
-			                , #{item.returnInoutId, jdbcType=VARCHAR}
+			                , #{item.returnReferenceNo, jdbcType=VARCHAR}
 			                , #{item.description, jdbcType=VARCHAR}
 			                , #{item.delYn, jdbcType=VARCHAR}
 			                , #{item.valMsg, jdbcType=VARCHAR}
@@ -568,11 +568,11 @@
 			                , #{item.inoutType, jdbcType=VARCHAR}
 			                , #{item.returnNo, jdbcType=VARCHAR}
 			                , #{item.seq, jdbcType=NUMERIC}
-			                , #{item.returnReferenceNo, jdbcType=VARCHAR}
+			                , #{item.returnInoutId, jdbcType=VARCHAR}
 			                , #{item.itemId, jdbcType=VARCHAR}
 			                , #{item.unitPrice, jdbcType=NUMERIC}
 			                , #{item.returnRequestQty, jdbcType=NUMERIC}
-			                , #{item.returnInoutId, jdbcType=VARCHAR}
+			                , #{item.returnReferenceNo, jdbcType=VARCHAR}
 			                , #{item.description, jdbcType=VARCHAR}
 			                , #{item.delYn, jdbcType=VARCHAR}
 			                , #{item.valMsg, jdbcType=VARCHAR}
