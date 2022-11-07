@@ -20383,7 +20383,7 @@ var momWidget = {
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				var param = that.getCheckedRowItems(that.grid[index]);
 				var actionType = 'C';
-				var targetArray = e.target.id.split('DP');
+				var targetArray = e.currentTarget.id.split('DP');
 				var buttonId = targetArray[0];
 		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
 					if(that.buttonProperty[index][k]['buttonId']+(index+1) == buttonId){
@@ -21946,7 +21946,7 @@ var momWidget = {
 				
 				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
 				var param = that.getCheckedRowItems(that.grid[index]);
-				var targetArray = e.target.id.split('DP');
+				var targetArray = e.currentTarget.id.split('DP');
 				var buttonId = targetArray[0];
 				var actionType = 'U';
 		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
@@ -22007,7 +22007,7 @@ var momWidget = {
 			$(document).on('click', '#' + delBtnId, function(e) {	
 				var param = [];
 				var callBackParam = {};
-				let buttonId = e.target.id;
+				let buttonId = e.currentTarget.id;
 				let eventType = 'D';
 				let tmpYn = 'N';
 				let queryId = that.pageProperty[index]['programId']+'.delBtn'+(index+1);
