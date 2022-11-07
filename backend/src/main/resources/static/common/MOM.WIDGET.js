@@ -54,13 +54,7 @@ var momWidget = {
 	init: function(index, menuId, your, widgetType) {		  
 		  var that = momWidget;	 
 		  let gridId = index;
-		  let widgetType = widgetType == undefined ? 'GRID':widgetType;
 		  index--;
-
-		 // var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
-		
-	
-				  
 		  if(index == 0 && widgetType!='DG'){
  			  //let uploadPop = that.createFileUploadPop.excelUp(index,'파일업로드');
 			  //$('body').append(uploadPop);
@@ -5649,3261 +5643,7 @@ var momWidget = {
 	}    
     return result;
 },*/
-	// 등록버튼 이벤트 핸들러
-	setBtnEvent: function(index, your) {
-			var that = momWidget;
-			for(let i=0,max=that.buttonProperty[index].length; i<max;i++){ //커스텀 버튼 이벤트 핸들러 추가
-				
-				if(that.buttonProperty[index].length==0){
-					break;
-				}
-				if(that.buttonProperty[index][i]['buttonType']=='DG'){				   	
-				   	 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {		//커스텀 그리드랍업			     
-					     that.setCustomGridPopBtn(index,e.currentTarget.id.split('customBtn')[1],e.currentTarget.id,your,e);				
-			         });	
-					
-				}
-				else if(that.buttonProperty[index][i]['buttonType']=='CP'){
-					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	 //커스텀 랍업				     
-					     that.setCustomPopBtn(index,e.target.id.split('customBtn')[1],e.target.id,your,e);				
-			         });	
-					
-				}
-				else if( that.buttonProperty[index][i]['buttonType']=='ST' || that.buttonProperty[index][i]['buttonType']=='EX'){
-					 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function(e) {	//커스텀 버튼(팝업없이 ACTION만실행)					     
-					     that.setCustomBtn(index,e.currentTarget.id.split('customBtn')[1],e.currentTarget.id,your,e);				
-			         });	
-					
-				}
-			}
-			var findBtnId        = 'findBtn'+(index + 1);			
-			var createBtnId      = 'createBtn'+(index + 1);	
-			var createBtnIdV     = 'createBtnV'+(index + 1);	
-			var copyBtnId        = 'copyBtn'+(index + 1);
-			var copyBtnIdV       = 'copyBtnV'+(index + 1);
-			var editBtnId        = 'editBtn'+(index + 1);	
-			var editBtnIdV       = 'editBtnV'+(index + 1);	
-			var cancelBtnId      = 'cancelBtn'+'DP'+(index + 1);	
-			var cancelCustomPopBtnId  = 'cancelCustomPopBtn'+'DP'+(index + 1);	
-			var saveCustomPopBtnId  = 'saveCustomPopBtn'+'DP'+(index + 1);
-			var dropDownGridCancelBtnId  = 'cancelBtn'+'DG'+(index + 1);	
-			var excelDownBtnId   = 'excelDownBtn'+(index + 1);
-			var excelTmpBtnId    = 'excelTmpBtn'+(index + 1);
-			var excelUpBtnId     = 'excelUpBtn'+(index + 1);
-			var excelUpBtnIdV    = 'excelUpBtnV'+(index + 1);
-			var excelUpCancelBtnId = 'cancelBtnExUp'+(index + 1);
-			var saveBtnId        = 'saveBtn'+(index + 1);
-			var saveBtnIdV       = 'saveBtnV'+(index + 1);
-			let procBtnId        = 'procBtn'+(index + 1);
-			var savePopBtnId     = 'saveBtn'+'DP'+(index + 1);
-			var dropdownGridId   = 'saveBtn'+'DG'+(index + 1);
-			var delBtnId         = 'delBtn'+(index + 1);
-			let delGridBtnId     = 'delGridBtn'+(index + 1);;
-			var addBtnId         = 'addBtn'+(index + 1);
-			var showLv1Btn       = 'showLv1Btn'+(index + 1);  
-			var excelFile          = 'excelFile'+(index + 1);  
-			var isExpanded         = true;
-			var saveExUpBtnId      = 'saveBtnExUp'+(index + 1);
-			var exUpCheckBtnId     = 'exUpCheck'+(index + 1);
-			var exUpCheckDownBtnId = 'exUpCheckDown'+(index + 1);
-			var reportBtnId        = 'reportBtn'+(index + 1);
-			var changePwBtnId      = 'changePwBtn'+(index + 1);
-			var changePwSaveBtn    = 'saveBtnCp'+(index + 1); 
-			var changePwCencelBtn  = 'closeBtnCp'+(index + 1);
-			var callInitResult     = undefined;
-			var callBackResult     = undefined;
-			var pagingNumBtnClass  ='aui-grid-paging-number';
-			var paginFirstBtnClass = 'aui-grid-paging-first';
-			var paginLastBtnClass  = 'aui-grid-paging-last';
-			var paginPrevBtnClass  = 'aui-grid-paging-prev';
-			var paginNextBtnClass  = 'aui-grid-paging-next';
-			let calendarPopSaveBtnId = 'saveBtnDT'+(index + 1);
-			let calendarPopCloseBtnId = 'closeBtnDT'+(index + 1);
-			let gridPopSaveBtnId   = 'saveBtnCP';
-			let gridPopCancelBtnId = 'cancelBtnCP'+(index + 1);
-			let moveBtnId = 'moveBtn'+(index + 1);
-			let gridPopXBtnId = 'gridPop-x-btn';
-			
-		/*	var isExist = document.getElementById(findBtnId);
-			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
-				return;excelUpCancelBtnId
-			}*/
-		
-			$(document).on('click', '#'+moveBtnId  , function(e) {				
-				 let fromIndex = index; //복사할 인덱스
-				 let toIndex = fromIndex+1; //이동할 인덱스
-				 let param = {fromIndex:fromIndex,toIndex:toIndex};
-				 let isCheckCol = that.gridProperty[fromIndex ][0]['showRowCheckColumn']; //체크 여부
-			     let fromItem	= {};	
-			     let callInitResult = that.checkActionCallInit(fromIndex, 'GM', param, 'moveBtn', your,e);
-				 if(callInitResult['result'] != 'SUCCESS') {
-				          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-						  momWidget.messageBox({type:msgType, width:'400', height: '145', html: multiLang.transText('MESSAGE',callInitResult['msg'])});
-						  momWidget.splashHide();
-					      return;
-			    }
-			
-			    param = Object.assign(param, callInitResult['param']);  
-			    fromIndex = param.fromIndex;
-			    toIndex = param.toIndex;
-			    isCheckCol = that.gridProperty[fromIndex][0]['showRowCheckColumn'];;
-				if(isCheckCol == true){
-					 fromItem = that.getCheckedRowItems(that.grid[fromIndex]);
-					 if(fromItem.length == 0){
-						fromItem = {};
-					     momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-						 momWidget.splashHide();
-						 return;
-				    }
-				    else{
-					fromItem = fromItem;
-				    }
-										
-				}
-				else{
-				     fromItem = AUIGrid.getSelectedItems(that.grid[fromIndex])[0];
-				    if(fromItem == undefined){
-					     fromItem = {};
-					    /* momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00052')});
-						 momWidget.splashHide();
-						 return;*/
-				    }
-				    else{
-					fromItem = fromItem['item'];
-					}
-				}
 
-				AUIGrid.addRow(that.grid[toIndex], fromItem, "last");
-				
-			});	
-			$(document).on('click', '#'+cancelCustomPopBtnId , function(e) {
-				$('.' + 'customPop').momModal('hide');	
-			
-			});
-			$(document).on('click', '.'+gridPopXBtnId , function(e) {
-				$(".grid-pop"+(index+1)).momModal('hide');	
-			});
-			$(document).on('click', '#'+gridPopCancelBtnId , function(e) {
-				$(".grid-pop"+(index+1)).momModal('hide');	
-			});
-			$(document).on('click', '#'+gridPopSaveBtnId + (index + 1) , function(e) {
-				that.wait(0.5);
-				let customPopId = e.target.parentElement.parentElement.parentElement.id; //커스텀 팝업 id
-				let buttonId    = customPopId.split('customBtn')[1]; //커스텀 버튼 id
-				let gridIndex   = Number($('#'+customPopId).attr('gridindex'))-1;			
-				let isCheckCol  = that.gridProperty[gridIndex][0]['showRowCheckColumn'];
-				let param = [];
-				let callInitResult = [];
-				let actionType = 'C';
-				let tmpYn = 'N';
-				let queryId = that.pageProperty[index]['programId'] + '.customBtn'+buttonId+'-'+(gridIndex+1);
-			   	if(isCheckCol == true){
-					    param = that.getCheckedRowItems(that.grid[gridIndex]);
-					if (param.length == 0){												
-						 momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});				   
-				         return;
-					}				
-									
-				}
-				else{					
-					   checkedItems = AUIGrid.getGridData(that.grid[gridIndex]);
-					   for(var i=0,max=checkedItems.length;i<max;i++){	
-						  param.push(checkedItems[i]); 														
-				        }
-				}
-				
-				callInitResult = that.checkActionCallInit(gridIndex, actionType, param, 'saveBtnCP', your,e);
-				if(callInitResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    }
-			   
-			     
-				 param = callInitResult['param'];
-				
-				 for(var i=0;i<that.buttonProperty[index].length;i++){
-					if(that.buttonProperty[index][i]['buttonId'] == 'customBtn'+buttonId){
-						actionType = that.buttonProperty[index][i]['eventType'];
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];					
-						break;
-					}
-			
-				 }	 
-				 if(tmpYn =='Y'){
-						 mom_ajax('D', queryId,[], function(result1, data1) {
-						 if(result1!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
-							  momWidget.splashHide();
-				              return;
-			            }    	
-						  mom_ajax('C', queryId,param, function(result2, data2) {
-							 if(result2!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
-							  momWidget.splashHide();
-				              return;
-			            }   
-							 mom_ajax('P', queryId,[], function(result3, data3) {
-			            	     if(data3[0]['p_err_code']=='E') {
-						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
-			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
-							  momWidget.splashHide();
-				              return;
-			            } 
-			                callBackResult = that.checkActionCallBack(index, actionType, {}, buttonId, your);   				                         							  						
-				        	if(callBackResult['result'] != 'SUCCESS') {
-								  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-								  momWidget.splashHide();
-							      return;
-							}
-						if(your.initParam != undefined && your.initParam != ''){
-				              initParam = your.initParam;
-			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
-			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, index, this, false,undefined,actionType);
-							
-							
-							 }, undefined, index, this, false,undefined,'C');
-				   }, undefined, index, this, false,undefined,'D');
-				 }
-				 else{
-					  mom_ajax(actionType, queryId,param, function(result, data) {
-			            if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
-							  momWidget.splashHide();
-				              return;
-			            }    				                         							  						
-			        	callBackResult = that.checkActionCallBack(gridIndex, actionType, param, 'saveBtnCP', your);
-						if(callBackResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    		}
-			
-						 
-			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtnCP',momWidget.pageProperty[index]['programId'],your);
-			        	  
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, undefined, this, false);
-				}
-				
-				
-				//$('.' + 'grid-pop').momModal('hide');	
-			});
- 			$(document).on('click', '#' + calendarPopSaveBtnId, function(e) {
-	        let nowTime = $( "#time-main" ).val().replace('T',' ');
-	        
-			$('#calendar-pop').css('display','none');
-			let rowIndex= Number($('#calendar-pop').attr('rowIndex'));
-			let columnIndex = Number($('#calendar-pop').attr('columnIndex'));
-			let dataField = AUIGrid.getColumnLayout(that.grid[index])[columnIndex]['dataField'];
-			let item = AUIGrid.getGridData(that.grid[index])[rowIndex];
-			AUIGrid.setCellValue(that.grid[index],rowIndex, columnIndex, nowTime);
-			if (your != undefined && your.calendarGridSaveCallBack != undefined) {
-				  your.calendarGridSaveCallBack(index,rowIndex,columnIndex,dataField,item,nowTime,e);
-			}
-			});
-			$(document).on('click', '#' + calendarPopCloseBtnId, function(e) {	
-			$('#calendar-pop').css('display','none');
-			});
-			 $(document).on('click', '.' + paginFirstBtnClass, function(e) {
-				if(e.target.closest('#grid'+(index+1))==null){
-					 return;
-				}
-				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
-					return;
-				}
-			 var pagingBtnHtml = '';
-				 var leftHtml = '';
-				 var rightHtml = '';
-				// var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
-				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
-				 var nextPagingNum =  1; //다음에 선택될버튼
-				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
-				 var pagingRow = Math.ceil(nextPagingNum/10);
-				 var endPageRow = Math.ceil(endPageNum/10)*10;
-				 var nextIcon = '>';
-				 var lastIcon = '>>';
-				 var fisrtIcon = '<<';
-				 var prevIcon = '<';
-				 var targetSeq = 1;
-				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
-				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
-					   pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
-						if(i==endPageNum){
-								break;
-						}
-								
-			  	 }  
-
-					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
-					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					      
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel')[0].childNodes[0].setAttribute('id','click');
-					 
-					
-
-			
-				
-					
-					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-					 
-				   
-				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
-					if(nowPagingBtn == undefined) {
-						return;
-					}
-			
-					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = 1;
-					var nowEndPage = nextPagingNum*maxPagingNum ;	  
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-				
-		
-		    });
-		     $(document).on('click', '.' + paginLastBtnClass, function(e) {
-			if(e.target.closest('#grid'+(index+1))==null){
-					 return;
-				}
-				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
-					return;
-				}
-			   	// e.stopPropagation(); 
-				 var pagingBtnHtml = '';
-				 var leftHtml = '';
-				 var rightHtml = '';
-				 //var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
-				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
-				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
-				 var endPageRow = Math.ceil(endPageNum/10)*10;
-				 var nextPagingNum = endPageRow-9; //다음에 선택될버튼
-				// var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
-			
-				 var pagingRow = Math.ceil(nextPagingNum/10);
-				
-				 var nextIcon = '>';
-				 var lastIcon = '>>';
-				 var fisrtIcon = '<<';
-				 var prevIcon = '<';
-				 var targetSeq = 1;
-				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
-				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
-					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
-						if(i==endPageNum){
-								break;
-									}
-								
-				}
-				/* if(nextPagingNum<=10){
-					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
-					    pagingBtnHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
-				 }*/
-
-					    
-					    leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
-					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
-					
-			
-			
-				
-					
-					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-					 
-				   
-				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
-					if(nowPagingBtn == undefined) {
-						return;
-					}
-			
-					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
-					var nowEndPage = nextPagingNum*maxPagingNum ;	  
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-				
-		
-		    });
-			 $(document).on('click', '.' + paginPrevBtnClass, function(e) {
-				if(e.target.closest('#grid'+(index+1))==null){
-					 return;
-				}
-				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
-					return;
-				}
-					// e.stopPropagation(); 
-				 var pagingBtnHtml = '';
-				 var leftHtml = '';
-				 var rightHtml = '';
-				 //var prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
-				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
-				 var nextPagingNum =  Math.floor(prevNum/10)*10+1-10; //다음에 선택될버튼
-				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
-				 var pagingRow = Math.ceil(nextPagingNum/10);
-				 var endPageRow = Math.ceil(endPageNum/10)*10;
-				 var nextIcon = '>';
-				 var lastIcon = '>>';
-				 var fisrtIcon = '<<';
-				 var prevIcon = '<';
-				 var targetSeq = 1;
-				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
-				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
-					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
-						if(i==endPageNum){
-								break;
-						}
-								
-				}  
-				/* if(nextPagingNum<=10){
-					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
-					    pagingBtnHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
-				 }*/
-				 if( nextPagingNum<=10){
-					    
-					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
-					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					      
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
-					    $('.aui-grid-paging-panel')[0].childNodes[0].setAttribute('id','click');
-					
-				 }
-				 else{
-					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
-					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
-					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
-					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);	
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
-					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
-				  }
-			
-				
-					
-					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-					 
-				   
-				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
-					if(nowPagingBtn == undefined) {
-						return;
-					}
-			
-					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
-					var nowEndPage = nextPagingNum*maxPagingNum ;	  
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-				
-		
-		    });
-			 $(document).on('click', '.' + paginNextBtnClass, function(e) {
-				if(e.target.closest('#grid'+(index+1))==null){
-					 return;
-				}
-				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
-					return;
-				}
-				// e.stopPropagation(); 
-				 var pagingBtnHtml = '';
-				 var leftHtml = '';
-				 var rightHtml = '';
-				 
-				 var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText); //이전에 누른버튼
-				 var nextPagingNum =  Math.ceil(prevNum/10)*10+1; //다음에 선택될버튼
-				// var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']) -  Math.ceil(prevNum/10)*10; //마지막 페이징번호
-				 var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
-				 var pagingRow = Math.ceil(nextPagingNum/10);
-				 var endPageRow = Math.ceil(endPageNum/10)*10;
-				 var nextIcon = '>';
-				 var lastIcon = '>>';
-				 var fisrtIcon = '<<';
-				 var prevIcon = '<';
-				 var targetSeq = 1;
-				 $('#grid'+(index+1)).find('.aui-grid-paging-panel').empty(); //페이징버튼  전부삭제
-				 	  for(var i=nextPagingNum,max1=10*pagingRow; i<=max1;i++){
-					pagingBtnHtml += '<span class ="aui-grid-paging-number">'+i+'</span>';	
-						if(i==endPageNum){
-								break;
-									}
-								
-				}
-				/* if(nextPagingNum<=10){
-					    rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
-					    pagingBtnHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					    $('.aui-grid-paging-panel').append(pagingBtnHtml);	
-				 }*/
-				 if((endPageRow-10)<nextPagingNum && nextPagingNum<=endPageRow){
-					    
-					    leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
-					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
-		
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
-					
-				 }
-				 else{
-					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-first">'+fisrtIcon+'</span>';	
-					     leftHtml += '<span class ="aui-grid-paging-number aui-grid-paging-prev">'+prevIcon+'</span>';
-					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-next">'+nextIcon+'</span>';	
-					     rightHtml += '<span class ="aui-grid-paging-number aui-grid-paging-last">'+lastIcon+'</span>';
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(leftHtml);	
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(pagingBtnHtml);	
-					    $('#grid'+(index+1)).find('.aui-grid-paging-panel').append(rightHtml);
-					   $('#grid'+(index+1)).find('.aui-grid-paging-panel')[0].childNodes[2].setAttribute('id','click');
-				  }
-			
-				
-					
-					 // $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-					 
-				   
-				   var nowPagingBtn = e.target.classList.contains('aui-grid-paging-next'); 					
-					if(nowPagingBtn == undefined) {
-						return;
-					}
-			
-					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = ((nextPagingNum*maxPagingNum)-maxPagingNum) + 1;
-					var nowEndPage = nextPagingNum*maxPagingNum ;	  
-						
-  				    that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-					//$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nextPagingNum + " / 전체페이징 : " + endPageNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
-						
-		    });
-			 $(document).on('click', '.' + pagingNumBtnClass, function(e) {
-				//e.stopPropagation();
-			
-				if(e.target.closest('#grid'+(index+1))==null){
-					 return;
-				}
-				if(e.target.parentElement == null || e.target.parentElement == undefined){
-					return;
-				}
-				if(e.target.parentElement.parentElement.parentElement.classList.contains('excel-up-grid')){
-					return;
-				}
-				if($('.aui-grid-paging-panel').find('#click')[0]==undefined){
-					return;
-				}
-				if(e.target.classList.contains('aui-grid-paging-first')){
-					return;
-				}
-				if(e.target.classList.contains('aui-grid-paging-last')){
-					return;
-				}
-				if(e.target.classList.contains('aui-grid-paging-prev')){
-					return;
-				}
-				if(e.target.classList.contains('aui-grid-paging-next')){
-					return;
-				}
-				 $('.aui-grid-paging-panel').find('#click')[0].setAttribute('id','');
-				    e.target.setAttribute('id','click');
-				    //var prevNum = Number($('#grid'+(index+1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
-					var nowPagingNum = Number(e.target.innerHTML); 
-					if(isNaN(nowPagingNum) == true){
-						return;
-					}
-					var maxPagingNum =  that.gridProperty[index][0]['pageRowCount'];
-					var nowStartPage = ((nowPagingNum*maxPagingNum)-maxPagingNum) + 1 ;
-					var nowEndPage = nowPagingNum*maxPagingNum;	 
-					var endPageNum = Math.ceil(that.totalRowCount[index]/ that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호 
-					
-  				 that.findBtnClicked(index, {startPage:nowStartPage,endPage:nowEndPage}, true, 'PAGING',that.pageProperty[index]['programId'],your,that.controlPaging,e);
-  				 
-		//$('.aui-grid-paging-info-text')[0].innerText  = "현재페이징 : " + nowPagingNum + " / 전체페이징 : " + endPageNum + "( " + '1' + "~" + that.totalRowCount[index] + " 개 )";
-		    });
-		    
-		  $(document).on('click', '#' + findBtnId, function(e) {  
-			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(index, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
-		    	 that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
-		    }	
-		    else{
-			  that.findBtnClicked(index, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
-		    }	    	
-			
-			// e.preventDefault();
-		});
-			$(document).on('click','.grid-popup'+'.gridPop'+(index+1), function(e) {	
-				let isEdit = $('#defaultPop'+(index+1)).attr('btnId') == 'editBtn'+(index+1) ? 'Y':'N';	
-				if(isEdit == 'Y'){
-					return;
-				}
-				let columnProp = [];			
-					
-				let activeId =  e.target.parentElement.parentElement.parentElement.parentElement.id.split('DP');
-				let targetId = 	activeId[0]; //선택자 
-				let clickedElment = e.target.parentElement.parentElement.parentElement.parentElement.id;
-				let dropDownGridIndex = 0;
-				let totalParam = [];
-				//var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-					
-				if(clickedElment =='' || clickedElment.indexOf('DP') == -1){
-					return;
-				}
-				if(fieldValue==''){
-					return;
-				}
-				for(let i=0,max1=that.popupProperty[index].length; i<max1;i++){
-					if(that.popupProperty[index][i].popupType == 'DG' && that.popupProperty[index][i].popupId == targetId){												
-							dropDownGridIndex = i;
-						    break;				
-					}
-			    }
-				var fieldValue = $('#'+clickedElment).val();
-				var activeTop = $('#'+clickedElment).offset().top;
-				var activeLeft = $('#'+clickedElment).offset().left;
-				
-			    var dropdownGridId = (index+1)*100;
-			    let dropdownGridQueryId = that.popupProperty[index][dropDownGridIndex]['dropdownGridList'];
-				
-			
-	
-			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
-				
-		         if(result1 != 'SUCCESS' || data1.length == 0) {
-		    	  momWidget.splashHide();
-			      return;							     
-		         }			  
-		      var gridString   = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
-		      var columnString = data1[0]['columnProperty'] == undefined ? '[]':data1[0]['columnProperty'];
-		          gridString   = gridString.substr(1,  gridString.length-2);  
-			      columnString = columnString.substr(1,  columnString.length-2);
-			      that.gridProperty[dropdownGridId]     = JSON.parse(gridString);
-			      that.columnProperty[dropdownGridId]   = JSON.parse(columnString);
-			      				var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
-				var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};			
-			      for(var i=0,max=gridExceptList.length; i<max;i++){
-			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[dropdownGridId][0][gridExceptList[i]];			    	  
-			    	   delete that.gridProperty[dropdownGridId][0][gridExceptList[i]];
-			      }
-			      that.gridExtraProperty[dropdownGridId] = gridExtraProp;
-			     var popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
-			    var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
-			    var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId,0);
-                var menuId = that.pageProperty[index]['programId'];
-                    var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
-                    if(isShow == 'block'){
-	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
-	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
-					 return;
-				}	
-			    //$('#dropDownGridPop'+(dropdownGridId+1)).remove();   
-			    $('body').append(popupHtml);
-			
-                
-			       for(var i=0,max=that.columnProperty[dropdownGridId].length;i<max;i++){	
-			    	   columnType = that.columnProperty[dropdownGridId][i]['columnEditable'] == 'N' ? 'default':'edit';	
-			    	   widthUse = that.columnProperty[dropdownGridId][i]['columnWidth']  == 0 ? 'N': 'Y';
-			    	   excelShow = that.columnProperty[dropdownGridId][i]['excelShow']  == 'Y' ? 'Y': 'N';
-			    	   excelTemplateShow = that.columnProperty[dropdownGridId][i]['excelTemplateShow']  == 'Y' ? 'Y': 'N';
-			    	   gridShow = that.columnProperty[dropdownGridId][i]['columnShow']  == 'Y' ? true: false;
-			    	   excelDownShow   = that.columnProperty[dropdownGridId][i]['excelShow'] == 'Y' ? true: false;
-			    	   excelUploadShow = that.columnProperty[dropdownGridId][i]['excelTemplateShow'] == 'Y' ? true: false;
-			    	   isCheckBox = momWidget.columnProperty[dropdownGridId][i]['columnType'] == 'CK' ? 'Y': 'N';
-			    	   isDropDown = momWidget.columnProperty[dropdownGridId][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
-			    	   columnId = that.columnProperty[dropdownGridId][i]['columnId'];
-
-			    	   columnProp[i] =  {
-					    	      dataField 	: columnId 
-					  			, headerText 	: that.columnProperty[dropdownGridId][i]['columnNm'] 
-						   		, dataType      : that.columnProperty[dropdownGridId][i]['dataType'] 
-								, formatString  : that.columnProperty[dropdownGridId][i]['dataFormat']
-	    	                    , editable      : that.columnProperty[dropdownGridId][i]['columnEditable']  == 'Y' ? true : false
-					  			, style			: that.columnProperty[dropdownGridId][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
-					  			, visible       : gridShow  
-					  		
-	                    };
-
-			    	   if(widthUse == 'Y'){
-			    		   columnProp[i].width      = that.columnProperty[dropdownGridId][i]['columnWidth'];
-
-			    	   }
-			    	   if(isCheckBox =='Y'){
-			    		   columnProp[i].renderer = {
-									          type: 'CheckBoxEditRenderer'
-											, editable: true
-											,checkValue : 'Y' 
-											,unCheckValue : 'N'
-										};
-			    		   
-			    		   columnProp[i].headerRenderer = { 
-			    				type : "CheckBoxHeaderRenderer",
-			    				position : "right",
-			    				dependentMode : true
-			    				//onClick : myHeaderCheckClick 
-			    			};
-			    	   }
-			 
-			    	   	
-			      } 	
-			        AUIGrid.destroy('#grid'+(dropdownGridId+1));
-				    that.grid[dropdownGridId] = AUIGrid.create('#grid'+(dropdownGridId+1), columnProp, that.gridProperty[dropdownGridId][0]); 
-			      
-
-				     //$('#dropDownGridPop'+(dropdownGridId+1)).momModal('show');
-				
-				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  {}, 'POPUPCLICK', your,e);     	
-				  if(callInitResult['result'] != 'SUCCESS') {
-						      let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			      }
-			           $('#dropDownGridPop'+(dropdownGridId+1)).css('z-index','9999');
-				     $('#dropDownGridPop'+(dropdownGridId+1)).css('display','block');
-				     
-				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+29, left : activeLeft});
-				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
-				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-			      totalParam = callInitResult['param'];
-				  		 mom_ajax('R', 'DG.'+dropdownGridQueryId, totalParam, function(result1, data1) {
-					//momWidget.splashShow();
-					if(result1 != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-					}
-						 AUIGrid.setGridData(that.grid[dropdownGridId], data1); 
-						   						   	
-				}, undefined, undefined, that, false);	 
-		/*    	 that.findBtnClicked(dropdownGridId, [{keyId1:fieldValue}], true, 'INIT',menuId,your,function(callBackResult, callBackData) {
-						                 if(callBackResult != 'SUCCESS' || callBackData.length==0) {
-						    	            momWidget.splashHide();
-						    	            momWidget.messageBox({type:'warning', width:'400', height: '145', html: '조회된 데이터없음!'});
-						    	            $('#dropDownGridPop'+(dropdownGridId+1)).remove();
-							                return;							     
-						                 }	
-						               
-					});*/
-		       
-				}, undefined, undefined, this, false);
-				
-				//}
-				e.stopImmediatePropagation();
-			});
-			
-	     $(document).on('click','html', function(e) {
-		/*    if(document.activeElement.id.indexOf('defaultPop') != -1 || document.activeElement.id==''){
-					return;
-				}*/
-				
-             if($('.dropDownGrid').length>0){
-	  			var dropdownGridId = $('.dropDownGrid')[0]['id'].split('dropDownGridPop');	  			 
-			        dropdownGridId = Number(dropdownGridId[1]);
-				 var isShow = $('#dropDownGridPop'+(dropdownGridId)).css('display');
-				      if(isShow == 'block'){
-	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
-	                 $('#dropDownGridPop'+(dropdownGridId)).remove();
-					 return;
-				     }
-            }
-			
-			/*	var activeId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id.split('DP');
-				var clickedElment = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-				var fieldValue = $('#'+clickedElment).val();
-				if(fieldValue==''){
-					return;
-				}
-				var targetId = 	activeId[0];*/
-				
-		   
-                 
-		});	
-			$(document).on('click','#'+changePwBtnId, function() {
-				//that.splashShow();
-               var modalDiv = $('#changePwPop'+(index+1));
-               modalDiv.momModal({ backdrop: false, show: true });
-               $('#changePwPop'+(index+1)).draggable({ handle: ".modal-header" });
-
-		      // $('#changePwPop'+(index+1)).css("display","block");
-					 $('#changePwPop'+(index+1)).momModal('show');
-				});
-				$(document).on('click','#'+changePwSaveBtn, function() {
-					momWidget.splashShow();
-					let param = {loginId:$('#userNoDP'+(index+1)).val(),nowPass:$('#nowPassword'+(index+1)).val()};
-					$.ajax({
-    				url:mCommon.contextPath() + '/passwordChange',
-    				method: "get",
-    				contentType: 'application/json; charset=UTF-8',
-    				data :param,
-    				async		: true,
-		            timeout 	: 30000000,
-		            beforeSend: function (xhr) {
-	                  xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
-	               },
-    				success: function(data){	                
-	                    
-	                    if(data.result == 'Y'){
-							$('#changePwPop'+(index+1)).momModal('hide');
-		                    momWidget.messageBox({type:'success', width:'400', height: '145', html: '저장시에 최종 반영됩니다!'});
-						    momWidget.splashHide();
-						    $('#passwordDP'+(index+1)).val($('#changePassword'+(index+1)).val().trim());						    
-					        return;
-						}
-						else{
-							$('#changePwPop'+(index+1)).momModal('hide');
-							momWidget.messageBox({type:'danger', width:'400', height: '145', html: '현재비밀번호 불일치!'});
-						    momWidget.splashHide();
-					        return;
-						}
-           			
-    				
-    				},
-    				error: function(e) {    				
-    						  momWidget.splashHide();
-    						  return;
-    				}
-    			});	        
-				});
-				
-				$(document).on('click','#'+changePwCencelBtn, function() {
-
-					 $('#changePwPop'+(index+1)).momModal('hide');
-				});
-			$(document).on('click','#'+reportBtnId, function() {
-				that.splashShow();
-				
-			
-				var param = that.getCheckedRowItems(that.grid[index]);
-				if (param.length == 0){
-					      return;	
-					}			
-					param[0].fileName  = that.pageProperty[index]['programId']+'_'+(index+1);
-					//param[0].fileType = 'xlsx';
-					param[0].fileType = 'pdf';
-			   // param = that.checkSearchParam(index,param,your); 	   
-				$.ajax({
-    				url:mCommon.contextPath() + '/createReport',
-    				method: "get",
-    				contentType: 'application/json; charset=UTF-8',
-    				data :param[0],
-    				async		: true,
-		            timeout 	: 30000000,
-		            beforeSend: function (xhr) {
-	                  xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
-	               },
-    				success: function(data){
-	                  setTimeout(function() {
-	                    momWidget.splashHide();
-    					//window.open('../report-xlsx/'+param[0].fileName+'.'+param[0].fileType, '_blank','resizable=no,width=2000,height=1300,left=740,top=520');	
-    					//history.pushState(null, null, '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType)
-    					location.href = location.href;
-           				//location.href  = '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType;
-           				
-           				location.href  = '../report-pdf/'+param[0].fileName+'.'+param[0].fileType;
-    					},7000);
-    				},
-    				error: function(e) {    				
-    						  momWidget.splashHide();
-    						  return;
-    				}
-    			});	            
-					
-				});
-			
-			$(document).on('click','#'+exUpCheckDownBtnId, function() {
-				/*	var excelData = AUIGrid.getGridData(that.excelUpGrid[index]); 
-					AUIGrid.setGridData(that.excelDownGrid[index], excelData);		*/		
-					 
-					 
-					 mom_ajax('R', momWidget.pageProperty[0]['programId']+'.excelUpBtn'+(index+1), [], function(result1, data1) {
-						   		if(result1 != 'SUCCESS') {
-							    	  momWidget.splashHide();
-							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '프로시저 호출실패!'});							    	  
-								      return;							     
-			      				}
-			      				let rowIndexes = [];
-			      			for(var i=0,max1=data1.length; i<max1;i++){
-								rowIndexes.push(i);
-							}
-							AUIGrid.updateRows(that.excelUpGrid[index], data1, rowIndexes); 
-			      				//AUIGrid.setGridData(that.excelUpGrid[index], data1);	
-					var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd')+'_검사결과';
-				    var excelDownOpt = {fileName: fileName ,
-						    		    progressBar: true,
-						    		    showRowNumColumn:false,
-						    		    footers: undefined,
-						    		    exportWithStyle: true
-				    		            };
-				   
-				    excelDownOpt.afterRequestCallback = function() { // 엑셀 만들고 호출되는 콜백함수
-					$('.aui-grid-export-progress-modal').remove();
-					// AUIGrid.GridData(that.excelGrid[index]);
-					
-					//$('#excelArea' + (index + 1)).remove();
-					//AUIGrid.destroy(that.excelDownGrid[index]);
-					//that.exceldownGrid[index] = undefined;
-				}
-				//option.footers = footerProperty;
-				    //that.excelDownGrid[index]
-				    //  AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], "valMsg", {visible : true});
-				   // that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-						validateCol = { dataField 	: 'valMsg' 
-				  			  , headerText 	: 'Result'
-				  			  , headerStyle   : "my-header-style-default"
-					   		  , dataType      : "string"
-							  , formatString  : ""
-    	                      , editable      : false
-				  			  , style			: 'aui-grid-default-column-left'
-				  		      , visible       : true
-				  		      , width         : 350
-						                     };			
-					 // let backupGridData = AUIGrid.getGridData('#excelUpGrid'+(index+1));	
-				      AUIGrid.addColumn(that.excelUpGrid[index], validateCol, 'first'); 
-				      $('.aui-grid-export-progress-modal').height('100%');
-				      $('#excelUpGrid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
-				      AUIGrid.exportToXlsx(that.excelUpGrid[index], excelDownOpt);
-				     // AUIGrid.removeColumn(that.excelUpGrid[index],0); 
-				     	setTimeout(function() {
-					     AUIGrid.removeColumn(that.excelUpGrid[index],0); 
-					   //AUIGrid.destroy(that.excelUpGrid[index]);
-				      // AUIGrid.create(that.excelUpGrid[index], that.excelUploadProperty[index], that.excelUpGridProperty[index]);	
-					   //AUIGrid.setGridData(that.excelUpGrid[index], backupGridData);
-				}, 400);
-				
-					  //AUIGrid.setColumnProp( that.excelUpGrid[index], 0, { visible : false} );				
-			
-				//AUIGrid.removeColumn(that.excelUpGrid[index], 'first');
-	   	 					}, undefined, undefined, this, false,undefined,'R');
-	   	 					
-	   	 														
-			
-				});
-					$(document).on('click','#'+exUpCheckBtnId, function() {	
-					let uploadItems = AUIGrid.getGridData(momWidget.excelUpGrid[index]);
-					if(uploadItems.length ==0){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: '데이터가없습니다!'});
-					}
-                 mom_ajax('D', momWidget.pageProperty[0]['programId']+'.excelUpBtnV'+(index+1), [], function(result1, data1) {
-		      		if(result1 != 'SUCCESS') {
-			    	  momWidget.splashHide();
-			    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삭제실패!'});
-				      return;							     
-		      		}					       			
-        				mom_ajax('C', momWidget.pageProperty[0]['programId']+'.excelUpBtnV'+(index+1), uploadItems, function(result2, data2) {
-				  			if(result2 != 'SUCCESS') {
-					    	  momWidget.splashHide();
-					    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'tmp테이블 삽입실패!'});
-						      return;							     
-				      		}
-			      			   mom_ajax('P', momWidget.pageProperty[0]['programId']+'.excelUpBtnV'+(index+1), [], function(result3, data3) {
-						   		if(result3 != 'SUCCESS') {
-							    	  momWidget.splashHide();
-							    	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '프로시저 호출실패!'});							    	  
-								      return;							     
-			      				}
-			      				 if(data3[0]['p_err_code']=='E') {
-								
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: '검사 불합격! 검사 결과를 다운 받으세요'+multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
-									  momWidget.splashHide();
-									  $("#exUpCheckDown"+(index+1)).prop("disabled", false);
-						              return;
-					            }    
-		      				    	$("#saveBtnExUp"+(index+1)).prop("disabled", false);
-
-	    							  momWidget.messageBox({type:'success', width:'400', height: '145', html: '검사통과!'});
-	   	 					}, undefined, undefined, this, false,undefined,'EV');			
-
-	    }, undefined, undefined, this, false);	
-   
-	}, undefined, undefined, this, false);	
-	 				   
-
-			});
-			
-			$(document).on('click','#'+saveExUpBtnId, function(e) {
-			    // $('#excelUpPop'+(index+1)).momModal('hide');	
-				 that.splashShow();
-				
-				 var bar = $('.bar');
-				 var percent = $('.percent');
-				 var status = $('#status');
-				   bar.width('0%');
-		           percent.text('0%');  
-            
-                status.empty();
-                var percentVal = '0%';
-            /*    bar.width(percentVal);
-                percent.html(percentVal);*/
-				var param = [];					
-			    var checkedItems = AUIGrid.getGridData(that.excelUpGrid[index]);
-			    if(checkedItems.length == 0){
-					momWidget.messageBox({type:'warning', width:'400', height: '145', html:'데이터가 없습니다!'});
-			        momWidget.splashHide();
-			        return;
-				}
-					for(var i=0,max=checkedItems.length;i<max;i++){	
-						param.push(checkedItems[i]); 														
-				    }
-					if(param.length>=1000){
-						that.splashHide();
-						 //$("#pleaseWaitDialog").momModal('show');
-					
-					}
-					else{
-						//that.splashShow();
-					}
-				if(that.checkActionCallInit(index, 'GS', param, 'saveUpBtn', your,e)['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callInit action fail!'});
-					  momWidget.splashHide();
-				      return;
-				}	
-					 				
-				    var actionType = $('#excelUpPop'+(index+1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop'+(index+1)).attr('actiontype');
-				    let validateYn = $('#excelUpPop'+(index+1)).attr('validateyn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('validateyn');
-				    let queryId    = validateYn == 'Y' ? that.pageProperty[index]['menuId']+'.excelUpBtnV'+(index+1) : that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1);
-				  
-				    let tmpYn = $('#excelUpPop'+(index+1)).attr('tmpYn') == undefined ? 'N' : $('#excelUpPop'+(index+1)).attr('tmpYn');
-					setTimeout(function() {
-						if(validateYn=='Y'){
-							 param[0].excelUpYn = 'Y';
-					         param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
-							 mom_ajax(actionType, queryId,[], function(result, data) {
-							   bar.width('100%');
-					           percent.text('100%'+' '+param.length+'/'+param.length);  
-							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
-					            if(data[0]['p_err_code']=='E' || data.length==0) {
-									  $("#pleaseWaitDialog").momModal('hide');
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00033')});
-									  momWidget.splashHide();
-						              return;
-					            }    				                         							  						
-					        	if(that.checkActionCallBack(index, 'GS', param, 'createBtn'+index, your)['result'] != 'SUCCESS'){
-									  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
-									  momWidget.splashHide();
-								      return;
-								} momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1),momWidget.pageProperty[index]['programId'],your,[]);	
-					        	  //$('#excelUpPop'+(index+1)).momModal('hide');
-					        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-								  momWidget.splashHide();
-								  //$("#pleaseWaitDialog").momModal('hide');
-							      return;
-				          }, undefined, index, this, false,undefined,'EA');	
-		          
-						
-					
-						// $("#pleaseWaitDialog").modal('show');
-					
-						}
-						else{
-							 param[0].excelUpYn = 'Y';
-						     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
-							 if(tmpYn=='Y'){
-								    mom_ajax('D', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1) ,[], function(result1, data1) {
-						            if(result1!='SUCCESS') {
-						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
-										  momWidget.splashHide();
-							              return;
-						            }    	
-					                   mom_ajax('C', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1),param, function(result2, data2) {                                                                                                      
-						 		  			if(result2!='SUCCESS') {
-							            	   momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
-											   momWidget.splashHide();
-								               return;
-							                }    	
-					                 mom_ajax('P', that.pageProperty[index]['programId']+'.excelUpBtn'+(index+1),[], function(result3, data3) {
-									    if(data3[0]['p_err_code']=='E') {
-								            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
-												  momWidget.splashHide();
-									              return;
-								         }    	
-					                 }, undefined, undefined, this, false,undefined,'C'); 
-			                    
-						 }, undefined, undefined, this, false);    
-						                      							  						
-			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'excelUpBtn'+(index+1), your);
-						if(callBackResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    		}
-						  let callBackParam = callBackResult['param'];		 
-			        	  momWidget.findBtnClicked(index, callBackParam, true, 'excelUpBtn'+(index+1),momWidget.pageProperty[index]['programId'],your);			        	  
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, undefined, this, false);
-							 }
-							 else{
-								 mom_ajax(actionType, queryId,param, function(result, data) {
-									   bar.width('100%');
-							           percent.text('100%'+' '+param.length+'/'+param.length);  
-							// percent.html(percentVal+' '+paramSize+'/'+data.percent);
-					            if(data[0]['p_err_code']=='E') {
-									  $("#pleaseWaitDialog").momModal('hide');
-					            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00033')});
-									  momWidget.splashHide();
-						              return;
-					            }    				                         							  						
-					        	if(that.checkActionCallBack(index, 'GS', param, 'createBtn'+index, your)['result'] != 'SUCCESS'){
-									  momWidget.messageBox({type:'danger', width:'400', height: '145', html: 'callBack action fail!'});
-									  momWidget.splashHide();
-								      return;
-								} momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1),momWidget.pageProperty[index]['programId'],your,[]);	
-					        	  //$('#excelUpPop'+(index+1)).momModal('hide');
-					        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-								  momWidget.splashHide();
-								  //$("#pleaseWaitDialog").momModal('hide');
-							      return;
-				          }, undefined, index, this, false,undefined,'EA');
-							}
-							
-					
-						// $("#pleaseWaitDialog").modal('show');
-						
-						}
-						
-				    
-					}, 500);
-				 
-				
-			});
-			$(document).on('change','#'+excelFile, function(e) {
-				that.splashShow();
-				 var bar = $('.bar');
-				 var percent = $('.percent');
-				 var status = $('#status');
-				 let validateYn = $('#excelUpPop'+(index+1)).attr('validateYn') == undefined ? 'N':$('#excelUpPop'+(index+1)).attr('validateYn');
-			   bar.width('0%');
-			   percent.text('0%');  
-			
-				
-				setTimeout(function() {
-						excelUploadGrid(e.target,index, that.excelUpGrid[index],validateYn);
-                        
-				$('#'+excelFile).val('');
-				//AUIGrid.update(that.excelUpGrid[index]);
-							setTimeout(function() {
-
-						that.splashHide();
-							}, 500);
-							}, 500);
-			
-		//AUIGrid.showToastMessage(that.excelUpGrid[index], 2, 0, "Y/N만 입력가능!");
-			});
-			$(document).on('click','#'+excelUpCancelBtnId, function() {
-				$('#excelFile1').val('')
-				 AUIGrid.destroy(that.excelUpGrid[index]);
-				//AUIGrid.clearGridData(that.excelUpGrid[index]);
-				//$('#excelUpPop'+(index+1)).css('opacity', '0');
-				$('#excelUpPop'+(index+1)).momModal('hide');
-				
-			});
-			$(document).on('click', '#' + excelUpBtnId, function() {
-				 //$("#exUpCheck"+(index+1)).prop("disabled", false);		
-				 let eventType = 'CU';	
-				 let tmpYn = 'N';	 
-				  $("#saveBtnExUp"+(index+1)).prop("disabled", false);
-				  for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-					  if(that.buttonProperty[index][i]['buttonId'] == 'excelUpBtn') {
-						 eventType =   that.buttonProperty[index][i]['eventType'];
-						 tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-					  }
-				  }
-				  $('#excelUpPop'+(index+1)).attr('actionType', eventType);
-				  $('#excelUpPop'+(index+1)).attr('validateYn', 'N');
-				  $('#excelUpPop'+(index+1)).attr('tmpYn', tmpYn);
-			     //$("#exUpCheckDown"+(index+1)).prop("disabled", true);
-				$('#excelFile1').val('')
-				AUIGrid.clearGridData(that.excelUpGrid[index]);
-					 var bar = $('.bar');
-				 var percent = $('.percent');
-				 var status = $('#status');
-			   bar.width('0%');
-			   percent.text('0%');  
-				var gridPros = {
-						
-						// 페이징 사용		
-						usePaging : true,
-						
-						// 한 화면 페이징 버턴 개수 5개로 지정
-						showPageButtonCount : 10,
-						
-						// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
-						showPageRowSelect : true,
-						
-						// 한 화면에 출력되는 행 개수 30개로 지정
-						// pageRowCount 의 크기가 너무 크면 퍼포먼스가 낮아집니다.
-						// 그리드 페이징은 해당 행 수만큼 DOM을 만들기 때문입니다.
-						pageRowCount : 100,
-						showRowNumColumn: true,
-						// 페이징 하단에 출력되는 페이징 정보 텍스트 변경 함수
-						// 파라메터 설명 
-						// currentPage : 현재 페이지, 
-						// totalPageCount : 총 페이지 수, 
-						// currentTopNumber : 최 상단의 행 번호, 
-						// currentBottomNumber : 최 하단 행 번호,
-						// dataLen : 전체 데이터 수
-						// 리턴 : 리턴되는 스트링이 출력됩니다.
-						pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber, currentBottomNumber, dataLen) {
-							return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + dataLen + " 개 )";
-						},
-						
-						// 그룹핑 패널 사용
-					/*	useGroupingPanel : true,
-					
-						groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."*/
-					};
-					that.excelUpGridProperty[index] = gridPros;
-					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-						
-				   // AUIGrid.hideColumnByDataField(that.excelUpGrid[index], ["valMsg"] ); 
-					$('#' +'excelUpPop'+(index+1)).momModal('show');
-					AUIGrid.resize('#excelUpGrid'+(index+1));
-			});
-			$(document).on('click', '#' + excelUpBtnIdV, function() {
-				 $("#exUpCheck"+(index+1)).prop("disabled", false);
-			     $("#exUpCheckDown"+(index+1)).prop("disabled", true);
-			     $('#excelUpPop'+(index+1)).attr('actionType', 'P');
-			     $('#excelUpPop'+(index+1)).attr('index', index);
-			     
-			     $('#excelUpPop'+(index+1)).attr('validateYn', 'Y');
-				 $('#excelFile1').val('')
-				 
-				AUIGrid.clearGridData(that.excelUpGrid[index]);
-					 var bar = $('.bar');
-				 var percent = $('.percent');
-				 var status = $('#status');
-			   bar.width('0%');
-			   percent.text('0%');  
-				var gridPros = {
-						
-						// 페이징 사용		
-						usePaging : true,
-						
-						// 한 화면 페이징 버턴 개수 5개로 지정
-						showPageButtonCount : 10,
-						
-						// 페이지 행 개수 select UI 출력 여부 (기본값 : false)
-						showPageRowSelect : true,
-						
-						// 한 화면에 출력되는 행 개수 30개로 지정
-						// pageRowCount 의 크기가 너무 크면 퍼포먼스가 낮아집니다.
-						// 그리드 페이징은 해당 행 수만큼 DOM을 만들기 때문입니다.
-						pageRowCount : 100,
-						showRowNumColumn: true,
-						// 페이징 하단에 출력되는 페이징 정보 텍스트 변경 함수
-						// 파라메터 설명 
-						// currentPage : 현재 페이지, 
-						// totalPageCount : 총 페이지 수, 
-						// currentTopNumber : 최 상단의 행 번호, 
-						// currentBottomNumber : 최 하단 행 번호,
-						// dataLen : 전체 데이터 수
-						// 리턴 : 리턴되는 스트링이 출력됩니다.
-						pagingInfoLabelFunction : function(currentPage, totalPageCount, currentTopNumber, currentBottomNumber, dataLen) {
-							return "현재페이징 : " + currentPage + " / 전체페이징 : " + totalPageCount + "( " + currentTopNumber + "~" + dataLen + " 개 )";
-						},
-						
-						// 그룹핑 패널 사용
-					/*	useGroupingPanel : true,
-					
-						groupingMessage : "여기에 칼럼을 드래그하면 그룹핑이 됩니다."*/
-					};
-					that.excelUpGridProperty[index] = gridPros;
-					that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);	
-  
-					$('#' +'excelUpPop'+(index+1)).momModal('show');
-					AUIGrid.resize('#excelUpGrid'+(index+1));
-			});
-			$(document).on('click', '#' + addBtnId, function(e) {	
-				 let param = {targetIndex:index,addIndex:index};
-				 let addIndex = index;
-				 let targetIndex = index;
-				 let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
-			     let targetItem	={};	
-			     let callInitResult = that.checkActionCallInit(index, 'GA', param, 'addBtn', your,e);
-				 if(callInitResult['result'] != 'SUCCESS') {
-					          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: multiLang.transText('MESSAGE',callInitResult['msg'])});
-							  momWidget.splashHide();
-						      return;
-			    }
-			    param = Object.assign(param, callInitResult['param']);  
-			    targetIndex = param.targetIndex;
-			    addIndex = param.addIndex;
-			    isCheckCol = that.gridProperty[targetIndex][0]['showRowCheckColumn'];;
-				if(isCheckCol == true){
-					 targetItem = that.getCheckedRowItems(that.grid[targetIndex]);
-					 if(targetItem.length == 0){
-						targetItem = {};
-					    /* momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-						 momWidget.splashHide();
-						 return;*/
-				    }
-				    else{
-					targetItem = targetItem[0];
-				    }
-										
-				}
-				else{
-				     targetItem = AUIGrid.getSelectedItems(that.grid[targetIndex])[0];
-				    if(targetItem == undefined){
-					     targetItem = {};
-					    /* momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00052')});
-						 momWidget.splashHide();
-						 return;*/
-				    }
-				    else{
-					targetItem = targetItem['item'];
-					}
-				}
-  				     
-				
-				 
-				let columnProp = that.columnProperty[addIndex];
-				let item = {};
-				let columnEdit =false;
-				for(let i=0,max=columnProp.length;i<max;i++){					
-					 if(columnProp[i]['columnShow'] =='Y'){
-							if(targetItem[columnProp[i]['columnId']] != undefined && targetItem[columnProp[i]['columnId']] != ''){
-								 item[columnProp[i]['columnId']] = targetItem[columnProp[i]['columnId']];
-							}
-							else{
-								 item[columnProp[i]['columnId']] = '';
-							}
-							
-						
-						
-					 }
-				}
-				item.addItem = 'Y';
-				AUIGrid.addRow(that.grid[addIndex], item, "first");
-				// row Styling 함수를 다른 함수로 변경
-		
-				//let colStyle = "aui-grid-default-column-left";			
-			 
-				for(let i=0,max=columnProp.length;i<max;i++){
-				    AUIGrid.setColumnPropByDataField(widget.grid[addIndex], columnProp[i]['columnId'], { 		    	
-						styleFunction: function(rowIndex, columnIndex, value, headerText, item, dataField) {
-						  if(item.addItem == 'Y' && columnProp[i]['columnCreate'] =='Y'){
-							   
-							    return 'aui-grid-edit-column-left';
-						  }
-						  else {
-							  
-							     return '';
-						  }
-							
-						},
-					
-				   });
-			 
-	
-				}
-				let callBackResult 	= that.checkActionCallBack(index, 'GA', item, 'addBtn', your,[]);	
-				if(callBackResult['result']  != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-					  momWidget.splashHide();
-				      return;
-				}	
-			});
-			
-			$(document).on('click', '#' + showLv1Btn, function(e) {	
-				if (!isExpanded) {
-					AUIGrid.expandAll(that.grid[index]);
-					isExpanded = true;
-				} else {
-					AUIGrid.collapseAll(that.grid[index]);
-					isExpanded = false;
-				}
-			});
-			 
-		
-			
-			$(document).on('click', '#' + createBtnId, function(e) {
-				var callbackData = [];	
-				var targetArray = e.target.id.split('DP');
-				var buttonId = targetArray[0];
-				var actionType = 'C';
-		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
-					if(that.buttonProperty[index][k]['buttonId']+(index+1) == buttonId){
-						actionType = that.buttonProperty[index][k]['eventType'];
-						
-					}
-				}	
-				if($('#changePwBtn'+(index+1)).length){
-					 $('#changePwBtn'+(index+1)).css('display','none');
-				}	
-				that.setPopup(index,actionType,'createBtn'+(index+1),'N');	
-				$('#defaultPop'+(index+1)).attr('actionType', actionType);
-				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
-				callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your,e);
-				if(callInitResult['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: callInitResult['msg']});
-					  momWidget.splashHide();
-				      return;
-				}		
-				//$('#popupTitle'+(index+1)).text('등록');	
-				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
-				$('#popupTitle'+(index+1)).text('');
-				$('#popupTitle'+(index+1)).append(popupTitle+'('+multiLang.transText('MESSAGE','MSG00039')+')');	
-				$('#' +'defaultPop'+(index+1)).momModal('show');
-				
-				    // AUIGrid.resize('#grid'+index+1);
-				 that.htmlResize(index,your);
-				//that.popUpSizeSet(index);			
-			
-				 callbackData   = AUIGrid.getGridData(that.grid[index]);
-				 callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your,callbackData);	
-				 if(callBackResult['result']  != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-					  momWidget.splashHide();
-				      return;
-				}				
-				
-			});	
-			
-
-			$(document).on('click', '#' + copyBtnId, function(e) {	
-				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
-				var param = that.getCheckedRowItems(that.grid[index]);
-				var actionType = 'C';
-				var targetArray = e.target.id.split('DP');
-				var buttonId = targetArray[0];
-		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
-					if(that.buttonProperty[index][k]['buttonId']+(index+1) == buttonId){
-						actionType = that.buttonProperty[index][k]['eventType'];
-						
-					}
-				}	
-				
-				if(isCheckCol == true){
-					if (param.length == 0){
-					   momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-					  momWidget.splashHide();
-					  return;		
-					}			
-										
-				}
-				else{
-				      momWidget.messageBox({type:'danger', width:'400', height: '145', html: '체크박스 설정필요!'});
-					  momWidget.splashHide();
-				      return;
-				}
-								
-				that.setPopup(index,"CP",'copy'+(index+1),'N');	
-				$('#defaultPop'+(index+1)).attr('actionType', actionType);
-				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
-			    callInitResult = that.checkActionCallInit(index, actionType, param, 'copyBtn', your,e);
-				if(callInitResult['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-					  momWidget.splashHide();
-				      return;
-				}	
-	
-				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
-				$('#popupTitle'+(index+1)).text('');	
-				$('#popupTitle'+(index+1)).append(popupTitle+'('+multiLang.transText('MESSAGE','MSG00041')+')');	
-				if($('#changePwBtn'+(index+1)).length){
-					 $('#changePwBtn'+(index+1)).css('display','none');
-				}	
-				$('#' +'defaultPop'+(index+1)).momModal('show');
-				that.htmlResize(index,your);
-				//that.popUpSizeSet(index);				
-				
-				callBackResult = that.checkActionCallBack(index, actionType, param, 'copyBtn', your,param);	
-				if(callBackResult['result']  != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-					  momWidget.splashHide();
-				      return;
-				}						
-				
-			});	
-			$(document).on('click', '#' + procBtnId, function(e) {
-				let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
-				var checkedItems = [];
-				var param = [];
-				let actionType = 'P';	
-				let tmpYn = 'N';
-				if(isCheckCol == true){
-					    param = that.getCheckedRowItems(that.grid[index]);
-					if (param.length == 0){
-						  checkedItems = AUIGrid.getGridData(that.grid[index]);
-						  for(var i=0,max=checkedItems.length;i<max;i++){	
-						     param.push(checkedItems[i]); 														
-				          }
-						/*  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-					      return;	*/
-					}				
-									
-				}
-				else{					
-					    checkedItems = AUIGrid.getGridData(that.grid[index]);
-					for(var i=0,max=checkedItems.length;i<max;i++){	
-						  param.push(checkedItems[i]); 														
-				    }
-				}
-		
-				callInitResult = that.checkActionCallInit(index, 'P', param, 'procBtn', your,e);
-				if(callInitResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    }
-			    	
-			     
-				 param = callInitResult['param'];
-				
-				 for(var i=0;i<that.buttonProperty[index].length;i++){
-					if(that.buttonProperty[index][i]['buttonId'] == 'procBtn'){
-						actionType = that.buttonProperty[index][i]['eventType'];
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						
-					}					
-				 }
-		       if(tmpYn =='Y'){
-			        mom_ajax('D', that.pageProperty[index]['programId']+'.procBtn'+(index+1),[], function(result1, data1) {
-			            if(result1!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
-							  momWidget.splashHide();
-				              return;
-			            }    	
-			             mom_ajax('C', that.pageProperty[index]['programId']+'.procBtn'+(index+1),param, function(result2, data2) {                                                                                                      
-				 		  if(result2!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
-							  momWidget.splashHide();
-				              return;
-			              }    	
-			                 mom_ajax('P', that.pageProperty[index]['programId']+'.procBtn'+(index+1),[], function(result3, data3) {
-							    if(data[0]['p_err_code']=='E') {
-						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_code'])});
-										  momWidget.splashHide();
-							              return;
-						         }    	
-			                 }, undefined, undefined, this, false,undefined,'C'); 
-			                    
-						 }, undefined, undefined, this, false);    
-						                      							  						
-			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'procBtn', your);
-						if(callBackResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    		}
-									 
-			        	  momWidget.findBtnClicked(index, {}, true, 'procBtn',momWidget.pageProperty[index]['programId'],your);			        	  
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, undefined, this, false);
-			      
-			   }
-			   else{
-				             mom_ajax(actionType, that.pageProperty[index]['programId']+'.procBtn'+(index+1),param, function(result1, data1) {
-								  if(result1!='SUCCESS') {
-							            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
-											  momWidget.splashHide();
-								              return;
-							      } 
-			                 }, undefined, undefined, this, false);    
-			  } 
-				
-				  
-					
-				
-			});
-			$(document).on('click', '#' + saveBtnId, function(e) {
-				let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn']
-				let checkedItems = [];
-				let param = [];
-				let tmpYn = 'N';
-				let actionType = 'CU';		
-				let queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
-				let targetParam ='';
-				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-					if(that.buttonProperty[index][i]['buttonId']=='saveBtn'){
-						targetParam = that.buttonProperty[index][i]['checkType'];	
-						break;	
-					}
-				}
-				if(targetParam=='GRID_CHECK'){
-					param = that.getCheckedRowItems(that.grid[index],true);
-					if(param.length==0){
-						     return;
-					}
-				}
-				else if(targetParam=='GRID_SELECT'){
-					
-				}
-				else if(targetParam=='GRID_ALL'){
-					    param = AUIGrid.getGridData(that.grid[index]);
-					    if(param.length==0){
-							momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00055')});
-							return;
-					    }
-							 
-				}
-				else{
-					if(isCheckCol == true){
-					    param = that.getCheckedRowItems(that.grid[index]);
-					if (param.length == 0){
-						 /* checkedItems = AUIGrid.getGridData(that.grid[index]);
-						  for(let i=0,max=checkedItems.length;i<max;i++){	
-						     param.push(checkedItems[i]); 														
-				          }*/
-						  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-					      return;	
-					}				
-									
-				}
-					else{
-						
-						    checkedItems = AUIGrid.getGridData(that.grid[index]);
-						for(var i=0,max=checkedItems.length;i<max;i++){	
-							  param.push(checkedItems[i]); 														
-					    }
-					}
-				}
-			
-				 
-				
-		
-				callInitResult = that.checkActionCallInit(index, 'GS', param, 'saveBtn', your,e);
-				if(callInitResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    }
-			   
-			     
-				 param = callInitResult['param'];
-				
-				 for(var i=0;i<that.buttonProperty[index].length;i++){
-					if(that.buttonProperty[index][i]['buttonId'] == 'saveBtn'){
-						actionType = that.buttonProperty[index][i]['eventType'];
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						//queryId = that.pageProperty[index]['programId']+'.saveBtn'+(index+1);
-						break;
-					}
-			
-				 }	 
-				 if(tmpYn =='Y'){
-						 mom_ajax('D', queryId,[], function(result1, data1) {
-						 if(result1!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
-							  momWidget.splashHide();
-				              return;
-			            }    	
-						  mom_ajax('C', queryId,param, function(result2, data2) {
-							 if(result2!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
-							  momWidget.splashHide();
-				              return;
-			            }   
-							 mom_ajax('P', queryId,[], function(result3, data3) {
-			            	  if(data3[0]['p_err_code']=='E') {
-						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
-			            	    //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
-								  momWidget.splashHide();
-					              return;
-			                  } 
-			                  callBackResult = that.checkActionCallBack(index, actionType, {}, 'saveBtn', your);   				                         							  						
-				        	  if(callBackResult['result'] != 'SUCCESS') {
-								  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-								  momWidget.splashHide();
-							      return;
-							}
-						    if(your.initParam != undefined && your.initParam != ''){
-				                initParam = your.initParam;
-			                }
-			        	  momWidget.findBtnClicked(index, initParam, false, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
-			        	  // $('#' +'defaultPop'+(index+1)).momModal('hide');
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, index, this, false,undefined,actionType);
-							
-							
-							 }, undefined, index, this, false,undefined,'C');
-				   }, undefined, index, this, false,undefined,'D');
-				 }
-				 else{
-					  mom_ajax(actionType, queryId,param, function(result, data) {
-			            if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
-							  momWidget.splashHide();
-				              return;
-			            }    				                         							  						
-			        	callBackResult = that.checkActionCallBack(index, 'GS', param, 'saveBtn', your);
-						if(callBackResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    		}
-			
-						 
-			        	  momWidget.findBtnClicked(index, {}, true, 'saveBtn',momWidget.pageProperty[index]['programId'],your);
-			        	  
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, undefined, this, false);
-				}
-				
-				  
-					
-				
-			});
-				$(document).on('click', '#' + savePopBtnId, function(e) {				 
-		        momWidget.splashShow();
-	    	
-				var param = [];
-				var initParam ={};
-		        let searchResult = true;
-		        let popupTitle   ='#'+e.target.parentElement.parentElement.parentElement.id ;
-		        let tmpYn = 'N';
-		        let buttonId   = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
-				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
-				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
-				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
-				var gridPopIndex   = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? index+1 : Number($('#defaultPop'+(index+1)).attr('gridPopIndex'));
-				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
-				//var btnIndex   = index;
-				var queryId = that.pageProperty[index]['programId']+'.'+buttonId;
-			    that.wait(1);
-				var buttonParam = [];
-				var extraParam = {};
-				var validateCheck = true;
-				let actionMode = 'C';
-				
-				
-					if(buttonId.indexOf('createBtn') >= 0) {
- 				        actionMode = 'C';
-					}
-					else if(buttonId.indexOf('copyBtn') >= 0){
-								actionMode = 'C';
-					}
-					else if(buttonId.indexOf('editBtn') >= 0){
-							actionMode = 'U';
-					}
-					else if(buttonId.indexOf('delBtn') >= 0){
-							actionMode = 'D';
-					}
-					else if(buttonId.indexOf('procBtn') >= 0){
-							actionMode = 'P';
-					}
-					else{
-						actionMode = 'C';
-					}
-
-		    
-		    
-		    
-		/*
-				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
-					if(callInitResult['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-					  momWidget.splashHide();
-				      return;
-					}	
-				  	param = callInitResult['param'];	*/
-				
-				var popupCount = that.popupProperty[index].length;
-				var popupItem  = that.popupProperty[index];
-				if(gridPopYn=='Y'){
-					
-				}
-				else{
-					for(var i=0,max2=popupCount;i<max2;i++){
-					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val() == undefined ? '':$('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
-					let fieldValues = [];
-					
-					if(actionType == 'C' ){		
-						 let containsYn = 'Y';		
-						if(that.popupProperty[index][i]['columnRequire']=='Y' && fieldValue ==''){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						}
-					if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M' && fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-								if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS' && fieldValue !=''){
-						
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-							}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-									searchResult = false;
-							      if(result != 'SUCCESS' || data.length ==0) {		
-								      that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});					    	  
-							    	  momWidget.splashHide();
-								      return ;							     
-							      }	
-							       
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-										   searchResult = true;
-									       break;
-										}
-
-								 }
-							      
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
-							      		
-					if(!searchResult) {
-						
-						 return;
-					}		      		
-				}
-				
-					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS' && fieldValue !=''){
-						
-					}			
-					else{
-						
-					}	
-					}
-					else if (actionType == 'U' ){ 
-						    let containsYn = 'Y';
-						    if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-					    containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-								if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-		else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
-						   
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-							}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-						 			searchResult = false;
-							      if(result != 'SUCCESS' || data.length ==0) {	
-								     that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});									    	 
-							    	  momWidget.splashHide();								
-								      return ;							     
-							      }	
-							       
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-											searchResult = true;
-									       break;
-										}
-										
-							    	  
-									
-									  
-		                			
-	    						
-								 }
-							      
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
-							      		
-					if(!searchResult) {
-						
-						 return;
-					}		      		
-				}
-				
-					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
-						
-					}			
-					else{
-						
-					}
-					}
-						else if (actionType == 'CP' ){
-						    if(fieldValue ==''&&that.popupProperty[index][i]['columnRequire']=='Y'){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-								if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-							}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-							      if(result != 'SUCCESS' || data.length ==0) {
-							    	  searchResult = false;
-							    	  momWidget.splashHide();
-									 
-								      return ;							     
-							      }	
-							       
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-									       searchResult = true;
-									       break;
-										}
-										
-							    	  
-									 
-									  
-		                			
-	    						
-								 }
-							      
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
-							      		
-					if(!searchResult) {
-						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
-						 return;
-					}		      		
-				}
-					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
-						
-					}			
-					else{
-						
-					}
-					}
-					else if (actionType == 'P' ){
-					if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-							if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-								if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-							}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-							      if(result != 'SUCCESS' || data.length ==0) {
-							    	  searchResult = false;
-							 
-								      return ;							     
-							      }	
-							       	searchResult = false;
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-										   searchResult = true;
-									       break;
-									       
-										}
-										}
-
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
-							      		
-					if(!searchResult) {
-						 momWidget.splashHide();
-						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
-						 return;
-					}		      		
-				}
-					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
-						
-					}			
-					else{
-						
-					}
-						 
-						
-						 
-					}
-				
-					
-				   if(that.popupProperty[index][i]['popupType']=='I' || that.popupProperty[index][i]['popupType']=='D'&& fieldValue !=''){
-				
-						  if(isNaN(Number($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim()))==true){
-							  momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' 숫자입력!'});
-							 momWidget.splashHide();
-				             return;
-						  }
-					 						
-				    }
-					
-				}
-				}
-			   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
-					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						
-					}					
-				 }
-				
-					if(btnIndex != undefined && btnPopYn =='Y'){
-					for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
-					if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
-						buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
-						break;
-					}
-				}
-				for(var j=0,max2=buttonParam.length;j<max2;j++){
-					if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
-					
-						extraParam['typeMap'] = buttonParam[j]['typeMap'];
-						extraParam['typeList'] = buttonParam[j]['typeList'];
-					}
-				
-						
-					
-					
-				}
-				
-					param = buttonParam.map(function(item1){
-			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);               
-			    return item1;
-			});
-				
-				}
-				else{
-					    let buttonParamText = {};
-					    let buttonParamList = [];
-					    let buttonParamMap = {};
-					    
-					    param = that.getPopupParam(index,your,extraParam);
-					    let actionBtnId =  buttonId.split('Btn')[0] +'saveBtnDP';
-					    callInitResult = that.checkActionCallInit(index, actionType, param, actionBtnId, your,e);
-							if(callInitResult['result'] != 'SUCCESS') {
-								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-									  momWidget.splashHide();
-								      return;
-							}	
-			/*	param = param.map(function(item1){
-			    var obj = callInitResult['param'].find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);               
-			    return item1;
-			});*/
-				  	param = callInitResult['param'];	
-					if(Array.isArray(param)==true){
-					    param = param.length == 0 ? {}:param;					    
-						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
-					}
-					else{
-						// param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
-					}
-					
-					for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-						if(buttonId == that.buttonProperty[index][i]['buttonId']+(index+1)){
-							buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
-							buttonParamList = buttonParamText.split(',');
-							 for(let j=0,max2=buttonParamList.length;j<max2;j++){
-								   buttonParamMap[buttonParamList[j].split('=')[0]]=buttonParamList[j].split('=')[1];
-							 }
-							 for(let k=0,max3=param.length;k<max3;k++){
-								 param[k] = Object.assign(param[k],buttonParamMap);   
-							}
- 						 
-						}
-					}
-					
-				
-				
-				}
-				if(tmpYn=='Y'){					
-					 mom_ajax('D', queryId,param, function(result1, data1) {
-						 if(result1!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
-							  momWidget.splashHide();
-				              return;
-			            }    	
-						  mom_ajax('C', queryId,param, function(result2, data2) {
-							 if(result2!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
-							  momWidget.splashHide();
-				              return;
-			            }   
-							 mom_ajax('P', queryId,param, function(result3, data3) {
-			            	     if(data3[0]['p_err_code']=='E') {
-				                    if(data3[0]['p_err_msg'] == null || data3[0]['p_err_msg'] ==''){
-					                             data3[0]['p_err_msg'] = '프로시저에러입니다!';
-											}
-				                  
-						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
-			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
-							  momWidget.splashHide();
-				              return;
-			            } 
-			                callBackResult = that.checkActionCallBack(index, actionType, {}, buttonId, your);   				                         							  						
-				        	if(callBackResult['result'] != 'SUCCESS') {
-								  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-								  momWidget.splashHide();
-							      return;
-							}
-						if(your.initParam != undefined && your.initParam != ''){
-				              initParam = your.initParam;
-			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, buttonId,momWidget.pageProperty[btnIndex]['menuId'],your);
-			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, index, this, false,undefined,actionMode);
-							
-							
-							 }, undefined, index, this, false,undefined,actionMode);
-				   }, undefined, index, this, false,undefined,actionMode);
-					
-				}
-				else{
-					 mom_ajax(actionType, queryId,param, function(result, data) {
-			             if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
-							  momWidget.splashHide();
-				              return;
-			            } 
-			               callBackResult = that.checkActionCallBack(index, actionType, {}, 'createBtn'+index, your);   				                         							  						
-			        	if(callBackResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-							  momWidget.splashHide();
-						      return;
-						}
-						if(your.initParam != undefined && your.initParam != ''){
-				              initParam = your.initParam;
-			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
-			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, index, this, false);
-				}
-					
-					 
-				 });
-				  
-			
-				
-			
-			$(document).on('click', '#' + saveCustomPopBtnId, function(e) {				 
-		        momWidget.splashShow();
-				var param = [];
-				var initParam ={};
-		        let searchResult = true;
-		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
-		        let tmpYn = 'N';
-		        let btnIndex = $('.customPop.in').attr('btnIndex');
-		        let buttonId = 'customBtn'+btnIndex;
-				let actionType = $('#customPop-'+buttonId).attr('actionType');
-				let gridPopYn= 'N';
-				let queryId = that.pageProperty[index]['programId']+'.'+buttonId;
-				that.wait(0.5);
-				var buttonParam = [];
-				var extraParam = {};
-				var validateCheck = true;
-				let actionMode = 'C';
-				let popupItem  = that.customPopupProperty[buttonId];
-				let comboBoxItems = [];
-					if(buttonId.indexOf('createBtn') >= 0) {
- 				        actionMode = 'C';
-					}
-					else if(buttonId.indexOf('copyBtn') >= 0){
-								actionMode = 'C';
-					}
-					else if(buttonId.indexOf('editBtn') >= 0){
-							actionMode = 'U';
-					}
-					else if(buttonId.indexOf('delBtn') >= 0){
-							actionMode = 'D';
-					}
-					else if(buttonId.indexOf('procBtn') >= 0){
-							actionMode = 'P';
-					}
-					else{
-						actionMode = 'C';
-					}
-
-
-				
-				
-				if(gridPopYn=='Y'){
-					
-				}
-				else{
-					for(var i=0,max2=popupItem.length;i<max2;i++){
-					let fieldValue = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val() == undefined ? '':$('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim();
-					let fieldValues = [];
-					
-					if(actionType == 'C' ){		
-						 let containsYn = 'Y';		
-						if(popupItem[i]['columnRequire']=='Y' && fieldValue ==''){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						}
-					if(popupItem[i]['popupType'] == 'S' && fieldValue !=''){
-						comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(popupItem[i]['popupType'] == 'M' && fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						   comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max4=fieldValues.length;h<max4;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-								if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-					else if(popupItem[i]['popupType'] == 'SS' && fieldValue !=''){
-						
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-							}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-									searchResult = false;
-							      if(result != 'SUCCESS' || data.length ==0) {		
-								      that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});					    	  
-							    	  momWidget.splashHide();
-								      return ;							     
-							      }	
-							       
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-										   searchResult = true;
-									       break;
-										}
-
-								 }
-							      
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
-							      		
-					if(!searchResult) {
-						
-						 return;
-					}		      		
-				}
-				
-					}	
-					else if(popupItem[i]['popupType'] == 'MS' && fieldValue !=''){
-						
-					}			
-					else{
-						
-					}	
-					}
-					else if (actionType == 'U' ){ 
-						    let containsYn = 'Y';
-						    if(fieldValue =='' && that.popupProperty[index][i]['columnRequire']=='Y'){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						if(that.popupProperty[index][i]['popupType'] == 'S' && fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-					    containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-								if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-		else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
-						   
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-							}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-						 			searchResult = false;
-							      if(result != 'SUCCESS' || data.length ==0) {	
-								     that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});									    	 
-							    	  momWidget.splashHide();								
-								      return ;							     
-							      }	
-							       
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-											searchResult = true;
-									       break;
-										}
-										
-							    	  
-									
-									  
-		                			
-	    						
-								 }
-							      
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-							      		
-							      	
-							      		
-							      		
-					if(!searchResult) {
-						
-						 return;
-					}		      		
-				}
-				
-					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
-						
-					}			
-					else{
-						
-					}
-					}
-						else if (actionType == 'CP' ){
-						    if(fieldValue ==''&&that.popupProperty[index][i]['columnRequire']=='Y'){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						if(that.popupProperty[index][i]['popupType'] == 'S'&& fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'M'&& fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max3=fieldValues.length;h<max3;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-								if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-					else if(that.popupProperty[index][i]['popupType'] == 'SS'&& fieldValue !=''){
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-							}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-							      if(result != 'SUCCESS' || data.length ==0) {
-							    	  searchResult = false;
-							    	  momWidget.splashHide();
-									 
-								      return ;							     
-							      }	
-							       
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-									       searchResult = true;
-									       break;
-										}
-
-								 }
-
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-
-							      		
-					if(!searchResult) {
-						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
-						 return;
-					}		      		
-				}
-					}	
-					else if(that.popupProperty[index][i]['popupType'] == 'MS'&& fieldValue !=''){
-						
-					}			
-					else{
-						
-					}
-					}
-					else if (actionType == 'P' ){
-					if(fieldValue =='' && popupItem[i]['columnRequire']=='Y'){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-					if(popupItem[i]['popupType'] == 'S'&& fieldValue !=''){
-						let comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-							if(comboBoxItems[j]['value'] == fieldValue){
-								containsYn = 'Y';
-							}
-																			
-					}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					
-					}
-					else if(popupItem[i]['popupType'] == 'M'&& fieldValue !=''){
-						 if($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems').length==0){
-							 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' '+ multiLang.transText('MESSAGE','MSG00043')});
-							 momWidget.splashHide();
-				             return;
-						} 
-						    comboBoxItems= $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getItems');
-						let containsYn = 'N';
-						fieldValues = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).jqxComboBox('getCheckedItems');
-							for(var j=0,max3=comboBoxItems.length;j<max3;j++){
-								for(var h=0,max4=fieldValues.length;h<max4;h++){
-										if(comboBoxItems[j]['value'] == fieldValues[h]['value']){
-										    containsYn = 'Y';
-										}
-								}
-						
-																			
-							}
-					if(containsYn == 'N'){
-						 momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!' });
-						 momWidget.splashHide();
-				         return;
-					}
-					}
-					else if(popupItem[i]['popupType'] == 'SS'&& fieldValue !=''){
-							var popupId = popupItem[i]['popupId'] +'DP'+(index+1);
-							var searchString = $('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val();
-							var minLength = that.popupComboMinLength[index][popupId] ;
-							var queryId2 = that.popupComboQueryId[index][popupId];
-				if(searchString.length < minLength)	{
-										that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-										return;
-				}
-							
-				else{
-	
-					 mom_ajax('R', queryId2, {"searchKey":searchString}, function(result, data) {
-							      if(result != 'SUCCESS' || data.length ==0) {
-							    	  searchResult = false;
-							 
-								      return ;							     
-							      }	
-							       	searchResult = false;
-							      for(var z=0,max7=data.length;z<max7;z++){
-								      if(data[z]['code'] == searchString){
-										   searchResult = true;
-									       break;
-									       
-										}
-										}
-
-							      //$('#'+popupId).jqxComboBox({source: data});
-							   
-		                		        momWidget.splashHide();
-		                			
-	    						
-							      		}, undefined, undefined, that, false)
-
-					if(!searchResult) {
-						 momWidget.splashHide();
-						 that.messageBox({type: 'warning', width: '400', height: '145', html: popupItem[i]['popupNm'] +'필드가 유효한값이 아닙니다!'});
-						 return;
-					}		      		
-				}
-					}	
-					else if(popupItem[i]['popupType'] == 'MS'&& fieldValue !=''){
-						
-					}			
-					else{
-						
-					}
-						 
-						
-						 
-					}
-				
-					
-				   if(popupItem[i]['popupType']=='I' || popupItem[i]['popupType']=='D'&& fieldValue !=''){
-				
-						  if(isNaN(Number($('#'+popupItem[i]['popupId'] +'DP'+(index+1)).val().trim()))==true){
-							  momWidget.messageBox({type:'warning', width:'400', height: '145', html: popupItem[i]['popupNm'] +' 숫자입력!'});
-							 momWidget.splashHide();
-				             return;
-						  }
-					 						
-				    }
-					
-				}
-				}
-			/*   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
-					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						
-					}					
-				 }
-
-					  for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
-					    if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
-							buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
-							break;
-					   }
-				}
-				for(var j=0,max2=buttonParam.length;j<max2;j++){
-						if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
-					
-						extraParam['typeMap'] = buttonParam[j]['typeMap'];
-						extraParam['typeList'] = buttonParam[j]['typeList'];
-					}
-						
-					
-					
-				}
-				
-					param = buttonParam.map(function(item1){
-			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);               
-			    return item1;
-			});*/
-				
-						let buttonParamText = {};
-					    let buttonParamList = [];
-					    let buttonParamMap = {};
-					    
-					    param = that.getCustomPopupParam(index,buttonId,your,extraParam);
-					
-					    let actionBtnId =  buttonId +'saveBtnCP';
-					    callInitResult = that.checkActionCallInit(index, actionType, param, actionBtnId, your,e);
-							if(callInitResult['result'] != 'SUCCESS') {
-								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-									  momWidget.splashHide();
-								      return;
-							}	
-			/*	param = param.map(function(item1){
-			    var obj = callInitResult['param'].find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);               
-			    return item1;
-			});*/
-				  	param = callInitResult['param'];	
-					if(Array.isArray(param)==true){
-					    param = param.length == 0 ? {}:param;					    
-						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
-					}
-					else{
-						// param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
-					}
-					
-					for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-						if(buttonId == that.buttonProperty[index][i]['buttonId']){
-							buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
-							buttonParamList = buttonParamText.split(',');
-							 for(let j=0,max2=buttonParamList.length;j<max2;j++){
-								   buttonParamMap[buttonParamList[j].split('=')[0]]=buttonParamList[j].split('=')[1];
-							 }
-							 for(let k=0,max3=param.length;k<max3;k++){
-								 param[k] = Object.assign(param[k],buttonParamMap);   
-							}
- 						 
-						}
-					}
-			
-					  
-					    callInitResult = that.checkActionCallInit(index, actionType, param, buttonId, your,e);
-							if(callInitResult['result'] != 'SUCCESS') {
-								  let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-									  momWidget.splashHide();
-								      return;
-							}
-							 for(let i=0,maxSize=param.length;i<maxSize;i++){								
-								 param[i] = Object.assign(param[i],callInitResult['param'][i]);   
-							}	
-
-					if(Array.isArray(param)==true){
-					    param = param.length == 0 ? {}:param;					    
-						//param = [Object.assign(param, that.getPopupParam(index,your,extraParam)[0])];  
-					}
-					else{
-						// param = Object.assign(param, that.getPopupParam(index,your,extraParam)[0]);  
-					}
-				
-				
-				
-				if(tmpYn=='Y'){
-					 mom_ajax('D', queryId,[], function(result1, data1) {
-						 if(result1!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
-							  momWidget.splashHide();
-				              return;
-			            }    	
-						  mom_ajax('C', queryId,param, function(result2, data2) {
-							 if(result2!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
-							  momWidget.splashHide();
-				              return;
-			            }   
-							 mom_ajax('P', queryId,[], function(result3, data3) {
-			            	     if(data3[0]['p_err_code']=='E') {
-						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
-			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
-							  momWidget.splashHide();
-				              return;
-			            } 
-			                callBackResult = that.checkActionCallBack(index, actionType, {}, buttonId, your);   				                         							  						
-				        	if(callBackResult['result'] != 'SUCCESS') {
-								  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-								  momWidget.splashHide();
-							      return;
-							}
-						if(your.initParam != undefined && your.initParam != ''){
-				              initParam = your.initParam;
-			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, buttonId,momWidget.pageProperty[btnIndex]['menuId'],your);
-			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, index, this, false,undefined,actionMode);
-							
-							
-							 }, undefined, index, this, false,undefined,actionMode);
-				   }, undefined, index, this, false,undefined,actionMode);
-					
-				}
-				else{
-					 mom_ajax(actionType, queryId,param, function(result, data) {
-			             if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
-							  momWidget.splashHide();
-				              return;
-			            } 
-			               callBackResult = that.checkActionCallBack(index, actionType, {}, 'createBtn'+index, your);   				                         							  						
-			        	if(callBackResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-							  momWidget.splashHide();
-						      return;
-						}
-						if(your.initParam != undefined && your.initParam != ''){
-				              initParam = your.initParam;
-			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
-			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, index, this, false);
-				}
-					
-						
-							 
-	
-				  
-			
-				
-			});
-			$(document).on('click', '#' + editBtnId, function(e) {	
-				
-				var isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
-				var param = that.getCheckedRowItems(that.grid[index]);
-				var targetArray = e.target.id.split('DP');
-				var buttonId = targetArray[0];
-				var actionType = 'U';
-		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
-					if(that.buttonProperty[index][k]['buttonId']+(index+1) == buttonId){
-						actionType = that.buttonProperty[index][k]['eventType'];
-						
-					}
-				}	
-				
-				if(isCheckCol == true){
-					if (param.length == 0){
-					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-					  momWidget.splashHide();
-					  return;	
-					}			
-										
-				}
-				else{
-				      momWidget.messageBox({type:'warning', width:'400', height: '145', html: '체크박스 설정필요!'});
-					  momWidget.splashHide();
-				      return;
-				}
-				if($('#changePwBtn'+(index+1)).length){
-					 $('#changePwBtn'+(index+1)).css('display','block');
-				}
-				$('#' +'defaultPop'+(index+1)).momModal('show');
-				that.setPopup(index,'U','editBtn'+(index+1),'N');	
-				$('#defaultPop'+(index+1)).attr('actionType', actionType);
-				$('#defaultPop'+(index+1)).attr('btnId', buttonId);
-		
-				callInitResult = that.checkActionCallInit(index, actionType, param, 'editBtn', your,param,e);
-				if(callInitResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    }
-				var popupTitle = that.gridExtraProperty[index]['popupTitle'];
-				$('#popupTitle'+(index+1)).text('');
-				$('#popupTitle'+(index+1)).append(popupTitle+'('+multiLang.transText('MESSAGE','MSG00040')+')');	
-
-				//$('#' +'defaultPop'+(index+1)).momModal('show');
-				that.htmlResize(index,your);
-				//that.popUpSizeSet(index);		
-				callBackResult = that.checkActionCallBack(index, actionType, {}, 'editBtn', your,param);
-				if(callBackResult['result']  != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-					  momWidget.splashHide();
-				      return;
-				}					
-		
-					
-				
-			});
-			$(document).on('click', '#' + delGridBtnId, function(e) {	
-				that.getCheckedRowItems(that.grid[index],true);
-				AUIGrid.removeCheckedRows(that.grid[index]);
-			});
-			$(document).on('click', '#' + delBtnId, function(e) {	
-				var param = [];
-				var callBackParam = {};
-				let buttonId = e.target.id;
-				let eventType = 'D';
-				let tmpYn = 'N';
-				let queryId = that.pageProperty[index]['programId']+'.delBtn'+(index+1);
-			    let buttonParamText = {};
-			    let buttonParamList = [];
-			    let buttonParamMap = {};
-			    var obj =[];
-			    
-			    param = that.getCheckedRowItems(that.grid[index]);
-				if(param.length ==0) {
-					  momWidget.messageBox({type:'warning', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});
-					  momWidget.splashHide();
-					  return;	
-				}
-				for(let i=0,max=that.buttonProperty[index].length;i<max;i++){
-					if(that.buttonProperty[index][i]['buttonId']+(index+1) == buttonId){
-						eventType = that.buttonProperty[index][i]['eventType'];
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
-						buttonParamList = buttonParamText.split(',');
-						for(let j=0,max2=buttonParamList.length;j<max2;j++){
-							 buttonParamMap[buttonParamList[j].split('=')[0]]=buttonParamList[j].split('=')[1];
-						}
-						for(let k=0,max3=param.length;k<max3;k++){
-							 param[k] = Object.assign(param[k],buttonParamMap);   
-						}
-					}
-					
-				}
-		
-				
-				  if(tmpYn=='Y'){
-					   callInitResult = that.checkActionCallInit(index, 'D', param, 'delBtn', your,e);
-						   if(callInitResult['result'] != 'SUCCESS') {
-							          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-									  momWidget.splashHide();
-								      return;
-					       }
-			               mom_ajax('D', queryId,param, function(result1, data1) {
-			               if(result1!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00047')});
-							  momWidget.splashHide();
-				              return;
-			               }
-			               callInitResult = that.checkActionCallInit(index, 'C', param, 'delBtn', your,e);
-						   if(callInitResult['result'] != 'SUCCESS') {
-							          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-									  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-									  momWidget.splashHide();
-								      return;
-					       }
-			    	
-			     		param = param.map(function(item1){
-					    obj = callInitResult['param'].find(function(item2){
-				        return item2;
-				    })
-				    $.extend(item1, obj);               
-					    return item1;
-					});
-				 		    // param = callInitResult['param'];   	
-			                 mom_ajax('C', queryId,param, function(result2, data2) {                                                                                                      
-				 		     if(result2!='SUCCESS') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00048')});
-							  momWidget.splashHide();
-				              return;
-			              }    	
-			                  callInitResult = that.checkActionCallInit(index, 'P', param, 'delBtn', your,e);
-				              if(callInitResult['result'] != 'SUCCESS') {
-					          let msgType = callInitResult['result'] == 'WARN' ? 'warning': 'danger';
-							  momWidget.messageBox({type:msgType, width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			       			}
-			    	
-			                    param = param.map(function(item1){
-				                obj = callInitResult['param'].find(function(item2){
-						        return item2;
-						    })
-						    $.extend(item1, obj);               
-							    return item1;
-							});
-				             if(param['actionMode'] != undefined && param['actionMode'] != ''){
-							     actionMode = param['actionMode'];
-							 }
-			                 mom_ajax('P', queryId,param, function(result3, data3) {
-							    if(data3[0]['p_err_code']=='E') {
-						            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_code'])});
-										  momWidget.splashHide();
-							              return;
-						         }    	
-			                 }, undefined, undefined, this, false,undefined,'D'); 
-			                    
-						 }, undefined, undefined, this, false);    
-						                      							  						
-			        	callBackResult = that.checkActionCallBack(index, 'P', param, 'procBtn', your);
-						if(callBackResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			    		}
-									 
-			        	  momWidget.findBtnClicked(index, {}, true, 'findBtn',momWidget.pageProperty[index]['menuId'],your);			        	  
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, undefined, this, false);
-				  }
-				  else {
-					    callInitResult = that.checkActionCallInit(index, eventType, param, 'delBtn', your,param,e);
-						if(callInitResult['result'] != 'SUCCESS') {
-									  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-									  momWidget.splashHide();
-								      return;
-					    }
-				      param = callInitResult['param'];	
-					  mom_ajax(eventType, queryId,param, function(result, data) {
-			              if(data[0]['p_err_code']=='E') {
-			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
-							  momWidget.splashHide();
-				              return;
-			            }    				                         							  						
-			  
-						callBackResult = that.checkActionCallBack(index, eventType, {}, 'delBtn', your,param);
-				        if(callBackResult['result']  != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callBackResult['msg']});
-							  momWidget.splashHide();
-						      return;
-						}	
-						  callBackParam = callBackResult['param'];	
-			        	  momWidget.findBtnClicked(index, callBackParam, false, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
-			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
-						  momWidget.splashHide();
-					      return;
-		          }, undefined, undefined, this, false) ;
-			     }
-				 
-				  	
-			});
-			$(document).on('click', '.bntpopclose, '+'#'+cancelBtnId, function() {
-				$('#defaultPop'+(index+1)).momModal('hide');
-				
-			});
-			$(document).on('click', '.bntpopclose, '+'#'+gridPopCancelBtnId, function() {
-				$('#dropDownGridPop'+(index+1)).momModal('hide');
-				
-			});
-			$(document).on('click', '#' + excelDownBtnId, function(e) {	        				
-					if(your != undefined && your['excelDownCallInit'] != undefined) {
-						your.excelDownCallInit(index, your);
-					}					
-					if(that.gridProperty[index][0]['usePaging']== true){
-						//that.backWork[index] = 'Y';		    
-						that.findBtnClicked(index, {}, true, 'EXCEL_DOWN',menuId,your);
-						return;
-	
-					}	
-					else{
-							var excelData = AUIGrid.getGridData(that.grid[index]); 
-					}		
-				
-					AUIGrid.setGridData(that.excelDownGrid[index], excelData);												
-					var	fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd');
-				    var excelDownOpt = {fileName: fileName ,
-						    		    progressBar: true,
-						    		    showRowNumColumn:false,
-						    		    footers: undefined,
-						    		    exportWithStyle: true
-				    		            };
-				    
-				    excelDownOpt.afterRequestCallback = function() { // 엑셀 만들고 호출되는 콜백함수
-					$('.aui-grid-export-progress-modal').remove();
-					// AUIGrid.GridData(that.excelGrid[index]);
-					
-					//$('#excelArea' + (index + 1)).remove();
-					//AUIGrid.destroy(that.excelDownGrid[index]);
-					//that.exceldownGrid[index] = undefined;
-				}
-				//option.footers = footerProperty;
-				    //that.excelDownGrid[index]
-					  AUIGrid.exportToXlsx("#excelGrid"+(index+1), excelDownOpt);
-					  				
-				$('.aui-grid-export-progress-modal').height('100%');
-				$('#grid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
-			});
-			
-			$(document).on('click', '#' + excelTmpBtnId, function(e) {	        				
-				if(your != undefined && your['excelUploadCallInit'] != undefined) {
-					your.excelDownCallInit(index, your);
-				}																				
-				var	fileName = that.pageProperty[index]['programId'] + '_template_' + get_current_date('yyyy-mm-dd');
-			    var excelDownOpt = {fileName: fileName ,
-					    		    progressBar: true,
-					    		    showRowNumColumn:false,
-					    		    footers: undefined
-			    		            };
-			    
-			    excelDownOpt.afterRequestCallback = function() { // 엑셀 만들고 호출되는 콜백함수
-				$('.aui-grid-export-progress-modal').remove();
-				// AUIGrid.clearGridData(that.excelGrid[index]);				
-				//$('#excelArea' + (index + 1)).remove();
-				//AUIGrid.destroy(that.excelDownGrid[index]);
-				//that.exceldownGrid[index] = undefined;
-			}
-				  AUIGrid.exportToXlsx("#excelTmpGrid"+(index+1), excelDownOpt);
-				  
-			
-			$('.aui-grid-export-progress-modal').height('100%');
-			$('#grid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
-		});
-	},
 	// 팝업 파라미터 가져오기
 	getPopupParam: function(index, your,extraParam) {
 		  var that = this;
@@ -21695,7 +18435,533 @@ var momWidget = {
 	}    
     return result;
 },*/
-	// 등록버튼 이벤트 핸들러
+		
+	  
+			
+	// 팝업 파라미터 가져오기
+	getPopupParam: function(index, your,extraParam) {
+		  var that = this;
+		  var param = {};
+		  var popupId =  '';
+		  var searchId = '';
+		  var checkedItem = [];
+		  var listItem = [];
+		  var mapItem = {};
+	
+		  //param = that.getCheckedRowItems(index) == 'FAIL'? []:that.getCheckedRowItems(index);
+		  for(var i=0;i<that.popupProperty[index].length;i++){
+			    popupId = that.popupProperty[index][i]['popupId'];
+			    popupType = that.popupProperty[index][i]['popupType'];
+				searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
+				that.popupProperty[index][i]['popupId']+'DP'+(index+1);
+		/*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
+				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
+				for(var j=0;j<checkedItem.length;j++){
+					 mapItem[popupId] = checkedItem[j]['value'];
+					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
+					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
+					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
+			
+				}
+			
+				param[popupId]= listItem;
+			}*/
+				if(Object.keys(extraParam).length >0 && i==0){			
+					 mapItem[popupId] = $('#'+searchId).val();
+					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
+					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
+					 //listItem[j] = JSON.parse(JSON.stringify(mapItem));
+
+				
+			}
+			else if(Object.keys(extraParam).length >0&&i>0){
+				 mapItem[popupId] = $('#'+searchId).val();
+			}
+		
+			
+				param[popupId]=$('#'+searchId).val(); 
+				
+			
+			 if(Object.keys(extraParam).length >0 && i==(that.popupProperty[index].length)-1 ){
+				param['arrayParam']= [mapItem];
+			}
+			  
+			  if( popupType=='SS' || popupType=='MS'){
+				//$('#'+searchId).jqxComboBox({source:[]});
+				 // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
+             //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+			}
+		  }
+		  return [param];
+	},
+	// 커스텀팝업 파라미터 가져오기
+	getCustomPopupParam: function(index, btnId,your,extraParam) {
+		  var that = momWidget;
+		  var param = {};
+		  var popupId =  '';
+		  var searchId = '';
+		  var checkedItem = [];
+		  var listItem = [];
+		  var mapItem = {};
+	      let popupItem = that.customPopupProperty[btnId];
+
+		  for(var i=0;i<popupItem.length;i++){
+			    popupId   = popupItem[i]['popupId'];
+			    popupType = popupItem[i]['popupType'];
+				searchId = $('#'+'customPop-'+btnId).find('#'+popupItem[i]['popupId']+'DP'+(index+1));
+				popupItem[i]['popupId']+'DP'+(index+1);
+                 
+			  if(popupType=='C'){
+				 if(searchId.val().indexOf('/')>0){
+				 let splitArray = searchId.val().split('/');
+				 let year = splitArray[2]
+				 let month = splitArray[1]
+				 let day = splitArray[0]
+				 let dateVal = year + month + day;
+				 param[popupId] = dateVal; 
+				}
+				else{
+				  param[popupId]=searchId.val(); 
+				}
+				
+			 }
+			  else if( popupType=='SS' || popupType=='MS'){
+				//$('#'+searchId).jqxComboBox({source:[]});
+				 // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
+             //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+			}
+			else{
+				param[popupId]=searchId.val(); 
+			}
+		  }
+		  return [param];
+	},
+		// 엑셀 업로드 검증 팝업생성
+		createExcelPopUp: function(index, your) {
+			var that = this.grid == undefined ? this.momWidget : this;
+			var excelUpBtnId = 'excelUpBtn' + (index + 1); 								
+			
+			var widthSizes = {1 : 400, 2 : 700, 3 : 776};
+			var wSizeClass = {1 : 'w190', 2 : 'w190', 3 : 'w120'}
+			var modalTitle ='MESSAGES12565';
+			var modalId = 'listPop49';	
+			
+			var excelCheckModal = this.createExcelCheckPopUpHtml.modal();
+			excelCheckModal = excelCheckModal.replace(/#{index}/gi, (index)).replace(/#{modalId}/gi, modalId).replace('#{modalTitle}', modalTitle);
+			var rowColCount = 0;
+			
+			var rowHtml = '';
+			var $row = null;
+			var col1TextArea = '';
+			var cols = null;
+			
+			
+	
+			// excelCheckModal = excelCheckModal.replace('#{context}', rowHtml);
+			$('body').append(excelCheckModal);
+			// $('#' + modalId).find('.panel').width('800' || '');
+		    
+			
+			$('#cancelBtn99').on('click', function() {
+				$('#' + modalId).momModal('hide');			
+			});
+
+			$('#applyBtn99').on('click', function() {
+//				that.splashShow();
+				var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
+				for(var i = 0; i < gridHeaders.length; i++) {
+					if(gridHeaders[i]['headerRenderer'] != undefined) {
+						if(gridHeaders[i]['headerRenderer']['checked']) {
+							AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked' : false});	
+						}
+					}
+				}
+//					 for(var i = 0; i < that.columnProperty[98].length; i++) {
+//						 if(that.columnProperty[98][i]['visible'] && !that.columnProperty[98][i]['popUpReq']) {
+//							 AUIGrid.setHeaderRendererProp(momWidget.grid[98], checkList[i]['index'], {'checked' : false});	
+//						 }
+//					 }
+					 
+				var checkList = [];
+				var list = $('#checkComboBox').jqxComboBox('getCheckedItems');
+				if(list != undefined) {
+					that.splashShow();
+					if(list.length == 1) {
+						checkList[0] = list[0]['value'];
+					} else {
+						$.each(list, function(index) {
+							checkList.push({index: list[index]['index'], value: list[index]['value']})
+						});
+					
+					}
+				}
+				for(var i = 0; i < checkList.length; i++) {
+					for(var j = 0; j < gridHeaders.length; j++) {
+						if(checkList[i]['value'] == gridHeaders[j]['dataField']) {
+							AUIGrid.setHeaderRendererProp(momWidget.grid[98], j, {'checked' : true} );	
+						}
+					}
+				}
+				setTimeout(function() {
+					that.splashHide();
+				}, 100);
+			});
+			$('#allcheckBtn99').on('click', function() {
+				that.splashShow();
+				var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
+				for(var i = 0; i < gridHeaders.length; i++) {
+					if(gridHeaders[i]['headerRenderer'] != undefined) {
+						if(!gridHeaders[i]['headerRenderer']['checked']) {
+							AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked' : true});	
+						}
+					}
+				}
+				setTimeout(function() {
+					that.splashHide();
+				}, 10);
+			});
+			
+			$('#alluncheckBtn99').on('click', function() {
+				that.splashShow();
+				var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
+				for(var i = 0; i < gridHeaders.length; i++) {
+					if(gridHeaders[i]['headerRenderer'] != undefined) {
+						if(gridHeaders[i]['headerRenderer']['checked']) {
+							AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked' : false});	
+						}
+					}
+				}
+				setTimeout(function() {
+					that.splashHide();
+				}, 10);
+			});
+			
+			this.popUpSetting[99] = modalId;
+			// $('#' + that.popUpSetting[99]).momModal('show');
+			// $('#' + that.popUpSetting[index+4]).momModal('show');
+			this.popUpSaveCancelBtn(98, your);
+			that.splashHide();
+		},
+		//  RPA 엑셀 업로드 팝업생성
+		createNewExcelPopUp: function(index, your) {
+			var that = this.grid == undefined ? this.momWidget : this;
+			var excelUpBtnId = 'excelNewUpBtn' + (index + 1); 								
+			
+			var widthSizes = {1 : 400, 2 : 700, 3 : 776};
+			var wSizeClass = {1 : 'w190', 2 : 'w190', 3 : 'w120'}
+			var modalTitle ='MESSAGES12638';
+			var modalId = 'excelNewPop'+(index + 1);
+			
+			var excelUpModal = this.createExcelNewPopUpHtml.modal();
+			excelUpModal = excelUpModal.replace(/#{index}/gi, (index+1)).replace(/#{modalId}/gi, modalId).replace('#{modalTitle}', modalTitle);
+			var rowColCount = 0;
+			
+			var rowHtml = '';
+			var $row = null;
+			var col1TextArea = '';
+			var cols = null;
+			
+			
+	
+			// excelCheckModal = excelCheckModal.replace('#{context}', rowHtml);
+			$('body').append(excelUpModal);
+			// $('#' + modalId).find('.panel').width('800' || '');
+		    
+			
+			$('#' +'cancelBtn'+(index + 1)).on('click', function() {
+				$('#' + modalId).momModal('hide');			
+			});
+			
+		},
+			// Level 3. 팝업창 생성을 위한 HTML 동적 생성, by createPopUp
+			createPopUpHtml: {
+				modal : function() {
+					var html = 
+					     '<div id="#{modalId}" class="modal gridPopup">'
+						+'    <div id="panel" class="panel messagebox col2">'
+						+'        <div class="panel-body">'
+						+'            <div class="panelbody">'
+						+'                <div class="w-clearfix panelheader panel-heading">'
+						+'                    <div tmpTabId="two" data-undefined="fa-edit" class="w-icon fa fa-edit icon r5"></div>'
+						+'                    <div class="textblock">#{modalTitle}</div>'
+						+'                    <a href="#" class="w-inline-block bntpopclose pop-close-Btn"></a>'
+						+'                </div>'
+						+'                <div class="searcharea pop">'
+						+'                    <div class="w-form">'
+						+'                        <form name="form" id="form#{modalId}" class="form-inline" data-name="Form">'
+						+'#{context}'
+					   	+'                        </form>'
+					   	+'                    </div>'
+					   	+'                </div>'
+					   	+'            </div>'
+					   	+'            <div class="panelfooter">'
+					   	+'              <div class="footer-pop-btn-area">'
+					   	+'                <a id="saveBtnEP#{index}" href="#" class="w-inline-block btnpop pop-save-Btn">'
+					   	+'                    <div class="textblock">'+multiLang.transText('MESSAGE','MSG00035')+'</div>'
+					   	+'                </a>'
+					   	+'                <a id="cancelBtnEP#{index}" href="#" class="w-inline-block btnpop grey pop-close-Btn">'
+					   	+'                    <div class="textblock">취소</div>'
+					   	+'                </a>'
+					   	+'              </div>'
+					   	+'            </div>'
+					   	+'        </div>'
+					   	+'        <div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
+					   	+'    </div>'
+					   	+'</div>';
+					
+					return html;
+				},
+				
+				row: function() {
+					var html = 
+						 '<div class="b5">'
+						+'    <div class="w-row">'
+					   	+'        '
+					   	+'    </div>'
+					   	+'</div>';
+					
+					return html;
+				},
+				
+				col1: function() {
+					var html = 
+						'<ul class="w-list-unstyled">'
+						+'   <li>'
+						+'       <div>'
+						+'           <div id="#{labelId}" class="col1-label labelbox" style="white-space: nowrap; text-overflow: ellipsis;">'
+						+'               <div class="circle #{circle_require}"></div>'
+						+'               <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
+						+'           </div>'
+						+'       	#{editBox}'
+						+'       </div>'
+						+'   </li>'
+						+'</ul>';
+						
+					return html;
+				},
+				
+				colReq: function() {
+					var html = 
+						'<ul class="w-list-unstyled">'
+						+'   <li>'
+						+'       <div>'
+						+'           <div id="#{labelId}" class="col1-label labelbox" style="white-space: nowrap; text-overflow: ellipsis;">'
+						+'               <div class="circle bg-orange"></div>'
+						+'               <div class="textblock orange" title="#{headerText}">#{headerText}</div>'
+						+'           </div>'
+						+'       	#{editBox}'
+						+'       </div>'
+						+'   </li>'
+						+'</ul>';
+					
+					return html;
+				},
+				
+				col2: function() {
+					var html = 
+						 '<div class="w-col w-col-6">'
+						+'    <div class="w-clearfix listitem">'
+						+'	    <div class="w-col w-col-5">'
+						+'   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'
+						+'	            <div class="circle #{circle_require}"></div>'
+						+'	            <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
+						+'	        </div>'
+						+'       </div>'
+						+'	    <div class="w-col w-col-6">'
+						+'       	#{editBox}'
+						+'       </div>'
+						+'    </div>'
+						+'</div>';
+					
+					return html;
+				},
+				
+				col3: function() {
+					var html =
+						 '<div class="w-col w-col-'+colNum+'">'
+						+'    <div class="w-clearfix listitem">'
+						+'	    <div class="w-col w-col-6">'
+						+'   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'
+						+'	            <div class="circle #{circle_require}"></div>'
+						+'	            <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
+						+'	        </div>'
+						+'       </div>'
+						+'	    <div class="w-col w-col-6">'
+						+'       	#{editBox}'
+						+'       </div>'
+						+'    </div>'
+						+'</div>';
+						
+					return html;
+				},
+				
+				input: function() {
+					var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';					
+					return html;
+				},
+				
+				number: function() {
+					var html = '<input style="float:right;" maxlength="100" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
+					return html;
+				},
+				
+				number1: function() {
+					var html = '<input style="float:right;" maxlength="1" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
+					return html;
+				},
+				
+				number4: function() {
+					var html = '<input style="float:right;" maxlength="4" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
+					return html;
+				},
+				
+				number6: function() {
+					var html = '<input style="float:right;" maxlength="6" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
+					return html;
+				},
+				
+				textarea: function() {
+					var html = '<textarea style="resize: none;" id="#{id}" type="text" class="w-input textbox w490px"></textarea>';					
+					return html;
+				},
+				
+				select: function() {
+					var html = '<select style="float:right;" id="#{id}" class="w-select fieldbox #{wSize}"></select>';					
+					return html;
+				},
+				
+				calendar: function() {
+					var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="datepicker" date-format="date" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';					
+					return html;
+				},
+				
+				file: function() {
+					var html = '<input name="file" id="#{id}" type="file" accept="image" style="float:left; width:100%;">'
+					return html;
+				},
+				
+				password: function() {
+					var html = '<input style="float:right;" maxlength="50" id="#{id}" input-type="password" type="password" class="w-input fieldbox #{wSize}"></input>';
+					return html;
+				}
+			},
+			// Level 3. 엑셀 업로드 체크 팝업창 생성을 위한 HTML 동적 생성, by excelUploadPopUp
+			createExcelCheckPopUpHtml: {
+				modal : function() {
+				var html = 
+					'<div id="listPop49" class="modal">'
+				+'	<div id="panel" class="panel messagebox w85p excelCheckPopPanel">'
+				+'		<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
+				+'			<h5>Panel</h5>'
+				+'		</div>'
+				+'		<div data-panelToolbar="n" panelToolbar="n" class="panel-toolbar hide"></div>'
+				+'		<div class="panel-body panel-body">'
+				+'			<div class="panelbody">'
+				+'				<div class="w-clearfix panelheader panel-heading">' 
+				+'					<div class="w-icon fa fa-cog icon r5"></div>'
+				+'					<div multi-lang="" class="textblock">#{modalTitle}</div>'
+				+'					<a href="#" class="w-inline-block bntpopclose"></a>'
+				+'				</div>'	
+				+'				<div class="w-clearfix cardheard"style="position: relative;height: 1.3em;">'
+				+'                 <div id="expArea" style="display:inline-block;float: left;position: relative;right: -%;top: -0.8em;">'
+				+'                  <div multi-lang="" id="uploadIcon"style="background-color : rgb(255 69 69);width: 50px;height: 16px;border: 1px solid gray;" class="textblock"></div>'
+				+'                  <div multi-lang="" style="position: relative;top: -0.3em;" id="uploadErrorCountText" class="textblock">MESSAGES12568</div>'
+				+'                  <div multi-lang=""id="uploadErrorCount"class="textblock"style="position: relative;top: -0.3em;"></div>'
+				+'                  <div multi-lang=""id="uploadErrorCountText2"class="textblock"style="position: relative;top: -0.24em;">MESSAGES12569</div>'
+				+'					<div class="w-clearfix combo-area" id="checkComboArea">'
+//				+'						<div multi-lang="" style="display:none;" class="textblock floatl"></div>'
+				+'						<select id="checkComboBox" class="w-select fieldbox small"></select>'
+				+'					</div>'
+				+'               </div>'
+				+'				   <a id="excelDownBtn99" href="#" class="w-inline-block btntool floatr"style="position: relative;top: -1.2em;">'
+				+'					<div tmpTabId="two" class="w-icon fa fa-file-excel-o icon"></div>'
+				+'					<div multi-lang="" style="display:none;" class="textblock">MESSAGES10863</div>'
+				+'				   </a>'
+				+'					<div id="checkArea">'				
+				+'			   			<a id="applyBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
+				+'							<div tmpTabId="two" class="w-icon fa fa-redo-o icon"></div>'
+				+'							<div multi-lang="" style="display:none;" class="textblock">적용</div>'
+				+'			   			</a>'
+				+'			   			<a id="allcheckBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
+				+'							<div tmpTabId="two" class="w-icon fa fa-check-o icon"></div>'
+				+'							<div multi-lang="" style="display:none;" class="textblock">All+</div>'
+				+'			   			</a>'
+				+'			   			<a id="alluncheckBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
+				+'							<div tmpTabId="two" class="w-icon fa fa-check-o icon"></div>'
+				+'							<div multi-lang="" style="display:none;" class="textblock">All-</div>'
+				+'			   			</a>'
+				+'              	</div>'
+				+'              </div>'
+				+'				<div class="panelcontent2">'
+				+'					<div class="calc100"style="position: relative;height: 30.8em;width: 101.5%;left: -0.7%;">'
+				+'						<div class="card h150"style="position: relative;height: 100%;">'
+				+'							<div class="cardcontent h100per"style="position: relative;height: 100%;">'
+				+'								<div id="grid99" class="w-widget w-dyn-list w-unbound grid w-widget-auigrid"></div>'
+				+'							</div>'
+				+'						</div>'
+				+'					</div>'
+				+'				</div>	'					
+				+'			</div>'
+				+'			<div class="w-clearfix panelfooter paddingrl10"style="position: relative;top: -0.5em;right: 0.1%;">'
+				+'			    <a id="verificationBtn99" href="#" class="w-inline-block btnpop"style="position: relative;right: -0.5%;top: 0.2em;">'
+				+'                    <div multi-lang="" class="textblock">재검증</div>'
+				+'              </a>'	
+				+'			    <a id="excelUpConfirmBtn99" href="#" class="w-inline-block btnpop"style="position: relative;right: -0.5%;top: 0.2em;">'
+				+'                    <div multi-lang="" class="textblock">MESSAGES10840</div>'
+				+'              </a>'				
+				+'				<a id="cancelBtn99" href="#" class="w-inline-block btnpop grey"style="position: relative;width: 6.3%;right: -0.2%;top: 0.2em;">'
+				+'					<div multi-lang="" class="textblock">MESSAGES11457</div>'
+				+'				</a>'			
+				+'			</div>'
+				+'		</div>'
+				+'		<div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
+				+'      </div>';
+					return html;
+				}
+				
+			
+			},
+			// Level 3. 엑셀 업로드 rpa 팝업창 생성을 위한 HTML 동적 생성
+			createExcelNewPopUpHtml: {
+				modal : function() {
+				var html = 
+					'<div id="#{modalId}" class="modal">'
+				+'  <div id="panel" class="panel messagebox w400">'
+				+' 	<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
+				+'	  <h5>Panel</h5>'
+				+'  </div>'
+				+'	<div data-panelToolbar="n" panelToolbar="n" class="panel-toolbar hide"></div>'
+				+'    <div class="panel-body">'
+				+'    <div class="panelbody">'
+				+'    <div class="w-clearfix panelheader panel-heading">'
+				+'    <div tmpTabId="two" class="w-icon fa fa-edit icon r5"></div>'
+				+'    <div multi-lang="" style="display:none;" class="textblock">MESSAGES12638</div>'
+				+'    <a href="#" class="w-inline-block bntpopclose"></a>'
+				+'	  </div>'
+				+'    <div class="searcharea pop">'
+				+'    <div class="w-form">'
+				+'    <form name="form" id="form" class="form-inline" data-name="Form"></form>'
+				+'    </div>'
+				+' 	  </div>'
+				+' 	  </div>'
+				+'    <div class="panelfooter">'
+				+'    <a id="saveBtnNEX#{index}" href="#" class="w-inline-block btnpop">'
+				+'    <div multi-lang="" style="display:none;" class="textblock">MESSAGES11192</div>'
+				+'    </a>'
+				+'    <a id="cancelBtnNEX#{index}" href="#" class="w-inline-block btnpop grey">'
+				+'    <div multi-lang="" style="display:none;" class="textblock">MESSAGES11457</div>'
+				+'	  </a>'
+				+'	  </div>'
+				+'	  </div>'
+				+'    <div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
+				+'    </div>'
+				+'    </div>'
+					return html;
+				}
+				
+			
+			},
+				// 등록버튼 이벤트 핸들러
 	setBtnEvent: function(index, your) {
 			var that = momWidget;
 			for(let i=0,max=that.buttonProperty[index].length; i<max;i++){ //커스텀 버튼 이벤트 핸들러 추가
@@ -22437,7 +19703,7 @@ var momWidget = {
 		       
 				}, undefined, undefined, this, false);
 				
-				//}
+				
 				e.stopImmediatePropagation();
 			});
 			
@@ -23071,7 +20337,7 @@ var momWidget = {
 			
 			$(document).on('click', '#' + createBtnId, function(e) {
 				var callbackData = [];	
-				var targetArray = e.target.id.split('DP');
+				var targetArray = e.currentTarget.id.split('DP');
 				var buttonId = targetArray[0];
 				var actionType = 'C';
 		        for(var k=0,max=that.buttonProperty[index].length;k<max;k++){
@@ -23405,19 +20671,22 @@ var momWidget = {
 			});
 				$(document).on('click', '#' + savePopBtnId, function(e) {				 
 		        momWidget.splashShow();
-	    	
+		        let buttonId   = $('#defaultPop'+(index+1)).attr('btnId');
+	    	    if(buttonId == undefined || buttonId == '' ){
+					return;
+				}
 				var param = [];
 				var initParam ={};
 		        let searchResult = true;
 		        let popupTitle   ='#'+e.target.parentElement.parentElement.parentElement.id ;
 		        let tmpYn = 'N';
-		        let buttonId   = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
+		        //let buttonId   = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
+				
 				var actionType = $('#defaultPop'+(index+1)).attr('actionType');
 				var btnPopYn   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? 'N' : 'Y';
 				var btnIndex   = $('#defaultPop'+(index+1)).attr('btnindex') == undefined ? index : Number($('#defaultPop'+(index+1)).attr('btnindex'));
 				var gridPopIndex   = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? index+1 : Number($('#defaultPop'+(index+1)).attr('gridPopIndex'));
 				var gridPopYn      = $('#defaultPop'+(index+1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
-				//var btnIndex   = index;
 				var queryId = that.pageProperty[index]['programId']+'.'+buttonId;
 			    that.wait(1);
 				var buttonParam = [];
@@ -24052,13 +21321,11 @@ var momWidget = {
 		        let searchResult = true;
 		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
 		        let tmpYn = 'N';
-		    
 		        let btnIndex = $('.customPop.in').attr('btnIndex');
-		        let index = Number(btnIndex.split('-')[0])-1;
 		        let buttonId = 'customBtn'+btnIndex;
 				let actionType = $('#customPop-'+buttonId).attr('actionType');
 				let gridPopYn= 'N';
-				let queryId = that.pageProperty[index]['menuId']+'.'+buttonId;
+				let queryId = that.pageProperty[index]['programId']+'.'+buttonId;
 				that.wait(0.5);
 				var buttonParam = [];
 				var extraParam = {};
@@ -24505,7 +21772,37 @@ var momWidget = {
 					
 				}
 				}
+			/*   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
+					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
+						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
+						
+					}					
+				 }
 
+					  for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
+					    if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
+							buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
+							break;
+					   }
+				}
+				for(var j=0,max2=buttonParam.length;j<max2;j++){
+						if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
+					
+						extraParam['typeMap'] = buttonParam[j]['typeMap'];
+						extraParam['typeList'] = buttonParam[j]['typeList'];
+					}
+						
+					
+					
+				}
+				
+					param = buttonParam.map(function(item1){
+			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
+		        return item2;
+		    })
+		    $.extend(item1, obj);               
+			    return item1;
+			});*/
 				
 						let buttonParamText = {};
 					    let buttonParamList = [];
@@ -24587,7 +21884,7 @@ var momWidget = {
 				              return;
 			            }   
 							 mom_ajax('P', queryId,[], function(result3, data3) {
-			            	     if(data3[0]['p_err_code']=='E'||data.length==0) {
+			            	     if(data3[0]['p_err_code']=='E') {
 						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
 			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
 							  momWidget.splashHide();
@@ -24616,7 +21913,7 @@ var momWidget = {
 				}
 				else{
 					 mom_ajax(actionType, queryId,param, function(result, data) {
-			             if(data[0]['p_err_code']=='E'||data.length==0) {
+			             if(data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
 				              return;
@@ -24630,7 +21927,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(index, initParam, false, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
 			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -24922,529 +22219,6 @@ var momWidget = {
 			$('#grid' + (index + 1)).children().append($('.aui-grid-export-progress-modal'));
 		});
 	},
-	// 팝업 파라미터 가져오기
-	getPopupParam: function(index, your,extraParam) {
-		  var that = this;
-		  var param = {};
-		  var popupId =  '';
-		  var searchId = '';
-		  var checkedItem = [];
-		  var listItem = [];
-		  var mapItem = {};
-	
-		  //param = that.getCheckedRowItems(index) == 'FAIL'? []:that.getCheckedRowItems(index);
-		  for(var i=0;i<that.popupProperty[index].length;i++){
-			    popupId = that.popupProperty[index][i]['popupId'];
-			    popupType = that.popupProperty[index][i]['popupType'];
-				searchId = that.popupProperty[index][i]['popupId']+'DP'+(index+1);
-				that.popupProperty[index][i]['popupId']+'DP'+(index+1);
-		/*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
-				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
-				for(var j=0;j<checkedItem.length;j++){
-					 mapItem[popupId] = checkedItem[j]['value'];
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
-			
-				}
-			
-				param[popupId]= listItem;
-			}*/
-				if(Object.keys(extraParam).length >0 && i==0){			
-					 mapItem[popupId] = $('#'+searchId).val();
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 //listItem[j] = JSON.parse(JSON.stringify(mapItem));
-
-				
-			}
-			else if(Object.keys(extraParam).length >0&&i>0){
-				 mapItem[popupId] = $('#'+searchId).val();
-			}
-		
-			
-				param[popupId]=$('#'+searchId).val(); 
-				
-			
-			 if(Object.keys(extraParam).length >0 && i==(that.popupProperty[index].length)-1 ){
-				param['arrayParam']= [mapItem];
-			}
-			  
-			  if( popupType=='SS' || popupType=='MS'){
-				//$('#'+searchId).jqxComboBox({source:[]});
-				 // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
-             //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
-			}
-		  }
-		  return [param];
-	},
-	// 커스텀팝업 파라미터 가져오기
-	getCustomPopupParam: function(index, btnId,your,extraParam) {
-		  var that = momWidget;
-		  var param = {};
-		  var popupId =  '';
-		  var searchId = '';
-		  var checkedItem = [];
-		  var listItem = [];
-		  var mapItem = {};
-	      let popupItem = that.customPopupProperty[btnId];
-
-		  for(var i=0;i<popupItem.length;i++){
-			    popupId   = popupItem[i]['popupId'];
-			    popupType = popupItem[i]['popupType'];
-				searchId = $('#'+'customPop-'+btnId).find('#'+popupItem[i]['popupId']+'DP'+(index+1));
-				popupItem[i]['popupId']+'DP'+(index+1);
-                 
-			  if(popupType=='C'){
-				 if(searchId.val().indexOf('/')>0){
-				 let splitArray = searchId.val().split('/');
-				 let year = splitArray[2]
-				 let month = splitArray[1]
-				 let day = splitArray[0]
-				 let dateVal = year + month + day;
-				 param[popupId] = dateVal; 
-				}
-				else{
-				  param[popupId]=searchId.val(); 
-				}
-				
-			 }
-			  else if( popupType=='SS' || popupType=='MS'){
-				//$('#'+searchId).jqxComboBox({source:[]});
-				 // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
-             //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
-			}
-			else{
-				param[popupId]=searchId.val(); 
-			}
-		  }
-		  return [param];
-	},
-		// 엑셀 업로드 검증 팝업생성
-		createExcelPopUp: function(index, your) {
-			var that = this.grid == undefined ? this.momWidget : this;
-			var excelUpBtnId = 'excelUpBtn' + (index + 1); 								
-			
-			var widthSizes = {1 : 400, 2 : 700, 3 : 776};
-			var wSizeClass = {1 : 'w190', 2 : 'w190', 3 : 'w120'}
-			var modalTitle ='MESSAGES12565';
-			var modalId = 'listPop49';	
-			
-			var excelCheckModal = this.createExcelCheckPopUpHtml.modal();
-			excelCheckModal = excelCheckModal.replace(/#{index}/gi, (index)).replace(/#{modalId}/gi, modalId).replace('#{modalTitle}', modalTitle);
-			var rowColCount = 0;
-			
-			var rowHtml = '';
-			var $row = null;
-			var col1TextArea = '';
-			var cols = null;
-			
-			
-	
-			// excelCheckModal = excelCheckModal.replace('#{context}', rowHtml);
-			$('body').append(excelCheckModal);
-			// $('#' + modalId).find('.panel').width('800' || '');
-		    
-			
-			$('#cancelBtn99').on('click', function() {
-				$('#' + modalId).momModal('hide');			
-			});
-
-			$('#applyBtn99').on('click', function() {
-//				that.splashShow();
-				var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
-				for(var i = 0; i < gridHeaders.length; i++) {
-					if(gridHeaders[i]['headerRenderer'] != undefined) {
-						if(gridHeaders[i]['headerRenderer']['checked']) {
-							AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked' : false});	
-						}
-					}
-				}
-//					 for(var i = 0; i < that.columnProperty[98].length; i++) {
-//						 if(that.columnProperty[98][i]['visible'] && !that.columnProperty[98][i]['popUpReq']) {
-//							 AUIGrid.setHeaderRendererProp(momWidget.grid[98], checkList[i]['index'], {'checked' : false});	
-//						 }
-//					 }
-					 
-				var checkList = [];
-				var list = $('#checkComboBox').jqxComboBox('getCheckedItems');
-				if(list != undefined) {
-					that.splashShow();
-					if(list.length == 1) {
-						checkList[0] = list[0]['value'];
-					} else {
-						$.each(list, function(index) {
-							checkList.push({index: list[index]['index'], value: list[index]['value']})
-						});
-					
-					}
-				}
-				for(var i = 0; i < checkList.length; i++) {
-					for(var j = 0; j < gridHeaders.length; j++) {
-						if(checkList[i]['value'] == gridHeaders[j]['dataField']) {
-							AUIGrid.setHeaderRendererProp(momWidget.grid[98], j, {'checked' : true} );	
-						}
-					}
-				}
-				setTimeout(function() {
-					that.splashHide();
-				}, 100);
-			});
-			$('#allcheckBtn99').on('click', function() {
-				that.splashShow();
-				var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
-				for(var i = 0; i < gridHeaders.length; i++) {
-					if(gridHeaders[i]['headerRenderer'] != undefined) {
-						if(!gridHeaders[i]['headerRenderer']['checked']) {
-							AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked' : true});	
-						}
-					}
-				}
-				setTimeout(function() {
-					that.splashHide();
-				}, 10);
-			});
-			
-			$('#alluncheckBtn99').on('click', function() {
-				that.splashShow();
-				var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
-				for(var i = 0; i < gridHeaders.length; i++) {
-					if(gridHeaders[i]['headerRenderer'] != undefined) {
-						if(gridHeaders[i]['headerRenderer']['checked']) {
-							AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked' : false});	
-						}
-					}
-				}
-				setTimeout(function() {
-					that.splashHide();
-				}, 10);
-			});
-			
-			this.popUpSetting[99] = modalId;
-			// $('#' + that.popUpSetting[99]).momModal('show');
-			// $('#' + that.popUpSetting[index+4]).momModal('show');
-			this.popUpSaveCancelBtn(98, your);
-			that.splashHide();
-		},
-		//  RPA 엑셀 업로드 팝업생성
-		createNewExcelPopUp: function(index, your) {
-			var that = this.grid == undefined ? this.momWidget : this;
-			var excelUpBtnId = 'excelNewUpBtn' + (index + 1); 								
-			
-			var widthSizes = {1 : 400, 2 : 700, 3 : 776};
-			var wSizeClass = {1 : 'w190', 2 : 'w190', 3 : 'w120'}
-			var modalTitle ='MESSAGES12638';
-			var modalId = 'excelNewPop'+(index + 1);
-			
-			var excelUpModal = this.createExcelNewPopUpHtml.modal();
-			excelUpModal = excelUpModal.replace(/#{index}/gi, (index+1)).replace(/#{modalId}/gi, modalId).replace('#{modalTitle}', modalTitle);
-			var rowColCount = 0;
-			
-			var rowHtml = '';
-			var $row = null;
-			var col1TextArea = '';
-			var cols = null;
-			
-			
-	
-			// excelCheckModal = excelCheckModal.replace('#{context}', rowHtml);
-			$('body').append(excelUpModal);
-			// $('#' + modalId).find('.panel').width('800' || '');
-		    
-			
-			$('#' +'cancelBtn'+(index + 1)).on('click', function() {
-				$('#' + modalId).momModal('hide');			
-			});
-			
-		},
-			// Level 3. 팝업창 생성을 위한 HTML 동적 생성, by createPopUp
-			createPopUpHtml: {
-				modal : function() {
-					var html = 
-					     '<div id="#{modalId}" class="modal gridPopup">'
-						+'    <div id="panel" class="panel messagebox col2">'
-						+'        <div class="panel-body">'
-						+'            <div class="panelbody">'
-						+'                <div class="w-clearfix panelheader panel-heading">'
-						+'                    <div tmpTabId="two" data-undefined="fa-edit" class="w-icon fa fa-edit icon r5"></div>'
-						+'                    <div class="textblock">#{modalTitle}</div>'
-						+'                    <a href="#" class="w-inline-block bntpopclose pop-close-Btn"></a>'
-						+'                </div>'
-						+'                <div class="searcharea pop">'
-						+'                    <div class="w-form">'
-						+'                        <form name="form" id="form#{modalId}" class="form-inline" data-name="Form">'
-						+'#{context}'
-					   	+'                        </form>'
-					   	+'                    </div>'
-					   	+'                </div>'
-					   	+'            </div>'
-					   	+'            <div class="panelfooter">'
-					   	+'              <div class="footer-pop-btn-area">'
-					   	+'                <a id="saveBtnEP#{index}" href="#" class="w-inline-block btnpop pop-save-Btn">'
-					   	+'                    <div class="textblock">'+multiLang.transText('MESSAGE','MSG00035')+'</div>'
-					   	+'                </a>'
-					   	+'                <a id="cancelBtnEP#{index}" href="#" class="w-inline-block btnpop grey pop-close-Btn">'
-					   	+'                    <div class="textblock">취소</div>'
-					   	+'                </a>'
-					   	+'              </div>'
-					   	+'            </div>'
-					   	+'        </div>'
-					   	+'        <div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
-					   	+'    </div>'
-					   	+'</div>';
-					
-					return html;
-				},
-				
-				row: function() {
-					var html = 
-						 '<div class="b5">'
-						+'    <div class="w-row">'
-					   	+'        '
-					   	+'    </div>'
-					   	+'</div>';
-					
-					return html;
-				},
-				
-				col1: function() {
-					var html = 
-						'<ul class="w-list-unstyled">'
-						+'   <li>'
-						+'       <div>'
-						+'           <div id="#{labelId}" class="col1-label labelbox" style="white-space: nowrap; text-overflow: ellipsis;">'
-						+'               <div class="circle #{circle_require}"></div>'
-						+'               <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
-						+'           </div>'
-						+'       	#{editBox}'
-						+'       </div>'
-						+'   </li>'
-						+'</ul>';
-						
-					return html;
-				},
-				
-				colReq: function() {
-					var html = 
-						'<ul class="w-list-unstyled">'
-						+'   <li>'
-						+'       <div>'
-						+'           <div id="#{labelId}" class="col1-label labelbox" style="white-space: nowrap; text-overflow: ellipsis;">'
-						+'               <div class="circle bg-orange"></div>'
-						+'               <div class="textblock orange" title="#{headerText}">#{headerText}</div>'
-						+'           </div>'
-						+'       	#{editBox}'
-						+'       </div>'
-						+'   </li>'
-						+'</ul>';
-					
-					return html;
-				},
-				
-				col2: function() {
-					var html = 
-						 '<div class="w-col w-col-6">'
-						+'    <div class="w-clearfix listitem">'
-						+'	    <div class="w-col w-col-5">'
-						+'   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'
-						+'	            <div class="circle #{circle_require}"></div>'
-						+'	            <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
-						+'	        </div>'
-						+'       </div>'
-						+'	    <div class="w-col w-col-6">'
-						+'       	#{editBox}'
-						+'       </div>'
-						+'    </div>'
-						+'</div>';
-					
-					return html;
-				},
-				
-				col3: function() {
-					var html =
-						 '<div class="w-col w-col-'+colNum+'">'
-						+'    <div class="w-clearfix listitem">'
-						+'	    <div class="w-col w-col-6">'
-						+'   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'
-						+'	            <div class="circle #{circle_require}"></div>'
-						+'	            <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
-						+'	        </div>'
-						+'       </div>'
-						+'	    <div class="w-col w-col-6">'
-						+'       	#{editBox}'
-						+'       </div>'
-						+'    </div>'
-						+'</div>';
-						
-					return html;
-				},
-				
-				input: function() {
-					var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';					
-					return html;
-				},
-				
-				number: function() {
-					var html = '<input style="float:right;" maxlength="100" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
-					return html;
-				},
-				
-				number1: function() {
-					var html = '<input style="float:right;" maxlength="1" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
-					return html;
-				},
-				
-				number4: function() {
-					var html = '<input style="float:right;" maxlength="4" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
-					return html;
-				},
-				
-				number6: function() {
-					var html = '<input style="float:right;" maxlength="6" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';					
-					return html;
-				},
-				
-				textarea: function() {
-					var html = '<textarea style="resize: none;" id="#{id}" type="text" class="w-input textbox w490px"></textarea>';					
-					return html;
-				},
-				
-				select: function() {
-					var html = '<select style="float:right;" id="#{id}" class="w-select fieldbox #{wSize}"></select>';					
-					return html;
-				},
-				
-				calendar: function() {
-					var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="datepicker" date-format="date" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';					
-					return html;
-				},
-				
-				file: function() {
-					var html = '<input name="file" id="#{id}" type="file" accept="image" style="float:left; width:100%;">'
-					return html;
-				},
-				
-				password: function() {
-					var html = '<input style="float:right;" maxlength="50" id="#{id}" input-type="password" type="password" class="w-input fieldbox #{wSize}"></input>';
-					return html;
-				}
-			},
-			// Level 3. 엑셀 업로드 체크 팝업창 생성을 위한 HTML 동적 생성, by excelUploadPopUp
-			createExcelCheckPopUpHtml: {
-				modal : function() {
-				var html = 
-					'<div id="listPop49" class="modal">'
-				+'	<div id="panel" class="panel messagebox w85p excelCheckPopPanel">'
-				+'		<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
-				+'			<h5>Panel</h5>'
-				+'		</div>'
-				+'		<div data-panelToolbar="n" panelToolbar="n" class="panel-toolbar hide"></div>'
-				+'		<div class="panel-body panel-body">'
-				+'			<div class="panelbody">'
-				+'				<div class="w-clearfix panelheader panel-heading">' 
-				+'					<div class="w-icon fa fa-cog icon r5"></div>'
-				+'					<div multi-lang="" class="textblock">#{modalTitle}</div>'
-				+'					<a href="#" class="w-inline-block bntpopclose"></a>'
-				+'				</div>'	
-				+'				<div class="w-clearfix cardheard"style="position: relative;height: 1.3em;">'
-				+'                 <div id="expArea" style="display:inline-block;float: left;position: relative;right: -%;top: -0.8em;">'
-				+'                  <div multi-lang="" id="uploadIcon"style="background-color : rgb(255 69 69);width: 50px;height: 16px;border: 1px solid gray;" class="textblock"></div>'
-				+'                  <div multi-lang="" style="position: relative;top: -0.3em;" id="uploadErrorCountText" class="textblock">MESSAGES12568</div>'
-				+'                  <div multi-lang=""id="uploadErrorCount"class="textblock"style="position: relative;top: -0.3em;"></div>'
-				+'                  <div multi-lang=""id="uploadErrorCountText2"class="textblock"style="position: relative;top: -0.24em;">MESSAGES12569</div>'
-				+'					<div class="w-clearfix combo-area" id="checkComboArea">'
-//				+'						<div multi-lang="" style="display:none;" class="textblock floatl"></div>'
-				+'						<select id="checkComboBox" class="w-select fieldbox small"></select>'
-				+'					</div>'
-				+'               </div>'
-				+'				   <a id="excelDownBtn99" href="#" class="w-inline-block btntool floatr"style="position: relative;top: -1.2em;">'
-				+'					<div tmpTabId="two" class="w-icon fa fa-file-excel-o icon"></div>'
-				+'					<div multi-lang="" style="display:none;" class="textblock">MESSAGES10863</div>'
-				+'				   </a>'
-				+'					<div id="checkArea">'				
-				+'			   			<a id="applyBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
-				+'							<div tmpTabId="two" class="w-icon fa fa-redo-o icon"></div>'
-				+'							<div multi-lang="" style="display:none;" class="textblock">적용</div>'
-				+'			   			</a>'
-				+'			   			<a id="allcheckBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
-				+'							<div tmpTabId="two" class="w-icon fa fa-check-o icon"></div>'
-				+'							<div multi-lang="" style="display:none;" class="textblock">All+</div>'
-				+'			   			</a>'
-				+'			   			<a id="alluncheckBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
-				+'							<div tmpTabId="two" class="w-icon fa fa-check-o icon"></div>'
-				+'							<div multi-lang="" style="display:none;" class="textblock">All-</div>'
-				+'			   			</a>'
-				+'              	</div>'
-				+'              </div>'
-				+'				<div class="panelcontent2">'
-				+'					<div class="calc100"style="position: relative;height: 30.8em;width: 101.5%;left: -0.7%;">'
-				+'						<div class="card h150"style="position: relative;height: 100%;">'
-				+'							<div class="cardcontent h100per"style="position: relative;height: 100%;">'
-				+'								<div id="grid99" class="w-widget w-dyn-list w-unbound grid w-widget-auigrid"></div>'
-				+'							</div>'
-				+'						</div>'
-				+'					</div>'
-				+'				</div>	'					
-				+'			</div>'
-				+'			<div class="w-clearfix panelfooter paddingrl10"style="position: relative;top: -0.5em;right: 0.1%;">'
-				+'			    <a id="verificationBtn99" href="#" class="w-inline-block btnpop"style="position: relative;right: -0.5%;top: 0.2em;">'
-				+'                    <div multi-lang="" class="textblock">재검증</div>'
-				+'              </a>'	
-				+'			    <a id="excelUpConfirmBtn99" href="#" class="w-inline-block btnpop"style="position: relative;right: -0.5%;top: 0.2em;">'
-				+'                    <div multi-lang="" class="textblock">MESSAGES10840</div>'
-				+'              </a>'				
-				+'				<a id="cancelBtn99" href="#" class="w-inline-block btnpop grey"style="position: relative;width: 6.3%;right: -0.2%;top: 0.2em;">'
-				+'					<div multi-lang="" class="textblock">MESSAGES11457</div>'
-				+'				</a>'			
-				+'			</div>'
-				+'		</div>'
-				+'		<div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
-				+'      </div>';
-					return html;
-				}
-				
-			
-			},
-			// Level 3. 엑셀 업로드 rpa 팝업창 생성을 위한 HTML 동적 생성
-			createExcelNewPopUpHtml: {
-				modal : function() {
-				var html = 
-					'<div id="#{modalId}" class="modal">'
-				+'  <div id="panel" class="panel messagebox w400">'
-				+' 	<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
-				+'	  <h5>Panel</h5>'
-				+'  </div>'
-				+'	<div data-panelToolbar="n" panelToolbar="n" class="panel-toolbar hide"></div>'
-				+'    <div class="panel-body">'
-				+'    <div class="panelbody">'
-				+'    <div class="w-clearfix panelheader panel-heading">'
-				+'    <div tmpTabId="two" class="w-icon fa fa-edit icon r5"></div>'
-				+'    <div multi-lang="" style="display:none;" class="textblock">MESSAGES12638</div>'
-				+'    <a href="#" class="w-inline-block bntpopclose"></a>'
-				+'	  </div>'
-				+'    <div class="searcharea pop">'
-				+'    <div class="w-form">'
-				+'    <form name="form" id="form" class="form-inline" data-name="Form"></form>'
-				+'    </div>'
-				+' 	  </div>'
-				+' 	  </div>'
-				+'    <div class="panelfooter">'
-				+'    <a id="saveBtnNEX#{index}" href="#" class="w-inline-block btnpop">'
-				+'    <div multi-lang="" style="display:none;" class="textblock">MESSAGES11192</div>'
-				+'    </a>'
-				+'    <a id="cancelBtnNEX#{index}" href="#" class="w-inline-block btnpop grey">'
-				+'    <div multi-lang="" style="display:none;" class="textblock">MESSAGES11457</div>'
-				+'	  </a>'
-				+'	  </div>'
-				+'	  </div>'
-				+'    <div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
-				+'    </div>'
-				+'    </div>'
-					return html;
-				}
-				
-			
-			},
 			setCustomBtn: function(index,btnIndex,btnId,your,e) {
 				let that = momWidget;
 				let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
