@@ -1497,6 +1497,9 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			excelUpYn = param[0].excelUpYn == undefined ? 'N':param[0].excelUpYn;
 		    sessionId = param[0].sessionId == undefined ? '':param[0].sessionId;
 			for(var i = 0;i<param.length;i++){
+				if(param[i].hasOwnProperty('') == true){
+					delete param[i][''];
+				}
 				param[i].divisionCd  = siteInfo.divisionCd;
 				param[i].companyCd   = siteInfo.companyCd;
 				param[i].langCd      = siteInfo.languageCd;

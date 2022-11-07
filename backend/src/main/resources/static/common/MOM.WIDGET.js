@@ -21286,7 +21286,7 @@ var momWidget = {
 				}
 				else{
 					 mom_ajax(actionType, queryId,param, function(result, data) {
-			             if(data[0]['p_err_code']=='E') {
+			             if(data.length == undefined || data.length == 0 || data[0]['p_err_code']=='E') {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
 				              return;
