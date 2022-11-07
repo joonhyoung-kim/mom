@@ -8981,43 +8981,26 @@ var momWidget = {
 			    popupType = popupItem[i]['popupType'];
 				searchId = popupItem[i]['popupId']+'DP'+(index+1);
 				popupItem[i]['popupId']+'DP'+(index+1);
-		/*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
-				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
-				for(var j=0;j<checkedItem.length;j++){
-					 mapItem[popupId] = checkedItem[j]['value'];
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
-			
-				}
-			
-				param[popupId]= listItem;
-			}*/
-				if(Object.keys(extraParam).length >0 && i==0){			
-					 mapItem[popupId] = $('#'+searchId).val();
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 //listItem[j] = JSON.parse(JSON.stringify(mapItem));
-
 				
-			}
-			else if(Object.keys(extraParam).length >0&&i>0){
-				 mapItem[popupId] = $('#'+searchId).val();
-			}
-		
-			
-				param[popupId]=$('#'+searchId).val(); 
 				
 			
-			 if(Object.keys(extraParam).length >0 && i==(popupItem.length)-1 ){
-				param['arrayParam']= [mapItem];
-			}
 			  
 			  if( popupType=='SS' || popupType=='MS'){
+				param[popupId]=$('#'+searchId).val(); 
 				//$('#'+searchId).jqxComboBox({source:[]});
 				 // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
              //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
 			}
+			else if(popupType=='C'){
+				if($('#'+searchId).val().indexOf('/')>0){
+					$('#'+searchId).val().replace(/o/,);
+				}
+				else{
+					
+				}
+				param[popupId]= $('#'+searchId).val(); 
+			}
+			param[popupId]=$('#'+searchId).val(); 
 		  }
 		  return [param];
 	},
@@ -24074,11 +24057,13 @@ var momWidget = {
 		        let searchResult = true;
 		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
 		        let tmpYn = 'N';
+		    
 		        let btnIndex = $('.customPop.in').attr('btnIndex');
+		        let index = $('.customPop.in').attr('btnIndex');
 		        let buttonId = 'customBtn'+btnIndex;
 				let actionType = $('#customPop-'+buttonId).attr('actionType');
 				let gridPopYn= 'N';
-				let queryId = that.pageProperty[index]['programId']+'.'+buttonId;
+				let queryId = that.pageProperty[gridIndex]['menuId']+'.'+buttonId;
 				that.wait(0.5);
 				var buttonParam = [];
 				var extraParam = {};
@@ -24525,37 +24510,7 @@ var momWidget = {
 					
 				}
 				}
-			/*   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
-					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-						
-					}					
-				 }
 
-					  for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
-					    if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
-							buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
-							break;
-					   }
-				}
-				for(var j=0,max2=buttonParam.length;j<max2;j++){
-						if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
-					
-						extraParam['typeMap'] = buttonParam[j]['typeMap'];
-						extraParam['typeList'] = buttonParam[j]['typeList'];
-					}
-						
-					
-					
-				}
-				
-					param = buttonParam.map(function(item1){
-			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);               
-			    return item1;
-			});*/
 				
 						let buttonParamText = {};
 					    let buttonParamList = [];
@@ -24637,7 +24592,7 @@ var momWidget = {
 				              return;
 			            }   
 							 mom_ajax('P', queryId,[], function(result3, data3) {
-			            	     if(data3[0]['p_err_code']=='E') {
+			            	     if(data3[0]['p_err_code']=='E'||data.length==0) {
 						         momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data3[0]['p_err_msg'])});
 			            	  //momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00049')});
 							  momWidget.splashHide();
@@ -24666,7 +24621,7 @@ var momWidget = {
 				}
 				else{
 					 mom_ajax(actionType, queryId,param, function(result, data) {
-			             if(data[0]['p_err_code']=='E') {
+			             if(data[0]['p_err_code']=='E'||data.length==0) {
 			            	  momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE',data[0]['p_err_msg'])});
 							  momWidget.splashHide();
 				              return;
@@ -24680,7 +24635,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[gridIndex]['menuId'],your);
 			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -25044,42 +24999,25 @@ var momWidget = {
 			    popupType = popupItem[i]['popupType'];
 				searchId = popupItem[i]['popupId']+'DP'+(index+1);
 				popupItem[i]['popupId']+'DP'+(index+1);
-		/*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
-				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
-				for(var j=0;j<checkedItem.length;j++){
-					 mapItem[popupId] = checkedItem[j]['value'];
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
-			
+                 
+			  if(popupType=='C'){
+				 if($('#'+searchId).val().indexOf('/')>0){
+				 let splitArray = $('#'+searchId).val().split('/');
+				 let year = splitArray[2]
+				 let month = splitArray[1]
+				 let day = splitArray[0]
+				 let dateVal = year + month + day;
+				 param[popupId] = dateVal; 
 				}
-			
-				param[popupId]= listItem;
-			}*/
-				if(Object.keys(extraParam).length >0 && i==0){			
-					 mapItem[popupId] = $('#'+searchId).val();
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 //listItem[j] = JSON.parse(JSON.stringify(mapItem));
-
 				
-			}
-			else if(Object.keys(extraParam).length >0&&i>0){
-				 mapItem[popupId] = $('#'+searchId).val();
-			}
-		
-			
-				param[popupId]=$('#'+searchId).val(); 
-				
-			
-			 if(Object.keys(extraParam).length >0 && i==(popupItem.length)-1 ){
-				param['arrayParam']= [mapItem];
-			}
-			  
-			  if( popupType=='SS' || popupType=='MS'){
+			 }
+			  else if( popupType=='SS' || popupType=='MS'){
 				//$('#'+searchId).jqxComboBox({source:[]});
 				 // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
              //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
+			}
+			else{
+				param[popupId]=$('#'+searchId).val(); 
 			}
 		  }
 		  return [param];
