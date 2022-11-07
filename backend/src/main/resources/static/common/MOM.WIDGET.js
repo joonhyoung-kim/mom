@@ -54,6 +54,7 @@ var momWidget = {
 	init: function(index, menuId, your, widgetType) {		  
 		  var that = momWidget;	 
 		  let gridId = index;
+		  let widgetType = widgetType == undefined ? 'GRID':widgetType;
 		  index--;
 
 		 // var fileUpProgressBar = that.createFileUploadPop.progressBar(index,'파일업로드');
@@ -145,7 +146,7 @@ var momWidget = {
 			  * 위젯세팅 정보 이용해 html 동적생성 
 			  ----------------------------------------------------------------------------------------------------------------------------------			  
 			  */ 
-			  
+			 
 			  if(Array.isArray(that.gridProperty[index]) == true && that.gridProperty[index].length !=0){
 				  var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
 			      var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};
@@ -484,7 +485,8 @@ var momWidget = {
 			    		    //that.buttonProperty[index][i]['customType'] = 'DG';
 			    		    //break;
 						}
-						else if(that.buttonProperty[index][i]['buttonType']=='CP'){													
+						else if(that.buttonProperty[index][i]['buttonType']=='CP'){	
+																		
 							that.createCustomPop(index,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.buttonProperty[index][i]['eventType']);
 							//that.buttonProperty[index][i]['customType'] = 'CP';
 						}
@@ -838,13 +840,7 @@ var momWidget = {
 			      that.startPage[index]    = 1;
 			      that.endPage[index]      = momWidget.gridProperty[0][0]['pageRowCount'] == undefined ? 20:momWidget.gridProperty[0][0]['pageRowCount'];
 	}, undefined, undefined, this, false);
-	
 		
-			
-			 
-			  
-			 
-		  									
 		  /*
 		  ----------------------------------------------------------------------------------------------------------------------------------     
 		  * 화면별 이벤트 세팅 
@@ -5150,8 +5146,7 @@ var momWidget = {
 		
 		if (momWidget.popupProperty.length > 0){
 
-		  for(var j=0,max2=that.popupProperty[index].length; j<max2;j++){
-			
+		  for(var j=0,max2=that.popupProperty[index].length; j<max2;j++){			
 				popupDropdownId       = that.popupProperty[index][j]['dropdownId'];
 				popupDropdownParam   = that.popupProperty[index][j]['dropdownParam'] == '' ? []:that.popupProperty[index][j]['dropdownParam'];
 			    popupType        = that.popupProperty[index][j]['popupType']; 
@@ -24059,11 +24054,11 @@ var momWidget = {
 		        let tmpYn = 'N';
 		    
 		        let btnIndex = $('.customPop.in').attr('btnIndex');
-		        let index = $('.customPop.in').attr('btnIndex');
+		        let index = Number(btnIndex.split('-')[0])-1;
 		        let buttonId = 'customBtn'+btnIndex;
 				let actionType = $('#customPop-'+buttonId).attr('actionType');
 				let gridPopYn= 'N';
-				let queryId = that.pageProperty[gridIndex]['menuId']+'.'+buttonId;
+				let queryId = that.pageProperty[index]['menuId']+'.'+buttonId;
 				that.wait(0.5);
 				var buttonParam = [];
 				var extraParam = {};
@@ -24635,7 +24630,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[gridIndex]['menuId'],your);
+			        	  momWidget.findBtnClicked(index, initParam, false, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
 			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -24997,17 +24992,20 @@ var momWidget = {
 		  for(var i=0;i<popupItem.length;i++){
 			    popupId   = popupItem[i]['popupId'];
 			    popupType = popupItem[i]['popupType'];
-				searchId = popupItem[i]['popupId']+'DP'+(index+1);
+				searchId = $('#'+'customPop-'+btnId).find('#'+popupItem[i]['popupId']+'DP'+(index+1));
 				popupItem[i]['popupId']+'DP'+(index+1);
                  
 			  if(popupType=='C'){
-				 if($('#'+searchId).val().indexOf('/')>0){
-				 let splitArray = $('#'+searchId).val().split('/');
+				 if(searchId.val().indexOf('/')>0){
+				 let splitArray = searchId.val().split('/');
 				 let year = splitArray[2]
 				 let month = splitArray[1]
 				 let day = splitArray[0]
 				 let dateVal = year + month + day;
 				 param[popupId] = dateVal; 
+				}
+				else{
+				  param[popupId]=searchId.val(); 
 				}
 				
 			 }
@@ -25017,7 +25015,7 @@ var momWidget = {
              //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
 			}
 			else{
-				param[popupId]=$('#'+searchId).val(); 
+				param[popupId]=searchId.val(); 
 			}
 		  }
 		  return [param];

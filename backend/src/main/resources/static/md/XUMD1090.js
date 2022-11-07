@@ -46,6 +46,7 @@ var VIEW= {
 		else if(action=='C'&& btnId == 'customBtn11-1'){ 
 		  for(var i=0,max=param.length; i<max;i++){
 			param[i]['borId'] = checkItem[0]['borId'];
+			
 	      }
 		}
 	  }

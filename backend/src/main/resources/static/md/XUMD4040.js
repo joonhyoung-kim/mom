@@ -126,9 +126,10 @@ var VIEW= {
 	customCallInit: function(index,your,action,btnId,param,result) {
 			 if (btnId=='customBtn1-1'){
 				var checkedItems = widget.getCheckedRowItems(widget.grid[0]);
-				if(checkedItems == 0){
+				if(checkedItems.length == 0){
 					 result.msg = '데이터를 체크해주세요!';
 					 result.result = 'FAIL';
+					 return;
 				}
 				  //$('#'+'defaultPop-'+(index+1)).find('#startDateDP1').val()
 				  $('#'+'customPop-'+btnId).find('#startDateDP1').val($('#startDate'+'SP1').val());
@@ -138,9 +139,10 @@ var VIEW= {
 			}
 			else if(btnId=='customBtn1-2'){
 					var checkedItems = momWidget.getCheckedRowItems('#grid1',true);
-				if(checkedItems == 0){
-					 result.msg = '데이터를 체크해주세요!';
+				if(checkedItems.length == 0){
+					 result.msg = '데이터를 체크해주세요!!';
 					 result.result = 'FAIL';
+					 return;
 				}
 				  $('#startDateDP1-2').val($('#startDateSP1').val());
 				  $('#endDateDP1-2').val($('#endDateSP1').val());			
