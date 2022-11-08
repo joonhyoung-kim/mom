@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js" prefix="og: http://ogp.me/ns#">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" type="image/x-icon" href="/TU_Platform/Content/PopUp/AUIGridWidget/static/img/page/favicon.png">
+
+		<title>MICA AUIGrid Settings</title>
+		<meta name="description" content="amCharts live editor: create, configure, tweak, edit data, export, import, save, share in a single interface, the user-friendly way."/>
+		<link rel="image_src" href="/TU_Platform/Content/PopUp/AUIGridWidget/static/img/page/editor-shot.jpg" />
+		<link rel="publisher" href="http://plus.google.com/+amcharts/" />
+		<link rel="canonical" href="/TU_Platform/Content/PopUp/AUIGridWidget/" />
+		<meta name="twitter:card" content="photo" />
+		<meta name="twitter:site" content="@amCharts" />
+		<meta name="twitter:image" content="/static/img/page/editor-shot.jpg" />
+		<meta property="og:title" content="Live Chart Editor" />
+		<meta property="og:site_name" content="amCharts" />
+		<meta property="og:url" content="/" />
+		<meta property="og:description" content="amCharts live editor: create, configure, tweak, edit data, export, import, save, share in a single interface, the user-friendly way." />
+		<meta property="og:type" content="article" />
+		<meta property="og:image" content="/static/img/page/editor-shot.jpg" />
+		<meta property="fb:app_id" content="563198717101351" />
+
+        <!-- Top Hide -->
+        <style type="text/css">
+            .app-header, .navbar-right {display:none !important }
+            .app-body {top:0 !important }
+            .app-editor-2-2 {
+                padding: 10px 10px 0 0;
+                font-size: 11px;
+            }
+        </style>
+		<!-- CSS -->
+		<!--<link rel="stylesheet" href="/Content/liveChart/vendor/jquery/css/ui-amcharts/jquery-ui-1.10.4.custom.css">-->
+		
+<!-- 		<link rel="stylesheet" type="text/css" href="/micaweb/Admin/css/designer.css"> -->
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/chosen/jquery.chosen.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/spectrum/jquery.spectrum.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/handsontable/jquery.handsontable.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/handsontable/jquery.handsontable.removeRow.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/font-awesome/css/font-awesome.css">
+
+        <!-- 
+        <link rel="stylesheet" type="text/css" href="/micaweb/Admin/css/mica.css">
+         -->
+
+		<!-- CSS; EDITOR -->
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/dist/css/ameditor.core.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/dist/css/ameditor.icons.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/dist/css/ameditor.table.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/PopUp/AUIGridWidget/dist/css/ameditor.share.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/AUIGrid/AUIGrid_style.css">
+		<link rel="stylesheet" href="/TU_Platform/Content/css/auigridEditor.css">
+		
+		<!-- JS; AMCHARTS -->
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/amcharts/amcharts.js"></script>
+		<!-- JS; LIBS -->
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/jquery-ui-1.10.4.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/router/jquery.router.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/layout/jquery.layout.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/chosen/jquery.chosen.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/spectrum/jquery.spectrum.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/handsontable/jquery.handsontable.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jquery/plugins/handsontable/jquery.handsontable.removeRow.js"></script>
+		<script type='text/javascript' src="/TU_Platform/Content/js/mica/mica.common.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/modernizr/modernizr-2.8.1.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/jsonlite/jsonlite.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/vendor/zeroclipboard/ZeroClipboard.js"></script>
+
+		<!-- JS; EDITOR -->
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/dist/gmeditor.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/dist/gmeditor.config.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/dist/ameditor.core.js"></script>
+		<script type="text/javascript">
+		   // AmCharts.Editor.CONSTANT.URL_AMCHARTS = 'http://www.amcharts.com/';
+		    AmCharts.Editor.CONSTANT.URL_BASE = '/TU_Platform/Content/PopUp/AUIGridWidget/';
+		    AmCharts.Editor.CONSTANT.URL_CDN = '/';
+		    AmCharts.Editor.CONSTANT.URL_CDN_AMCHARTS = 'http://cdn.amcharts.com/';
+		    AmCharts.Editor.CONSTANT.URL_API = 'http://www.amcharts.com/wp-admin/admin-ajax.php';
+		    AmCharts.Editor.CONSTANT.URL_PATH = '/';
+		    AmCharts.Editor.CONSTANT.RND_KEY = '181114_1';
+		    AmCharts.Editor.CONSTANT.CHARTS_CREATED = 4109;
+		    AmCharts.Editor.DEBUG = false;
+		</script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/dist/ameditor.handler.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/dist/ameditor.router.js"></script>
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/dist/lang/ameditor.en-US.js"></script>
+
+		<script type="text/javascript" src="/TU_Platform/Content/PopUp/AUIGridWidget/dist/section/gmeditor.editor.js"></script>
+        <!-- 
+    	<script src='/TU_Platform/Content/theme/js/plugins/jqGrid/i18n/grid.locale-en.js'></script>
+        <link href="/TU_Platform/ontent/theme/css/jqGrid/ui.jqgrid.css" rel="stylesheet" type="text/css" id="theme">
+         -->
+        <script src="/TU_Platform/Content/AUIGrid/AUIGridLicense.js"></script>
+        <script src="/TU_Platform/Content/AUIGrid/AUIGrid.js"></script>
+        <!-- 
+        <script type="text/javascript" src="/micaweb/Admin/js/jsonfn.js"></script>
+         -->
+		<link href="/TU_Platform/Content/jsonEditor/jsoneditor.css" type="text/css" rel="stylesheet" />
+		<script src="/TU_Platform/Content/jsonEditor/jsoneditor.js"></script>
+	</head>
+	<body class="glamorize fx-all-250">
+		<div class="app">
+			<section class="app-section hidden app-section-landing overflow-auto">
+				<header class="app-header app-header-site">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">
+								<nav class="app-nav navbar navbar-amcharts" role="navigation">
+									<div class="app-nav-brand">
+										<div class="app-nav-brand-inner">
+											<a href="http://www.amcharts.com"><img src="/TU_Platform/Content/PopUp/AUIGridWidget/static/img/page/logo_site.png" title="JavaScript charts and maps" alt=""></a>
+										</div>
+									</div>
+									<ul class="nav navbar-nav navbar-right navbar-signin">
+										<li class="am-login-label">
+											<span>Want to see your saved charts?</span>
+										</li>
+										<li class="am-menu-signin dropdown">
+											<a href="/micaweb/Content/liveChart/signin/" class="dropdown-toggle" data-toggle="dropdown">
+												<span class="btn btn-flat btn-lightblue">
+													<span>Sign In</span>
+												</span>
+											</a>
+											<ul class="dropdown-menu dropdown-menu-right"></ul>
+										</li>
+									</ul>
+									<ul class="nav navbar-nav navbar-right navbar-user hidden">
+										<li class="am-login-label disabled">
+											<span>Logged in as</span>
+										</li>
+										<li class="am-menu-user dropdown">
+											<a href="/micaweb/Content/liveChart/user/" class="dropdown-toggle" data-toggle="dropdown">
+												<span class="am-user-name">Mr. Who</span>
+												<span class="btn btn-flat btn-lightblue btn-usercharts">
+													<span class="am-user-charts">0</span>
+												</span>
+											</a>
+											<ul class="dropdown-menu dropdown-menu-right"></ul>
+										</li>
+									</ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</header>
+				
+                 
+                
+                <div class="app-landing">
+					<div class="app-landing-header">
+						<div class="container full-height">
+							<div class="row full-height">
+								<div class="col-sm-12 full-height text-center">
+									<h1>Live Editor - Make your charts online</h1>
+									<span class="am-charts-counter"></span>
+									<div>
+										<a href="#" class="btn btn-flat btn-lightblue btn-makechart">
+											<span>Make a <strong>Chart</strong></span>
+										</a>
+										<a href="#" class="btn btn-flat btn-lightblue btn-upgrade hidden">
+											<span>We are sorry, but you need a modern browser to use the editor</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="app-landing-cover" style="background-image: url(./static/img/cover/2.jpg);"></div>
+					</div>
+
+					<div class="app-landing-body">
+						<div class="container">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="app-landing-usercharts"></div>
+									<div class="app-landing-publiccharts"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="app-landing-footer">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">
+								<div style="width: 20%;float: left;">
+									<div>
+										<h3>Products</h3>
+										<ul>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/javascript-charts/">JavaScript Charts</a></li>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/stock-chart/">Javascript Stock Chart</a></li>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/javascript-maps/">Interactive Javascript Maps</a></li>
+										</ul>
+									</div>
+								</div>
+								<div style="width: 20%;float: left;">
+									<div>
+										<h3>Related</h3>
+										<ul>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/visited_countries/">Visited Countries Map</a></li>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/visited_states/">Visited States Map</a></li>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/about/">About</a></li>
+										</ul>
+									</div>
+								</div>
+								<div style="width: 20%;float: left;">
+									<div>
+										<h3>Get Social</h3>
+										<ul>
+											<li><a href="/micaweb/Content/liveChart//www.facebook.com/amcharts"><i class="fa fa-facebook-square color-gray"></i> Facebook</a></li>
+											<li><a href="/micaweb/Content/liveChart//www.twitter.com/amcharts"><i class="fa fa-twitter color-gray"></i>  Twitter</a></li>
+											<li><a href="/micaweb/Content/liveChart//plus.google.com/+amcharts/"><i class="fa fa-google-plus-square color-gray"></i> Google+</a></li>
+										</ul>
+									</div>
+								</div>
+								<div style="width: 20%;float: left;">
+									<div>
+										<h3>Resources</h3>
+										<ul>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/inspiration/">Inspiration Gallery</a></li>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/svg-maps/">Free SVG Maps</a></li>
+											<li><a href="/micaweb/Content/liveChart//feeds.feedburner.com/amcharts">RSS feed of our blog</a></li>
+										</ul>
+									</div>
+								</div>
+								<div style="width: 20%;float: left;">
+									<div>
+										<h3>Contact Us</h3>
+										<ul>
+											<li><a href="mailto:contact@amcharts.com">contact@amcharts.com</a></li>
+											<li><a href="/micaweb/Content/liveChart//www.amcharts.com/support/">Get Support</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="app-fieldset text-center">
+									<div class="app-fieldset-legend">Copyright © 2014, amcharts.com. All rights reserved.</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="app-wave wave-light"></div>
+				</div>
+			</section>
+			<section class="app-section hidden app-section-editor"></section>
+			<section class="app-section hidden app-section-share fx-all-250"></section>
+			<div class="app-modal am-editor-modal modal fade in">
+				<div class="modal-dialog">
+					<div class="modal-content"></div>
+				</div>
+			</div>
+			<div class="modal fade" id="headerGrouping" tabindex="-1" role="dialog" aria-labelledby="headerGroupingLabel">
+		    	<div class="modal-dialog modal-sm">
+		    		<div class="modal-content" style="width:700px;height:500px">
+			        	<div class="modal-header" style="height:60px">
+		            		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+			        		<h4 class="modal-title" id="headerGroupingLabel">Header Grouping<a class="anchorjs-link" href="#headerGroupingLabel"><span class="anchorjs-icon"></span></a></h4>
+			        	</div>
+			       		<div class="modal-body" id = "headerGroupingBody" style ="height:370px">
+			       			<div class="left" >
+			       				<ul class="menu-group-items nav navbar-stacked navbar-headerGrouping-setting columnList">
+				       				<li class="menu-item menu-item-textbox_num menu-item-null clearfix">
+				       					<div class="menu-item-name" style="height:30px">
+				       							<span title="" data-original-title="" class="menu-item-tooltip" style="font-size: 16px;">header ID : </span>
+			       						</div>
+			       						<div class="menu-item-control" style ="width: 90%;height:35px">
+			       							<div class="ui-control ui-control-text">
+			       								<input type="text" id="txt_headerId"">
+		       								</div>
+	       								</div>
+	   								</li>
+				       				<li class="menu-item menu-item-textbox_num menu-item-null clearfix">
+				       					<div class="menu-item-name" style="height:30px">
+				       							<span title="" data-original-title="" class="menu-item-tooltip" style="font-size: 16px;">header name : </span>
+			       						</div>
+			       						<div class="menu-item-control" style ="width: 90%;height:35px">
+			       							<div class="ui-control ui-control-text">
+			       								<input type="text" id="txt_headerName"">
+		       								</div>
+	       								</div>
+	   								</li>
+   								</ul>
+			       			</div>
+			       			<div class="right" >
+			       				<ul class='menu-group-items nav navbar-stacked navbar-headerGrouping columnList' style="border-left : 2px solid #535364;font-size : 15px"></ul>
+		       				</div>
+		        		</div>
+		        		<div class="modal-footer" style ="height:70px" >
+		        			 <div class="pop-footer" style="height: 35px; line-height: 35px; text-align: center;">
+			                    <a id="btn_groupingOK" class="w-inline-block pop-btn btn-ok btn-info" href="#" style=" width: 100px; height: 25px; margin-top: 5px; margin-right: 5px; margin-left: 5px; line-height: 27px;">
+			                        <div class="w-icon fa fa-pencil icon" style="margin-top: 0px; margin-right: 5px; font-size: 12px;"></div>
+			                        <div class="pop-txt" style="display: inline-block;"><span multi-lang="m_confirm"> 확 인</span></div>
+			                    </a>
+			                    <a id="btn_groupingCancel" class="w-inline-block pop-btn btn-grey btn-cancel" href="#" style=" width: 100px; height: 25px; margin-top: 5px; margin-right: 5px; margin-left: 5px; line-height: 27px;" data-dismiss="micaModal">
+			                        <div class="w-icon fa fa-close" style="margin-top: 0px; margin-right: 5px; font-size: 12px;"></div>
+			                        <div class="pop-txt" style="display: inline-block;"><span multi-lang="m_cancel"> 취 소</span></div>
+			                    </a>
+		                	</div>
+		        		</div>
+			      	</div><!-- /.modal-content -->
+			    </div><!-- /.modal-dialog -->
+			</div>
+			<div id="editPop" style="position: fixed; width: 100%; height: 100%; top: 0; left: 0px; display: inline-flex;">
+				<div style="width: 60px; height:100%; background: #ffffffb0;">
+					<a id="btnEditSave" class="am-data-add-page w-inline-block searchbutton" href="#" style="position: absolute;left : 9px;top: 10px;">
+	              		<div multi-lang="" class="textblock"><!--<i class="fa fa-check" aria-hidden="true"></i>-->Save</div>
+	              	</a>
+	              	<a id="btnEditCancel" class="am-data-add-page w-inline-block searchbutton" href="#" style="position: absolute;left : 3px;top: 47px;">
+	              		<div multi-lang="" class="textblock"><!--<i class="fa fa-check" aria-hidden="true"></i>-->Cancel</div>
+	              	</a>
+				</div>
+				<div id="jsonEditor" style="width: calc(100% - 60px); height:100%; background: white; ">
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop modal-backdrop-init fade in"></div>
+	</body>
+</html>

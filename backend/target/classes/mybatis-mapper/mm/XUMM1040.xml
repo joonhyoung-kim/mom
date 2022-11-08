@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUMM1040">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+		SELECT MPR.PR_NO
+		     , MPR.PR_NO AS KEY_ID
+		     , MPR.PR_TYPE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPR.COMPANY_CD, MPR.DIVISION_CD, 'MM0001', MPR.PR_TYPE, 'KR') FROM DUAL)  AS PR_TYPE_NM
+		     , MPR.PR_TITLE
+		     , MPR.REFERENCE_NO
+		      , MPR.REQUEST_DEPT_CD
+		     , (SELECT MOM_COMMON_PKG.FN_GET_DEPARTMENT_NAME(MPR.COMPANY_CD, MPR.DIVISION_CD, MPR.REQUEST_DEPT_CD) FROM DUAL) AS REQUEST_DEPT_NM
+		     , MPR.REQUEST_REASON
+		     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPR.COMPANY_CD, MPR.DIVISION_CD, 'MM0003', MPR.REQUEST_REASON, 'KR') FROM DUAL)  AS REQUEST_REASON_NM
+		     , TO_CHAR(MPR.REQUEST_DATE ,'YYYY-MM-DD')     AS REQUEST_DATE
+		     , MPR.REQUEST_USER_NO
+		     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MPR.COMPANY_CD, MPR.DIVISION_CD, MPR.REQUEST_USER_NO) FROM DUAL ) AS REQUEST_USER_NM
+		     , MPR.EXPECTED_AMOUNT
+		     , MPR.DESCRIPTION 
+		     , MPR.COMPANY_CD
+		     , MPR.DIVISION_CD
+		FROM   MOM_PR_MST MPR
+		WHERE  MPR.STATE = 'PRG'
+		AND    MPR.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+		AND    MPR.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	    AND    MPR.REQUEST_DATE BETWEEN TO_DATE(#{requestDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{requestDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
+	 
+	    <if test="prNo != null and prNo != ''">
+	    AND (UPPER(MPR.PR_NO) LIKE '%' || UPPER(#{prNo, jdbcType=VARCHAR}) || '%')	  
+	    </if>	
+	    <if test="referenceNo != null and referenceNo != ''">
+		AND (UPPER(MPR.REFERENCE_NO) LIKE '%' || UPPER(#{referenceNo, jdbcType=VARCHAR}) || '%')	  
+		</if>	
+		<if test="requestDeptCd != null and requestDeptCd != ''">
+		AND MPR.REQUEST_DEPT_CD IN (${requestDeptCd})
+		</if>		
+		 <if test="prTitle != null and prTitle != ''">
+	    AND (UPPER(MPR.PR_TITLE) LIKE '%' || UPPER(#{prTitle, jdbcType=VARCHAR}) || '%')	  
+	    </if>	
+	
+    ORDER BY MPR.PR_NO,MPR.PR_TYPE,MPR.REQUEST_DEPT_CD
+
+	</select>
+	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+		SELECT  MPD.PR_NO
+	      , MPD.PR_SEQ
+	      , MPD.ITEM_ID
+	      , MI.ITEM_NM
+	      , MI.ITEM_SPEC
+	      , MI.ITEM_TYPE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM
+	      , MPD.DUE_DATE
+	      , MPD.STATE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MM0004', MPD.STATE, 'KR') FROM DUAL)  AS STATE_NM
+	      , NVL(MPD.REQUEST_QTY,0) AS REQUEST_QTY
+	      , NVL(MPD.CONFIRM_QTY, NVL(MPD.REQUEST_QTY,0))  AS  CONFIRM_QTY
+	      , MPD.PO_QTY
+	      , NVL(MPD.CONFIRM_QTY, MPD.REQUEST_QTY)   - NVL(MPD.PO_QTY,0) AS REMAIN_QTY
+	      , MPD.CURRENCY_CD
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'SM0017', MPD.CURRENCY_CD, 'KR') FROM DUAL)  AS CURRENCY_NM
+	      , MPD.UNIT_PRICE
+	      , MPD.AMOUNT
+	      , MPD.LOCAL_AMOUNT
+	      , MI.IN_LOCATION_CD  AS DEPARTURE_LOCATION_CD
+	      , (SELECT MOM_COMMON_PKG.fn_get_location_name(MPD.COMPANY_CD,MPD.DIVISION_CD,MI.IN_LOCATION_CD) FROM DUAL) AS DEPARTURE_LOCATION_NM
+	      , MI.MAKER
+	      , MI.LOT_MANAGEMENT_YN
+		  , MI.PRICE_SYNC_YN  
+		  , MI.PO_OVER_RECEIPT_RATE 
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MD0007', MI.MAKER, 'KR') FROM DUAL)  AS MAKER_NM
+	      , MI.VENDOR_CD
+	      , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPD.COMPANY_CD,MPD.DIVISION_CD,MI.VENDOR_CD) FROM DUAL) AS VENDOR_NM
+	      , MI.DEPARTURE_VENDOR_CD
+	      , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPD.COMPANY_CD,MPD.DIVISION_CD,MI.DEPARTURE_VENDOR_CD) FROM DUAL) AS DEPARTURE_VENDOR_NM
+	      , MI.PROCUREMENT_TYPE
+	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MD0004', MI.PROCUREMENT_TYPE, 'KR') FROM DUAL)  AS PROCUREMENT_TYPE_NM
+	      , MPD.DESCRIPTION
+	      , MPD.COMPANY_CD
+	      , MPD.DIVISION_CD
+	      , MPD.PURCHASE_REQUEST_ID
+	      , MPD.PURCHASE_REQUEST_ID AS KEY_ID
+	FROM    MOM_PR_DTL MPD
+	      , MOM_ITEM MI
+	WHERE   MPD.COMPANY_CD   = MI.COMPANY_CD
+	AND     MPD.DIVISION_CD  = MI.DIVISION_CD
+	AND     MPD.ITEM_ID      = MI.ITEM_ID
+	AND     MPD.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
+	AND     MPD.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	AND     MPD.PR_NO        = #{prNo, jdbcType=VARCHAR}
+	ORDER BY MPD.PR_NO
+	    , MPD.PR_SEQ
+</select>
+   <delete id="remove_customBtn1-1" parameterType="java.util.List">
+       DELETE FROM MOM_PROC_PR_MST_CONFIRM
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>  
+   <insert id="create_customBtn1-1" parameterType="java.util.List">
+	 <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+	     INTO MOM_PROC_PR_MST_CONFIRM (
+	                  COMPANY_CD
+	                , DIVISION_CD
+	                , PR_NO
+	                , VAL_MSG
+	                , MULTI_MSG
+	                , CREATE_BY
+	                , CREATE_DATE )
+	      VALUES 
+	              (   #{item.companyCd, jdbcType=VARCHAR}
+	                , #{item.divisionCd, jdbcType=VARCHAR}
+	                , #{item.prNo, jdbcType=VARCHAR}
+	                , #{item.valMsg, jdbcType=VARCHAR}
+	                , #{item.multiMsg, jdbcType=VARCHAR}
+	                , #{item.userId, jdbcType=VARCHAR}
+	                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+	              )
+	 </foreach>
+  </insert>
+    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MATERIAL_PKG.sp_confirm_pr_mst(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+    </select>  
+     <delete id="remove_customBtn2-1" parameterType="java.util.List">
+       DELETE FROM MOM_PROC_PR_DTL_CONFIRM
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>  
+   <insert id="create_customBtn2-1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PROC_PR_DTL_CONFIRM (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PR_NO
+                , PURCHASE_REQUEST_ID
+                , CONFIRM_QTY
+                , VAL_MSG
+                , MULTI_MSG
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.prNo, jdbcType=VARCHAR}
+                , #{item.purchaseRequestId, jdbcType=VARCHAR}
+                , #{item.confirmQty, jdbcType=NUMERIC}
+                , #{item.valMsg, jdbcType=VARCHAR}
+                , #{item.multiMsg, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+    <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_MATERIAL_PKG.sp_confirm_pr_dtl(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+    </select>  
+</mapper>

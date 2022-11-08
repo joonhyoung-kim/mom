@@ -1,0 +1,158 @@
+/*
+** SHARE; CHART
+*/
+.app-section-share {
+background-repeat: no-repeat;
+background-size: cover;
+}
+.app-section-share .modal-content {
+border: none;
+max-width: 100%;
+max-height: 100%;
+}
+.app-section-share .am-share-chart {
+width: 100%;
+height: 100%;
+}
+.app-section-share .am-share-modal {
+z-index: 10;
+}
+.app-section-share .am-share-modal {
+display: table;
+width: 100%;
+height: 100%;
+}
+.app-section-share .am-share-modal .modal-dialog {
+display: table-cell;
+width: 100%;
+height: 100%;
+vertical-align: middle;
+}
+.app-section-share .am-share-modal .modal-content {
+margin: 0 auto;
+}
+
+/* MENU */
+.app-section-share .app-menu {
+position: absolute;
+width: 330px;
+right: -330px;
+z-index: 1337;
+top: 15px;
+overflow: visible;
+background: none;
+}
+.app-section-share .app-menu.active {
+right: 0;
+}
+.app-section-share .app-menu.active > ul > li {
+display: none;
+}
+.app-section-share .app-menu.active > ul > li.active {
+display: block;
+}
+.app-section-share .app-menu .menu-group-title,
+.app-section-share .app-menu.active .menu-group-title,
+.app-section-share .app-menu.active .menu-group-title:hover {
+text-transform: none;
+left: 0;
+border-radius: 10px 0 0 10px;
+margin: 0 -15px 0 -85px;
+padding: 25px 0;
+font-size: 16px;
+}
+.app-section-share .app-menu .menu-group-title:hover {
+left: -260px;
+margin: 0;
+}
+.app-section-share .app-menu > ul,
+.app-section-share .app-menu > ul > li.active,
+.app-section-share .app-menu > ul > li.active > ul,
+.app-section-share .app-menu > ul > li.active > div {
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+display: block;
+}
+.app-section-share .app-menu > ul > li {
+margin: 0 0 20px 0;
+}
+.app-section-share .app-menu > ul > li.active {
+z-index: 10;
+margin: 0;
+}
+.app-section-share .app-menu > ul > li > div > ul {
+margin: 75px 15px 25px 15px;
+}
+.app-section-share .app-menu > ul > li > div {
+background-color: #FFFFFF;
+overflow: auto;
+display: none;
+}
+.app-section-share .app-menu .menu-item-stacked .menu-item-control {
+margin: 5px 0 0 0  !important;
+}
+.app-section-share .app-menu .menu-group-title i {
+position: absolute;
+top: 15px;
+left: 15px;
+width: 45px;
+height: 45px;
+margin: 0;
+}
+.app-section-share .menu-item-background .menu-item-name {
+width: 100% !important;
+}
+.app-section-share .menu-item-background ul {
+list-style: none;
+margin: 0;
+padding: 0;
+}
+.app-section-share .menu-item-background ul li {
+float: left;
+width: 50%;
+height: 120px;
+border-style: none solid solid none;
+border-width: 1px;
+border-color: rgba(0,0,0,.05);
+cursor: pointer;
+position: relative;
+padding: 5px;
+}
+.app-section-share .menu-item-background ul li:nth-child(2n) {
+border-style: none none solid none;
+}
+.app-section-share .menu-item-background ul li a {
+background-repeat: no-repeat;
+background-position: center;
+background-size: cover;
+display: block;
+width: 100%;
+height: 100%;
+}
+/* HOVER */
+.app-section-share .menu-item-background ul li a:hover {
+opacity: .8;
+}
+
+/*
+** COPY CAT
+*/
+.copyCat {
+position: absolute;
+top: 3px;
+right: 3px;
+cursor: pointer;
+}
+.copyCat i {
+margin: 3px;
+}
+
+/*
+** HIDE SHARETHIS WRAPPER
+*/
+.stwrapper {
+display: none !important;
+}

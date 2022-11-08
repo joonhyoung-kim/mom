@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUSM3040">
+  <select id="get_pivotLang" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	  SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG
+	  FROM   MOM_CODE MC
+	  WHERE  MC.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR} 
+	  AND    MC.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	  AND    MC.GROUP_CD     = #{groupCd, jdbcType=VARCHAR}
+	  AND    MC.USE_YN = 'Y'
+  </select>
+  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	  SELECT  A.MSG_TYPE 
+		    , MIN(A.MSG_TYPE_NM)  AS MSG_TYPE_NM
+		    , A.MSG_CD
+		    , A.MSG_CD AS KEY_ID 
+		    , MIN(A.DESCRIPTION)  AS DESCRIPTION
+		    , MIN(A.USE_YN)       AS USE_YN
+		    , A.COMPANY_CD
+		    , MIN(A.COMPANY_NM)   AS COMPANY_NM
+		    , A.DIVISION_CD
+		    , MIN(A.DIVISION_NM)  AS DIVISION_NM
+		    , MIN(DECODE(A.LANG_CD, 'KR', A.MSG_NM, '')) AS MSG_NM_KR
+		    , MIN(DECODE(A.LANG_CD, 'EN', A.MSG_NM, '')) AS MSG_NM_EN
+		    , MIN(DECODE(A.LANG_CD, 'CN', A.MSG_NM, '')) AS MSG_NM_CN
+      FROM  (SELECT MM.LANG_CD
+                  , MM.MSG_TYPE
+                  , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MM.COMPANY_CD,MM.DIVISION_CD,'SM0013', MM.MSG_TYPE, #{langCd, jdbcType=VARCHAR} )  FROM DUAL ) AS MSG_TYPE_NM
+                  , MM.MSG_CD
+                  , MM.MSG_NM
+                  , CASE WHEN MM.MSG_TYPE = 'MENU' THEN
+                        (SELECT MDM.DESCRIPTION 
+                         FROM   MOM_DIVISION_MENU MDM 
+                         WHERE  MDM.COMPANY_CD = MM.COMPANY_CD
+                         AND    MDM.DIVISION_CD = MM.DIVISION_CD
+                         AND    MDM.MENU_ID = MM.MSG_CD )
+                    WHEN MM.MSG_TYPE = 'CODE' THEN
+                        (SELECT MC.DESCRIPTION 
+                         FROM   MOM_CODE MC 
+                         WHERE  MC.COMPANY_CD  = MM.COMPANY_CD
+                         AND    MC.DIVISION_CD = MM.DIVISION_CD
+                         AND    MC.GROUP_CD||'_'||MC.CODE = MM.MSG_CD )
+                    ELSE
+                        MM.DESCRIPTION
+                    END   AS DESCRIPTION
+                  , MM.USE_YN
+                  , MCD.COMPANY_CD
+                  , MCD.COMPANY_NM
+                  , MCD.DIVISION_CD
+                  , MCD.DIVISION_NM
+             FROM   MOM_COM_DIV_V MCD
+                  , MOM_MESSAGE  MM  
+             WHERE  MCD.COMPANY_CD   = MM.COMPANY_CD
+             AND    MCD.DIVISION_CD  = MM.DIVISION_CD
+             AND    MM.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+             AND    MM.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+             <if test="msgType != null and msgType != ''">
+		     AND    MM.MSG_TYPE = #{msgType, jdbcType=VARCHAR}
+		     </if> 
+		     <if test="msgCd != null and msgCd != ''">
+			 AND   (UPPER(MM.MSG_CD) LIKE '%' || UPPER(#{msgCd, jdbcType=VARCHAR}) || '%' )
+			 </if> 
+			 <if test="msgNm != null and msgNm != ''">
+		     AND    MM.MSG_CD IN ( SELECT MMS.MSG_CD 
+		                             FROM   MOM_MESSAGE MMS
+		                             WHERE  MMS.COMPANY_CD  = MM.COMPANY_CD
+		                             AND    MMS.DIVISION_CD = MMS.DIVISION_CD
+		                             AND    TRIM(UPPER(MMS.MSG_NM)) LIKE '%' || TRIM(UPPER(#{msgNm, jdbcType=VARCHAR})) || '%' )
+		        
+			  </if> 
+              ) A
+			GROUP BY A.COMPANY_CD
+			       , A.DIVISION_CD
+			       , A.MSG_TYPE
+			       , A.MSG_CD
+			ORDER BY MSG_TYPE, MSG_CD  
+   </select>
+     <insert id="create_customBtn1-1-11" parameterType="java.util.List">
+     <foreach collection="list" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+       INTO MOM_MESSAGE (
+                  COMPANY_CD
+                , DIVISION_CD
+                , LANG_CD
+                , MSG_TYPE
+                , MSG_CD
+                , MSG_NM
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+
+       VALUES
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.langCd2, jdbcType=VARCHAR}
+                , #{item.msgType, jdbcType=VARCHAR}
+                , #{item.msgCd, jdbcType=VARCHAR}
+                , #{item.msgNm, jdbcType=VARCHAR}
+                , NVL(#{item.useYn, jdbcType=VARCHAR},'Y')
+                , NVL(#{item.description, jdbcType=VARCHAR},'')
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+    </foreach>
+  </insert>
+     <insert id="create_customBtn1-3-31" parameterType="java.util.List">
+     <foreach collection="list" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+       INTO MOM_MESSAGE (
+                  COMPANY_CD
+                , DIVISION_CD
+                , LANG_CD
+                , MSG_TYPE
+                , MSG_CD
+                , MSG_NM
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+
+       VALUES
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.langCd2, jdbcType=VARCHAR}
+                , #{item.msgType, jdbcType=VARCHAR}
+                , #{item.msgCd, jdbcType=VARCHAR}
+                , #{item.msgNm, jdbcType=VARCHAR}
+                , NVL(#{item.useYn, jdbcType=VARCHAR},'Y')
+                , NVL(#{item.description, jdbcType=VARCHAR},'')
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+    </foreach>
+  </insert>
+    <update id="modify_customBtn1-2-21" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_MESSAGE
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , LANG_CD = #{item.langCd2, jdbcType=VARCHAR}
+           , MSG_TYPE = #{item.msgType, jdbcType=VARCHAR}
+           , MSG_CD = #{item.msgCd, jdbcType=VARCHAR}
+           , MSG_NM = #{item.msgNm, jdbcType=VARCHAR}
+           , USE_YN = NVL(#{item.useYn, jdbcType=VARCHAR},'Y')
+           , DESCRIPTION = NVL(#{item.description, jdbcType=VARCHAR},'')
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    LANG_CD     = #{item.langCd2, jdbcType=VARCHAR}
+      AND    MSG_CD      = #{item.msgCd, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+   <insert id="create_createBtn1" parameterType="java.util.List">
+     <foreach collection="list" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+       INTO MOM_MESSAGE (
+                  COMPANY_CD
+                , DIVISION_CD
+                , LANG_CD
+                , MSG_TYPE
+                , MSG_CD
+                , MSG_NM
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+
+       VALUES
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.langCd2, jdbcType=VARCHAR}
+                , #{item.msgType, jdbcType=VARCHAR}
+                , #{item.msgCd, jdbcType=VARCHAR}
+                , #{item.msgNm, jdbcType=VARCHAR}
+                , NVL(#{item.useYn, jdbcType=VARCHAR},'Y')
+                , NVL(#{item.description, jdbcType=VARCHAR},'')
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+    </foreach>
+  </insert>
+  <update id="modify_editBtn1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_MESSAGE
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , LANG_CD = #{item.langCd2, jdbcType=VARCHAR}
+           , MSG_TYPE = #{item.msgType, jdbcType=VARCHAR}
+           , MSG_CD = #{item.msgCd, jdbcType=VARCHAR}
+           , MSG_NM = #{item.msgNm, jdbcType=VARCHAR}
+           , USE_YN = NVL(#{item.useYn, jdbcType=VARCHAR},'Y')
+           , DESCRIPTION = NVL(#{item.description, jdbcType=VARCHAR},'')
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    LANG_CD     = #{item.langCd2, jdbcType=VARCHAR}
+      AND    MSG_CD      = #{item.msgCd, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <delete id="remove_delBtn1" parameterType="java.util.List">
+      DELETE FROM MOM_MESSAGE
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  MSG_CD = #{item.msgCd, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+  </delete>  
+  
+</mapper>

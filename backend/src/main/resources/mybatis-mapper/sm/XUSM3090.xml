@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUSM3090">
+  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	  SELECT   MCD.COMPANY_CD
+		     , MCD.COMPANY_NM
+		     , MCD.DIVISION_CD
+		     , MCD.DIVISION_NM
+		     , MPC.PO_TYPE  
+		     , MPC.PO_TYPE_NM
+		     , MPC.IO_TYPE
+		     , (SELECT MOM_COMMON_PKG.FN_GET_IO_TYPE_NAME(MPC.COMPANY_CD,MPC.DIVISION_CD, MPC.IO_TYPE) FROM DUAL) AS IO_TYPE_NM        
+		     , MPC.USE_YN
+		     , MPC.DESCRIPTION
+		     , MPC.UPDATE_BY
+		     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MPC.COMPANY_CD, MPC.DIVISION_CD, MPC.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		     , TO_CHAR(MPC.UPDATE_DATE,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		     , MPC.PO_TYPE  || '_' || MPC.IO_TYPE AS KEY_ID
+	  FROM     MOM_COM_DIV_V MCD
+             , MOM_PO_CATEGORY MPC
+      WHERE    MCD.COMPANY_CD   = MPC.COMPANY_CD
+      AND      MCD.DIVISION_CD  = MPC.DIVISION_CD     
+      <if test="poType != null and poType != ''">
+	  AND MPC.PO_TYPE  IN (${poType})
+	  </if>
+	  <if test="ioType != null and ioType!= ''">
+	  AND MPC.IO_TYPE  IN (${ioType})
+	  </if>
+	  <if test="useYn != null and useYn != ''">
+	  AND MPC.USE_YN = #{useYn, jdbcType=VARCHAR}
+	  </if>
+      ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MPC.PO_TYPE_NM 
+  </select>
+  <insert id="create_createBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PO_CATEGORY (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PO_TYPE
+                , PO_TYPE_NM
+                , IO_TYPE
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.poType, jdbcType=VARCHAR}
+                , #{item.poTypeNm, jdbcType=VARCHAR}
+                , #{item.ioType, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+   <insert id="create_copyBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PO_CATEGORY (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PO_TYPE
+                , PO_TYPE_NM
+                , IO_TYPE
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.poType, jdbcType=VARCHAR}
+                , #{item.poTypeNm, jdbcType=VARCHAR}
+                , #{item.ioType, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+  <update id="modify_editBtn1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_PO_CATEGORY
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , PO_TYPE = #{item.poType, jdbcType=VARCHAR}
+           , PO_TYPE_NM = #{item.poTypeNm, jdbcType=VARCHAR}
+           , IO_TYPE = #{item.ioType, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    PO_TYPE = #{item.poType, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <delete id="remove_delBtn1" parameterType="java.util.List">
+      DELETE FROM MOM_PO_CATEGORY
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  PO_TYPE = #{item.poType, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+  </delete>
+</mapper>

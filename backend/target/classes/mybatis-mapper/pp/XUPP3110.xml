@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUPP3110">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+		SELECT MWR.WORK_ORDER_ID
+	     , MWR.WO_RESULT_ID
+	     , MWR.WORK_ORDER_ID || '_' || MWR.WO_RESULT_ID  || '_' || MWRP.OPERATION_ID AS KEY_ID
+	     , MWO.ITEM_ID     
+	     , MI.ITEM_NM
+	     , MI.ITEM_SPEC
+	     , MI.ITEM_TYPE
+	     , MI.LOT_MANAGEMENT_YN
+		 , MI.PRICE_SYNC_YN  
+		 , MI.PO_OVER_RECEIPT_RATE 
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD, MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM
+	     , MWO.WO_STATE
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWO.COMPANY_CD, MWO.DIVISION_CD, 'PP0003', MWO.WO_STATE, 'KR') FROM DUAL)  AS WO_STATE_NM
+	     , MWR.WORK_CENTER_CD
+	     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(MWR.COMPANY_CD, MWR.DIVISION_CD, MWR.WORK_CENTER_CD) FROM DUAL) AS WORK_CENTER_NM
+	     , MWO.WO_QTY 
+	     , TO_CHAR(MWR.WORK_DAY ,'YYYY-MM-DD')                AS RESULT_DATE
+	     , TO_CHAR(MWR.START_TIME ,'YYYY-MM-DD HH24:MI:SS')   AS RESULT_START_TIME
+	     , TO_CHAR(MWR.END_TIME ,'YYYY-MM-DD HH24:MI:SS')     AS RESULT_END_TIME
+	     , MWR.SHIFT_CD         AS SHIFT_DETAIL_CD
+	     , (SELECT MOM_COMMON_PKG.FN_GET_SHIFT_DETAIL_NAME(MWR.COMPANY_CD, MWR.DIVISION_CD, MWR.SHIFT_CD) FROM DUAL)  AS SHIFT_DETAIL_NM
+	     , MWR.GOOD_QTY         AS RESULT_GOOD_QTY                                           
+	     , MWR.DEFECT_QTY       AS RESULT_DEFECT_QTY
+	     , MWR.STATE            AS RESULT_STATE
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWR.COMPANY_CD, MWR.DIVISION_CD, 'PP0009', MWR.STATE, 'KR') FROM DUAL)  AS RESULT_STATE_NM
+	     , MWRP.OPERATION_SEQ
+	     , MWRP.OPERATION_ID
+	     , (SELECT MOM_COMMON_PKG.FN_GET_OPERATION_NAME(MWRP.COMPANY_CD, MWRP.DIVISION_CD, MWRP.OPERATION_ID) FROM DUAL) AS OPERATION_NM
+	     , MWRP.WORK_STATION_CD
+	     , (SELECT MOM_COMMON_PKG.FN_GET_WORK_STATION_NAME(MWRP.COMPANY_CD, MWRP.DIVISION_CD, MWRP.WORK_STATION_CD) FROM DUAL) AS WORK_STATION_NM
+	     , TO_CHAR(MWRP.WORK_DAY ,'YYYY-MM-DD')             AS OPERATION_RESULT_DATE  
+	     , TO_CHAR(MWRP.START_TIME ,'YYYY-MM-DD HH24:MI:SS')   AS OPERATION_RESULT_START_TIME
+	     , TO_CHAR(MWRP.END_TIME ,'YYYY-MM-DD HH24:MI:SS')     AS OPERATION_RESULT_END_TIME     
+	     , MWRP.GOOD_QTY          AS OPERATION_GOOD_QTY
+	     , MWRP.DEFECT_QTY        AS OPERATION_DEFECT_QTY
+	     , MWRP.STATE             AS OPERATION_STATE
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWRP.COMPANY_CD, MWRP.DIVISION_CD, 'PP0010', MWRP.STATE, 'KR') FROM DUAL)  AS OPERATION_STATE_NM
+	     , TO_CHAR(MWR.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS RESULT_CREATE_DATE
+	     , MWR.CREATE_BY  AS RESULT_CREATE_BY
+	     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWR.COMPANY_CD, MWR.DIVISION_CD, MWR.CREATE_BY) FROM DUAL ) AS RESULT_CREATE_BY_NM
+	     , MWR.UPDATE_BY  AS RESULT_CANCEL_BY
+	     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWR.COMPANY_CD, MWR.DIVISION_CD, MWR.UPDATE_BY) FROM DUAL ) AS RESULT_CANCEL_BY_NM
+	     , TO_CHAR(MWR.CANCEL_DATE ,'YYYY-MM-DD HH24:MI:SS')   AS RESULT_CANCEL_DATE 
+	     , MWO.DESCRIPTION
+	     , MWO.COMPANY_CD
+	     , MWO.DIVISION_CD
+	     , MWO.OUTSOURCING_YN
+	FROM   MOM_WO_RESULT MWR
+	     , MOM_WO_RESULT_OP_PATH MWRP
+	     , MOM_WORK_ORDER MWO
+	     , MOM_ITEM MI
+	WHERE  MWR.COMPANY_CD     = MWO.COMPANY_CD
+	AND    MWR.DIVISION_CD    = MWO.DIVISION_CD
+	AND    MWR.WORK_ORDER_ID  = MWO.WORK_ORDER_ID
+	AND    MWR.COMPANY_CD     = MWRP.COMPANY_CD
+	AND    MWR.DIVISION_CD    = MWRP.DIVISION_CD
+	AND    MWR.WORK_ORDER_ID  = MWRP.WORK_ORDER_ID
+	AND    MWR.WO_RESULT_ID   = MWRP.WO_RESULT_ID
+	AND    MWO.COMPANY_CD     = MI.COMPANY_CD
+	AND    MWO.DIVISION_CD    = MI.DIVISION_CD
+	AND    MWO.ITEM_ID        = MI.ITEM_ID
+	AND    MWR.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
+	AND    MWR.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
+	AND    MWR.WORK_DAY BETWEEN TO_DATE(#{resultDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{resultDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999  
+    <if test="itemIdNm != null and itemIdNm != ''">
+	  AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+    </if>
+    <if test="workOrderId != null and workOrderId != ''">
+	  AND (UPPER(MWR.WORK_ORDER_ID) LIKE '%' || UPPER(#{workOrderId, jdbcType=VARCHAR}) || '%')	  
+	</if>
+	<if test="workCenterCd != null and workCenterCd != ''">
+	  AND MWR.WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
+	</if>	
+	<if test="woState != null and woState != ''">
+	  AND MWR.STATE  = #{woState, jdbcType=VARCHAR}
+	</if>
+	<if test="outsourcingYn != null and outsourcingYn != ''">
+	  AND MWO.OUTSOURCING_YN =  #{outsourcingYn, jdbcType=VARCHAR}
+	</if>	
+	</select>
+	<insert id="create_customBtn1-1" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PROC_WO_RESULT_CANCEL (
+                  COMPANY_CD
+                , DIVISION_CD
+                , WORK_ORDER_ID
+                , WO_RESULT_ID
+                , GOOD_QTY
+                , DEFECT_QTY
+                , DESCRIPTION
+                , VAL_MSG
+                , MULTI_MSG
+                , CREATE_BY
+                , CREATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.workOrderId, jdbcType=VARCHAR}
+                , #{item.woResultId, jdbcType=VARCHAR}
+                , #{item.resultGoodQty, jdbcType=NUMERIC}
+                , #{item.resultDefectQty, jdbcType=NUMERIC}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.valMsg, jdbcType=VARCHAR}
+                , #{item.multiMsg, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+   <delete id="remove_customBtn1-1" parameterType="java.util.List">
+       DELETE FROM MOM_PROC_WO_RESULT_CANCEL
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>  
+<select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+          { CALL MOM_WO_PKG.sp_cancel_wo_result(     		    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+ </select>  
+</mapper>

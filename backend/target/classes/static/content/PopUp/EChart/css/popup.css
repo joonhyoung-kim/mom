@@ -1,0 +1,347 @@
+*{
+	font-size:14px;
+}
+
+li { list-style-type: none; }
+textarea { margin-bottom:10px; }
+
+.p-0 { padding: 0;}
+.p-10 { padding: 10; }
+.d-ib { display: inline-block; }
+
+.menuBox { display: flex; }
+.menu-1 { width: 200px; height: 100%; }
+.menu-2 { width: 320px; overflow-y: auto; height: 100%; }
+.view-menu { width: 100%; height: 100%; overflow-y:hidden; }
+
+.fs { position: absolute; left: 15; top: 10; }
+.ck { border:1px solid #c7c7d1; padding:0px 0px 0px 1px; margin:2 10px 0 0 !important;}
+.cp { margin: 5 7 0 0 !important;}
+.disabled > .fa { border:1px solid #6c757d; color:#535364; }
+.bind { position: absolute; right: 16; top: 16; font-size: 20; }
+
+.treebox { color:#17a2b8; text-align:center; }
+.treebox:hover { background-color:white; }
+.upper { text-transform: uppercase;} 
+
+.leave { background-color:white; }
+.leave:hover { background-color:white !important; }
+.leave > a { color:gray !important;}
+
+.chart-container {
+  margin: 0 0 20 0;
+  position: relative;
+  width:100%;
+  height: 60%;
+  padding: 0;
+  z-index: 30;
+  background-color: #ebedef;
+  box-shadow: 0 0px 3px rgba(0,0,0,0.16), 0 0px 3px rgba(0,0,0,0.23);
+  border-left: 1px solid #c2c5c7;
+}
+.data-container {
+  margin: 4 0 10 0;
+  position: relative;
+  height: 35%;
+  background-color: #ebedef;
+  box-shadow: 0 0px 2px rgba(0,0,0,0.1), 0 0px 2px rgba(0,0,0,0.1);
+}
+
+.arr { display:none; }
+.itm-none { display:none }
+.test-box { display:none; }
+.n { display:none; }
+
+div[key-info=option] { display:block !important; }
+
+.lv-3 { background-color: #d0e9ef; }
+.lv-4 { background-color: #e4e5d5; }
+.lv-5 { background-color: #e8edbd; }
+.lilv-2 { background-color: #e4e7ea; border-bottom: 1px solid #c9d6e2; }
+.lilv-3 { background-color: #d0e9ef; border-bottom: 1px solid #c9d6e2; }
+.lilv-4 { background-color: #e4e5d5; border-bottom: 1px solid #c9d6e2; }
+.lilv-5 { background-color: #e8edbd; border-bottom: 1px solid #c9d6e2; }
+
+/* * * * * * * * * * * * switch button checkbox * * * * * * * * * * * */
+
+.setBind {
+  color: black;
+  position: absolute;
+  display: inline-block;
+  top: 4;
+  left: 200;
+  margin-bottom: 0;
+  font-weight: 700;
+  font-size: 18;
+}
+
+.switch2 {
+  position: absolute;
+  display: inline-block;
+  width: 51px;
+  height: 25px;
+  top: 7;
+  left: 345;
+  margin-bottom: 0;
+}
+
+.switch2 input {display:none;}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 25px;
+  top:8px;
+  margin-bottom:0;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* * * * * * * * * * * Rounded sliders  * * * * * * * * * * */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+/* modal box */
+.ListBox {
+  display: none;
+  position: absolute;
+  z-index: 40;
+  padding-top: 120px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.menu-content {
+  position: relative;
+  background-color: #ececec;
+  margin: auto;
+  padding: 0;
+  width: 70%;
+  height: 80%;
+  max-width: 1200px;
+  padding-top: 40px;
+}
+
+.m-close {
+  color: #293c55;
+position: absolute;
+top: 0;
+right: 20px;
+font-size: 30px;
+font-weight: bold;
+/* padding: 0px 4px 0px 4px; */
+background-color: #293c55;
+margin: 12px -15px 0px 0px;
+line-height: 0;
+}
+
+.m-close:hover,
+.m-close:focus { color: #3398DB; text-decoration: none; cursor: pointer; }
+.m-cursor { cursor: pointer }
+
+.chart-a {
+  padding:10px 0 6px 3px !important;
+  text-decoration:none !important;
+}
+
+.right-chart-content {
+  margin: 0 0 0 180px;
+  height: 100%;
+  overflow: auto;
+  background-color: #ececec;
+}
+
+.tab-li > a {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.active {
+  background-color:#bac7e8 !important;
+}
+
+.tab-container i {
+  margin-right:4px;
+}
+
+
+.colNameBox {
+  display: none;
+  position: absolute;
+  z-index: 40;
+  padding-top: 120px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.col-Content {
+  position: relative;
+  background-color: #ececec;
+  margin: auto;
+  padding: 0;
+  width: 200px;
+  height: 30%;
+  min-width: 300px;
+  padding: 10px;
+}
+
+.col-header {
+  border-bottom: 1px solid #ded5d5;
+  color: black;
+  font-weight: 700;
+}
+
+.col-box {
+  text-align:center;
+  padding: 20px 0px 10px 0px;
+}
+
+.col-bottom {
+  text-align:center;
+}
+
+.message {
+  color:red;
+  font-weight: 700;
+  padding: 10px;
+}
+
+.col-labels {
+  color: black;
+  position: absolute;
+  display: inline-block;
+  top: 4;
+  left: 20;
+  margin-bottom: 0;
+  font-weight: 700;
+  font-size: 18;
+}
+
+.input-group-addon {
+  padding: 10px 10px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: #555;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.edit-btn {
+	color: #666666;
+    text-decoration: none;
+    border: solid 1px #666666;
+    padding: 6 6 8 6;
+    border-radius:3px;
+}
+.edit-btn:hover {
+	text-decoration: none;
+	background-color:#0ea8ff;
+	border: solid 1px #0ea8ff;
+	color:white;
+}
+.edit-btn i { margin: 0 5; }
+.edit-btn span { margin: 0 5; }
+
+.non-back {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 100; 
+}
+.non {
+	display: table;
+	width: 100%;
+    height: 100%;
+}
+.non span{
+	display: table-cell;
+    vertical-align: middle;
+    color: white;
+    font-size: 20;
+    text-align: center;
+    font-family: Verdana; 
+}
+
+.non-select {
+	text-decoration: none !important;
+    cursor: default;
+}
+
+/* * * * * * * * * * *  tooltip area  * * * * * * * * * * */
+
+
+li .help { cursor:help; }
+
+.helpText {
+	width: 160px;
+    background-color: black;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    top: -5;
+    word-wrap: break-word;
+    left: 100%;
+}
