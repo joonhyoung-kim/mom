@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUMD1020">
+<!--     <parameterMap id="paramMap" type="hashMap">
+    	<parameter property="cd"         mode="IN"  jdbcType="VARCHAR" javaType = "java.lang.String"/>
+    	
+    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
+    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   fetchSize="1"resultType="com.mom.dto.LowerHashMap"
+    </parameterMap> -->
+    	<select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="10000">
+		    SELECT ML.COMPANY_CD 
+			     , MCD.COMPANY_NM
+			     , ML.DIVISION_CD
+			     , MCD.DIVISION_NM
+			     , ML.PLANT_CD
+			     , (SELECT MOM_COMMON_PKG.FN_GET_PLANT_NAME(ML.COMPANY_CD, ML.DIVISION_CD, ML.PLANT_CD) FROM DUAL ) AS PLANT_NM
+			     , ML.LOCATION_CD
+			     , ML.LOCATION_NM
+			     , ML.LOCATION_GROUP_CD
+			     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(ML.COMPANY_CD,ML.DIVISION_CD,'MD0017', ML.LOCATION_GROUP_CD, #{langCd, jdbcType=VARCHAR})  FROM DUAL ) AS LOCATION_GROUP_NM
+			     , ML.LOCATION_TYPE
+			     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(ML.COMPANY_CD,ML.DIVISION_CD,'MD0016', ML.LOCATION_TYPE, #{langCd, jdbcType=VARCHAR})  FROM DUAL ) AS LOCATION_TYPE_NM
+			     , ML.PARTNER_CD
+			     , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(ML.COMPANY_CD, ML.DIVISION_CD, ML.PARTNER_CD) FROM DUAL ) AS PARTNER_NM
+			     , ML.USE_YN
+			     , ML.CREATE_BY
+			     , ML.CREATE_DATE
+			     , ML.UPDATE_BY
+			     , ML.UPDATE_DATE 
+			     , ML.DESCRIPTION
+			FROM   MOM_COM_DIV_V MCD  
+			     , MOM_LOCATION ML
+			WHERE  MCD.COMPANY_CD  = ML.COMPANY_CD
+			AND    MCD.DIVISION_CD = ML.DIVISION_CD   
+			AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+		    AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  			
+			<if test="plantNm != null and plantNm != ''">
+		    AND ML.PLANT_CD IN (${plantNm})
+			</if>
+			<if test="locationCd != null and locationCd != ''">
+			AND (UPPER(ML.LOCATION_CD) LIKE '%' || UPPER(#{locationCd, jdbcType=VARCHAR}) || '%' )
+			</if>
+			<if test="locationNm != null and locationNm != ''">
+		    AND (UPPER(ML.LOCATION_NM) LIKE '%' || UPPER(#{locationNm, jdbcType=VARCHAR}) || '%' )
+			</if>
+		    <if test="locationTypeNm != null and locationTypeNm != ''">
+			AND ML.LOCATION_TYPE IN (${locationTypeNm})
+			</if>			
+			<if test="locationGroupNm != null and locationGroupNm != ''">
+		    AND ML.LOCATION_GROUP_CD IN (${locationGroupNm})
+			</if>
+		    <if test="useYn != null and useYn != ''">
+		    AND ML.USE_YN = #{useYn, jdbcType=VARCHAR}
+			</if>
+		    ORDER BY ML.LOCATION_NM							
+	    </select>
+   <insert id="create_createBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_LOCATION (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PLANT_CD
+                , LOCATION_CD
+                , LOCATION_NM
+                , LOCATION_GROUP_CD
+                , LOCATION_TYPE
+                , PARTNER_CD
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.plantCd, jdbcType=VARCHAR}
+                , #{item.locationCd, jdbcType=VARCHAR}
+                , #{item.locationNm, jdbcType=VARCHAR}
+                , #{item.locationGroupCd, jdbcType=VARCHAR}
+                , #{item.locationType, jdbcType=VARCHAR}
+                , #{item.partnerCd, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+   <insert id="create_copyBtn1" parameterType="java.util.List">
+   <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_LOCATION (
+                  COMPANY_CD
+                , DIVISION_CD
+                , PLANT_CD
+                , LOCATION_CD
+                , LOCATION_NM
+                , LOCATION_GROUP_CD
+                , LOCATION_TYPE
+                , PARTNER_CD
+                , USE_YN
+                , DESCRIPTION
+                , CREATE_BY
+                , CREATE_DATE
+                , UPDATE_BY
+                , UPDATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.plantCd, jdbcType=VARCHAR}
+                , #{item.locationCd, jdbcType=VARCHAR}
+                , #{item.locationNm, jdbcType=VARCHAR}
+                , #{item.locationGroupCd, jdbcType=VARCHAR}
+                , #{item.locationType, jdbcType=VARCHAR}
+                , #{item.partnerCd, jdbcType=VARCHAR}
+                , #{item.useYn, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+  <update id="modify_editBtn1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_LOCATION
+      SET    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           , DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           , PLANT_CD = #{item.plantCd, jdbcType=VARCHAR}
+           , LOCATION_CD = #{item.locationCd, jdbcType=VARCHAR}
+           , LOCATION_NM = #{item.locationNm, jdbcType=VARCHAR}
+           , LOCATION_GROUP_CD = #{item.locationGroupCd, jdbcType=VARCHAR}
+           , LOCATION_TYPE = #{item.locationType, jdbcType=VARCHAR}
+           , PARTNER_CD = #{item.partnerCd, jdbcType=VARCHAR}
+           , USE_YN = #{item.useYn, jdbcType=VARCHAR}
+           , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
+           , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
+           , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE  1=1
+      AND    COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+      AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+      AND    LOCATION_CD = #{item.locationCd, jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  <delete id="remove_delBtn1" parameterType="java.util.List">
+      DELETE FROM MOM_LOCATION
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  LOCATION_CD = #{item.locationCd, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+  </delete>
+  <insert id="upsert_excelUpBtn1" parameterType="java.util.List">
+      MERGE INTO MOM_LOCATION 
+            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
+                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{item.plantCd, jdbcType=VARCHAR} as plantCd,
+                            #{item.locationCd, jdbcType=VARCHAR} as locationCd,
+                            #{item.locationNm, jdbcType=VARCHAR} as locationNm,
+                            #{item.locationGroupCd, jdbcType=VARCHAR} as locationGroupCd,
+                            #{item.locationType, jdbcType=VARCHAR} as locationType,
+                            #{item.partnerCd, jdbcType=VARCHAR} as partnerCd,
+                            #{item.useYn, jdbcType=VARCHAR} as useYn,
+                            #{item.description, jdbcType=VARCHAR} as description,
+                            #{item.userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{item.userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                   </foreach> ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 LOCATION_CD = PARAM.locationCd )
+            WHEN MATCHED THEN 
+                 UPDATE SET PLANT_CD = PARAM.plantCd
+                          , LOCATION_NM = PARAM.locationNm
+                          , LOCATION_GROUP_CD = PARAM.locationGroupCd
+                          , LOCATION_TYPE = PARAM.locationType
+                          , PARTNER_CD = PARAM.partnerCd
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , PLANT_CD
+                            , LOCATION_CD
+                            , LOCATION_NM
+                            , LOCATION_GROUP_CD
+                            , LOCATION_TYPE
+                            , PARTNER_CD
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.plantCd
+                            , PARAM.locationCd
+                            , PARAM.locationNm
+                            , PARAM.locationGroupCd
+                            , PARAM.locationType
+                            , PARAM.partnerCd
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>
+</mapper>

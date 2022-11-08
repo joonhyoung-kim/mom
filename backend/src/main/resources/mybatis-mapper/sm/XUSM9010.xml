@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.XUSM9010">
+  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	 SELECT ATC.COLUMN_NAME
+	      , SUBSTR ( REPLACE ( INITCAP ( '1' || ATC.COLUMN_NAME ), '_' ), 2) AS COLUMN_NAME2
+          , ATC.DATA_TYPE 
+          , DECODE((SELECT B.COLUMN_NAME     
+		            FROM   ALL_CONSTRAINTS  A
+		                 , ALL_CONS_COLUMNS B
+		            WHERE  A.TABLE_NAME      = #{tableId, jdbcType=VARCHAR}
+		            AND    A.OWNER           = B.OWNER 
+		            AND    A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+		            AND    A.OWNER           = 'MOM_MASTER'
+		            AND    A.CONSTRAINT_TYPE = 'P' 
+		            AND    B.COLUMN_NAME = ATC.COLUMN_NAME             
+            ),'','N','Y') AS IS_PK
+     FROM   ALL_TAB_COLUMNS ATC
+     WHERE  TABLE_NAME = #{tableId, jdbcType=VARCHAR}
+     AND    ATC.OWNER = 'MOM_MASTER'
+     ORDER BY ATC.COLUMN_ID
+  </select>
+	
+</mapper>

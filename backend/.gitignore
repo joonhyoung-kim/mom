@@ -6,6 +6,8 @@
 *.jpg
 *.svg
 *.png
-
+*.text
+*.exe
+*.zip
 #폴더
 !/src/main/resources/mybatis-mapper/
