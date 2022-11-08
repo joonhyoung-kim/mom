@@ -3,14 +3,5 @@
 !/pom.xml
 .target/
 # 특정 확장자 무시
-*.scss
-*.jpg
-*.svg
-*.png
-*.text
-*.exe
-*.zip
-*.iml
-*.gif
 .idea/
 .codetogether.ignore
