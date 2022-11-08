@@ -1,0 +1,11 @@
+# ! 키워드로 특정 파일을 포함
+!/.gitignore
+!/pom.xml
+# 특정 확장자 무시
+*.scss
+*.jpg
+*.svg
+*.png
+
+#폴더
+!/src/main/resources/mybatis-mapper/
