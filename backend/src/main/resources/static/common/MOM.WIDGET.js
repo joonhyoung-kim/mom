@@ -482,6 +482,7 @@ var momWidget = {
 						else if(that.buttonProperty[index][i]['buttonType']=='CP'){	
 																		
 							that.createCustomPop(index,that.buttonProperty[index][i]['popupGridId'],that.buttonProperty[index][i]['buttonId'],that.buttonProperty[index][i]['eventType']);
+                            that.setCustomComboBoxSet(index,your);
 							//that.buttonProperty[index][i]['customType'] = 'CP';
 						}
 						
@@ -1695,498 +1696,6 @@ var momWidget = {
 			}
 
 	},	
-	setSearchSet: function(index,your){
-		var that = this;
-		var searchId = undefined;
-		var dropdownId = undefined;
-		var headerDropdownId = undefined;
-		var groupCd = undefined;
-		var searchType = undefined;
-		var nameSpace  = undefined;
-		var paramMap   = [];
-		var splitArray1 = undefined;
-		var splitArray2 = undefined;
-		var defaultValue = undefined;
-		let comboTmp = {};
-		
-		
-		if(that.searchProperty[index] == undefined || that.searchProperty[index] == ''){
-			return;
-		}
-		for(var i=0,max1=that.searchProperty[index].length;i<max1;i++){
-			searchId         = that.searchProperty[index][i]['searchId'];
-			dropdownId       = that.searchProperty[index][i]['dropdownId'];
-			headerDropdownId = that.searchProperty[index][i]['headerDropdownId'];
-			dropdownParam    = that.searchProperty[index][i]['dropdownParam'];
-			headerDropdownParam = that.searchProperty[index][i]['headerDropdownParam'];
-		    searchType       = that.searchProperty[index][i]['searchType']; 
-		    headerSearchType = that.searchProperty[index][i]['headerType']; 
-		    defaultValue     = that.searchProperty[index][i]['defaultValue'];
-		    nameSpace        = dropdownId.substr(0, 2);  
-		    queryId          = '';
-		    searchId2 = searchId+'SP'+(index+1);
-		    paramMap.length = 0;
-		    comboTmp = {};
-			if(searchType == 'S' || searchType == 'M' || headerSearchType == 'S'||headerSearchType == 'M'){
-			/*	searchId = that.searchProperty[index][i]['searchId'];
-				dropdownId = that.searchProperty[index][i]['searchId'];
-				headerDropdownId = that.searchProperty[index][i]['searchId'];
-				searchType =  that.searchProperty[index][i]['searchType'];*/
-				if(dropdownId != '' && dropdownId != undefined){
-					 queryId = dropdownId;
-					 splitArray1 = dropdownParam.split(',');					 
-					 for(var j=0,max2=splitArray1.length;j<max2;j++){
-						  splitArray2 = splitArray1[j].split('=');
-						  paramMap.push(JSON.parse('{"'+splitArray2[0] +'"'+':'+'"'+splitArray2[1]+'"}'));
-					 }
-					 
-					// paramMap[i] = splitArray[0]:; 
-				}
-				else if(headerDropdownId != '' && headerDropdownId != undefined){
-					      queryId    = headerDropdownId;
-					      nameSpace  = headerDropdownId.substr(0, 4);  
-							 splitArray1 = headerDropdownParam.split('&');
-							 for(var j=0,max2=splitArray1.length;j<max2;j++){
-								  splitArray2 = splitArray1[j].split('=');
-								  paramMap.push(JSON.parse('{"'+splitArray2[0] +'"'+':'+'"'+splitArray2[1]+'"}'));
-							 }
-				}
-				else{
-					    queryId = dropdownId;
-					 //   paramMap[i] = ; 
-				}
-				  mom_ajax('R', nameSpace+'.'+queryId, paramMap[0] == undefined ? {}:paramMap[0], function(result, data) {
-				      if(result != 'SUCCESS' || data.length==0) {
-				    	  momWidget.splashHide();
-					      return;							     
-				      }		
-				      
-				        if(headerDropdownId != '' && headerDropdownId != undefined){
-				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({source: data}); 
-				        	 $('#'+searchId+'Header'+'SP'+(index+1)).prev().prev().attr('class','circle-dh')
-				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({selectedIndex: 0 });
-				        }
-				        else{
-				        	if(searchType == 'M'){
-				        		$('#'+searchId +'SP'+(index+1)).jqxComboBox({source: data});	
-				        	if(defaultValue == 'CHECK_ALL'){
-								//$('#'+searchId +'SP'+(index+1)).jqxComboBox('checkAll'); 
-							}
-							else{
-								//$('#'+searchId).jqxComboBox('checkIndex', 0); 
-							}				        
-								
-							          
-				        		//$('#'+searchId).val(defaultValue); 
-				        	}
-				        	else{
-				        		$('#'+searchId+'SP'+(index+1)).jqxComboBox({source: data}); 
-				        		$('#'+searchId+'SP'+(index+1)).val(defaultValue); 
-				        		//comboTmp[searchId2] = data;
-				        		
-				        		that.searchComboItems[searchId2] = data;
-
-				        	}
-				        	  
-				        }
-				       
-					  	//$('#gridId').jqxComboBox("clear");								
-						//$('#'+searchId).jqxComboBox('source',data);					
-						//$("#gridId").jqxComboBox({ disabled: false }); 
-						//momWidget.messageBox({type:'success', width:'400', height: '145', html: '성공하였습니다!'});
-						//momWidget.splashHide();
-					   
-			}, undefined, undefined, this, false);
-			}
-			else if(searchType == 'C' ){
-					var today = new Date();  
-					var year  = undefined; // 년도
-				    var month = undefined;;  // 월
-				    var date  = undefined;;  // 날짜
-				if(defaultValue == 'TODAY'){
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				    
-				}
-				else if(defaultValue == 'INIT'){
-					     today = new Date(today.getFullYear(), today.getMonth(), 1);
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-				}
-				else if(defaultValue == 'LAST'){
-					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-				}
-						else if(defaultValue.includes("W") && defaultValue.length>1 && !(defaultValue.includes("+") || defaultValue.includes("-"))){
-					      var weekNum =	defaultValue.substring(0,defaultValue.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue.substring(0,defaultValue.indexOf('W'));
-					      
-					      year = moment(moment().years()+weekNum, 'YYYYWW').format('YYYY');					     
-					      month = moment(moment().years()+weekNum, 'YYYYWW').format('MM')-1+'';
-					      date = moment(moment().years()+weekNum, 'YYYYWW').format('DD');
-					     
-				}
-					else if(defaultValue.includes("W") && defaultValue.length>1 && (defaultValue.includes("+") || defaultValue.includes("-"))){
-						var weekNum ='1';
-						var dateType ='+';
-						var calNum = 0;
-			
-						  if (defaultValue.indexOf('+')>0){
-							  dateType = defaultValue.substring(defaultValue.indexOf('+'),defaultValue.indexOf('+')+1); 
-							  weekNum =	defaultValue.substring(0,defaultValue.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue.substring(0,defaultValue.indexOf('W'));
-							  calNum = defaultValue.substring(defaultValue.indexOf('+')+1,defaultValue.length-1);
-							  year = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('YYYY')				     
-						      month = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('MM')-1+'';
-						      date = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('DD')
-						  }
-						  else  if (defaultValue.indexOf('-')>0){
-							  dateType = defaultValue.substring(defaultValue.indexOf('-'),defaultValue.indexOf('-')+1); 
-							  weekNum =	defaultValue.substring(0,defaultValue.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue.substring(0,defaultValue.indexOf('W'));
-							  calNum = defaultValue.substring(defaultValue.indexOf('-')+1,defaultValue.length-1);
-							  year = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('YYYY')				     
-						      month = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('MM')-1+'';
-						      date = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('DD')
-						  }
-					     
-					  
-					      
-				}
-				else if(defaultValue.includes("TODAY") && defaultValue.length>5){
-				var dateNum  =	defaultValue.substring(5,defaultValue.length-1);
-				var dateType =	defaultValue.substring(defaultValue.length,defaultValue.length-1);
-				  if(dateType == 'M'){
-					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				  }
-				  else if (dateType == 'D'){
-					 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-					 year  = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date  = today.getDate();  // 날짜
-				  }
-				  else{
-					
-				  }
-				
-				}
-				else if(defaultValue.includes("INIT") && defaultValue.length>5){
-					var dateNum  =	defaultValue.substring(4,6);
-				    var dateType =	defaultValue.substring(6,7);
-				    today = new Date(today.getFullYear(), today.getMonth(), 1);
-				      if(dateType == 'M'){
-						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
-						 year = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date = today.getDate();  // 날짜
-				      }
-					  else if (dateType == 'D'){
-						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-					  }
-					  else{
-						 
-					  }
-				}
-					else if(defaultValue.includes("LAST") && defaultValue.length>5){
-					var dateNum  =	defaultValue.substring(4,6);
-				    var dateType =	defaultValue.substring(6,7);
-				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
-				      if(dateType == 'M'){
-						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
-						 year = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date = today.getDate();  // 날짜
-				      }
-					  else if (dateType == 'D'){
-						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-					  }
-					  else{
-						
-					  }
-				}
-				else{
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				}
-						
-				 var calendar = new Date();
-                 calendar.setFullYear(year, month, date);
-				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput({ width: '210px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
-				$('#'+searchId+'SP'+(index+1)).jqxDateTimeInput('setDate', calendar);
-				   
-       //input을 datepicker로 선언
-              
-  
-			}
-			else if(searchType == 'CP'){
-					var today = new Date();  
-					var year  = undefined; // 년도
-				    var month = undefined;;  // 월
-				    var date  = undefined;;  // 날짜
-				    const defaultValueArray = defaultValue.split('/');
-				    let defaultValue1 = defaultValueArray[0] == undefined ? '':defaultValueArray[0];
-				    let defaultValue2 = defaultValueArray[1] == undefined ? '':defaultValueArray[1];
-				if(defaultValue1 == 'TODAY'){
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				    
-				}
-				else if(defaultValue1.includes("W") && defaultValue1.length>1 && !(defaultValue1.includes("+") || defaultValue1.includes("-"))){
-					      var weekNum =	defaultValue1.substring(0,defaultValue1.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue1.substring(0,defaultValue1.indexOf('W'));
-					      year = moment(moment().years()+weekNum, 'YYYYWW').format('YYYY');					     
-					      month = moment(moment().years()+weekNum, 'YYYYWW').format('MM')-1+'';
-					      date = moment(moment().years()+weekNum, 'YYYYWW').format('DD');
-					     
-				}
-					else if(defaultValue1.includes("W") && defaultValue1.length>1 && (defaultValue1.includes("+") || defaultValue1.includes("-"))){
-						var weekNum ='1';
-						var dateType ='+';
-						var calNum = 0;
-			
-						  if (defaultValue1.indexOf('+')>0){
-							  dateType = defaultValue1.substring(defaultValue1.indexOf('+'),defaultValue1.indexOf('+')+1); 
-							  weekNum =	defaultValue1.substring(0,defaultValue1.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue1.substring(0,defaultValue1.indexOf('W'));
-							  calNum = defaultValue1.substring(defaultValue1.indexOf('+')+1,defaultValue1.length-1);
-							  year = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('YYYY')				     
-						      month = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('MM')-1+'';
-						      date = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('DD')
-						  }
-						  else  if (defaultValue1.indexOf('-')>0){
-							  dateType = defaultValue1.substring(defaultValue1.indexOf('-'),defaultValue1.indexOf('-')+1); 
-							  weekNum =	defaultValue1.substring(0,defaultValue1.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue1.substring(0,defaultValue1.indexOf('W'));
-							  calNum = defaultValue1.substring(defaultValue1.indexOf('-')+1,defaultValue1.length-1);
-							  year = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('YYYY')				     
-						      month = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('MM')-1+'';
-						      date = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('DD')
-						  }
-					     
-					  
-					      
-				}
-				else if(defaultValue1 == 'INIT'){
-					     today = new Date(today.getFullYear(), today.getMonth(), 1);
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-				}
-				else if(defaultValue1 == 'LAST'){
-					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-				}
-				else if(defaultValue1.includes("TODAY") && defaultValue1.length>5){
-				var dateNum  =	defaultValue1.substring(5,defaultValue1.length-1);
-				var dateType =	defaultValue1.substring(defaultValue1.length,defaultValue1.length-1);
-				  if(dateType == 'M'){
-					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				  }
-				  else if (dateType == 'D'){
-					 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-					 year  = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date  = today.getDate();  // 날짜
-				  }
-				  else{
-					
-				  }
-				
-				}
-				else if(defaultValue1.includes("INIT") && defaultValue1.length>5){
-					var dateNum  =	defaultValue1.substring(4,6);
-				    var dateType =	defaultValue1.substring(6,7);
-				    today = new Date(today.getFullYear(), today.getMonth(), 1);
-				      if(dateType == 'M'){
-						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
-						 year = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date = today.getDate();  // 날짜
-				      }
-					  else if (dateType == 'D'){
-						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-					  }
-					  else{
-						 
-					  }
-				}
-					else if(defaultValue1.includes("LAST") && defaultValue1.length>5){
-					var dateNum  =	defaultValue1.substring(4,6);
-				    var dateType =	defaultValue1.substring(6,7);
-				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
-				      if(dateType == 'M'){
-						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
-						 year = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date = today.getDate();  // 날짜
-				      }
-					  else if (dateType == 'D'){
-						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-					  }
-					  else{
-						
-					  }
-				}
-				else{
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				}
-						
-				 var calendar = new Date();
-                 calendar.setFullYear(year, month, date);
-				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput({ width: '115px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
-				$('#'+searchId+'SD'+(index+1)).jqxDateTimeInput('setDate', calendar);
-			    today = new Date();
-				
-				
-				if(defaultValue2 == 'TODAY'){
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				    
-				}
-				else if(defaultValue2 == 'INIT'){
-					     today = new Date(today.getFullYear(), today.getMonth(), 1);
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-				}
-				else if(defaultValue2 == 'LAST'){
-					     today = new Date(today.getFullYear(), today.getMonth()+1, 0);
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-				}
-				else if(defaultValue2.includes("TODAY") && defaultValue2.length>5){
-				var dateNum  =	defaultValue2.substring(5,defaultValue2.length-1);
-				var dateType =	defaultValue2.substring(defaultValue2.length,defaultValue2.length-1);
-				  if(dateType == 'M'){
-					 today = new Date(today.setMonth(today.getMonth() +Number(dateNum)));
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				  }
-				  else if (dateType == 'D'){
-					 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-					 year  = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date  = today.getDate();  // 날짜
-				  }
-				  else{
-					
-				  }
-				
-				}
-				else if(defaultValue2.includes("W") && defaultValue2.length>1 && !(defaultValue2.includes("+") || defaultValue2.includes("-"))){
-					      var weekNum =	defaultValue2.substring(0,defaultValue2.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue2.substring(0,defaultValue2.indexOf('W'));
-					      year = moment(moment().years()+weekNum, 'YYYYWW').format('YYYY');					     
-					      month = moment(moment().years()+weekNum, 'YYYYWW').format('MM')-1+'';
-					      date = moment(moment().years()+weekNum, 'YYYYWW').format('DD');
-					     
-				}
-					else if(defaultValue2.includes("W") && defaultValue2.length>1 && (defaultValue2.includes("+") || defaultValue2.includes("-"))){
-						var weekNum ='1';
-						var dateType ='+';
-						var calNum = 0;
-			
-						  if (defaultValue2.indexOf('+')>0){
-							  dateType = defaultValue2.substring(defaultValue2.indexOf('+'),defaultValue2.indexOf('+')+1); 
-							  weekNum =	defaultValue2.substring(0,defaultValue2.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue2.substring(0,defaultValue2.indexOf('W'));
-							  calNum = defaultValue2.substring(defaultValue2.indexOf('+')+1,defaultValue2.length-1);
-							  year = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('YYYY')				     
-						      month = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('MM')-1+'';
-						      date = moment(moment().years()+weekNum, 'YYYYWW').add(calNum,'days').format('DD')
-						  }
-						  else  if (defaultValue2.indexOf('-')>0){
-							  dateType = defaultValue2.substring(defaultValue2.indexOf('-'),defaultValue2.indexOf('-')+1); 
-							  weekNum =	defaultValue2.substring(0,defaultValue2.indexOf('W')) =='T' ? moment().isoWeeks()+'': defaultValue2.substring(0,defaultValue2.indexOf('W'));
-							  calNum = defaultValue2.substring(defaultValue2.indexOf('-')+1,defaultValue2.length-1);
-							  year = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('YYYY')				     
-						      month = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('MM')-1+'';
-						      date = moment(moment().years()+weekNum, 'YYYYWW').subtract(calNum,'days').format('DD')
-						  }
-					     
-					  
-					      
-				}
-				else if(defaultValue2.includes("INIT") && defaultValue2.length>5){
-					var dateNum  =	defaultValue2.substring(4,6);
-				    var dateType =	defaultValue2.substring(6,7);
-				    today = new Date(today.getFullYear(), today.getMonth(), 1);
-				      if(dateType == 'M'){
-						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
-						 year = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date = today.getDate();  // 날짜
-				      }
-					  else if (dateType == 'D'){
-						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-					  }
-					  else{
-						 
-					  }
-				}
-					else if(defaultValue2.includes("LAST") && defaultValue2.length>5){
-					var dateNum  =	defaultValue2.substring(4,6);
-				    var dateType =	defaultValue2.substring(6,7);
-				        today    = new Date(today.getFullYear(), today.getMonth()+1, 0);
-				      if(dateType == 'M'){
-						 today = new Date(today .setMonth(today.getMonth() +Number(dateNum)));
-						 year = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date = today.getDate();  // 날짜
-				      }
-					  else if (dateType == 'D'){
-						 today = new Date(today.setDate(today.getDate() +Number(dateNum)));
-						 year  = today.getFullYear(); // 년도
-					     month = today.getMonth() ;  // 월
-					     date  = today.getDate();  // 날짜
-					  }
-					  else{
-						
-					  }
-				}
-				else{
-					 year = today.getFullYear(); // 년도
-				     month = today.getMonth() ;  // 월
-				     date = today.getDate();  // 날짜
-				}
-						
-				 var calendar = new Date();
-                 calendar.setFullYear(year, month, date);
-			
-				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput({ width: '115px', height: '25px',formatString: "yyyy-MM-dd",editMode: 'full',allowNullDate: true,value: null});
-				$('#'+searchId+'ED'+(index+1)).jqxDateTimeInput('setDate', calendar);
-			}
-			else{
-				
-			}
-		}
-		},	
 
 	createSearchArea: {
 		h01 : function(classItem,searchItem,searchBtn) {
@@ -4292,611 +3801,10 @@ var momWidget = {
 		
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 셀클릭 관련
-	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	setGridEvent: function(index, your) {
-		var that =  this;	
-        let result = 'SUCCESS';
-       
-		AUIGrid.bind(momWidget.grid[index], "ready", function(e) {
-			let scrollbar = $(e.pid).find('.aui-hscrollbar');
-		   if(scrollbar[0]!=undefined && scrollbar.css('display') !='none'){
-		
-		
-		   }
-		});
-			AUIGrid.bind(that.grid[index], "cellEditBegin", function(e) {
-			 if(your != undefined && your.cellEditCallInit != undefined) {
-				result = your.cellEditCallInit(index,e.rowIndex,e);
-				if (result == undefined){
-					result = 'SUCCESS';
-				}
-				if(result != 'SUCCESS'){
-					//e.orgEvent.stopImmediatePropagation();
-					return false;
-				}
-			}	
-			 for(let i=0,max=that.columnProperty[index].length; i<max;i++){
-				if(that.columnProperty[index][i]['columnEditable'] =='N' && that.columnProperty[index][i]['columnCreate'] =='Y' && e.item.addItem == undefined && e.dataField == that.columnProperty[index][i]['columnId']){
-						return false;
-			    }
-			 }			
-	
-			});
-		AUIGrid.bind(that.grid[index], "cellEditEnd", function(e) {
-			let columnProp = that.columnProperty[index][e.columnIndex];
-			if(columnProp['columnType'] == 'S'){
-					for(var i=0, len=that.columnDropdown[index][e.dataField].length; i<len; i++) { // keyValueList 있는 값만..
-									if(that.columnDropdown[index][e.dataField][i]["code"] == e.value) {
-										break;
-									}
-									if(i==len-1&&e.value!=''){
-										AUIGrid.setCellValue(that.grid[index], e.rowIndex,e.columnIndex, e.oldValue);
-										that.messageBox({type: 'warning', width: '400', height: '145', html: '리스트에 없는 데이터!'});
-									}
-								}
-								$('.aui-grid-cell-editor-button.aui-grid-cell-editor-button-combo-list').css('display','none');
-			}
-						
-			else if(columnProp['columnType'] == 'T'){
-				 if(e.value=='' || e.value==null || e.value==undefined){
-					 if(columnProp['dataType']=='string'){
-						AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, '');
-					 }
-					 else if(columnProp['dataType']=='numeric'){
-						
-					 }
-					
-				 }
-				 else{
-					   if(columnProp['dataType']=='numeric'){
-					     if(isNaN(e.value)==true){
-						      that.messageBox({type: 'warning', width: '400', height: '145', html: '숫자만 입력가능!'});
-						      AUIGrid.setCellValue(that.grid[index], e.rowIndex, e.columnIndex, e.oldValue);
-					     }
-				       }
-				 }
-				  
-			}
-			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'DG'){
-				//that.editItem[index].push();
-			}
-			else if(that.columnProperty[index][e.columnIndex]['columnType'] == 'CK'){
-				if(e.dataField == "checkBox") {
-			// 체크박스 클릭 했을 때, 병합된 모든 행의 체크박스를 동기화 시킴.
-			that.syncData(index,e.item, e.rowIndex, e.dataField, that.columnProperty[index][e.columnIndex]['dataFormat'], e.value);
-		     }
-			}		
-			if(your != undefined && your.cellEditCallBack != undefined) {
-				result = your.cellEditCallBack(index,e.rowIndex,e.columnIndex,e.dataField,e.item,e);
-				if (result == undefined){
-					result = 'SUCCESS';
-				}
-				if(result != 'SUCCESS'){
-					//e.orgEvent.stopImmediatePropagation();
-					return false;
-				}
-			}				
-      // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
-			});
-			AUIGrid.bind(that.grid[index], "dropEnd", function(e) {
-   			if(your != undefined && your.dropCallBack != undefined) {
-				 your.dropCallBack(index,e.pid,e.pidToDrop,e.fromRowIndex,e.toRowIndex,e.dropColumnIndex,e.items); 		
-			}	
-    });
-		$(document).on('click', '#upBtn1', function() {
-			AUIGrid.moveRowsToUp(momWidget.grid[index]);
-		
-		});
-		
-		$(document).on('click', '#downBtn1', function() {
-			AUIGrid.moveRowsToDown(momWidget.grid[index]);
-		});	
-/*	    AUIGrid.bind('#excelUpGrid1',  "ready", function(event) {
-	  alert('으아아');
-		return event.value; // 원래값
-	});*/
-		AUIGrid.bind(that.grid[index], "cellClick", function(e) {
-			
-			let customCheckBox = 'N';
-				//let scrollbar = $('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset() == undefined ? {top:0,left:0}:$('#grid1').children().children('.aui-hscrollbar').children('.aui-scroll-thumb').offset();			
-				
-								
-		        	    
-			let item = e.item;
-			let rowIdField = AUIGrid.getProp(e.pid, "rowIdField"); 
-			let rowId = item[rowIdField];
-			let rowIdValue = [] ;
-			let dropdownGridYn = 'N';
-			let dropDownGridIndex = 0;
-		    let rowIndex = $('#dropDownGridPop'+(index+1)).length == 0 ?  0: Number($('#dropDownGridPop'+(index+1)).attr('rowIndex'));
-		    let target = $('#dropDownGridPop'+(index+1)).length == 0 ?  '': $('#dropDownGridPop'+(index+1)).attr('target');
-			let selectionMode = momWidget.gridProperty[index][0]['selectionMode'];
-				if(your != undefined && your.cellClickCallInit != undefined) {
-				result = your.cellClickCallInit(index,rowIndex,e) ;
-				if (result == undefined){
-					result = 'SUCCESS';
-				}
-				if(result != 'SUCCESS'){
-					e.orgEvent.stopImmediatePropagation();
-					return;
-				}
-			}
-			
-				for(let i=0,max=that.columnProperty[index].length; i<max;i++){
-				 if( that.columnProperty[index][i]['columnType']=='C' && that.columnProperty[index][i]['columnId'] == e.dataField){
-			/*	  $('#calendar-main').datepicker({
-					changeMonth: true,
-					changeYear: true,
-					selectOtherMonths : true,
-					showOtherMonths: true,
-					autoSize: true,
-					dateFormat: 'dd-mm-yy',
-					dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-					monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]});*/
-					if(e.value != '' && e.value !=undefined){
-						let cellValue = e.value.split(' ');
-						//let setDateText = cellValue[0].split('-');
-						//setDateText =  setDateText[2]+'-'+ setDateText[1]+'-' +setDateText[0];
-						//$( "#calendar-main" ).datepicker( "setDate", setDateText);
-						$( "#time-main" ).val(cellValue[0]+'T'+cellValue[1]);
-						//$('#time-main').val('2017-06-01T08:30')
-						//$('#time-main').timepicker();
-					
-						
-					}
-					
-			        $('#calendar-pop').attr('rowIndex',e.rowIndex);
-			        $('#calendar-pop').attr('columnIndex',e.columnIndex);
-			        $('#calendar-pop').css('display','block');
-			        let td = AUIGrid.getCellElementByIndex(that.grid[index], e.rowIndex,e.columnIndex); // 0, 0 번째 TD 얻기
-		       	    let offset = $(td).offset();
-					let activeTop = offset.top;//
-					let activeLeft = offset.left;	
-			      $('#calendar-pop').offset({top : activeTop, left : activeLeft});		
-			    }
-			    if(that.columnProperty[index][i]['columnId']=='checkBox'){
-				    customCheckBox = 'Y';
-			    }
-			}
-			
-			 for(let i=0,max1=that.columnProperty[index].length; i<max1;i++){
-				if(that.columnProperty[index][i].columnType == 'DG' && that.columnProperty[index][i].columnId == e.dataField){					
-						dropdownGridYn = 'Y';
-						dropDownGridIndex = i;
-					    break;				
-				}
-			 }
-			
-			if(dropdownGridYn == 'Y'){
-				var columnProp = [];	
-				var targetId =  e.dataField;
-				let totalParam = [];
-				let rowIndex = e.rowIndex;
 
-				
-				
-				    let td = AUIGrid.getCellElementByIndex(that.grid[index], e.rowIndex,e.columnIndex); // 0, 0 번째 TD 얻기
-		       	    let offset = $(td).offset();
-					let activeTop = offset.top;//
-					let activeLeft = offset.left;	
-				// activeTop = e.orgEvent.currentTarget.offsetTop;//
-				 //activeLeft = e.orgEvent.currentTarget.offsetLeft;
-  	            var dropdownGridId =90;
-	            let dropdownGridQueryId = that.columnProperty[index][dropDownGridIndex]['dropdownId'];
-			    mom_ajax('R', 'XUSM3030.defaultInfo', {menuId:dropdownGridQueryId,gridId:1}, function(result1, data1) { 
-		         if(result1 != 'SUCCESS' || data1.length == 0) {
-		    	  momWidget.splashHide();
-			      return;							     
-		        }			  
-		      var gridString   = data1[0]['gridProperty']   == undefined ? '[]':data1[0]['gridProperty'];
-		      var columnString = data1[0]['columnProperty'] == undefined ? '[]':data1[0]['columnProperty'];
-		          gridString   = gridString.substr(1,  gridString.length-2);  
-			      columnString = columnString.substr(1,  columnString.length-2);
-			      that.gridProperty[dropdownGridId]     = JSON.parse(gridString);
-			      that.columnProperty[dropdownGridId]   = JSON.parse(columnString);
-			    var gridExceptList = ['checkId','gridTitle','popupColNum','popupRowNum','popupTitle','headerColor','initSearch','showFindBtn']; 	
-				var gridExtraProp  = {'checkId':'checkId','gridTitle':'gridTitle','popupColNum':'popupColNum','popupRowNum':'popupRowNum','popupTitle':'popupTitle','headerColor':'headerColor','initSearch':'initSearch','showFindBtn':'showFindBtn'};			
-			      for(var i=0,max=gridExceptList.length; i<max;i++){
-			    	   gridExtraProp[gridExceptList[i]] = that.gridProperty[dropdownGridId][0][gridExceptList[i]];			    	  
-			    	   delete that.gridProperty[dropdownGridId][0][gridExceptList[i]];
-			      }
-			      that.gridExtraProperty[dropdownGridId] = gridExtraProp;
-			     var popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
-			     var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3:Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
-			     var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId+1,popupColNum,popupRowNum,'popup',targetId,rowIndex);
-			    
- 		         var menuId = that.pageProperty[index]['programId'];
-                 var isShow = $('#dropDownGridPop'+(dropdownGridId+1)).css('display');
-                    if(isShow == 'block'){
-	                // $('#dropDownGridPop'+(dropdownGridId+1)).css('display','none');
-	                 $('#dropDownGridPop'+(dropdownGridId+1)).remove();
-					 return;
-				}	
-			    //$('#dropDownGridPop'+(dropdownGridId+1)).remove();   
-			    $('body').append(popupHtml);
-			
-                
-			       for(var i=0,max=that.columnProperty[dropdownGridId].length;i<max;i++){	
-			    	   columnType = that.columnProperty[dropdownGridId][i]['columnEditable'] == 'N' ? 'default':'edit';	
-			    	   widthUse = that.columnProperty[dropdownGridId][i]['columnWidth']  == 0 ? 'N': 'Y';
-			    	   excelShow = that.columnProperty[dropdownGridId][i]['excelShow']  == 'Y' ? 'Y': 'N';
-			    	   excelTemplateShow = that.columnProperty[dropdownGridId][i]['excelTemplateShow']  == 'Y' ? 'Y': 'N';
-			    	   gridShow = that.columnProperty[dropdownGridId][i]['columnShow']  == 'Y' ? true: false;
-			    	   excelDownShow   = that.columnProperty[dropdownGridId][i]['excelShow'] == 'Y' ? true: false;
-			    	   excelUploadShow = that.columnProperty[dropdownGridId][i]['excelTemplateShow'] == 'Y' ? true: false;
-			    	   isCheckBox = momWidget.columnProperty[dropdownGridId][i]['columnType'] == 'CK' ? 'Y': 'N';
-			    	   isDropDown = momWidget.columnProperty[dropdownGridId][i]['columnType'] == 'S' ? 'Y': momWidget.columnProperty[index][i]['columnType'] == 'M' ? 'Y':'N';
-			    	   columnId = that.columnProperty[dropdownGridId][i]['columnId'];
 
-			    	   columnProp[i] =  {
-					    	      dataField 	: columnId 
-					  			, headerText 	: that.columnProperty[dropdownGridId][i]['columnNm'] 
-						   		, dataType      : that.columnProperty[dropdownGridId][i]['dataType'] 
-								, formatString  : that.columnProperty[dropdownGridId][i]['dataFormat']
-	    	                    , editable      : that.columnProperty[dropdownGridId][i]['columnEditable']  == 'Y' ? true : false
-					  			, style			: that.columnProperty[dropdownGridId][i]['columnAlign']  == 'LEFT' ? 'aui-grid-'+columnType+'-column-left': that.columnProperty[index][i]['columnAlign'] == 'RIGHT'? 'aui-grid-'+columnType+'-column-right' : 'aui-grid-'+columnType+'-column-center'	
-					  			, visible       : gridShow  
-					  		
-	                    };
-
-			    	   if(widthUse == 'Y'){
-			    		   columnProp[i].width      = that.columnProperty[dropdownGridId][i]['columnWidth'];
-
-			    	   }
-			    	   if(isCheckBox =='Y'){
-			    		   columnProp[i].renderer = {
-									          type: 'CheckBoxEditRenderer'
-											, editable: true
-											,checkValue : 'Y' 
-											,unCheckValue : 'N'
-										};
-			    		   
-			    		   columnProp[i].headerRenderer = { 
-			    				type : "CheckBoxHeaderRenderer",
-			    				position : "right",
-			    				dependentMode : true
-			    				//onClick : myHeaderCheckClick 
-			    			};
-			    	   }
-			 
-			    	   	
-			      } 	
-			        AUIGrid.destroy('#grid'+(dropdownGridId+1));
-				    that.grid[dropdownGridId] = AUIGrid.create('#grid'+(dropdownGridId+1), columnProp, that.gridProperty[dropdownGridId][0]); 
-			      
-
-				     //$('#dropDownGridPop'+(dropdownGridId+1)).momModal('show');
-				     $('#dropDownGridPop'+(dropdownGridId+1)).css('z-index','9999');
-				     $('#dropDownGridPop'+(dropdownGridId+1)).css('display','block');
-				     
-				     $('#dropDownGridPop'+(dropdownGridId+1)).offset({top : activeTop+20, left : activeLeft+0});
-				  AUIGrid.resize('#grid'+(dropdownGridId+1));	
-				  that.setGridEvent(dropdownGridId,your);                      // 그리드이벤트 세팅(셀클릭,체크박스클릭,편집 등)
-				  let callInitResult = that.checkActionCallInit(dropdownGridId, 'R',  item, 'CELLCLICK', your,e);     	
-			  if(callInitResult['result'] != 'SUCCESS') {
-							  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-							  momWidget.splashHide();
-						      return;
-			 }
-			 totalParam = callInitResult['param'];
-				  mom_ajax('R', 'DG.'+dropdownGridQueryId, totalParam, function(result1, data1) {
-					if(result1 != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-					}
-						 AUIGrid.setGridData(that.grid[dropdownGridId], data1); 
-						   						   	
-				}, undefined, undefined, that, false);
-		    	/* that.findBtnClicked(dropdownGridId, [{keyId1:fieldValue}], true, 'INIT',menuId,your,function(callBackResult, callBackData) {
-						                 if(callBackResult != 'SUCCESS' || callBackData.length==0) {
-						    	            momWidget.splashHide();
-						    	            momWidget.messageBox({type:'warning', width:'400', height: '145', html: '조회된 데이터없음!'});
-						    	            $('#dropDownGridPop'+(dropdownGridId+1)).remove();
-							                return;							     
-						                 }	
-						               
-					});*/
-		       
-				}, undefined, undefined, this, false);
-				
-				//}
-				e.orgEvent.stopImmediatePropagation();
-				return;
-			}
-			else{
-				
-			rowIdValue.push(e.rowIdValue);
-			let gridData = AUIGrid.getGridData(e['pid']);
-			let checkCount = 0;
-			if(selectionMode =='singleCell' || selectionMode == 'singleRow'){
-				for(let i=0,max=gridData.length; i<max;i++){
-					if(AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])){ //체크되어있따면
-					  
-						checkCount ++;
-					}
-					
-					
-				}
-				 if(checkCount==0){					
-					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					  if(customCheckBox=='Y'){
-						//that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], 'Y');
-						     
-					  }
-				}
-				 else if(checkCount==1){
-					     AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					     if(customCheckBox=='Y'){
-						   //that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], 'N');
-					    }
-				     }
-				 else if(checkCount>1){
-					let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);
-					AUIGrid.setAllCheckedRows(e.pid, false);
-					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-				/*	if(ischeck==true){
-						AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
-					}
-					else{
-						AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					}*/
-					
-				
-					  if(customCheckBox=='Y'){
-						  // that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], '');
-					  }
-					
-				}
-				
-				
-				else{
-					
-				}
-				
-			/*	if(AUIGrid.isCheckedRowById(e.pid, rowId)) {
-					AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
-				} else {								
-					     AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-				}*/
-			}
-			else if(selectionMode =='multipleCells' || selectionMode == 'multipleRows'){	
-				if(AUIGrid.isCheckedRowById(e.pid, rowId)) {
-					AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
-				} else {								
-					AUIGrid.addCheckedRowsByIds(e.pid, rowId);
-				}
-				     
-					
-			}
-			else{
-				
-			}
-			if(your != undefined && your.cellClickCallBack != undefined) {
-			     your.cellClickCallBack(index,rowIndex,target,e);
-			}
-			}
-		
-			
-		});	
-		AUIGrid.bind(that.grid[index], "rowCheckClick", function(e) {
-		
-			const rowIdField = AUIGrid.getProp(e['pid'], 'rowIdField'); 			 
-			const rowId = e['item'][rowIdField];
-			let gridData = AUIGrid.getGridData(e['pid']);
-			let checkCount=0;
-			//let selectionMode = AUIGrid.getProp(that.grid[index], "selectionMode");
-			let checkMode = that.gridExtraProperty[index]['checkId'];
-			if(checkMode =='singleRows'){
-				for(let i=0,max=gridData.length; i<max;i++){
-					if(AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])){
-						checkCount ++;
-					}
-					
-					
-				}
-				 if(checkCount==0){					
-					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					
-				}
-				else if(checkCount==1){
-					
-				}
-				else if(checkCount>1){
-						let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);
-					AUIGrid.setAllCheckedRows(e.pid, false);
-					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-				/*	if(ischeck==true){
-						AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
-					}
-					else{
-						AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					}*/
-					
-					
-				}
-				
-				
-				else{
-					
-				}
-				
-			}
-			else if( checkMode == 'multipleRows'){
-				for(let i=0,max=gridData.length; i<max;i++){
-					if(AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])){
-						checkCount ++;
-					}
-					
-					
-				}
-				 if(checkCount==0){					
-					AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					
-				}
-				else if(checkCount==1){
-					//AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-				}
-				else if(checkCount>1){
-					//AUIGrid.setAllCheckedRows(e.pid, false);
-					//AUIGrid.setCheckedRowsByIds(e.pid, rowId);
-					
-				}
-				
-				
-				else{
-					
-				}
-			}
-			else{
-				
-			}
-	
-		});	
-	/*	AUIGrid.bind(that.grid[index], "dropEnd", function(event ) {
-			var childColumn    = that.gridProperty[index][0]['treeIdField']
-			var childId        = event['toRowIndex'];
-			var parentColumn   = that.gridProperty[index][0]['treeIdRefField'];
-			var prevParentId   = event.items[0][that.gridProperty[index][0]['treeIdRefField']]
-			var toRowIndex     = event['toRowIndex'];
-			var nowParentId    = event.items[0]['_$parent'];
-			AUIGrid.setCellValue(that.grid[index], toRowIndex, parentColumn, nowParentId);
-		});*/
-	},
-	setKeyEvent: function(index, your) {
-		var that =  momWidget;	
-		//$(document).on('keydown', '.searchInputField, .searchSelectField, .searchSelectField-search-combo', function(e) {
-			$(document).on('keydown', '.searchSelectField.jqx-combobox', function(e) {//콤보박스 
-			if(e.keyCode == 13){ //엔터
-			 let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1;
-			  	 if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
-		    	 that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
-		    }	
-		    else{
-			  that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
-		    }	    	
-			    
-			
-			
-				
-			} 
-			else if(e.keyCode == 8 || e.keyCode == 46){
-				var searchId = e.currentTarget.id;
-				$('#'+searchId).jqxComboBox('clearSelection');
-				$('#'+searchId).jqxComboBox('uncheckAll');
-			}
-		});
-		$(document).on('keydown', '.form-control.w-input.searchInputField', function(e) {
-			if(e.keyCode == 13){ //엔터
-			 let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1; //
-			 if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
-		    	 that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
-		    }	
-		    else{
-			  that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
-		    }	    
-				e.stopImmediatePropagation();
-			} 
-			else if(e.keyCode == 46){
-				var searchId = e.currentTarget.id;
-				$('#'+searchId).val('');
-			}
-		});
-		$(document).on('keydown','.searchSelectField.jqx-datetimeinput', function(e) {
-			if(e.keyCode == 13){ //엔터
-			    let gridIndex = 1;
-			    if(e.currentTarget.id.split('SD')[1]!=undefined){
-				   gridIndex= Number(e.currentTarget.id.split('SD')[1]);
-			    }
-			    else  if(e.currentTarget.id.split('ED')[1]!=undefined){
-				   gridIndex= Number(e.currentTarget.id.split('ED')[1]);
-			    }
-			    else{
-				   gridIndex= Number(e.currentTarget.id.split('SP')[1]);
-			    }
-				
-			
-				
-			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
-		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
-		    }	
-		    else{
-			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
-		    }	      
-			} 
-			else if(e.keyCode == 8 || e.keyCode == 46){
-				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-				$('#'+searchId+'SP'+(index+1)).val('');
-			}
-		});
-		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
-			if(e.keyCode == 13){ //엔터
-		
-		      
-			
-			var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
-			var minLength = that.searchComboMinLength[index][searchId] ;
-			var queryId = that.searchComboQueryId[index][searchId];
-			if(searchString.length < minLength)	{
-						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-						return;
-			}
-			else{
-				mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
-						      if(result != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-						      }	
-						      $('#'+searchId).jqxComboBox({source: data});
-						   		setTimeout(function() {
-	                				$('#'+searchId).jqxComboBox('open' ); 
-    							},500);
-						      		}, undefined, undefined, that, false);
-			}
-				
-
-			} 
-			
-			
-
-		});
-		$(document).on('keydown', '.popupSelectField-popup-combo', function(e) {
-			if(e.keyCode == 13){ //엔터
-			e.stopImmediatePropagation();
-			var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-			var popupIndex = Number($('#'+e.currentTarget.parentElement.parentElement.parentElement.parentElement.id).attr('index'))
-			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
-			var minLength = that.popupComboMinLength[popupIndex][popupId] ;
-			var queryId = that.popupComboQueryId[popupIndex][popupId];
-			
-			if(searchString.length < minLength)	{
-						that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-						return;
-			}
-			else{
-				mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
-						      if(result != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-						      }	
-						      $('#'+popupId).jqxComboBox({source: data});
-						   		setTimeout(function() {
-	                				$('#'+popupId).jqxComboBox('open' ); 
-    							},500);
-						      		}, undefined, undefined, that, false);
-			}
-				
-
-			} 
-
-		});
-
-	},
-	setComboBoxSet: function(index, your) {
-		var that =  momWidget;	
+    setCustomComboBoxSet: function(index, btnId,your) {
+        var that =  momWidget;
         var searchId = '';
         var popupId = '';
         var searchType = '';
@@ -4923,415 +3831,205 @@ var momWidget = {
         var maxItemWidthNum = 0;
         var searchDropdownParam =[];
         var popupDropdownParam =[];
-        if (momWidget.searchProperty.length > 0){
-	  for(var i=0,max=that.searchProperty[index].length; i<max;i++){
-			 searchType = that.searchProperty[index][i]['searchType'];
-			 searchId = that.searchProperty[index][i]['searchId'];
-			 searchHeaderDropdownId  = that.searchProperty[index][i]['headerDropdownId'];
-			 searchHeaderType  = that.searchProperty[index][i]['headerType'];
-			 searchDropdownId  = that.searchProperty[index][i]['dropdownId'];
-			 searchNameSpace   = searchDropdownId.substr(0, 2);  
 
 
-			  
-			if(searchType == 'S' || searchType == 'M' || searchHeaderType == 'S'||searchHeaderType == 'M' || searchType == 'SS' || searchType == 'MS'){	      
-				        if(searchHeaderDropdownId != '' && searchHeaderDropdownId != undefined){
-				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({ displayMember: "label", valueMember: "code", width: '160px', height: 27,dropDownHeight: 120,disabled: false});
-				        	 $('#'+searchId+'Header'+'SP'+(index+1)).prev().prev().attr('class','circle-dh')
-				        	 $('#'+searchId+'Header'+'SP'+(index+1)).jqxComboBox({selectedIndex: 0 });
-				        }
-				        else{
-				        	if(searchType == 'M'){
-				        		$('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: '210px', height: 27,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
-				        		$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {
-				  
-				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
-				   maxItemWidthArry = maxItemWidth.split('px');
-				   maxItemWidthNum = Number(maxItemWidthArry[0]);
-				  if(maxItemWidthNum<210){
-					 maxItemWidth = '210px';
-				 }
-				 else{
-					maxItemWidth = maxItemWidthNum+50+'px'
-				 }
-				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
-			      });
-				        		
-				 }
-				  else if(searchType == 'MS'){
-						searchMinLen  = Number(that.searchProperty[index][i]['defaultValue'].trim());
-						searchComboMinLength[searchId+'SP'+(index+1)] = searchMinLen;
-						if(searchDropdownId != '' && searchDropdownId != undefined){
-						searchQueryId = searchDropdownId;
-						searchComboItem[searchId+'SP'+(index+1)] = searchNameSpace+'.'+searchQueryId;
-							 
-							// paramMap[i] = splitArray[0]:; 
-						}
-						else{
-							    searchQueryId = searchDropdownId;
-							 //   paramMap[i] = ; 
-						}
-					that.searchComboQueryId[index] = searchComboItem;
-					that.searchComboMinLength[index] = searchComboMinLength; 		    
-						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label",checkboxes: true, valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
-		  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
-				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
-				   maxItemWidthArry = maxItemWidth.split('px');
-				   maxItemWidthNum = Number(maxItemWidthArry[0]);
-				  if(maxItemWidthNum<160){
-					 maxItemWidth = '160px';
-				 }
-				 else{
-					maxItemWidth = maxItemWidthNum+30+'px'
-				 }
-				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
-			      });
-				}
-				 else if(searchType == 'SS'){
-						searchMinLen  = Number(that.searchProperty[index][i]['defaultValue'].trim());
-						searchComboMinLength[searchId+'SP'+(index+1)] = searchMinLen;
-						if(searchDropdownId != '' && searchDropdownId != undefined){
-						searchQueryId = searchDropdownId;
-						searchComboItem[searchId+'SP'+(index+1)] = searchNameSpace+'.'+searchQueryId;
-							 
-							// paramMap[i] = splitArray[0]:; 
-						}
-						else{
-							    searchQueryId = searchDropdownId;
-							 //   paramMap[i] = ; 
-						}
-					that.searchComboQueryId[index] = searchComboItem;
-					that.searchComboMinLength[index] = searchComboMinLength; 		    
-						     $('#'+searchId+'SP'+(index+1)).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
-		  $('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {				  
-				   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-				   maxItemWidthArry = maxItemWidth.split('px');
-				   maxItemWidthNum = Number(maxItemWidthArry[0]);
-				  if(maxItemWidthNum<160){
-					 maxItemWidth = '160px';
-				 }
-				 else{
-					maxItemWidth = maxItemWidthNum+30+'px'
-				 }
-				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
-			      });
-			          $('#'+searchId+'SP'+(index+1)).on('close', function (e) {
-				     var tmpCd = e.target.children[1].value; 
-				            if(tmpCd ==''){
-								$('#'+e.target.id).jqxComboBox('clear');
-								return;
-							}
-							 
-							 //$('#'+e.target.id).val(tmpCd);
-			      });		
-			      
-			     
-				}
-				else if(searchType == 'S'){
-				      $('#'+searchId+'SP'+(index+1)).jqxComboBox({displayMember: "label", valueMember: "code", width: 210, height: 27,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase'});
-				    	$('#'+searchId+'SP'+(index+1)).on('bindingComplete', function (e) {	
-					if($("#innerListBox" + e.owner.id + " div[role=option] span")[0]==undefined){
-						 
-						  maxItemWidth = '160px';
-					}	  
-					else{
-						 maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-					}
-				 
-				   maxItemWidthArry = maxItemWidth.split('px');
-				   maxItemWidthNum = Number(maxItemWidthArry[0]);
-				  if(maxItemWidthNum<210){
-					 maxItemWidth = '210px';
-				 }
-				 else{
-					maxItemWidth = maxItemWidthNum+30+'px';
-				 }
-				 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
-			      });
-			          $('#'+searchId+'SP'+(index+1)).on('close', function (e) {
-				/*     var tmpCd = e.target.children[1].value; 
-				            if(tmpCd ==''){
-								$('#'+e.target.id).jqxComboBox('clear');
-								return;
-							}*/
-							//$('#'+searchId+'SP'+(index+1)).jqxComboBox('clear'); 
-							 //$('#'+e.target.id).val(tmpCd);
-			      });	
-			      	$('#'+searchId+'SP'+(index+1)).on('keyup', function (e) {
-				        if(e.keyCode==13){
-						    let passCount = 0;				 	  
-							that.searchPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems') == undefined ? 0:$('#'+e.currentTarget.id).jqxComboBox('getItems');
-					       if(that.searchPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
-		             		for(var i=0,max1=that.searchPrevItem.length; i<max1;i++){
-								if(that.searchPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
-								passCount ++;	
-							}
-						    
-					       } 
-					     if(passCount >=1 ){
-						     return;
-						 }
-							}	
-										  				  
-      					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
-      					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[e.currentTarget.id] == undefined || that.searchComboItems[e.currentTarget.id] == ''){
-							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[e.currentTarget.id]);	
-			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
-	          				return;
-						} 
-						//$('#'+e.currentTarget.id).val('');
-						let searchStr = $('#'+e.currentTarget.id).val();
-						//$('#'+e.currentTarget.id).jqxComboBox('clear');
-      					let oldItems = that.searchComboItems[e.currentTarget.id];
-      				/*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
-	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
-						}*/
-      					    
-      					let newItems = [];
-              			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					
-				 			if(oldItems[i]['label'].toUpperCase().indexOf($('#'+e.currentTarget.id).val().toUpperCase()) >=0){
-								//$("#jqxComboBox").jqxComboBox('removeItem', "List Item" ); 
-								 newItems.push(oldItems[i]);
-							     
-								//$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']}); 
-							}
-							else{
-								//$('#'+e.currentTarget.id).jqxComboBox('removeItem', oldItems[i]['code']);
-							}
+        if (momWidget.customPopupProperty[btnId].length > 0){
 
-			  		   }
-			  		      
-	               			//$('#'+e.currentTarget.id).val(searchStr);
-    					
-			  		  
-			  		   if(newItems.length ==0 ){
-				 		   
-			  		       $('#'+e.currentTarget.id).jqxComboBox('source',oldItems);	
-			  		       $('#'+e.currentTarget.id).jqxComboBox('open');
-			  		  
-						}
-						else{
-							
-			  		    	$('#'+e.currentTarget.id).jqxComboBox('source',newItems);	
-			  		    	$('#'+e.currentTarget.id).jqxComboBox('open');
-			  		    	
-			  		    	 $('#'+e.currentTarget.id).val(searchStr);
-						}
-			  		    
-     					
-}
-				    	
-			      });
-				}
-				else{
-				     
-				        	}
-				        
-				        	  
-				        }
+            for(var j=0,max2=that.customPopupProperty[btnId].length; j<max2;j++){
+                popupDropdownId       = that.customPopupProperty[btnId][j]['dropdownId'];
+                popupDropdownParam   = that.customPopupProperty[btnId][j]['dropdownParam'] == '' ? []:that.popupProperty[index][j]['dropdownParam'];
+                popupType        = that.customPopupProperty[btnId][j]['popupType'];
+                popupNameSpace   = popupDropdownId.substr(0, 2);
+                queryId          = '';
+                paramMap.length  = 0;
+                //  minLength        = 1;
+                popupId = that.customPopupProperty[btnId][j]['popupId'] + 'DP' +(index+1);
+                if($(popupId).hasClass("jqx-widget")){
+                    $('#'+'customPop-'+btnId).find('#fromWorkCenterCdDP1').val(checkedItems[0]['fromWorkCenterCd']);
+                }
+                if(popupType == 'S' ){
+                    $('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'none'});
+                    $('#'+popupId).on('bindingComplete', function (e) {
+                        //maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+                        maxItemWidth = $("#innerListBox" + e.owner.id)[0].style["width"];
+                        maxItemWidthArry = maxItemWidth.split('px');
+                        maxItemWidthNum = Number(maxItemWidthArry[0]);
+                        if(maxItemWidthNum<160){
+                            maxItemWidth = '160px';
+                        }
+                        else{
+                            maxItemWidth = maxItemWidthNum+20+'px';
+                        }
+                        $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+                    });
+                    /*    	$('#'+popupId).on('open', function (e) {
+                         that.popupOpenYn = 'N';
+                      });*/
+                    $('#'+popupId).on('close', function (e) {
+                        var tmpCd = e.target.children[1].value;
+                        /* if(tmpCd ==''){
+                             $('#'+e.target.id).jqxComboBox('clear');
+                             return;
+                         }*/
+                        //that.popupOpenYn = 'N';
 
-					
-		
-			}
-		
-		
-			}
-		}
-		
-		if (momWidget.popupProperty.length > 0){
 
-		  for(var j=0,max2=that.popupProperty[index].length; j<max2;j++){			
-				popupDropdownId       = that.popupProperty[index][j]['dropdownId'];
-				popupDropdownParam   = that.popupProperty[index][j]['dropdownParam'] == '' ? []:that.popupProperty[index][j]['dropdownParam'];
-			    popupType        = that.popupProperty[index][j]['popupType']; 
-			    popupNameSpace   = popupDropdownId.substr(0, 2);  
-			    queryId          = '';
-			    paramMap.length  = 0;
-			  //  minLength        = 1;
-			    popupId = that.popupProperty[index][j]['popupId'] + 'DP' +(index+1);
-					if(popupType == 'S' ){    
-						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'none'});       		
-					  	 $('#'+popupId).on('bindingComplete', function (e) {
-							   //maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-							   maxItemWidth = $("#innerListBox" + e.owner.id)[0].style["width"];
-							   maxItemWidthArry = maxItemWidth.split('px');
-							   maxItemWidthNum = Number(maxItemWidthArry[0]);
-							  if(maxItemWidthNum<160){
-								 maxItemWidth = '160px';
-							 }
-							 else{
-								maxItemWidth = maxItemWidthNum+20+'px';
-							 }
-							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
-			      });		
-			   /*    	$('#'+popupId).on('open', function (e) {
-				    that.popupOpenYn = 'N';
-				 });*/	
-				    $('#'+popupId).on('close', function (e) {
-				     var tmpCd = e.target.children[1].value; 
-				           /* if(tmpCd ==''){
-								$('#'+e.target.id).jqxComboBox('clear');
-								return;
-							}*/
-							//that.popupOpenYn = 'N';
-						
 
-							
-			      });	
-			      	      	$('#'+popupId).on('keyup', function (e) {
-				        if(e.keyCode==13){	
-					        let passCount = 0;				 	  
-							that.popupPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
-						
-	                     if(that.popupPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
-		             		for(var i=0,max1=that.popupPrevItem.length; i<max1;i++){
-								if(that.popupPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
-								passCount ++;	
-							}
-						    
-					     } 
-					     if(passCount>=1){
-						     return;
-						 }
-							}							  
-      					// let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
-      					   if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[e.currentTarget.id] == undefined || that.searchComboItems[e.currentTarget.id] == ''){
-							$('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[e.currentTarget.id]);	
-			  		        $('#'+e.currentTarget.id).jqxComboBox('open');
-			  		        //that.popupOpenYn = 'Y'; 
-	          				return;
-						} 
-						//$('#'+e.currentTarget.id).val('');
-						let searchStr = $('#'+e.currentTarget.id).val();
-						//$('#'+e.currentTarget.id).jqxComboBox('clear');
-      					let oldItems = that.searchComboItems[e.currentTarget.id];
-      				/*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
-	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
-						}*/
-      					    
-      					let newItems = [];
-              			for(var i=0,popupLen=oldItems.length; i<popupLen;i++){					
-				 			if(oldItems[i]['label'].toUpperCase().indexOf($('#'+e.currentTarget.id).val().toUpperCase()) >=0){
-								//$("#jqxComboBox").jqxComboBox('removeItem', "List Item" ); 
-								 newItems.push(oldItems[i]);
-								//$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']}); 
-							}
-							else{
-								//$('#'+e.currentTarget.id).jqxComboBox('removeItem', oldItems[i]['code']);
-							}
+                    });
+                    $('#'+popupId).on('keyup', function (e) {
+                        if(e.keyCode==13){
+                            let passCount = 0;
+                            that.popupPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
 
-			  		   }
-			  		      
-	               			//$('#'+e.currentTarget.id).val(searchStr);
-    					
-			  		  
-			  		   if(newItems.length ==0 ){
-				 		   
-			  		       $('#'+e.currentTarget.id).jqxComboBox('source',oldItems);	
-			  		       $('#'+e.currentTarget.id).jqxComboBox('open');
-			  		  
-						}
-						else{
-							
-			  		    	$('#'+e.currentTarget.id).jqxComboBox('source',newItems);	
-			  		    	$('#'+e.currentTarget.id).jqxComboBox('open');
-			  		    	
-			  		    	 $('#'+e.currentTarget.id).val(searchStr);
-						}
-    				
-					 
-			  		    
-     					
-						}
-				    	
-			      });
-				
-			      
-			      
-				}
-				else if(popupType == 'DG' ){    
-						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'press click to open'});       		
-					  	 $('#'+popupId).on('bindingComplete', function (e) {
-							/*   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-							  maxItemWidthArry = maxItemWidth.split('px');
-							   maxItemWidthNum = Number(maxItemWidthArry[0]);
-							  if(maxItemWidthNum<160){
-								 maxItemWidth = '160px';
-							 }
-							 else{
-								maxItemWidth = maxItemWidthNum+20+'px'
-							 }
-							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});*/
-			      });		
-				}
-				else if (popupType == 'M'){
-					$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
-					 	 $('#'+popupId).on('bindingComplete', function (e) {
-							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
-							  maxItemWidthArry = maxItemWidth.split('px');
-							   maxItemWidthNum = Number(maxItemWidthArry[0]);
-							  if(maxItemWidthNum<160){
-								 maxItemWidth = '160px';
-							 }
-							 else{
-								maxItemWidth = maxItemWidthNum+20+'px'
-							 }
-							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
-			      });		
-				}
-				else if(popupType == 'SS'){
-						popupMinLen  = Number(that.popupProperty[index][j]['defaultValue'].trim());
-						popupComboMinLength[popupId] = popupMinLen;
-						if(popupDropdownId != '' && popupDropdownId != undefined){
-						popupQueryId = popupDropdownId;
-						popupComboItem[popupId] =  popupNameSpace +'.'+popupQueryId;
-							 
-							// paramMap[i] = splitArray[0]:; 
-						}
-						else{
-							    popupQueryId = popupDropdownId;
-							 //   paramMap[i] = ; 
-						}
-					that.popupComboQueryId[index] = popupComboItem;
-					that.popupComboMinLength[index] = popupComboMinLength; 		    
-						     $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+popupMinLen +' or more characters',minLength: popupMinLen,remoteAutoComplete: false});
-	 	 $('#'+popupId).on('bindingComplete', function (e) {
-			if ($('#'+e.target.id).jqxComboBox('isOpened' ) == false){
-				return;
-			}
-							  // maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
-							  maxItemWidth = $("#innerListBox" + e.owner.id)[0].style["width"];
-							  maxItemWidthArry = maxItemWidth.split('px');
-							   maxItemWidthNum = Number(maxItemWidthArry[0]);
-							  if(maxItemWidthNum<160){
-								 maxItemWidth = '160px';
-							 }
-							 else{
-								maxItemWidth = maxItemWidthNum+20+'px'
-							 }
-							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
-			      });	
-			       $('#'+popupId).on('close', function (e) {
-				     var tmpCd = e.target.children[1].value; 
-				            if(tmpCd ==''){
-								$('#'+e.target.id).jqxComboBox('clear');
-								return;
-							}
-							
-							 //$('#'+e.target.id).val(tmpCd);
-			      });			
-				}
-				  
-					  	 	
-						    			        	 
-						        
-		}
-			
-			}
-	
-	
+                            if(that.popupPrevItem.length !=0 && $('#'+e.currentTarget.id).val()!=''){
+                                for(var i=0,max1=that.popupPrevItem.length; i<max1;i++){
+                                    if(that.popupPrevItem[i]['value'] == $('#'+e.currentTarget.id).val().trim()){
+                                        passCount ++;
+                                    }
 
-	},
+                                }
+                                if(passCount>=1){
+                                    return;
+                                }
+                            }
+                            // let items = $('#'+searchId+'SP'+(index+1)).jqxComboBox('getItems');
+                            if($('#'+e.currentTarget.id).val() =='' ||that.searchComboItems[e.currentTarget.id] == undefined || that.searchComboItems[e.currentTarget.id] == ''){
+                                $('#'+e.currentTarget.id).jqxComboBox('source',that.searchComboItems[e.currentTarget.id]);
+                                $('#'+e.currentTarget.id).jqxComboBox('open');
+                                //that.popupOpenYn = 'Y';
+                                return;
+                            }
+                            //$('#'+e.currentTarget.id).val('');
+                            let searchStr = $('#'+e.currentTarget.id).val();
+                            //$('#'+e.currentTarget.id).jqxComboBox('clear');
+                            let oldItems = that.searchComboItems[e.currentTarget.id];
+                            /*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
+                                   that.preComboItems[index][e.currentTarget.id] = oldItems;
+                              }*/
+
+                            let newItems = [];
+                            for(var i=0,popupLen=oldItems.length; i<popupLen;i++){
+                                if(oldItems[i]['label'].toUpperCase().indexOf($('#'+e.currentTarget.id).val().toUpperCase()) >=0){
+                                    //$("#jqxComboBox").jqxComboBox('removeItem', "List Item" );
+                                    newItems.push(oldItems[i]);
+                                    //$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']});
+                                }
+                                else{
+                                    //$('#'+e.currentTarget.id).jqxComboBox('removeItem', oldItems[i]['code']);
+                                }
+
+                            }
+
+                            //$('#'+e.currentTarget.id).val(searchStr);
+
+
+                            if(newItems.length ==0 ){
+
+                                $('#'+e.currentTarget.id).jqxComboBox('source',oldItems);
+                                $('#'+e.currentTarget.id).jqxComboBox('open');
+
+                            }
+                            else{
+
+                                $('#'+e.currentTarget.id).jqxComboBox('source',newItems);
+                                $('#'+e.currentTarget.id).jqxComboBox('open');
+
+                                $('#'+e.currentTarget.id).val(searchStr);
+                            }
+
+
+
+
+                        }
+
+                    });
+
+
+
+                }
+                else if(popupType == 'DG' ){
+                    $('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'press click to open'});
+                    $('#'+popupId).on('bindingComplete', function (e) {
+                        /*   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+                          maxItemWidthArry = maxItemWidth.split('px');
+                           maxItemWidthNum = Number(maxItemWidthArry[0]);
+                          if(maxItemWidthNum<160){
+                             maxItemWidth = '160px';
+                         }
+                         else{
+                            maxItemWidth = maxItemWidthNum+20+'px'
+                         }
+                         $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});*/
+                    });
+                }
+                else if (popupType == 'M'){
+                    $('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
+                    $('#'+popupId).on('bindingComplete', function (e) {
+                        maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
+                        maxItemWidthArry = maxItemWidth.split('px');
+                        maxItemWidthNum = Number(maxItemWidthArry[0]);
+                        if(maxItemWidthNum<160){
+                            maxItemWidth = '160px';
+                        }
+                        else{
+                            maxItemWidth = maxItemWidthNum+20+'px'
+                        }
+                        $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+                    });
+                }
+                else if(popupType == 'SS'){
+                    popupMinLen  = Number(that.popupProperty[index][j]['defaultValue'].trim());
+                    popupComboMinLength[popupId] = popupMinLen;
+                    if(popupDropdownId != '' && popupDropdownId != undefined){
+                        popupQueryId = popupDropdownId;
+                        popupComboItem[popupId] =  popupNameSpace +'.'+popupQueryId;
+
+                        // paramMap[i] = splitArray[0]:;
+                    }
+                    else{
+                        popupQueryId = popupDropdownId;
+                        //   paramMap[i] = ;
+                    }
+                    that.popupComboQueryId[index] = popupComboItem;
+                    that.popupComboMinLength[index] = popupComboMinLength;
+                    $('#'+popupId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+popupMinLen +' or more characters',minLength: popupMinLen,remoteAutoComplete: false});
+                    $('#'+popupId).on('bindingComplete', function (e) {
+                        if ($('#'+e.target.id).jqxComboBox('isOpened' ) == false){
+                            return;
+                        }
+                        // maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+                        maxItemWidth = $("#innerListBox" + e.owner.id)[0].style["width"];
+                        maxItemWidthArry = maxItemWidth.split('px');
+                        maxItemWidthNum = Number(maxItemWidthArry[0]);
+                        if(maxItemWidthNum<160){
+                            maxItemWidth = '160px';
+                        }
+                        else{
+                            maxItemWidth = maxItemWidthNum+20+'px'
+                        }
+                        $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});
+                    });
+                    $('#'+popupId).on('close', function (e) {
+                        var tmpCd = e.target.children[1].value;
+                        if(tmpCd ==''){
+                            $('#'+e.target.id).jqxComboBox('clear');
+                            return;
+                        }
+
+                        //$('#'+e.target.id).val(tmpCd);
+                    });
+                }
+
+
+
+
+            }
+
+        }
+
+
+
+    },
 		setCustomBoXSet: function(index, btnId) {
 		var that =  momWidget;	
 		var btnIndex = btnId.split('customBtn')[1];
@@ -17553,139 +16251,7 @@ var momWidget = {
 			AUIGrid.setCellValue(that.grid[index], toRowIndex, parentColumn, nowParentId);
 		});*/
 	},
-	setKeyEvent: function(index, your) {
-		var that =  momWidget;	
-		//$(document).on('keydown', '.searchInputField, .searchSelectField, .searchSelectField-search-combo', function(e) {
-			$(document).on('keydown', '.searchSelectField.jqx-combobox', function(e) {//콤보박스 
-			if(e.keyCode == 13){ //엔터
-			 let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1;
-			  	 if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
-		    	 that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
-		    }	
-		    else{
-			  that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
-		    }	    	
-			    
-			
-			
-				
-			} 
-			else if(e.keyCode == 8 || e.keyCode == 46){
-				var searchId = e.currentTarget.id;
-				$('#'+searchId).jqxComboBox('clearSelection');
-				$('#'+searchId).jqxComboBox('uncheckAll');
-			}
-		});
-		$(document).on('keydown', '.form-control.w-input.searchInputField', function(e) {
-			if(e.keyCode == 13){ //엔터
-			 let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1; //
-			 if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
-		    	 that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
-		    }	
-		    else{
-			  that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
-		    }	    
-				e.stopImmediatePropagation();
-			} 
-			else if(e.keyCode == 46){
-				var searchId = e.currentTarget.id;
-				$('#'+searchId).val('');
-			}
-		});
-		$(document).on('keydown','.searchSelectField.jqx-datetimeinput', function(e) {
-			if(e.keyCode == 13){ //엔터
-			    let gridIndex = 1;
-			    if(e.currentTarget.id.split('SD')[1]!=undefined){
-				   gridIndex= Number(e.currentTarget.id.split('SD')[1]);
-			    }
-			    else  if(e.currentTarget.id.split('ED')[1]!=undefined){
-				   gridIndex= Number(e.currentTarget.id.split('ED')[1]);
-			    }
-			    else{
-				   gridIndex= Number(e.currentTarget.id.split('SP')[1]);
-			    }
-				
-			
-				
-			 if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용		
-			     that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
-		    	 that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
-		    }	
-		    else{
-			  that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
-		    }	      
-			} 
-			else if(e.keyCode == 8 || e.keyCode == 46){
-				var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-				$('#'+searchId+'SP'+(index+1)).val('');
-			}
-		});
-		$(document).on('keydown', '.searchSelectField-search-combo', function(e) {
-			if(e.keyCode == 13){ //엔터
-		
-		      
-			
-			var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
-			var minLength = that.searchComboMinLength[index][searchId] ;
-			var queryId = that.searchComboQueryId[index][searchId];
-			if(searchString.length < minLength)	{
-						that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-						return;
-			}
-			else{
-				mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
-						      if(result != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-						      }	
-						      $('#'+searchId).jqxComboBox({source: data});
-						   		setTimeout(function() {
-	                				$('#'+searchId).jqxComboBox('open' ); 
-    							},500);
-						      		}, undefined, undefined, that, false);
-			}
-				
 
-			} 
-			
-			
-
-		});
-		$(document).on('keydown', '.popupSelectField-popup-combo', function(e) {
-			if(e.keyCode == 13){ //엔터
-			e.stopImmediatePropagation();
-			var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
-			var popupIndex = Number($('#'+e.currentTarget.parentElement.parentElement.parentElement.parentElement.id).attr('index'))
-			var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
-			var minLength = that.popupComboMinLength[popupIndex][popupId] ;
-			var queryId = that.popupComboQueryId[popupIndex][popupId];
-			
-			if(searchString.length < minLength)	{
-						that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
-						return;
-			}
-			else{
-				mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
-						      if(result != 'SUCCESS') {
-						    	  momWidget.splashHide();
-							      return;							     
-						      }	
-						      $('#'+popupId).jqxComboBox({source: data});
-						   		setTimeout(function() {
-	                				$('#'+popupId).jqxComboBox('open' ); 
-    							},500);
-						      		}, undefined, undefined, that, false);
-			}
-				
-
-			} 
-
-		});
-
-	},
 	setComboBoxSet: function(index, your) {
 		var that =  momWidget;	
         var searchId = '';
@@ -17941,9 +16507,10 @@ var momWidget = {
 			    paramMap.length  = 0;
 			  //  minLength        = 1;
 			    popupId = that.popupProperty[index][j]['popupId'] + 'DP' +(index+1);
-					if(popupType == 'S' ){    
-						$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'none'});       		
-					  	 $('#'+popupId).on('bindingComplete', function (e) {
+                let popupComboId = $('#defaultPop'+index).find('#'+popupId);
+					if(popupType == 'S' ){
+                        popupComboId.find('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'none'});
+                        popupComboId.find('#'+popupId).on('bindingComplete', function (e) {
 							   //maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
 							   maxItemWidth = $("#innerListBox" + e.owner.id)[0].style["width"];
 							   maxItemWidthArry = maxItemWidth.split('px');
@@ -17958,8 +16525,8 @@ var momWidget = {
 			      });		
 			   /*    	$('#'+popupId).on('open', function (e) {
 				    that.popupOpenYn = 'N';
-				 });*/	
-				    $('#'+popupId).on('close', function (e) {
+				 });*/
+                        popupComboId.on('close', function (e) {
 				     var tmpCd = e.target.children[1].value; 
 				           /* if(tmpCd ==''){
 								$('#'+e.target.id).jqxComboBox('clear');
@@ -17969,8 +16536,8 @@ var momWidget = {
 						
 
 							
-			      });	
-			      	      	$('#'+popupId).on('keyup', function (e) {
+			      });
+                        popupComboId.on('keyup', function (e) {
 				        if(e.keyCode==13){	
 					        let passCount = 0;				 	  
 							that.popupPrevItem = $('#'+e.currentTarget.id).jqxComboBox('getItems');
@@ -18057,8 +16624,8 @@ var momWidget = {
 			      });		
 				}
 				else if (popupType == 'M'){
-					$('#'+popupId).jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
-					 	 $('#'+popupId).on('bindingComplete', function (e) {
+                        popupComboId.jqxComboBox({displayMember: "label", valueMember: "code", width: 160, height: 30,dropDownHeight: 120,disabled: false,checkboxes: true,searchMode: 'containsignorecase'});
+                        popupComboId.on('bindingComplete', function (e) {
 							   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[1].style["width"];
 							  maxItemWidthArry = maxItemWidth.split('px');
 							   maxItemWidthNum = Number(maxItemWidthArry[0]);
@@ -21322,6 +19889,7 @@ var momWidget = {
 		        let popupTitle ='#'+e.target.parentElement.parentElement.parentElement.id ;
 		        let tmpYn = 'N';
 		        let btnIndex = $('.customPop.in').attr('btnIndex');
+                let index = Number(btnIndex.split('-')[0])-1;
 		        let buttonId = 'customBtn'+btnIndex;
 				let actionType = $('#customPop-'+buttonId).attr('actionType');
 				let gridPopYn= 'N';
@@ -21899,7 +20467,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, buttonId,momWidget.pageProperty[btnIndex]['menuId'],your);
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, buttonId,momWidget.pageProperty[index]['menuId'],your);
 			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
@@ -21927,8 +20495,7 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[btnIndex]['menuId'],your);
-			        	 // $('#' +'defaultPop'+(index+1)).momModal('hide');
+			        	  momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
 						  momWidget.splashHide();
 					      return;
@@ -21936,7 +20503,7 @@ var momWidget = {
 				}
 					
 						
-							 
+
 	
 				  
 			
@@ -22419,9 +20986,9 @@ var momWidget = {
 				/*let targetArray = e.target.id.split('DP');
 				var buttonId = targetArray[0];*/
 				var actionType = $('#customPop-'+btnId).attr('actiontype');
-		      	
-			
-				that.setPopup(index,actionType,btnId,'Y');	
+
+
+                that.setPopup(index,actionType,btnId,'Y');
 				
 				callInitResult = that.checkActionCallInit(index, actionType, [], btnId, your,e);
 				if(callInitResult['result'] != 'SUCCESS') {
@@ -23889,7 +22456,140 @@ var momWidget = {
 			$(that.excelTemplateGrid[index]).children().append($('.aui-grid-export-progress-modal'));
 		});
 	},
-	
+    // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    setKeyEvent: function(index, your) {
+        var that =  momWidget;
+        //$(document).on('keydown', '.searchInputField, .searchSelectField, .searchSelectField-search-combo', function(e) {
+        $(document).on('keydown', '.searchSelectField.jqx-combobox', function(e) {//콤보박스
+            if(e.keyCode == 13){ //엔터
+                let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1;
+                if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용
+                    that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
+                    that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
+                }
+                else{
+                    that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
+                }
+
+
+
+
+            }
+            else if(e.keyCode == 8 || e.keyCode == 46){
+                var searchId = e.currentTarget.id;
+                $('#'+searchId).jqxComboBox('clearSelection');
+                $('#'+searchId).jqxComboBox('uncheckAll');
+            }
+        });
+        $(document).on('keydown', '.form-control.w-input.searchInputField', function(e) {
+            if(e.keyCode == 13){ //엔터
+                let gridIndex= Number(e.currentTarget.id.split('SP')[1])-1; //
+                if(that.gridProperty[gridIndex][0]['usePaging'] == true){ //페이징사용
+                    that.findBtnClicked(gridIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[gridIndex]['programId'],your);
+                    that.findBtnClicked(gridIndex, {startPage:1,endPage:that.gridProperty[gridIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[gridIndex]['programId'],your);
+                }
+                else{
+                    that.findBtnClicked(gridIndex, {}, true, 'findBtn',that.pageProperty[gridIndex]['menuId'],your);
+                }
+                e.stopImmediatePropagation();
+            }
+            else if(e.keyCode == 46){
+                var searchId = e.currentTarget.id;
+                $('#'+searchId).val('');
+            }
+        });
+        $(document).on('keydown','.searchSelectField.jqx-datetimeinput', function(e) {
+            if(e.keyCode == 13){ //엔터
+                let gridIndex = 1;
+                if(e.currentTarget.id.split('SD')[1]!=undefined){
+                    gridIndex= Number(e.currentTarget.id.split('SD')[1]);
+                }
+                else  if(e.currentTarget.id.split('ED')[1]!=undefined){
+                    gridIndex= Number(e.currentTarget.id.split('ED')[1]);
+                }
+                else{
+                    gridIndex= Number(e.currentTarget.id.split('SP')[1]);
+                }
+
+
+
+                if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용
+                    that.findBtnClicked(gridIndex-1, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
+                    that.findBtnClicked(gridIndex-1, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
+                }
+                else{
+                    that.findBtnClicked(gridIndex-1, {}, true, 'findBtn',that.pageProperty[index]['menuId'],your);
+                }
+            }
+            else if(e.keyCode == 8 || e.keyCode == 46){
+                var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+                $('#'+searchId+'SP'+(index+1)).val('');
+            }
+        });
+        $(document).on('keydown', '.searchSelectField-search-combo', function(e) {
+            if(e.keyCode == 13){ //엔터
+
+
+
+                var searchId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+                var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
+                var minLength = that.searchComboMinLength[index][searchId] ;
+                var queryId = that.searchComboQueryId[index][searchId];
+                if(searchString.length < minLength)	{
+                    that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
+                    return;
+                }
+                else{
+                    mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
+                        if(result != 'SUCCESS') {
+                            momWidget.splashHide();
+                            return;
+                        }
+                        $('#'+searchId).jqxComboBox({source: data});
+                        setTimeout(function() {
+                            $('#'+searchId).jqxComboBox('open' );
+                        },500);
+                    }, undefined, undefined, that, false);
+                }
+
+
+            }
+
+
+
+        });
+        $(document).on('keydown', '.popupSelectField-popup-combo', function(e) {
+            if(e.keyCode == 13){ //엔터
+                e.stopImmediatePropagation();
+                var popupId = document.activeElement.parentElement.parentElement.parentElement.parentElement.id;
+                var popupIndex = Number($('#'+e.currentTarget.parentElement.parentElement.parentElement.parentElement.id).attr('index'))
+                var searchString = $('#'+document.activeElement.parentElement.parentElement.parentElement.parentElement.id).val().trim();
+                var minLength = that.popupComboMinLength[popupIndex][popupId] ;
+                var queryId = that.popupComboQueryId[popupIndex][popupId];
+
+                if(searchString.length < minLength)	{
+                    that.messageBox({type: 'warning', width: '400', height: '145', html: that.popupComboMinLength[index][popupId] +''+ multiLang.transText('MESSAGE','MSG00050')});
+                    return;
+                }
+                else{
+                    mom_ajax('R', queryId, {"searchKey":searchString}, function(result, data) {
+                        if(result != 'SUCCESS') {
+                            momWidget.splashHide();
+                            return;
+                        }
+                        $('#'+popupId).jqxComboBox({source: data});
+                        setTimeout(function() {
+                            $('#'+popupId).jqxComboBox('open' );
+                        },500);
+                    }, undefined, undefined, that, false);
+                }
+
+
+            }
+
+        });
+
+    },
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Excel Upload 관련
 	// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
