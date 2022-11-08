@@ -1,7 +1,5 @@
 # ! 키워드로 특정 파일을 포함
-!/.gitignore
-!/pom.xml
-.target/
 # 특정 확장자 무시
 .idea/
+.MOM.iml
 .codetogether.ignore

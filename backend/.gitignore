@@ -1,0 +1,13 @@
+### Example user template template
+# ! 키워드로 특정 파일을 포함
+!/.gitignore
+!/pom.xml
+.target/
+/target/
+# 특정 확장자 무시
+.idea
+.idea/
+*.iml
+out
+gen
+.codetogether.ignore
