@@ -12,4 +12,4 @@
 *.zip
 *.iml
 *.gif
-/.codetogether.ignore
+.codetogether.ignore
