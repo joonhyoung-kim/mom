@@ -9,5 +9,6 @@
 *.text
 *.exe
 *.zip
-#폴더
-
+*.iml
+*.gif
+/.codetogether.ignore
