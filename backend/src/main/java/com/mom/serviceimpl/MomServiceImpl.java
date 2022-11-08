@@ -25,9 +25,10 @@ public class MomServiceImpl implements MomService {
 
 	
 	public List<Map<String,Object>> getMapList(String query, Map<String,Object> param) {
+		System.out.println("서비스임플접근");
 		PrintUtil.print("MomService", "getMapList", "#", "$", "query", query, true, false, false, false);
 		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-		
+
 		List<Map<String,Object>> result = momDao.getMapList(query, param);
 		
 		return FrameworkUtil.getMapList(result, query);

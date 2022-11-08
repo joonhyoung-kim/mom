@@ -194,7 +194,7 @@
                  PARENT_ITEM_ID = PARAM.parentItemId AND
                  CHILD_ITEM_ID = PARAM.childItemId )
             WHEN MATCHED THEN 
-                 UPDATE SET UNIT    = PARM.unit	
+                 UPDATE SET UNIT    = PARAM.unit
                           , REQ_QTY = PARAM.reqQty
                           , START_DATE = PARAM.startDate
                           , END_DATE = PARAM.endDate
