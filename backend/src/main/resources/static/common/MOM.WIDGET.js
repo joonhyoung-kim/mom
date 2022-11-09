@@ -19898,12 +19898,12 @@ var momWidget = {
 						if(your.initParam != undefined && your.initParam != ''){
 				              initParam = your.initParam;
 			             }
-                         if(that.gridProperty[btnIndex][0]['usePaging'] == true){ //페이징사용
-                             that.findBtnClicked(btnIndex, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[btnIndex]['programId'],your);
-                             that.findBtnClicked(btnIndex, {startPage:1,endPage:that.gridProperty[btnIndex][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[btnIndex]['programId'],your);
+                         if(that.gridProperty[index][0]['usePaging'] == true){ //페이징사용
+                             that.findBtnClicked(index, {startPage:1,endPage:1}, true, 'TOTAL',that.pageProperty[index]['programId'],your);
+                             that.findBtnClicked(index, {startPage:1,endPage:that.gridProperty[index][0]['pageRowCount']}, true, 'INIT_PAGING',that.pageProperty[index]['programId'],your);
                          }
                          else{
-                             that.findBtnClicked(btnIndex, initParam, false, buttonId,that.pageProperty[index]['menuId'],your);
+                             that.findBtnClicked(index, initParam, false, buttonId,that.pageProperty[index]['menuId'],your);
                          }
 			        	  momWidget.findBtnClicked(index, initParam, false, 'findBtn',momWidget.pageProperty[index]['menuId'],your);
 			        	  momWidget.messageBox({type:'success', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00001')});
