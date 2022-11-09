@@ -93,7 +93,7 @@ var VIEW= {
         
 	    }
       else if(index == 0 && btnId =='customBtn1-1'){
-	         let toWorkGroupItem = $("#toWorkGroupCdDP1").jqxComboBox('getCheckedItems');	
+			 let toWorkGroupItem = $('#'+'customPop-'+btnId).find('#toWorkGroupCdDP1').jqxComboBox('getCheckedItems');
 	         let paramArray = [];
 	      	 for(var i=0,max1=toWorkGroupItem.length; i<max1;i++){
 				  paramArray.push({param1:toWorkGroupItem[i]['value'],typeList:'VARCHAR_ARRAY_LIST',typeMap:'VARCHAR_ARRAY_MAP'});	    				
@@ -103,6 +103,39 @@ var VIEW= {
 		     }	
 	             result.param = param;
 	  }
+		 else if(index == 0 && btnId =='customBtn1-2'){
+			 let toWorkGroupItem = $('#'+'customPop-'+btnId).find('#toWorkCenterCdDP1').jqxComboBox('getCheckedItems');
+			 let paramArray = [];
+			 for(var i=0,max1=toWorkGroupItem.length; i<max1;i++){
+				 paramArray.push({param1:toWorkGroupItem[i]['value'],typeList:'VARCHAR_ARRAY_LIST',typeMap:'VARCHAR_ARRAY_MAP'});
+			 }
+			 for(var i=0,max2=param.length; i<max2;i++){
+				 param[i]['arrayParam1'] = paramArray;
+			 }
+			 result.param = param;
+		 }
+		 else if(index == 0 && btnId =='customBtn1-3'){
+			 let toWorkGroupItem = $('#'+'customPop-'+btnId).find('#workGroupCdDP1').jqxComboBox('getCheckedItems');
+			 let paramArray = [];
+			 for(var i=0,max1=toWorkGroupItem.length; i<max1;i++){
+				 paramArray.push({param1:toWorkGroupItem[i]['value'],typeList:'VARCHAR_ARRAY_LIST',typeMap:'VARCHAR_ARRAY_MAP'});
+			 }
+			 for(var i=0,max2=param.length; i<max2;i++){
+				 param[i]['arrayParam1'] = paramArray;
+			 }
+			 result.param = param;
+		 }
+		 else if(index == 0 && btnId =='customBtn1-4'){
+			 let toWorkGroupItem = $('#'+'customPop-'+btnId).find('#workCenterCdDP1').jqxComboBox('getCheckedItems');
+			 let paramArray = [];
+			 for(var i=0,max1=toWorkGroupItem.length; i<max1;i++){
+				 paramArray.push({param1:toWorkGroupItem[i]['value'],typeList:'VARCHAR_ARRAY_LIST',typeMap:'VARCHAR_ARRAY_MAP'});
+			 }
+			 for(var i=0,max2=param.length; i<max2;i++){
+				 param[i]['arrayParam1'] = paramArray;
+			 }
+			 result.param = param;
+		 }
 
 	},
 	editCallInit: function(index,your,action,btnId,param,result) {
@@ -144,11 +177,20 @@ var VIEW= {
 					 result.result = 'FAIL';
 					 return;
 				}
-				  $('#startDateDP1-2').val($('#startDateSP1').val());
-				  $('#endDateDP1-2').val($('#endDateSP1').val());			
-				  $('#fromWorkCenterCdDP1-2').val(checkedItems[0]['workCenterCd']);	
+				 $('#'+'customPop-'+btnId).find('#startDateDP1').val($('#startDate'+'SP1').val());
+				 $('#'+'customPop-'+btnId).find('#endDateDP1').val($('#endDate'+'SP1').val());
+				 $('#'+'customPop-'+btnId).find('#fromWorkCenterCdDP1').val(checkedItems[0]['fromWorkCenterCd']);
 			}
-				
+			 else if(btnId=='customBtn1-3'){
+				 $('#'+'customPop-'+btnId).find('#startDateDP1').val($('#startDate'+'SP1').val());
+				 $('#'+'customPop-'+btnId).find('#endDateDP1').val($('#endDate'+'SP1').val());
+
+			 }
+			 else if(btnId=='customBtn1-4'){
+				 $('#'+'customPop-'+btnId).find('#startDateDP1').val($('#startDate'+'SP1').val());
+				 $('#'+'customPop-'+btnId).find('#endDateDP1').val($('#endDate'+'SP1').val());
+
+			 }
 			else{
 				  	
 			}

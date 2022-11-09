@@ -135,7 +135,7 @@
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{toWorkCenterCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+					                                          , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
     <select id="proc_customBtn1-3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
@@ -145,7 +145,7 @@
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
-					                                          , #{workGroupCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+                                                              , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
     <select id="proc_customBtn1-4" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
@@ -155,7 +155,7 @@
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
-					                                          , #{workCenterCd,javaType=Object,jdbcType=ARRAY, jdbcTypeName=WG_COPY_PROC_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+                                                              , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
   <insert id="create_createBtn1" parameterType="java.util.List">
