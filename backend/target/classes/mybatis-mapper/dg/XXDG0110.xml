@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XXDG0110">
+ <!-- routing조회 -->
+ <select id="get_findBtn11" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+  	SELECT MO.OPERATION_ID	
+  	     , TO_CHAR(ROWNUM) AS KEY_ID			
+	     , MO.OPERATION_NM				
+	     , MO.INSPECTION_YN				
+	FROM   MOM_OPERATION MO				
+	WHERE  MO.COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}				
+	AND    MO.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}      				
+	AND    MO.USE_YN      = 'Y'				
+	ORDER BY MO.OPERATION_ID									
+ </select>
+   <delete id="remove_customBtn12-2" parameterType="java.util.List">
+       DELETE FROM MOM_PROC_ROUTING_PATH_IN
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>  
+   <insert id="create_customBtn12-2" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PROC_ROUTING_PATH_IN (
+                  COMPANY_CD
+                , DIVISION_CD
+                , OPERATION_SEQ
+                , OPERATION_ID
+                , VAL_MSG
+                , MULTI_MSG
+                , CREATE_BY
+                , CREATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.operationSeq, jdbcType=NUMERIC}
+                , #{item.operationId, jdbcType=VARCHAR}
+                , #{item.valMsg, jdbcType=VARCHAR}
+                , #{item.multiMsg, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+    <select id="proc_customBtn12-2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+          { CALL MOM_MASTER_INFO_PKG.sp_create_routing_path(    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}												  
+					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}               
+    </select>    
+</mapper>

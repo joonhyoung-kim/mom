@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUSM8110">
+    <!-- 구매입고 현황 -->
+    <select id="get_findBtn21" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+    SELECT A.COMPANY_CD
+	     , A.DIVISION_CD
+	     , A.GR_NO
+	     , A.GR_NO || '_' || A.ITEM_INOUT_ID  AS KEY_ID
+	     , A.GR_SEQ
+	     , A.IO_TYPE
+	     , A.IO_TYPE_NM
+	     , A.IO_DATE
+	     , A.ITEM_ID
+	     , A.ITEM_NM
+	     , A.ITEM_SPEC
+	     , A.GR_UNIT   
+	     , A.GR_UNIT_NM
+	     , A.GR_QTY 
+	     , A.CONVERSION_UNIT 
+	     , A.CONVERSION_UNIT_NM
+	     , A.CONVERSION_UNIT_QTY
+	     , NVL(A.RETURN_QTY,0) AS RETURN_QTY
+	     , A.CONVERSION_UNIT_QTY - NVL(A.RETURN_QTY, 0) AS REMAIN_QTY						     
+	     , 0            AS RETURN_REQUEST_QTY
+	     , A.UNIT_PRICE
+	     , A.AMOUNT
+	     , A.LOCAL_AMOUNT
+	     , A.CURRENCY_CD
+	     , A.CURRENCY_NM
+	     , A.EXCHANGE_RATE
+	     , A.VENDOR_CD
+	     , A.VENDOR_NM 
+	     , A.GR_LOCATION_CD
+	     , A.GR_LOCATION_NM
+	     , A.PURCHASE_ORDER_ID
+	     , A.PURCHASE_INOUT_ID 
+	     , A.ITEM_TYPE   
+	     , A.ITEM_TYPE_NM
+	     , A.ITEM_INOUT_ID  
+    FROM   (SELECT MII.COMPANY_CD
+	             , MII.DIVISION_CD
+	             , MII.ITEM_INOUT_NO    AS GR_NO
+	             , MII.ITEM_INOUT_SEQ   AS GR_SEQ
+	             , MII.IO_TYPE
+	             , (SELECT MOM_COMMON_PKG.FN_GET_IO_TYPE_NAME(MII.COMPANY_CD, MII.DIVISION_CD, MII.IO_TYPE) FROM DUAL) AS IO_TYPE_NM
+	             , MII.IO_DATE
+	             , MII.ITEM_ID
+	             , MI.ITEM_NM
+	             , MI.ITEM_SPEC
+	             , MII.UNIT        AS GR_UNIT   
+	             , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MII.COMPANY_CD, MII.DIVISION_CD, MII.UNIT) FROM DUAL) AS GR_UNIT_NM
+	             , MII.QTY         AS GR_QTY 
+	             , MII.INOUT_UNIT  AS CONVERSION_UNIT 
+	             , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MII.COMPANY_CD, MII.DIVISION_CD, MII.INOUT_UNIT) FROM DUAL) AS CONVERSION_UNIT_NM
+	             , MII.INOUT_QTY   AS CONVERSION_UNIT_QTY
+	             , (SELECT SUM(NVL(MPD.CONFIRM_QTY, MPD.INOUT_QTY))
+	                FROM   MOM_PURCHASE_INOUT_DTL MPD
+	                WHERE  MPD.COMPANY_CD        = MII.COMPANY_CD 
+	                AND    MPD.DIVISION_CD       = MII.DIVISION_CD 
+	                AND    MPD.PURCHASE_ORDER_ID = MII.ITEM_INOUT_ID)       AS RETURN_QTY
+	             , MII.UNIT_PRICE
+	             , MII.AMOUNT
+	             , MII.LOCAL_AMOUNT
+	             , MII.CURRENCY_CD
+	             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MII.COMPANY_CD, MII.DIVISION_CD, 'SM0017', MII.CURRENCY_CD, 'KR') FROM DUAL)  AS CURRENCY_NM
+	             , MII.EXCHANGE_RATE
+	             , MII.PARTNER_CD      AS VENDOR_CD
+	             , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MII.COMPANY_CD,MII.DIVISION_CD,MII.PARTNER_CD) FROM DUAL) AS VENDOR_NM 
+	             , MII.LOCATION_CD     AS GR_LOCATION_CD
+	             , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MII.COMPANY_CD,MII.DIVISION_CD,MII.LOCATION_CD) FROM DUAL) AS GR_LOCATION_NM
+	             , (SELECT MPD.PURCHASE_ORDER_ID
+	                FROM   MOM_PURCHASE_INOUT_DTL MPD
+	                WHERE  MPD.COMPANY_CD        = MII.COMPANY_CD 
+	                AND    MPD.DIVISION_CD       = MII.DIVISION_CD 
+	                AND    MPD.PURCHASE_INOUT_ID = MII.ITEM_ORDER_ID)       AS PURCHASE_ORDER_ID
+	             , MII.ITEM_ORDER_ID                                        AS PURCHASE_INOUT_ID 
+	              , MI.ITEM_TYPE   
+	              , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD, MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS ITEM_TYPE_NM
+	              , MII.ITEM_INOUT_ID  
+	        FROM   MOM_ITEM_INOUT MII
+	             , MOM_ITEM MI
+	        WHERE  MII.COMPANY_CD  = MI.COMPANY_CD
+	        AND    MII.DIVISION_CD = MI.DIVISION_CD
+	        AND    MII.ITEM_ID     = MI.ITEM_ID
+	        AND    MII.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}	
+	        AND    MII.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}	
+	        AND    MII.IO_DATE   BETWEEN TO_DATE(#{grDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{grDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999 				
+	        AND    MII.PARTNER_CD  = #{vendorCd, jdbcType=VARCHAR}	
+	        AND    MII.CURRENCY_CD = #{currencyCd, jdbcType=VARCHAR}
+	        AND    MII.IO_CATEGORY = 'I'
+	        AND    MII.IO_TYPE IN ( SELECT  MIC.IO_TYPE				
+	                                FROM    MOM_IO_CATEGORY MIC
+	                                WHERE   MIC.COMPANY_CD  = MII.COMPANY_CD
+	                                AND     MIC.DIVISION_CD = MII.DIVISION_CD
+	                                AND     MIC.PUR_RECEIVE_YN  = 'Y'
+	                                AND     MIC.USE_YN        = 'Y' )  ) A
+    WHERE  A.GR_QTY  - NVL(A.RETURN_QTY,0)  > 0                                  
+    ORDER BY A.GR_NO
+        , A.GR_SEQ                                   
+    </select>
+    <delete id="remove_customBtn21-1" parameterType="java.util.List">
+    DELETE FROM MOM_PROC_PI_DTL
+        <where>
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+	        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+	           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+	           AND  INOUT_TYPE  = #{item.inoutType, jdbcType=VARCHAR}
+	           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+	        )
+            </foreach>
+        </where>
+    </delete>  
+    <insert id="create_customBtn21-1" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+        INTO MOM_PROC_PI_DTL( COMPANY_CD
+			                , DIVISION_CD
+			                , INOUT_TYPE
+			                , INOUT_NO
+			                , SEQ
+			                , PURCHASE_INOUT_ID
+			                , ITEM_ID
+			                , UNIT_PRICE
+			                , INOUT_QTY
+			                , PURCHASE_ORDER_ID
+			                , DESCRIPTION
+			                , DEL_YN
+			                , VAL_MSG
+			                , MULTI_MSG
+			                , CREATE_BY
+			                , CREATE_DATE )
+        VALUES              ( #{item.companyCd, jdbcType=VARCHAR}
+			                , #{item.divisionCd, jdbcType=VARCHAR}
+			                , #{item.inoutType, jdbcType=VARCHAR}
+			                , #{item.inoutNo, jdbcType=VARCHAR}
+			                , ''
+			                , ''
+			                , #{item.itemId, jdbcType=VARCHAR}
+			                , #{item.unitPrice, jdbcType=NUMERIC}	 
+						    , #{item.returnRequestQty, jdbcType=NUMERIC}
+			                , #{item.itemInoutId, jdbcType=VARCHAR}
+			                , #{item.description, jdbcType=VARCHAR}
+			                , #{item.delYn, jdbcType=VARCHAR}
+			                , #{item.valMsg, jdbcType=VARCHAR}
+			                , #{item.multiMsg, jdbcType=VARCHAR}
+			                , #{item.userId, jdbcType=VARCHAR}
+			                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+			              )
+        </foreach>
+    </insert>
+    <select id="proc_customBtn21-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+    { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_DTL( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+	                                        , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+	                                        , #{companyCd,   jdbcType=VARCHAR, mode=IN}
+	                                        , #{divisionCd,  jdbcType=VARCHAR, mode=IN}			
+	                                        , #{inoutType,   jdbcType=VARCHAR, mode=IN}										  
+	                                        , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+    </select>    
+</mapper>

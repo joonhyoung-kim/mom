@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUSM3010">
+<!--     <parameterMap id="paramMap" type="hashMap">
+    	<parameter property="cd"         mode="IN"  jdbcType="VARCHAR" javaType = "java.lang.String"/>
+    	
+    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
+    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   fetchSize="1"resultType="com.mom.backend.dto.LowerHashMap"
+    </parameterMap> -->
+    	<select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+                   SELECT PROGRAM_ID
+				       ,  PROGRAM_NM
+				       ,  PROGRAM_TYPE
+				       ,  TEMPLATE_ID
+				       ,  MOM_COMMON_PKG.FN_GET_TEMPLATE_NAME(#{companyCd, jdbcType=VARCHAR}, #{divisionCd, jdbcType=VARCHAR},TEMPLATE_ID) AS TEMPLATE_NM
+				       ,  LOG_YN
+				       ,  USE_YN
+				       ,  DESCRIPTION
+				       ,  CREATE_BY
+				       ,  TO_CHAR(CREATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+				       ,  UPDATE_BY
+				       ,  TO_CHAR(UPDATE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+				   FROM   MOM_PROGRAM		 
+		           WHERE 1=1
+				   <if test="programIdNm != null and programIdNm != ''">
+				   AND (TRIM(UPPER(PROGRAM_ID)) LIKE '%' || TRIM(UPPER(#{programIdNm, jdbcType=VARCHAR})) || '%' OR TRIM(UPPER(PROGRAM_NM)) LIKE '%' || TRIM(UPPER(#{programIdNm, jdbcType=VARCHAR})) || '%')
+				   </if>
+				   <if test="programType != null and programType != ''">
+				   AND PROGRAM_TYPE = #{programType, jdbcType=VARCHAR}
+				   </if>
+				   <if test="useYn != null and useYn != ''">
+				   AND USE_YN = #{useYn, jdbcType=VARCHAR}
+				   </if>
+				    ORDER BY PROGRAM_ID,PROGRAM_TYPE  
+	</select>
+    <insert id="create_createBtn1" parameterType="java.util.List">  
+        INSERT INTO MOM_PROGRAM(
+					           PROGRAM_ID
+					         , PROGRAM_NM
+					         , PROGRAM_TYPE
+					         , TEMPLATE_ID
+					         , LOG_YN
+					         , USE_YN
+					         , DESCRIPTION
+					         , CREATE_BY
+					         , CREATE_DATE
+					         , UPDATE_BY
+					         , UPDATE_DATE
+					         )     
+        VALUES
+                <foreach item="item" collection="list" index="i" separator=" , " open="">
+				          (    TRIM(#{item.programId, jdbcType=VARCHAR})
+				             , #{item.programNm, jdbcType=VARCHAR}
+				             , TRIM(#{item.programType, jdbcType=VARCHAR})
+				             , TRIM(#{item.templateId, jdbcType=INTEGER})
+				             , TRIM(#{item.logYn, jdbcType=VARCHAR})
+				             , TRIM(#{item.useYn, jdbcType=VARCHAR})
+				             , TRIM(#{item.description, jdbcType=VARCHAR})     
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  
+				          )		             
+	            </foreach>			               
+   </insert>   
+    <insert id="create_copyBtn1" parameterType="java.util.List">  
+        INSERT INTO MOM_PROGRAM(
+					           PROGRAM_ID
+					         , PROGRAM_NM
+					         , PROGRAM_TYPE
+					         , TEMPLATE_ID
+					         , LOG_YN
+					         , USE_YN
+					         , DESCRIPTION
+					         , CREATE_BY
+					         , CREATE_DATE
+					         , UPDATE_BY
+					         , UPDATE_DATE
+					         )     
+        VALUES
+                <foreach item="item" collection="list" index="i" separator=" , " open="">
+				          (    TRIM(#{item.programId, jdbcType=VARCHAR})
+				             , #{item.programNm, jdbcType=VARCHAR}
+				             , TRIM(#{item.programType, jdbcType=VARCHAR})
+				             , TRIM(#{item.templateId, jdbcType=INTEGER})
+				             , TRIM(#{item.logYn, jdbcType=VARCHAR})
+				             , TRIM(#{item.useYn, jdbcType=VARCHAR})
+				             , TRIM(#{item.description, jdbcType=VARCHAR})     
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})  
+				          )		             
+	            </foreach>			               
+   </insert>   
+   <update id="modify_editBtn1" parameterType="java.util.List">     
+      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+        UPDATE MOM_PROGRAM SET 
+		       PROGRAM_NM     = #{item.programNm, jdbcType=VARCHAR}
+             , PROGRAM_TYPE   = #{item.programType, jdbcType=VARCHAR}
+             , TEMPLATE_ID    = #{item.templateId, jdbcType=VARCHAR}
+             , LOG_YN         = #{item.logYn, jdbcType=VARCHAR}
+		     , USE_YN 		  = #{item.useYn, jdbcType=VARCHAR}
+ 		     , DESCRIPTION    = #{item.description, jdbcType=VARCHAR}
+		     , UPDATE_BY      = #{item.userId, jdbcType=VARCHAR}
+		     , UPDATE_DATE    = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+         <where>
+               PROGRAM_ID     = #{item.programId} 
+         </where>
+      </foreach>
+   </update> 
+   <delete id="remove_delBtn1" parameterType="java.util.List"> 
+	   DELETE
+	   FROM     MOM_PROGRAM
+       <where> 
+        <foreach collection="list" item="item" open="" close="" separator="OR"> 
+          (   
+            PROGRAM_ID  = #{item.programId}
+          )
+        </foreach>
+       </where>
+   </delete>
+   <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true" >
+	    MERGE INTO MOM_PROGRAM MP
+	    USING (
+	       
+	             SELECT           TRIM(#{item.companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
+	                              TRIM(#{divisionCd, jdbcType=VARCHAR}) 																   as divisionCd,                                 						       
+	                              TRIM(#{programId, jdbcType=VARCHAR})                                                                    as programId,
+					              #{programNm, jdbcType=VARCHAR}           															   as programNm,
+					              TRIM(#{programType, jdbcType=VARCHAR})    															   as programType,
+					              TRIM(#{templateId, jdbcType=INTEGER})     															   as templateId,
+					              TRIM(#{logYn, jdbcType=VARCHAR})          															   as logYn,
+					              TRIM(#{useYn, jdbcType=VARCHAR})         															   as useYn,
+					              TRIM(#{description, jdbcType=VARCHAR})    															   as description,
+					              TRIM(#{userId, jdbcType=VARCHAR})         															   as createBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as createDate,
+					              TRIM(#{userId, jdbcType=VARCHAR})         															   as updateBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as updateDate
+	             FROM DUAL
+	       
+	    ) PARAM 
+	    ON (  PROGRAM_ID    = PARAM.programId  )
+	    WHEN MATCHED THEN
+	    UPDATE
+	    SET		  PROGRAM_NM     = PARAM.programNm
+                , PROGRAM_TYPE   = PARAM.programType
+                , TEMPLATE_ID    = PARAM.templateId
+                , LOG_YN         = PARAM.logYn
+		        , USE_YN 		 = PARAM.useYn
+ 		        , DESCRIPTION    = PARAM.description
+		        , UPDATE_BY      = PARAM.updateBy
+		        , UPDATE_DATE    = PARAM.updateDate
+			    	       
+	    WHEN NOT MATCHED THEN
+		INSERT ( 
+			      PROGRAM_ID
+		        , PROGRAM_NM
+		        , PROGRAM_TYPE
+		        , TEMPLATE_ID
+		        , LOG_YN
+		        , USE_YN
+		        , DESCRIPTION
+		        , CREATE_BY
+		        , CREATE_DATE
+		        , UPDATE_BY
+		        , UPDATE_DATE
+	    )   
+	    VALUES (
+                 PARAM.programId
+			   , PARAM.programNm
+			   , PARAM.programType
+	           , PARAM.templateId
+	           , PARAM.logYn
+	           , PARAM.useYn
+	           , PARAM.description
+			   , PARAM.createBy
+			   , PARAM.createDate
+			   , PARAM.updateBy
+			   , PARAM.updateDate
+	    )	 
+	</insert>
+</mapper>

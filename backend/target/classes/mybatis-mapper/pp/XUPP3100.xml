@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUPP3100">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	WITH C_DEDUCT AS (SELECT MII.ITEM_ID
+                       , TO_CHAR(MII.IO_DATE, 'YYYY-MM-DD') AS IO_DATE
+                       , MII.LOCATION_CD
+                       , MII.WO_RESULT_ID  
+                       , MII.WORK_ORDER_ID
+                       , MII.QTY 
+                       , MII.UNIT
+                       , MII.CREATE_BY
+                       , TO_CHAR(MII.CREATE_DATE, 'YYYY-MM-DD') AS CREATE_DATE
+                       , MII.COMPANY_CD
+                       , MII.DIVISION_CD
+                       , MII.ITEM_INOUT_ID
+                  FROM   MOM_ITEM_INOUT MII
+                  WHERE  MII.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+                  AND    MII.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+                  AND    MII.IO_DATE     BETWEEN TO_DATE(#{deductStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD') AND  TO_DATE(#{deductStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 23.9997/24 
+                  AND    MII.IO_TYPE     = 'O'
+                  AND    MII.IO_CATEGORY = 'M00070'
+                  <if test="workOrderId != null and workOrderId != ''">
+                  AND    MII.WORK_ORDER_ID = #{workOrderId, jdbcType=VARCHAR}
+                  </if>
+                  <if test="deductItemId != null and deductItemId != ''">
+                  AND    MII.ITEM_ID   = #{deductItemId, jdbcType=VARCHAR}
+                  </if>
+                  <if test="locationCd != null and locationCd != ''">
+                  AND    MII.LOCATION_CD   = #{locationCd, jdbcType=VARCHAR}
+                  </if>
+                  )
+SELECT CD.WORK_ORDER_ID
+     , CD.WO_RESULT_ID
+     , MWO.ITEM_ID       AS WO_ITEM_ID   
+     , CD.ITEM_ID        AS DEDUCT_ITEM_ID    
+     , MI.ITEM_NM        AS DEDUCT_ITEM_NM    
+     , MI.ITEM_SPEC      AS DEDUCT_ITEM_SPEC
+     , MI.ITEM_TYPE      AS DEDUCT_ITEM_TYPE
+     , MI.LOT_MANAGEMENT_YN
+     , MI.PRICE_SYNC_YN  
+     , MI.PO_OVER_RECEIPT_RATE 
+     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(CD.COMPANY_CD, CD.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, 'KR') FROM DUAL)  AS DEDUCT_ITEM_TYPE_NM 
+     , CD.LOCATION_CD    
+     , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(CD.COMPANY_CD, CD.DIVISION_CD, CD.LOCATION_CD) FROM DUAL) AS LOCATION_NM     
+     , CD.IO_DATE        AS DEDUCT_DATE
+     , CD.UNIT           
+     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(CD.COMPANY_CD,CD.DIVISION_CD, 'MD0003', CD.UNIT, 'KR') FROM DUAL) AS UNIT_NM    
+     , CD.QTY            AS DEDUCT_QTY
+     , CD.CREATE_BY      AS DEDUCT_BY
+     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(CD.COMPANY_CD, CD.DIVISION_CD, CD.CREATE_BY) FROM DUAL ) AS DEDUCT_BY_NM
+     , TO_CHAR(MC.IO_DATE, 'YYYY-MM-DD') AS CANCEL_DATE
+     , MC.QTY            AS CANCEL_QTY   
+     , MC.CREATE_BY      AS CANCEL_BY
+     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(CD.COMPANY_CD, CD.DIVISION_CD, MC.CREATE_BY) FROM DUAL ) AS CANCEL_BY_NM
+     , CD.COMPANY_CD
+     , CD.DIVISION_CD
+     , CD.ITEM_INOUT_ID 
+     , CD.ITEM_INOUT_ID  AS KEY_ID
+     , MC.ITEM_INOUT_ID   AS CANCEL_ITEM_INOUT_ID
+     , MC.DESCRIPTION        
+FROM   C_DEDUCT CD
+     , MOM_ITEM MI
+     , MOM_WORK_ORDER MWO
+     , MOM_ITEM_INOUT MC
+WHERE  CD.COMPANY_CD     = MI.COMPANY_CD
+AND    CD.DIVISION_CD    = MI.DIVISION_CD
+AND    CD.ITEM_ID        = MI.ITEM_ID
+AND    CD.COMPANY_CD     = MWO.COMPANY_CD
+AND    CD.DIVISION_CD    = MWO.DIVISION_CD
+AND    CD.WORK_ORDER_ID  = MWO.WORK_ORDER_ID
+AND    CD.COMPANY_CD     = MC.COMPANY_CD(+)
+AND    CD.DIVISION_CD    = MC.DIVISION_CD(+)
+AND    CD.ITEM_INOUT_ID  = MC.PREV_ITEM_INOUT_ID(+)
+ <if test="woItemId != null and woItemId != ''">
+AND    MWO.ITEM_ID       = #{woItemId, jdbcType=VARCHAR}
+ </if>
+ORDER BY CD.WORK_ORDER_ID
+       , CD.WO_RESULT_ID
+       , CD.IO_DATE
+       , CD.ITEM_ID
+       , CD.IO_DATE
+	</select>
+	<insert id="create_customBtn1-1" parameterType="java.util.List">
+      <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+     INTO MOM_PROC_ITEM_DEDUCT_CANCEL (
+                  COMPANY_CD
+                , DIVISION_CD
+                , ITEM_INOUT_ID
+                , CANCEL_ITEM_INOUT_ID
+                , DESCRIPTION
+                , VAL_MSG
+                , MULTI_MSG
+                , CREATE_BY
+                , CREATE_DATE )
+      VALUES 
+              (   #{item.companyCd, jdbcType=VARCHAR}
+                , #{item.divisionCd, jdbcType=VARCHAR}
+                , #{item.itemInoutId, jdbcType=VARCHAR}
+                , #{item.cancelItemInoutId, jdbcType=VARCHAR}
+                , #{item.description, jdbcType=VARCHAR}
+                , #{item.valMsg, jdbcType=VARCHAR}
+                , #{item.multiMsg, jdbcType=VARCHAR}
+                , #{item.userId, jdbcType=VARCHAR}
+                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+              )
+   </foreach>
+  </insert>
+   <delete id="remove_customBtn1-1" parameterType="java.util.List">
+       DELETE FROM MOM_PROC_ITEM_DEDUCT_CANCEL
+      <where>
+       <foreach collection="list" item="item" open="" close="" separator="OR">
+        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+        )
+       </foreach>
+      </where>
+   </delete>  
+<select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+          { CALL MOM_WO_PKG.sp_cancel_item_deduct(     		    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+ </select>  
+</mapper>

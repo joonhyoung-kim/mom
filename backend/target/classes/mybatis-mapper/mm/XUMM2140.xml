@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUMM2140">
+    <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	SELECT MPM.COMPANY_CD		
+	     , MPM.DIVISION_CD		
+	     , MPM.INOUT_TYPE		 		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0012', MPM.INOUT_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS INOUT_TYPE_NM  		
+	     , MPM.TITLE            AS INOUT_TITLE		
+	     , MPD.PURCHASE_INOUT_ID		
+	     , MPM.VENDOR_CD		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPM.COMPANY_CD,MPM.DIVISION_CD,MPM.VENDOR_CD) FROM DUAL) AS VENDOR_NM		
+	     , MPM.DEPARTURE_VENDOR_CD		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MPM.COMPANY_CD,MPM.DIVISION_CD,MPM.DEPARTURE_VENDOR_CD) FROM DUAL) AS DEPARTURE_VENDOR_NM		
+	     , MPM.DEPARTURE_LOCATION_CD		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MPM.COMPANY_CD,MPM.DIVISION_CD,MPM.DEPARTURE_LOCATION_CD) FROM DUAL) AS DEPARTURE_LOCATION_NM		
+	     , MPM.BL_NO		
+	     , MPM.IP_NO		
+	     , MPM.IP_CURRENCY_CD		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'SM0017', MPM.IP_CURRENCY_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS IP_CURRENCY_NM		
+	     , MPM.IP_EXCHANGE_RATE		
+	     , TO_CHAR(MPM.CC_DATE ,'YYYY-MM-DD')     AS CC_DATE		
+	     , MPM.LC_NO		
+	     , MPD.ITEM_ID		
+	     , MI.ITEM_NM		
+	     , MI.ITEM_SPEC		
+	     , MI.ITEM_TYPE		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS ITEM_TYPE_NM		
+	     , MI.PURCHASE_UNIT		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_UNIT_NAME(MPD.COMPANY_CD, MPD.DIVISION_CD, MI.PURCHASE_UNIT) FROM DUAL) AS PURCHASE_UNIT_NM		
+	     , MPD.CONFIRM_QTY   AS INOUT_QTY		
+	     , TO_CHAR( MPM.IQC_RECEIVE_DATE ,'YYYY-MM-DD')     AS IQC_RECEIVE_DATE		
+	     , MPM.CURRENCY_CD		
+	     , MPM.EXCHANGE_RATE		
+	     , MPD.UNIT_PRICE		
+	     , MPD.AMOUNT		
+	     , MPD.LOCAL_AMOUNT		
+	     , MPD.IQC_REFERENCE_NO		
+	     , MPD.NCR_NO      		
+	     , MM.GOOD_QTY  AS GOOD_CHOICE_QTY		
+	     , MPD.PO_OVER_RECEIPT_RATE		
+	     , MPD.GR_LOT_NO		
+	     , MPD.INOUT_NO		
+	     , MPD.SEQ		
+	     , MPM.FREE_YN		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0015', MPM.FREE_YN, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS FREE_YN_NM		
+	     , MPM.REASON_CD		
+	     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0016', MPM.REASON_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS EXP_RCV_REASON_NM		
+	     , TO_CHAR(ROWNUM) AS KEY_ID
+	FROM   MOM_PURCHASE_INOUT_MST  MPM		
+	     , MOM_PURCHASE_INOUT_DTL  MPD		
+	     , MOM_ITEM                MI		
+	     , MOM_NCPC                MM		
+	WHERE  MPM.COMPANY_CD  = MPD.COMPANY_CD		
+	AND    MPM.DIVISION_CD = MPD.DIVISION_CD     		
+	AND    MPM.INOUT_NO    = MPD.INOUT_NO		
+	AND    MPD.COMPANY_CD  = MI.COMPANY_CD		
+	AND    MPD.DIVISION_CD = MI.DIVISION_CD     		
+	AND    MPD.ITEM_ID     = MI.ITEM_ID		
+	AND    MPD.COMPANY_CD  = MM.COMPANY_CD(+)		
+	AND    MPD.DIVISION_CD = MM.DIVISION_CD(+)     		
+	AND    MPD.NCR_NO      = MM.NCR_NO(+) 		
+	AND    MPM.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}	
+	AND    MPM.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}	
+	AND    MPM.IQC_RECEIVE_DATE  BETWEEN TO_DATE(#{iqcReceiveDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{iqcReceiveDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999 
+	<if test="purchaseInoutId != null and purchaseInoutId != ''">
+	AND    (UPPER(MPD.PURCHASE_INOUT_ID) LIKE '%' || UPPER(#{purchaseInoutId, jdbcType=VARCHAR}) || '%')	  
+	</if>			
+	<if test="vendorCd != null and vendorCd != ''">
+	AND    MPM.VENDOR_CD = #{vendorCd, jdbcType=VARCHAR}
+	</if>	
+	<if test="inoutTitle != null and inoutTitle != ''">
+	AND    (UPPER(MPM.TITLE) LIKE '%' || UPPER(#{inoutTitle, jdbcType=VARCHAR}) || '%')	  
+	</if>			
+	<if test="itemIdNm != null and itemIdNm != ''">
+	AND    (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+	</if>	
+	<if test="departureLocationCd != null and departureLocationCd != ''">
+	AND    MPM.DEPARTURE_LOCATION_CD = #{departureLocationCd, jdbcType=VARCHAR}
+	</if>		
+    AND    MPD.STATE       = 'PIIF'  -- 불합격		
+    ORDER BY MPM.INOUT_NO			
+    </select>
+	<delete id="remove_customBtn1-1" parameterType="java.util.List">
+    DELETE FROM MOM_PROC_PI_IQC_NCPC_RESULT
+        <where>
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+	        (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+	           AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+	           AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+	        )
+            </foreach>
+        </where>
+    </delete>  
+    <insert id="create_customBtn1-1" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+	    INTO MOM_PROC_PI_IQC_NCPC_RESULT( COMPANY_CD
+						                , DIVISION_CD
+						                , INOUT_TYPE
+						                , PURCHASE_INOUT_ID
+						                , NCPC_NO
+						                , GOOD_QTY
+						                , VAL_MSG
+						                , MULTI_MSG
+						                , DESCRIPTION
+						                , CREATE_BY
+						                , CREATE_DATE )
+	    VALUES                          ( #{item.companyCd, jdbcType=VARCHAR}
+						                , #{item.divisionCd, jdbcType=VARCHAR}
+						                , #{item.inoutType, jdbcType=VARCHAR}
+						                , #{item.purchaseInoutId, jdbcType=VARCHAR}
+						                , #{item.ncpcNo, jdbcType=VARCHAR}
+						                , #{item.goodChoiceQty, jdbcType=NUMERIC}
+						                , #{item.valMsg, jdbcType=VARCHAR}
+						                , #{item.multiMsg, jdbcType=VARCHAR}
+						                , #{item.description, jdbcType=VARCHAR}
+						                , #{item.userId, jdbcType=VARCHAR}
+						                , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+					                )
+        </foreach>
+    </insert>
+    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+    { CALL MOM_MATERIAL_PKG.SP_PI_IQC_NCPC_RESULT( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+				                                 , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+				                                 , #{companyCd,   jdbcType=VARCHAR , mode=IN}
+				                                 , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+				                                 , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+    </select>  
+</mapper>

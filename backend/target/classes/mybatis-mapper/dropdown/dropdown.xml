@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.DD">	
+<select id="get_DD00001" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" >
+	SELECT  CODE
+         ,  NVL((SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR},#{langCd, jdbcType=VARCHAR},'CODE',#{groupCd, jdbcType=VARCHAR}|| '_' ||CODE)
+	             FROM   DUAL ),CODE ||'('|| CODE_NM ||')') AS LABEL
+	FROM    MOM_CODE
+	WHERE   DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	AND     COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND     GROUP_CD    = #{groupCd, jdbcType=VARCHAR}
+	AND     USE_YN      = 'Y'
+	ORDER BY SORT_NO,LABEL
+  </select> 
+  <select id="get_DD00004" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+    SELECT   DEPT_CD AS CODE 
+	     ,   DEPT_CD ||'('|| DEPT_NM ||')' AS LABEL
+    FROM     MOM_DEPARTMENT
+    WHERE 1=1
+    AND     USE_YN      = 'Y'
+    <if test="searchKey != null and searchKey != ''">
+    AND (DEPT_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR DEPT_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+    </if>
+    ORDER BY LABEL
+
+  </select> 
+
+  <select id="get_DD00005" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">	
+          SELECT A.MENU_ID  AS CODE
+   	         , A.MENU_ID ||'('|| A.MENU_NM ||')'  AS LABEL
+        FROM   (SELECT MM.MENU_ID  
+                     , MM.MENU_NM
+                FROM   MOM_DIVISION_MENU MDM
+                     , MOM_MENU   MM 
+		        WHERE  MDM.MENU_ID      = MM.MENU_ID
+		        AND    MDM.COMPANY_CD   =  #{companyCd, jdbcType=VARCHAR}
+		        AND    MDM.DIVISION_CD  =  #{divisionCd, jdbcType=VARCHAR} 
+		        AND     MDM.MENU_ID  <![CDATA[ <> 'root' ]]>
+		        AND    MM.MENU_TYPE = 'P'       
+        UNION ALL        
+		        SELECT MM.MENU_ID 
+		             , MM.MENU_NM
+		        FROM   MOM_MENU MM 
+		        where  MM.MENU_ID     <![CDATA[ <> 'XUDG' ]]> 
+		        <!-- AND    MM.MENU_TYPE = 'D'  -->) A
+		ORDER BY A.MENU_ID,A.MENU_NM 
+  </select>
+  <select id="get_DD00006" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT GRID_ID        AS CODE 
+        , GRID_ID     ||'('|| GRID_NM      ||')' AS LABEL
+   FROM   MOM_GRID   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    MENU_ID     = #{menuId, jdbcType=VARCHAR} 
+   ORDER BY GRID_ID
+   </select>
+  <select id="get_DD00007" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	  SELECT TEMPLATE_ID AS CODE
+           , TEMPLATE_ID ||'('|| TEMPLATE_NM ||')' AS LABEL
+	  FROM   MOM_GRID_TEMPLATE
+	  ORDER BY LABEL
+  </select>	
+  <select id="get_DD00008" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	  SELECT AUTH_GROUP_CD AS CODE 
+	     ,   AUTH_GROUP_CD ||'('|| AUTH_GROUP_NM ||')' AS LABEL
+      FROM   MOM_AUTH_GROUP
+      WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	  AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+      ORDER BY LABEL
+  </select>	
+  
+  <select id="get_DD00012" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	  SELECT MC.COMPANY_CD
+	 	   , MC.COMPANY_NM
+      FROM   MOM_COMPANY  MC
+      WHERE  MC.USE_YN = 'Y'
+     <if test = "companyCd != null and companyCd != ''">
+      AND    MD.COMPANY_CD = #{companyCd, jdbcType=VARCHAR}
+     </if>
+      ORDER BY COMPANY_NM
+  </select>	
+  <select id="get_DD00013" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+		 SELECT DIVISION_CD
+			  , DIVISION_NM
+	     FROM   MOM_DIVISION_V	
+	     WHERE 1=1
+	    <if test = "companyCd != null and companyCd != ''">
+	     AND    COMPANY_CD = #{companyCd, jdbcType=VARCHAR}
+	    </if>
+	    ORDER BY DIVISION_NM
+  </select>	
+  <select id="get_DD00014" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">	
+	SELECT CODE_CATEGORY AS CODE 
+	     , CODE_CATEGORY ||'('|| CODE_CATEGORY_NM ||')' AS LABEL
+	FROM   MOM_CODE_CATEGORY 
+	WHERE  USE_YN = 'Y'
+	AND    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+	ORDER BY LABEL
+  </select>  
+  <select id="get_DD00015" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">	
+	SELECT GROUP_CD AS CODE 
+	     , GROUP_CD ||'('|| GROUP_CODE_NM ||')'  AS LABEL
+    FROM   MOM_GROUP_CODE 
+	WHERE  USE_YN = 'Y'
+	AND    COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+    ORDER BY LABEL
+  </select>  
+  <select id="get_DD00016" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT UNIT     AS CODE 
+        , UNIT   ||'('|| UNIT_NM ||')' AS LABEL
+   FROM   MOM_UNIT   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL
+   </select>
+  <select id="get_DD10000" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">	
+	SELECT B.TABLE_NAME AS CODE
+         , B.TABLE_NAME ||'('|| B.COMMENTS ||')' AS LABEL
+    FROM   ALL_OBJECTS A
+       ,   ALL_TAB_COMMENTS B
+	WHERE  OBJECT_TYPE = 'TABLE'
+	AND    B.OWNER = A.OWNER
+	AND    B.TABLE_NAME = A.OBJECT_NAME 
+	AND    B.OWNER = 'MOM_MASTER'	
+	ORDER BY LABEL
+  </select>  
+  <select id="get_DD10001" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">	
+  	   SELECT MAM.MENU_ID AS CODE
+	        , NVL((SELECT MOM_COMMON_PKG.FN_GET_MULTI_LANGUAGE( MAM.COMPANY_CD
+	                                                       , MAM.DIVISION_CD
+	                                                       , #{langCd, jdbcType=VARCHAR} 
+	                                                       , 'MENU' 	                                                                           
+	                                                       , MAM.PARENT_MENU_ID)
+           FROM  DUAL ),MAM.MENU_NM ) || '-' || MENU_NM AS LABEL                                             
+		   FROM   MOM_AUTH_MENU_V MAM
+		   WHERE  MAM.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
+		   AND    MAM.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR} 
+		   AND    MAM.AUTH_GROUP_CD = #{authGroupCd, jdbcType=VARCHAR}
+           AND    MAM.MENU_TYPE = 'P'
+           AND  (UPPER(MAM.MENU_NM) LIKE '%' || TRIM(UPPER(#{searchText, jdbcType=VARCHAR})) || '%' ) 
+           ORDER BY LABEL
+ </select>
+  <!-- D-->
+ <select id="get_DD00017" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT PLANT_CD  AS CODE 
+        , PLANT_CD ||'('|| PLANT_NM  ||')' AS LABEL
+   FROM   MOM_PLANT  
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL
+</select>
+<select id="get_DD00018" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT LOCATION_CD   AS CODE 
+        , LOCATION_CD ||'('|| LOCATION_NM   ||')' AS LABEL
+   FROM   MOM_LOCATION   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   <if test="locationType != null and locationType != ''">
+   AND    LOCATION_TYPE = #{locationType, jdbcType=VARCHAR} 
+   </if>
+   <if test="searchKey != null and searchKey != ''">
+   AND (TRIM(UPPER(LOCATION_CD)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR TRIM(UPPER(LOCATION_NM)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL 
+</select>
+   
+<select id="get_DD00019" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT PARTNER_CD   AS CODE 
+        , PARTNER_CD ||'('|| PARTNER_NM   ||')' AS LABEL
+   FROM   MOM_PARTNER   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   <if test="searchKey != null and searchKey != ''">
+   AND (TRIM(UPPER(PARTNER_CD)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR TRIM(UPPER(PARTNER_NM)) LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
+   ORDER BY LABEL
+</select>
+<select id="get_DD00020" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT ITEM_ID    AS CODE 
+        , ITEM_ID  ||'('|| ITEM_NM    ||')' AS LABEL
+   FROM   MOM_ITEM   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   <if test="searchKey != null and searchKey != ''">
+   AND ( UPPER(ITEM_ID) LIKE '%' || UPPER(TRIM(#{searchKey, jdbcType=VARCHAR}) || '%' ))
+   </if>
+   ORDER BY LABEL
+</select>
+<select id="get_DD00021" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT WORK_GROUP_CD    AS CODE 
+        , WORK_GROUP_CD  ||'('|| WORK_GROUP_NM    ||')' AS LABEL
+   FROM   MOM_WORK_GROUP   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL    
+</select>
+<select id="get_DD00022" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT WORK_CENTER_CD     AS CODE 
+        , WORK_CENTER_CD   ||'('|| WORK_CENTER_NM     ||')' AS LABEL
+   FROM   MOM_WORK_CENTER   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   <if test="workCenterType != null and workCenterType != ''">
+   AND WORK_CENTER_TYPE = #{workCenterType, jdbcType=VARCHAR} 
+   </if>
+   <if test="searchKey != null and searchKey != ''">
+   AND (WORK_CENTER_CD LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR WORK_CENTER_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
+   ORDER BY LABEL    
+</select>
+<select id="get_DD00023" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT WORK_STATION_CD     AS CODE 
+        , WORK_STATION_CD   ||'('|| WORK_STATION_NM     ||')' AS LABEL
+   FROM   MOM_WORK_STATION   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   <if test="workCenterCd != null and workCenterCd != ''">
+   AND    WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR} 
+   </if>
+   ORDER BY LABEL
+</select>      
+<select id="get_DD00024" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+    SELECT OPERATION_ID AS CODE 
+         , OPERATION_ID   ||'('|| OPERATION_NM     ||')' AS LABEL
+	FROM MOM_OPERATION
+	WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+    AND    USE_YN      = 'Y'
+	ORDER BY LABEL
+</select>    
+<select id="get_DD00025" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT ROUTING_ID      AS CODE 
+        , ROUTING_ID    ||'('|| ROUTING_NM      ||')' AS LABEL
+   FROM   MOM_ROUTING   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   <if test="searchKey != null and searchKey != ''">
+   AND (ROUTING_ID LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%' OR ROUTING_NM LIKE '%' || TRIM(UPPER(#{searchKey, jdbcType=VARCHAR})) || '%')
+   </if>
+   ORDER BY LABEL
+</select>
+<select id="get_DD00026" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT IL_TYPE      AS CODE 
+        , IL_TYPE    ||'('|| IL_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_IL_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL
+</select>
+<select id="get_DD00027" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT IO_TYPE       AS CODE 
+        , IO_TYPE    ||'('|| IO_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_IO_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   <if test="purReturnYn != null and purReturnYn != ''">
+   AND    PUR_RETURN_YN = #{purReturnYn, jdbcType=VARCHAR} 
+   </if>
+   <if test="purReceiveYn != null and purReceiveYn != ''">
+   AND    PUR_RECEIVE_YN = #{purReceiveYn, jdbcType=VARCHAR} 
+   </if>
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL
+</select>   
+<select id="get_DD00028" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT PO_TYPE       AS CODE 
+        , PO_TYPE    ||'('|| PO_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_PO_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+   AND    USE_YN      = 'Y' 
+   ORDER BY LABEL
+</select>
+ <select id="get_DD00029" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT SO_TYPE       AS CODE 
+        , SO_TYPE    ||'('|| SO_TYPE_NM      ||')' AS LABEL
+   FROM   MOM_SO_CATEGORY   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL
+ </select>
+ <select id="get_DD00030" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT REST_TIME_CD       AS CODE 
+        , REST_TIME_CD    ||'('|| REST_TIME_NM       ||')' AS LABEL
+   FROM   MOM_SHIFT_REST_TIME   
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL
+ </select>
+ <select id="get_DD00031" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT SHIFT_CD        AS CODE 
+        , SHIFT_CD     ||'('|| SHIFT_NM        ||')' AS LABEL
+   FROM   MOM_SHIFT
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY LABEL
+ </select> 
+ <select id="get_DD00032" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT ID_GEN_CD         AS CODE 
+        , ID_GEN_CD      ||'('|| ID_GEN_NM         ||')' AS LABEL
+   FROM   MOM_ID_GENERATE
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY ID_GEN_NM 
+ </select> 
+ <select id="get_DD00033" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+   SELECT USER_NO   AS CODE
+        , USER_NO      ||'('|| USER_NM          ||')' AS LABEL 
+   FROM   MOM_USER 
+   WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+   AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+   AND    USE_YN      = 'Y'
+   ORDER BY USER_NM
+ </select> 
+  <select id="get_DD00034" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+    SELECT MUI.USER_NO    AS CODE
+	     , MUI.USER_NO      ||'('|| MU.USER_NM          ||')' AS LABEL 
+	FROM   MOM_USER_ITEM_TYPE_REL MUI
+	    ,  MOM_USER MU
+	WHERE  MUI.COMPANY_CD   = MU.COMPANY_CD
+	AND    MUI.DIVISION_CD  = MU.DIVISION_CD
+	AND    MUI.USER_NO      = MU.USER_NO
+	AND    MUI.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
+	AND    MUI.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	AND    MUI.CATEGORY     = #{category, jdbcType=VARCHAR} 
+	AND    MUI.ITEM_TYPE    = NVL(#{itemType, jdbcType=VARCHAR} , MUI.ITEM_TYPE)
+	AND    MUI.USE_YN       = 'Y'
+	ORDER BY MU.USER_NM
+ </select> 
+</mapper>

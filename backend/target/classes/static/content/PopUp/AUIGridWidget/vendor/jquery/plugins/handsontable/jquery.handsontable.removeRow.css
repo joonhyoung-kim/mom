@@ -1,0 +1,21 @@
+/**
+ * Handsontable RemoveRow extension. See `demo/buttons.html` for example usage
+ */
+.handsontable.htRemoveRow th.htRemoveRow .menu-item-remove {
+  background-color: #FFFFFF;
+  color: #e5e8eb;
+  cursor: pointer;
+  font-size: 11px;
+  display: none;
+  text-align:center;
+
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+  border-radius: 20px;
+  border: 1px solid #e5e8eb;
+}
+
+.handsontable.htRemoveRow th.htRemoveRow .menu-item-remove:hover {
+  background-color: #777;
+}

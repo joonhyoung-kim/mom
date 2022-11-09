@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUPP1020">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+		SELECT    MCD.COMPANY_CD
+				, MCD.COMPANY_NM
+				, MCD.DIVISION_CD
+				, MCD.DIVISION_NM
+				, MD.DEMAND_ID
+				, MD.DEMAND_ID AS KEY_ID
+				, MD.ITEM_ID
+				, MI.ITEM_NM
+				, MI.ITEM_SPEC
+				, MI.LOT_MANAGEMENT_YN
+				, MI.PRICE_SYNC_YN  
+				, MI.PO_OVER_RECEIPT_RATE 
+				, TO_CHAR(MD.DUE_DATE ,'YYYY-MM-DD') AS DUE_DATE
+				, MD.PRIORITY
+				, MD.QTY
+				, NVL(MD.ALLOCATE_QTY, 0) AS ALLOCATE_QTYL
+				, MD.QTY - NVL(MD.ALLOCATE_QTY, 0) AS REMAIN_QTY
+				, NVL(MD.ALLOCATE_FLAG, 'N') AS ALLOCATE_FLAG
+				, MD.DESCRIPTION
+				, MD.UPDATE_BY
+				,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MD.COMPANY_CD, MD.DIVISION_CD,MD.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+				, TO_CHAR(MD.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+	    FROM    MOM_COM_DIV_V MCD
+		      , MOM_DEMAND MD
+		      , MOM_ITEM MI
+		WHERE MCD.COMPANY_CD = MD.COMPANY_CD
+		AND MCD.DIVISION_CD = MD.DIVISION_CD
+		AND MD.COMPANY_CD = MI.COMPANY_CD
+		AND MD.DIVISION_CD = MI.DIVISION_CD
+		AND MD.ITEM_ID = MI.ITEM_ID
+		AND MD.ALLOCATE_FLAG = 'N'
+	    AND MD.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
+	    AND MD.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}	  
+	    AND MD.DUE_DATE BETWEEN TO_DATE(#{dueStartDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD')  AND TO_DATE(#{dueStartDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 0.99999
+		<if test="demandId != null and demandId != ''">
+		AND (UPPER(MD.DEMAND_ID) LIKE '%' || UPPER(#{demandId , jdbcType=VARCHAR}) || '%' )
+		</if>
+		<if test="itemIdNm != null and itemIdNm != ''">
+	    AND (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+	    </if>
+		ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MD.DUE_DATE, MD.ITEM_ID, MD.DEMAND_ID
+	</select>
+	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+		SELECT MCD.COMPANY_CD
+		     , MCD.COMPANY_NM
+		     , MCD.DIVISION_CD
+		     , MCD.DIVISION_NM
+		     , MSD.SO_NO
+		     , MSD.SO_SEQ
+		     , TO_CHAR((SELECT MOM_COMMON_PKG.FN_GET_SO_SHIPPING_DATE(MSD.COMPANY_CD, MSD.DIVISION_CD, MSD.SO_NO) FROM DUAL) ,'YYYY-MM-DD') AS SHIPPING_DATE
+		     , MSD.ORDER_QTY
+		     , MDSR.ALLOCATE_QTY
+		     , NVL(MDSR.CANCEL_FLAG, 'N')   AS  CANCEL_FLAG
+		     , MDSR.DESCRIPTION
+		     , MDSR.UPDATE_BY
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MDSR.COMPANY_CD, MDSR.DIVISION_CD, MDSR.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+		     , TO_CHAR(MDSR.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		FROM   MOM_COM_DIV_V MCD
+		     , MOM_DEMAND_SO_REL   MDSR
+		     , MOM_SO_DTL      MSD
+		WHERE  MCD.COMPANY_CD       = MDSR.COMPANY_CD
+		AND    MCD.DIVISION_CD      = MDSR.DIVISION_CD   
+		AND    MDSR.COMPANY_CD      = MSD.COMPANY_CD
+		AND    MDSR.DIVISION_CD     = MSD.DIVISION_CD   
+		AND    MDSR.SALES_ORDER_ID  = MSD.SALES_ORDER_ID
+		AND    MDSR.COMPANY_CD      = #{companyCd, jdbcType=VARCHAR}
+	    AND    MDSR.DIVISION_CD     = #{divisionCd, jdbcType=VARCHAR}	
+	      
+		ORDER BY MCD.COMPANY_NM , MCD.DIVISION_NM, MSD.SO_NO , MSD.SO_SEQ
+	</select>
+	<select id="get_findBtn3" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+		SELECT MCD.COMPANY_CD
+		     , MCD.COMPANY_NM
+		     , MCD.DIVISION_CD
+		     , MCD.DIVISION_NM
+		     , MSD.SO_NO
+		     , MSD.SO_SEQ
+		     , TO_CHAR((SELECT MOM_COMMON_PKG.FN_GET_SO_SHIPPING_DATE(MSD.COMPANY_CD, MSD.DIVISION_CD, MSD.SO_NO) FROM DUAL) ,'YYYY-MM-DD') AS SHIPPING_DATE
+		     , MSD.ORDER_QTY 
+		     , NVL(MSD.ALLOCATE_QTY,0)                  AS ALLOCATE_QTY
+		     , MSD.ORDER_QTY - NVL(MSD.ALLOCATE_QTY,0)  AS REMAIN_QTY
+		     , NVL(MSD.ALLOCATE_FLAG, 'N')  AS ALLOCATE_FLAG
+		     , MSD.DESCRIPTION
+		     , MSD.UPDATE_BY
+		     ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSD.COMPANY_CD, MSD.DIVISION_CD, MSD.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+		     , TO_CHAR(MSD.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+		FROM   MOM_COM_DIV_V MCD
+		     , MOM_SO_DTL    MSD
+		WHERE  MCD.COMPANY_CD     = MSD.COMPANY_CD
+		AND    MCD.DIVISION_CD    = MSD.DIVISION_CD   
+		AND    MSD.ALLOCATE_FLAG  = 'N'
+	    AND    MSD.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
+	    AND    MSD.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}	  
+		ORDER BY MCD.COMPANY_NM, MCD.DIVISION_NM, MSD.SO_NO , MSD.SO_SEQ
+	</select>
+</mapper>

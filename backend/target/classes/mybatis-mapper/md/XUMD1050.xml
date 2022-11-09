@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUMD1050">
+  <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	  SELECT MCD.COMPANY_CD
+           , MCD.COMPANY_NM
+		   , MCD.DIVISION_CD
+		   , MCD.DIVISION_NM
+		   , MWC.WORK_GROUP_CD
+		   , (SELECT MOM_COMMON_PKG.FN_GET_WORK_GROUP_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.WORK_GROUP_CD) FROM DUAL) AS WORK_GROUP_NM
+		   , MWC.WORK_CENTER_CD
+		   , MWC.WORK_CENTER_NM
+		   , MWC.WORK_CENTER_TYPE
+		   , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MWC.COMPANY_CD,MWC.DIVISION_CD, 'MD0010', MWC.WORK_CENTER_TYPE, 'KR') FROM DUAL) AS WORK_CENTER_TYPE_NM  
+		   , MWC.CONSUME_LOCATION_CD
+		   , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.CONSUME_LOCATION_CD) FROM DUAL) AS CONSUME_LOCATION_NM
+		   , MWC.GOOD_LOCATION_CD
+		   , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.GOOD_LOCATION_CD) FROM DUAL) AS GOOD_LOCATION_NM
+		   , MWC.DEFECT_LOCATION_CD
+		   , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.DEFECT_LOCATION_CD) FROM DUAL) AS DEFECT_LOCATION_NM
+		   , MWC.USE_YN
+		   , MWC.DESCRIPTION
+		   , MWC.CREATE_BY
+		   ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.CREATE_BY) FROM DUAL ) AS CREATE_BY_NM
+		   , TO_CHAR(MWC.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+		   , MWC.UPDATE_BY
+		   ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MWC.COMPANY_CD, MWC.DIVISION_CD, MWC.UPDATE_BY) FROM DUAL ) AS UPDATE_BY_NM
+		   , TO_CHAR(MWC.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+      FROM   MOM_COM_DIV_V MCD
+           , MOM_WORK_CENTER MWC
+      WHERE  MCD.COMPANY_CD  = MWC.COMPANY_CD
+      AND    MCD.DIVISION_CD = MWC.DIVISION_CD  
+	  AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	  AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  		
+	  <if test="workGroupCd != null and workGroupCd != ''">
+      AND MWC.WORK_GROUP_CD = #{workGroupCd, jdbcType=VARCHAR}
+	  </if>
+	  <if test="workCenterCd != null and workCenterCd != ''">
+      AND (UPPER(MWC.WORK_CENTER_CD) LIKE '%' || UPPER(#{workCenterCd, jdbcType=VARCHAR}) || '%' )
+	  </if>
+	  <if test="workCenterNm != null and workCenterNm != ''">
+      AND (UPPER(MWC.WORK_CENTER_NM) LIKE '%' || UPPER(#{workCenterNm, jdbcType=VARCHAR}) || '%' )
+	  </if>
+	  <if test="workCenterType != null and workCenterType != ''">
+      AND MWC.WORK_CENTER_TYPE = #{workCenterType, jdbcType=VARCHAR}
+	  </if>
+      <if test="useYn != null and useYn != ''">
+      AND MWC.USE_YN = #{useYn, jdbcType=VARCHAR}
+	  </if>
+      ORDER BY  MWC.WORK_CENTER_NM					
+  </select>
+  <insert id="create_createBtn1" parameterType="java.util.List">
+      INSERT INTO MOM_WORK_CENTER (
+                  COMPANY_CD
+               ,  DIVISION_CD
+               ,  WORK_GROUP_CD
+               ,  WORK_CENTER_CD
+               ,  WORK_CENTER_NM
+               ,  WORK_CENTER_TYPE
+               ,  CONSUME_LOCATION_CD
+               ,  GOOD_LOCATION_CD
+               ,  DEFECT_LOCATION_CD
+               ,  USE_YN
+               ,  DESCRIPTION
+               ,  CREATE_BY
+               ,  CREATE_DATE
+               ,  UPDATE_BY
+               ,  UPDATE_DATE )
+      VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+               (   #{item.companyCd,         jdbcType=VARCHAR}
+               ,   #{item.divisionCd,        jdbcType=VARCHAR}
+               ,   #{item.workGroupCd,       jdbcType=VARCHAR}
+               ,   #{item.workCenterCd,      jdbcType=VARCHAR}
+               ,   #{item.workCenterNm,      jdbcType=VARCHAR}
+               ,   #{item.workCenterType,    jdbcType=VARCHAR}
+               ,   #{item.consumeLocationCd, jdbcType=VARCHAR}
+               ,   #{item.goodLocationCd,    jdbcType=VARCHAR}
+               ,   #{item.defectLocationCd,     jdbcType=VARCHAR}
+               ,   #{item.useYn,             jdbcType=VARCHAR}
+               ,   #{item.description,       jdbcType=VARCHAR}
+               ,   #{item.userId,            jdbcType=VARCHAR}
+               ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+               ,   #{item.userId,          jdbcType=VARCHAR}
+               ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+               )
+             </foreach>
+  </insert> 
+    <insert id="create_copyBtn1" parameterType="java.util.List">
+      INSERT INTO MOM_WORK_CENTER (
+                  COMPANY_CD
+               ,  DIVISION_CD
+               ,  WORK_GROUP_CD
+               ,  WORK_CENTER_CD
+               ,  WORK_CENTER_NM
+               ,  WORK_CENTER_TYPE
+               ,  CONSUME_LOCATION_CD
+               ,  GOOD_LOCATION_CD
+               ,  DEFECT_LOCATION_CD
+               ,  USE_YN
+               ,  DESCRIPTION
+               ,  CREATE_BY
+               ,  CREATE_DATE
+               ,  UPDATE_BY
+               ,  UPDATE_DATE )
+      VALUES <foreach item="item" collection="list" index="i" separator=" " open="">
+               (   #{item.companyCd,         jdbcType=VARCHAR}
+               ,   #{item.divisionCd,        jdbcType=VARCHAR}
+               ,   #{item.workGroupCd,       jdbcType=VARCHAR}
+               ,   #{item.workCenterCd,      jdbcType=VARCHAR}
+               ,   #{item.workCenterNm,      jdbcType=VARCHAR}
+               ,   #{item.workCenterType,    jdbcType=VARCHAR}
+               ,   #{item.consumeLocationCd, jdbcType=VARCHAR}
+               ,   #{item.goodLocationCd,    jdbcType=VARCHAR}
+               ,   #{item.defectLocationCd,     jdbcType=VARCHAR}
+               ,   #{item.useYn,             jdbcType=VARCHAR}
+               ,   #{item.description,       jdbcType=VARCHAR}
+               ,   #{item.userId,            jdbcType=VARCHAR}
+               ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+               ,   #{item.userId,          jdbcType=VARCHAR}
+               ,   MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+               )
+             </foreach>
+  </insert> 
+  <update id="modify_editBtn1" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+      UPDATE MOM_WORK_CENTER
+      SET COMPANY_CD          = #{item.companyCd, 		  jdbcType=VARCHAR}
+       ,  DIVISION_CD         = #{item.divisionCd, 		  jdbcType=VARCHAR}
+       ,  WORK_GROUP_CD       = #{item.workGroupCd, 	  jdbcType=VARCHAR}
+       ,  WORK_CENTER_CD      = #{item.workCenterCd,      jdbcType=VARCHAR}
+       ,  WORK_CENTER_NM      = #{item.workCenterNm, 	  jdbcType=VARCHAR}
+       ,  WORK_CENTER_TYPE    = #{item.workCenterType,    jdbcType=VARCHAR}
+       ,  CONSUME_LOCATION_CD = #{item.consumeLocationCd, jdbcType=VARCHAR}
+       ,  GOOD_LOCATION_CD    = #{item.goodLocationCd, 	  jdbcType=VARCHAR}
+       ,  DEFECT_LOCATION_CD  = #{item.defectLocationCd, 	  jdbcType=VARCHAR}
+       ,  USE_YN              = #{item.useYn, 			  jdbcType=VARCHAR}
+       ,  DESCRIPTION         = #{item.description, 	  jdbcType=VARCHAR}
+       ,  UPDATE_BY           = #{item.userId, 		  jdbcType=VARCHAR}
+       ,  UPDATE_DATE         = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+      WHERE 1=1
+      AND   COMPANY_CD        = TRIM(#{item.companyCd,    jdbcType=VARCHAR})
+      AND   DIVISION_CD       = TRIM(#{item.divisionCd,   jdbcType=VARCHAR}) 
+      AND   WORK_CENTER_CD    = TRIM(#{item.workCenterCd, jdbcType=VARCHAR})           
+    </foreach>
+  </update> 
+  <delete id="remove_delBtn1" parameterType="java.util.List"> 
+	   DELETE
+	   FROM    MOM_WORK_CENTER
+       <where> 
+        <foreach collection="list" item="item" open="" close="" separator="OR"> 
+          (   
+	               COMPANY_CD     = TRIM(#{item.companyCd,    jdbcType=VARCHAR})
+	         AND   DIVISION_CD    = TRIM(#{item.divisionCd,   jdbcType=VARCHAR}) 
+	         AND   WORK_CENTER_CD = TRIM(#{item.workCenterCd, jdbcType=VARCHAR}) 
+          )
+        </foreach>
+       </where>
+  </delete>  
+     <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true">
+      MERGE INTO MOM_WORK_CENTER 
+            USING( 
+                     SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{workGroupCd, jdbcType=VARCHAR} as workGroupCd,
+                            #{workCenterCd, jdbcType=VARCHAR} as workCenterCd,
+                            #{workCenterNm, jdbcType=VARCHAR} as workCenterNm,
+                            #{routingId, jdbcType=VARCHAR} as routingId,
+                            #{workCenterType, jdbcType=VARCHAR} as workCenterType,
+                            #{consumeLocationCd, jdbcType=VARCHAR} as consumeLocationCd,
+                            #{goodLocationCd, jdbcType=VARCHAR} as goodLocationCd,
+                            #{defectLocationCd, jdbcType=VARCHAR} as defectLocationCd,
+                            #{useYn, jdbcType=VARCHAR} as useYn,
+                            #{description, jdbcType=VARCHAR} as description,
+                            #{userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL
+                    ) PARAM
+            ON ( COMPANY_CD = PARAM.companyCd AND
+                 DIVISION_CD = PARAM.divisionCd AND
+                 WORK_CENTER_CD = PARAM.workCenterCd )
+            WHEN MATCHED THEN 
+                 UPDATE SET WORK_GROUP_CD = PARAM.workGroupCd
+                          , WORK_CENTER_NM = PARAM.workCenterNm
+                          , ROUTING_ID = PARAM.routingId
+                          , WORK_CENTER_TYPE = PARAM.workCenterType
+                          , CONSUME_LOCATION_CD = PARAM.consumeLocationCd
+                          , GOOD_LOCATION_CD = PARAM.goodLocationCd
+                          , DEFECT_LOCATION_CD = PARAM.defectLocationCd
+                          , USE_YN = PARAM.useYn
+                          , DESCRIPTION = PARAM.description
+                          , CREATE_BY = PARAM.createBy
+                          , CREATE_DATE = PARAM.createDate
+                          , UPDATE_BY = PARAM.updateBy
+                          , UPDATE_DATE = PARAM.updateDate
+            WHEN NOT MATCHED THEN
+                     INSERT ( COMPANY_CD
+                            , DIVISION_CD
+                            , WORK_GROUP_CD
+                            , WORK_CENTER_CD
+                            , WORK_CENTER_NM
+                            , ROUTING_ID
+                            , WORK_CENTER_TYPE
+                            , CONSUME_LOCATION_CD
+                            , GOOD_LOCATION_CD
+                            , DEFECT_LOCATION_CD
+                            , USE_YN
+                            , DESCRIPTION
+                            , CREATE_BY
+                            , CREATE_DATE
+                            , UPDATE_BY
+                            , UPDATE_DATE )
+                     VALUES ( PARAM.companyCd
+                            , PARAM.divisionCd
+                            , PARAM.workGroupCd
+                            , PARAM.workCenterCd
+                            , PARAM.workCenterNm
+                            , PARAM.routingId
+                            , PARAM.workCenterType
+                            , PARAM.consumeLocationCd
+                            , PARAM.goodLocationCd
+                            , PARAM.badLocationCd
+                            , PARAM.useYn
+                            , PARAM.description
+                            , PARAM.createBy
+                            , PARAM.createDate
+                            , PARAM.updateBy
+                            , PARAM.updateDate )
+  </insert>   
+</mapper>

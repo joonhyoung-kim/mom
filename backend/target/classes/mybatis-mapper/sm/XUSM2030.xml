@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUSM2030">
+<!--     <parameterMap id="paramMap" type="hashMap">
+    	<parameter property="cd"         mode="IN"  jdbcType="VARCHAR" javaType = "java.lang.String"/>
+    	
+    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
+    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
+    </parameterMap> -->
+	
+     <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">    
+		 SELECT COMPANY_CD
+		      , DIVISION_CD
+		      , AUTH_GROUP_CD
+		      , AUTH_GROUP_NM
+		      , OUT_SOURCING_FLAG
+		      , ( SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(COMPANY_CD, DIVISION_CD, 'SM0001',OUT_SOURCING_FLAG,#{langCd, jdbcType=VARCHAR})
+	                                       FROM   DUAL  ) AS OUT_SOURCING_FLAG_NM 
+		      , DESCRIPTION
+		      , CREATE_BY
+		      , CREATE_DATE
+		      , UPDATE_BY
+		      , UPDATE_DATE
+		 FROM  MOM_AUTH_GROUP
+		 WHERE COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+		 AND   DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}	
+		 ORDER BY COMPANY_CD, DIVISION_CD, AUTH_GROUP_CD		 	                	  
+     </select>
+     <select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+		 SELECT LEVEL
+	          , A.MENU_ID        
+	          , (SELECT MENU_TYPE FROM MOM_MENU WHERE MENU_ID = A.MENU_ID) AS MENU_TYPE       
+		      , A.PARENT_MENU_ID
+		      , A.MENU_NM
+		      , A.SORT_NO
+		      , A.AUTH_GROUP_CD
+		      , NVL(A.AUTH_ROLE_CD,'A') AS AUTH_ROLE_CD
+		      , A.AUTH_ROLE_NM
+		      , DECODE(A.AUTH_ROLE_CD, '', '', A.AUTH_ROLE_CD||'('||A.AUTH_ROLE_NM||')')   as AUTH_ROLE_CDNM
+		      , (SELECT MM.DESCRIPTION
+			     FROM   MOM_MENU MM
+				 WHERE  MM.MENU_ID = A.MENU_ID)  AS DESCRIPTION
+			  , A.COMPANY_CD
+			  , A.DIVISION_CD    
+			  , A.USE_YN    
+	     FROM   (WITH C_ROLE AS ( SELECT MAM.COMPANY_CD
+	                                   , MAM.DIVISION_CD	                                   
+	                                   , MAM.MENU_ID
+	                                   , MAM.ROLE_CD          as AUTH_ROLE_CD   
+	                                   , MAM.AUTH_GROUP_CD 
+	                                   , ( SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MAM.COMPANY_CD, MAM.DIVISION_CD, 'SM0011',MAM.ROLE_CD,#{langCd, jdbcType=VARCHAR})
+	                                       FROM   DUAL  ) AS AUTH_ROLE_NM 
+	                                   , NVL(MAM.USE_YN, 'N') AS USE_YN
+	                              FROM   MOM_AUTH_MENU  MAM
+		                          WHERE  MAM.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
+		                          AND    MAM.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}
+		                          AND    MAM.AUTH_GROUP_CD = #{authGroupCd, jdbcType=VARCHAR})
+			        SELECT MDM.COMPANY_CD
+			             , MDM.DIVISION_CD
+			             , MDM.MENU_ID
+			             , MDM.MENU_NM
+			             , MDM.PARENT_MENU_ID
+			             , MDM.SORT_NO
+			             , R.AUTH_ROLE_CD
+			             , R.AUTH_ROLE_NM
+			             , R.AUTH_GROUP_CD
+			             , R.USE_YN
+			        FROM   MOM_DIVISION_MENU MDM
+			             , C_ROLE R
+			        WHERE  MDM.COMPANY_CD   = R.COMPANY_CD(+)
+			        AND    MDM.DIVISION_CD  = R.DIVISION_CD(+)   
+			        AND    MDM.MENU_ID      = R.MENU_ID(+)                                 
+			        AND    MDM.USE_YN       = 'Y'  ) A
+			START WITH  A.PARENT_MENU_ID = '-' 
+			CONNECT BY PRIOR  A.MENU_ID  = A.PARENT_MENU_ID  
+			ORDER SIBLINGS BY A.PARENT_MENU_ID,A.SORT_NO, A.MENU_ID 
+     </select>  
+     <select id="get_findBtn3" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+		SELECT *
+		FROM   MOM_USER_V  MU
+		WHERE MU.COMPANY_CD     = #{companyCd, jdbcType=VARCHAR}
+		AND   MU.DIVISION_CD    = #{divisionCd, jdbcType=VARCHAR}
+		AND   MU.AUTH_GROUP_CD  = #{authGroupCd, jdbcType=VARCHAR}
+		ORDER by MU.USER_NO
+     </select>  
+     <insert id="create_createBtn1" parameterType="java.util.List">  
+         INSERT INTO MOM_AUTH_GROUP(
+							             COMPANY_CD
+									   , DIVISION_CD
+									   , AUTH_GROUP_CD
+									   , AUTH_GROUP_NM
+									   , OUT_SOURCING_FLAG
+									   , DESCRIPTION
+									   , CREATE_BY
+									   , CREATE_DATE
+									   , UPDATE_BY
+									   , UPDATE_DATE
+		 							  )     
+        VALUES(
+                <foreach item="item" collection="list" index="i" separator=" " open="">
+				               #{item.companyCd,       jdbcType=VARCHAR}
+				             , #{item.divisionCd,      jdbcType=VARCHAR}
+				             , #{item.authGroupCd,     jdbcType=VARCHAR}
+				             , #{item.authGroupNm,     jdbcType=INTEGER}
+				             , #{item.outSourcingFlag, jdbcType=VARCHAR}
+				             , #{item.description,     jdbcType=VARCHAR} 
+				             , #{item.userId,          jdbcType=VARCHAR}
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+				             , TRIM(#{item.userId, jdbcType=VARCHAR})
+				             , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+			  )				             
+	            </foreach>			               
+    </insert>
+    <update id="modify_editBtn1" parameterType="java.util.List">     
+      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
+        UPDATE MOM_AUTH_GROUP 
+        SET    AUTH_GROUP_NM       = #{item.authGroupNm,     jdbcType=VARCHAR}
+             , OUT_SOURCING_FLAG   = #{item.outSourcingFlag, jdbcType=INTEGER}
+             , DESCRIPTION         = #{item.description,     jdbcType=VARCHAR}
+		     , UPDATE_BY           = #{item.userId,          jdbcType=VARCHAR}
+		     , UPDATE_DATE         = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+        <where>
+               COMPANY_CD           = #{item.companyCd, jdbcType=VARCHAR} 
+		AND    DIVISION_CD          = #{item.divisionCd, jdbcType=VARCHAR} 
+        AND    AUTH_GROUP_CD        = #{item.authGroupCd, jdbcType=VARCHAR} 
+         </where>
+      </foreach>
+    </update> 
+
+     <delete id="remove_delBtn1"   parameterType="java.util.List">
+     <foreach collection="list" item="item" open="{ CALL DECLARE " close="}" separator="">              
+       BEGIN   
+       DELETE FROM MOM_AUTH_MENU
+       WHERE  COMPANY_CD    = #{item.companyCd, jdbcType=VARCHAR}
+       AND    DIVISION_CD   = #{item.divisionCd, jdbcType=VARCHAR}
+       AND    AUTH_GROUP_CD = #{item.authGroupCd, jdbcType=VARCHAR}        
+       ;     
+       DELETE FROM MOM_AUTH_GROUP
+       WHERE  COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+       AND    DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+       AND    AUTH_GROUP_CD = #{item.authGroupCd, jdbcType=VARCHAR} 
+       ;
+  <!--      SELECT
+	    CASE 
+	    WHEN COUNT(AUTH_GROUP_CD) = 0 THEN 'S'
+				ELSE 'E' 
+		 END  
+			INTO #{p_err_code, mode=OUT, jdbcType=VARCHAR, javaType=String}
+		 FROM MOM_AUTH_GROUP
+		 WHERE  COMPANY_CD    = #{item.companyCd, jdbcType=VARCHAR}
+         AND    DIVISION_CD   = #{item.divisionCd, jdbcType=VARCHAR}
+         AND    AUTH_GROUP_CD = #{item.authGroupCd, jdbcType=VARCHAR} 
+		; -->	
+		END
+     </foreach>
+    </delete>
+    <insert id="upsert_saveBtn2" parameterType="java.util.HashMap" flushCache="true">
+	    MERGE INTO MOM_AUTH_MENU MAM
+	    USING (
+	  
+	             SELECT           TRIM(#{companyCd, jdbcType=VARCHAR})                              									   as companyCd,                                              					  
+	                              TRIM(#{divisionCd, jdbcType=VARCHAR}) 																   as divisionCd, 
+	                              TRIM(#{authGroupCd, jdbcType=VARCHAR}) 																   as authGroupCd,                               						       
+	                              TRIM(#{menuId, jdbcType=VARCHAR}) 																	   as menuId,           														   
+					              TRIM(#{authRoleCd, jdbcType=VARCHAR})																   as roleCd,             															   
+					              TRIM(#{useYn, jdbcType=VARCHAR})																	       as useYn,
+					              TRIM(#{description, jdbcType=VARCHAR})																   as description,
+					              TRIM(#{userId, jdbcType=VARCHAR})       															       as createBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as createDate,
+					              TRIM(#{userId, jdbcType=VARCHAR})                                                                       as updateBy,
+					              MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{divisionCd, jdbcType=VARCHAR}, #{companyCd, jdbcType=VARCHAR})  as updateDate
+	             FROM DUAL
+	  
+	    ) PARAM 
+	    ON ( MAM.COMPANY_CD    = PARAM.companyCd
+	    AND  MAM.DIVISION_CD   = PARAM.divisionCd
+	    AND  MAM.AUTH_GROUP_CD = PARAM.authGroupCd
+	    AND  MAM.MENU_ID       = PARAM.menuId	   	    	    
+	       )
+	    WHEN MATCHED THEN
+	    UPDATE
+	    SET		  MAM.USE_YN        = NVL(PARAM.useYn,'N')
+	            , MAM.ROLE_CD       = PARAM.roleCd
+			    , MAM.DESCRIPTION   = PARAM.description
+			    , MAM.UPDATE_BY     = PARAM.updateBy
+			    , MAM.UPDATE_DATE   = PARAM.updateDate
+	       
+	    WHEN NOT MATCHED THEN
+		INSERT ( MAM.COMPANY_CD
+	           , MAM.DIVISION_CD
+			   , MAM.AUTH_GROUP_CD
+			   , MAM.MENU_ID
+			   , MAM.ROLE_CD
+			   , MAM.USE_YN
+			   , MAM.DESCRIPTION
+			   , MAM.CREATE_BY
+			   , MAM.CREATE_DATE
+			   , MAM.UPDATE_BY
+			   , MAM.UPDATE_DATE
+	    )   
+	    VALUES ( PARAM.companyCd
+			   , PARAM.divisionCd
+			   , PARAM.authGroupCd	
+               , PARAM.menuId
+               , PARAM.roleCd
+			   , NVL(PARAM.useYn,'N')
+			   , PARAM.description
+			   , PARAM.createBy
+			   , PARAM.createDate
+			   , PARAM.updateBy
+			   , PARAM.updateDate
+	    )	 
+	</insert>
+ 
+   
+     
+</mapper>
