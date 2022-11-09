@@ -1,6 +1,5 @@
 !/pom.xml
-.target/
-/target/
+*/target/*
 .idea
 .idea/
 *.iml
