@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUSM3030">
-	<resultMap id="get_defaultInfo_result" type="com.mom.dto.LowerHashMap">
+<mapper namespace="com.mom.backend.XUSM3030">
+	<resultMap id="get_defaultInfo_result" type="com.mom.backend.dto.LowerHashMap">
 	<result property="PROGRAM_ID" column="PROGRAM_ID" />
 	<result property="MENU_ID" column="MENU_ID" />
 	<result property="GRID_PROPERTY"   column="GRID_PROPERTY"/>
@@ -10,7 +10,7 @@
 	<result property="POPUP_PROPERTY"  column="POPUP_PROPERTY"  jdbcType="CLOB" javaType="java.lang.String"/>
 	<result property="BUTTON_PROPERTY" column="BUTTON_PROPERTY"/>
 	</resultMap>
-    <select id="get_multiLangList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    <select id="get_multiLangList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
      SELECT   A.MSG_CD AS CODE 
 		    , A.MSG_CD || '(' || MIN(DECODE(A.LANG_CD, 'KR', A.MSG_NM, ''))  || '/' || MIN(DECODE(A.LANG_CD, 'EN', A.MSG_NM, '')) || ')'AS LABEL
       FROM  (SELECT MM.LANG_CD
@@ -35,7 +35,7 @@
 			       , A.MSG_CD
 			ORDER BY LABEL
 	</select>
-	<select id="get_dropDown" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_dropDown" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	SELECT  CODE
          ,  CODE_NM AS LABEL
 	FROM    MOM_CODE
@@ -45,7 +45,7 @@
 	AND     USE_YN      = 'Y'
 	ORDER BY SORT_NO
 	</select>
-	<select id="get_dropDownList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_dropDownList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 		SELECT  DROPDWON_ID AS CODE
 	         ,  DROPDWON_NM || '(' || DROPDWON_ID || ')'  AS LABEL
 		FROM    MOM_DROP_DOWN
@@ -54,7 +54,7 @@
 		AND     USE_YN         = 'Y'
 		ORDER BY CODE
 	</select>
-    <select id="get_dropDownGridList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    <select id="get_dropDownGridList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	SELECT MENU_ID AS CODE
 	     , MENU_NM || '(' || MENU_ID || ')'  AS LABEL
 	FROM   MOM_PROGRAM MP	  
@@ -64,7 +64,7 @@
     AND    MENU_TYPE = 'D'
 	ORDER BY MENU_NM
 	</select>
-    <select id="get_dropDownDetailList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    <select id="get_dropDownDetailList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
     		    
         SELECT  DETAIL_ID AS CODE
 	        ,   DETAIL_NM || '(' || DETAIL_ID || ')'  AS LABEL
@@ -76,7 +76,7 @@
 		AND     USE_YN      = 'Y'
 		ORDER BY DROPDWON_ID, DETAIL_ID
 	</select>
-	<select id="get_menuList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
+	<select id="get_menuList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">	
         SELECT A.MENU_ID  AS CODE
    	         , A.MENU_ID ||'('|| A.MENU_NM ||')'  AS NAME
         FROM   (SELECT MM.MENU_ID  
@@ -108,7 +108,7 @@
 		WHERE A.MENU_TYPE = #{menuType, jdbcType=VARCHAR}
 		ORDER BY A.MENU_ID,A.MENU_NM 
 	</select>
-	<select id="get_programTypeList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">	
+	<select id="get_programTypeList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">	
         SELECT CODE
              , CODE ||'('|| CODE_NM ||')'  AS NAME
         FROM MOM_CODE 
@@ -116,7 +116,7 @@
         AND   CODE <![CDATA[ <> 'M' ]]> 
         ORDER BY SORT_NO
 	</select>
-    <select id="get_gridList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    <select id="get_gridList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	   SELECT  GRID_ID AS CODE
             ,  GRID_ID AS NAME
        FROM    MOM_WIDGET 
@@ -125,7 +125,7 @@
 	   AND     LOCALE_CD    = #{langCd, jdbcType=VARCHAR}
 	   AND     MENU_ID      = #{menuId, jdbcType=VARCHAR}
 	</select>
-	<select id="get_programList" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_programList" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	   SELECT  DISTINCT PROGRAM_ID AS CODE
 	        ,  PROGRAM_ID AS NAME	   
        FROM    MOM_MENU
@@ -414,7 +414,7 @@
 			  )				             
 	            </foreach>			               
     </insert>
-    <select id="create_widgetProc" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" statementType="CALLABLE">
+    <select id="create_widgetProc" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" statementType="CALLABLE">
      CALL MOM_BASIC_INFO_PKG.COPY_BOM_PROC (
              #{p_err_code, jdbcType=VARCHAR, mode=OUT}
            , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
@@ -747,35 +747,35 @@
                                                 )
        }    	           
     </select>   -->
-        <select id="proc_gridProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
+        <select id="proc_gridProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">    
             { CALL MOM_WIDGET_PKG.upsert_grid_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 													          , #{userId, jdbcType=VARCHAR, mode=IN} )}    	            
         </select>  
-        <select id="proc_columnProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">   
+        <select id="proc_columnProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">   
           { CALL MOM_WIDGET_PKG.upsert_column_property_proc(    #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 													          , #{userId, jdbcType=VARCHAR, mode=IN} )}												            	              
         </select> 
-        <select id="proc_searchProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">   
+        <select id="proc_searchProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">   
            { CALL MOM_WIDGET_PKG.upsert_search_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 													          , #{userId, jdbcType=VARCHAR, mode=IN} )}             
          </select>   
-         <select id="proc_popupProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap"> 
+         <select id="proc_popupProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap"> 
             { CALL MOM_WIDGET_PKG.upsert_popup_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}
 				                                              , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 													          , #{userId, jdbcType=VARCHAR, mode=IN} )}  													           	              
          </select> 
-         <select id="proc_buttonProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">    
+         <select id="proc_buttonProp" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">    
        		{ CALL MOM_WIDGET_PKG.upsert_button_property_proc(#{p_err_code, jdbcType=VARCHAR, mode=OUT}
 				                                              , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 				                                              , #{companyCd, jdbcType=VARCHAR , mode=IN}

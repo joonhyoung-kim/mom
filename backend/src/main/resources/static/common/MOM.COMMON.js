@@ -1401,7 +1401,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		actionMode = type;
 	}
 	if(type == 'R'){
-		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
+		url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
 		if(sessionStorage.getItem('userInfo') != undefined && sessionStorage.getItem('userInfo') != null){
 			userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		}
@@ -1438,7 +1438,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 
 	}
 	else if(type =='P'){
-	    url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
+	    url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		type = 'POST';	
 		excelUpYn = param[0] == undefined ? 'N':param[0].excelUpYn;
@@ -1484,7 +1484,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		}*/
 	}
 	else if (type == 'C' || type == 'CU' || type=='CP'){
-		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
+		url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		type = 'POST';	
 		if(param.length==0){
@@ -1524,7 +1524,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		
 	}
 	else if (type == 'U'){
-		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
+		url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		type = 'PUT';
 		if(param.length==0){
@@ -1552,8 +1552,8 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		
 	}
 	else if (type == 'D'){
-		//url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type+'/'+$.param(param[0]);
-		url = mCommon.contextPath() + '/request/com.mom.' + url+'/'+type;
+		//url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type+'/'+$.param(param[0]);
+		url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
 		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
 		type = 'DELETE';
 		if(param.length==0){

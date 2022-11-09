@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUMD1080">
-  <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+<mapper namespace="com.mom.backend.XUMD1080">
+  <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 	 	SELECT MCD.COMPANY_CD											
 	     , MCD.COMPANY_NM											
 	     , MCD.DIVISION_CD											
@@ -50,7 +50,7 @@
 		AND    ROUTING_ID        = #{item.routingId, jdbcType=VARCHAR}						      
     </foreach>
   </update> 
-  <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">  
+  <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">  
      	SELECT MCD.COMPANY_CD									
 	     , MCD.COMPANY_NM									
 	     , MCD.DIVISION_CD									
@@ -132,7 +132,7 @@
               )
    </foreach>
   </insert>
-    <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.sp_update_routing_path(    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}

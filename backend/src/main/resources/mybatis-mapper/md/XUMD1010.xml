@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUMD1010">
+<mapper namespace="com.mom.backend.XUMD1010">
 <!--     <parameterMap id="paramMap" type="hashMap">
     	<parameter property="cd"         mode="IN"  jdbcType="VARCHAR" javaType = "java.lang.String"/>
     	
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
-    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   fetchSize="1"resultType="com.mom.dto.LowerHashMap"
+    	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   fetchSize="1"resultType="com.mom.backend.dto.LowerHashMap"
     </parameterMap> -->
-    	<select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+    	<select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
             SELECT MCD.COMPANY_CD
 			     , MCD.COMPANY_NM
 			     , MCD.DIVISION_CD

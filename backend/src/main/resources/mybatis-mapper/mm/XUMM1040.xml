@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUMM1040">
-	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+<mapper namespace="com.mom.backend.XUMM1040">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 		SELECT MPR.PR_NO
 		     , MPR.PR_NO AS KEY_ID
 		     , MPR.PR_TYPE
@@ -41,7 +41,7 @@
     ORDER BY MPR.PR_NO,MPR.PR_TYPE,MPR.REQUEST_DEPT_CD
 
 	</select>
-	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 		SELECT  MPD.PR_NO
 	      , MPD.PR_SEQ
 	      , MPD.ITEM_ID
@@ -122,7 +122,7 @@
 	              )
 	 </foreach>
   </insert>
-    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MATERIAL_PKG.sp_confirm_pr_mst(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -167,7 +167,7 @@
               )
    </foreach>
   </insert>
-    <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MATERIAL_PKG.sp_confirm_pr_dtl(     		#{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}

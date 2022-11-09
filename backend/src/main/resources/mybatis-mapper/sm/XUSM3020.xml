@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUSM3020">
-	<resultMap id="get_defaultInfo_result" type="com.mom.dto.LowerHashMap">
+<mapper namespace="com.mom.backend.XUSM3020">
+	<resultMap id="get_defaultInfo_result" type="com.mom.backend.dto.LowerHashMap">
 	<result property="PROGRAM_ID" column="PROGRAM_ID" />
 	<result property="MENU_ID" column="MENU_ID" />
 	<result property="GRID_PROPERTY"   column="GRID_PROPERTY"/>
@@ -11,7 +11,7 @@
 	<result property="BUTTON_PROPERTY" column="BUTTON_PROPERTY"/>
 	</resultMap>
 
-	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 		SELECT MCD.COMPANY_CD
 	         , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -156,7 +156,7 @@
       </where>
   </delete>
   
-	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	    SELECT MCD.COMPANY_CD
 	         , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -189,7 +189,7 @@
 		</if>
 		ORDER BY MCD.COMPANY_CD, MCD.DIVISION_CD, MCC.SORT_NO, MGC.GROUP_CD 
 	</select>
-	<select id="get_findBtn3" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+	<select id="get_findBtn3" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	    SELECT *
         FROM   MOM_CODE_V MV
         WHERE  1=1
@@ -354,7 +354,7 @@
        </foreach>
       </where>
   </delete>   
-    <select id="get_findBtn4" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    <select id="get_findBtn4" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 		    SELECT MC.COMPANY_CD
 	     , MDV.COMPANY_NM
 	     , MC.DIVISION_CD

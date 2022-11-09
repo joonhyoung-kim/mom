@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUMM2170">
-	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+<mapper namespace="com.mom.backend.XUMM2170">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
     SELECT MPIM.COMPANY_CD			
 	     , MPIM.DIVISION_CD			
 	     , MPIM.INOUT_NO     AS RETURN_NO        -- 반품서번호	
@@ -49,7 +49,7 @@
 	AND    MPIM.INOUT_TYPE  = 'TD'   			
 	ORDER BY MPIM.INOUT_NO			
     </select>
-	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
     WITH P_MPID AS ( SELECT MPID.COMPANY_CD  		
 	                      , MPID.DIVISION_CD		
 	                      , MPID.INOUT_NO            AS RETURN_NO		
@@ -178,7 +178,7 @@
 			                )
         </foreach>
     </insert>
-    <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
         { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_MST( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 	                                            , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 	                                            , #{companyCd,   jdbcType=VARCHAR, mode=IN}
@@ -259,7 +259,7 @@
 			              )
         </foreach>
     </insert>
-    <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
     { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_MST( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
                                             , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
                                             , #{companyCd,   jdbcType=VARCHAR, mode=IN}
@@ -340,7 +340,7 @@
                             )
         </foreach>
     </insert>
-    <select id="proc_editBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_editBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
     { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_MST( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
                                             , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
                                             , #{companyCd,   jdbcType=VARCHAR, mode=IN}
@@ -421,7 +421,7 @@
 				              )
         </foreach>
     </insert>
-    <select id="proc_delBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_delBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
     { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_MST( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
                                             , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
                                             , #{companyCd,   jdbcType=VARCHAR, mode=IN}
@@ -468,7 +468,7 @@
 				                )
         </foreach>
     </insert>
-    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
     { CALL MOM_MATERIAL_PKG.SP_PI_CONFIRM( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
                                          , #{companyCd,   jdbcType=VARCHAR, mode=IN}
@@ -525,7 +525,7 @@
 			              )
         </foreach>
     </insert>
-    <select id="proc_customBtn2-2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn2-2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
     { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_DTL( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
                                             , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
                                             , #{companyCd,   jdbcType=VARCHAR, mode=IN}
@@ -582,7 +582,7 @@
                             )
         </foreach>
     </insert>
-    <select id="proc_customBtn2-3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn2-3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
     { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_DTL( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 	                                        , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 	                                        , #{companyCd,   jdbcType=VARCHAR, mode=IN}

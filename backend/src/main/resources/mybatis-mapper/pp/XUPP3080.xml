@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUPP3080">
-	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+<mapper namespace="com.mom.backend.XUPP3080">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 	SELECT     MWO.COMPANY_CD
 		     , MWO.DIVISION_CD
 		     , MWO.WORK_ORDER_ID   
@@ -98,7 +98,7 @@
 		      , MWO.PRIORITY
 		      , MWO.ITEM_ID
 	</select>
-	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	<select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 	SELECT MWR.WO_RESULT_ID
 	 , MWR.WO_RESULT_ID AS KEY_ID
      , TO_CHAR(MWR.WORK_DAY ,'YYYY-MM-DD')   AS RESULT_CREATE_DATE
@@ -170,7 +170,7 @@ ORDER BY MWR.WO_RESULT_ID
        </foreach>
       </where>
    </delete> 
-   <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_customBtn2-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_WO_PKG.sp_cancel_wo_result(     		    #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}

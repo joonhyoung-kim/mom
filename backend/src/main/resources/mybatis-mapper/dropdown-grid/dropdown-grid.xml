@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.DG">	
+<mapper namespace="com.mom.backend.DG">	
 <!-- 품목기준검색 -->
-<select id="get_XUSM8010" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
+<select id="get_XUSM8010" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" >
 	SELECT MB.ITEM_ID 
 	     , MI.ITEM_NM
 	     , MB.WORK_CENTER_CD
@@ -34,7 +34,7 @@
 
  </select> 
  <!-- 작업장기준검색 -->
- <select id="get_XUSM8020" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" >
+ <select id="get_XUSM8020" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" >
 		SELECT MB.ITEM_ID 
 	     , MI.ITEM_NM
 	     , MB.WORK_CENTER_CD
@@ -65,7 +65,7 @@
 	ORDER BY MB.PRIORITY,MI.ITEM_NM
  </select> 
  <!-- 품목별환산단위 -->
- <select id="get_XUSM8030" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">   
+ <select id="get_XUSM8030" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
    SELECT A.UNIT_CATEGORY_NM          
      , A.UNIT_NM                                                                          
      , A.CONVERSION_UNIT_NM            
@@ -103,7 +103,7 @@ ORDER BY A.UNIT_CATEGORY_NM
        , A.CONVERSION_UNIT_NM
  </select>
  <!-- 다국어팝업 -->
- <select id="get_XUSM8040" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+ <select id="get_XUSM8040" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	<!--   SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG -->
 	  SELECT MC.CODE AS LANG_CD2
 	        ,MC.CODE_NM AS LANG_NM
@@ -114,7 +114,7 @@ ORDER BY A.UNIT_CATEGORY_NM
 	  AND    MC.USE_YN = 'Y'
  </select>
   <!-- 거래처정보 -->
- <select id="get_XUSM8050" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+ <select id="get_XUSM8050" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	<!--   SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG -->
 	  SELECT MP.PARTNER_CD
 	       , MP.PARTNER_CD AS KEY_ID
@@ -127,7 +127,7 @@ ORDER BY A.UNIT_CATEGORY_NM
 
  </select>
  <!-- 구매요청 미발주 현황 -->
- <select id="get_XUSM8060" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+ <select id="get_XUSM8060" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
     SELECT  MPD.PUCHASE_REQUEST_ID     
 	      , MPM.PR_TYPE
 	      , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MPM.COMPANY_CD, MPM.DIVISION_CD, 'MM0001', MPM.PR_TYPE, 'KR') FROM DUAL)  AS PR_TYPE_NM
@@ -218,7 +218,7 @@ ORDER BY A.UNIT_CATEGORY_NM
 
  </select>
   <!-- 단가 기준 품목검색 -->
- <select id="get_XUSM8070" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+ <select id="get_XUSM8070" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	 SELECT MUP.ITEM_ID
      , MI.ITEM_NM
     , MUP.PARTNER_CD
@@ -249,7 +249,7 @@ ORDER BY MUP.ITEM_ID
  </select>
  
  <!-- 구매발주접수현황 -->
- <select id="get_XUSM8080" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+ <select id="get_XUSM8080" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	SELECT A.PO_NO
      , A.PO_SEQ
      , A.ITEM_ID
@@ -379,7 +379,7 @@ ORDER BY A.COMPANY_CD
  </select>
  
   <!-- 사용자조회(구매요청서접수) -->
- <select id="get_XUSM8090" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+ <select id="get_XUSM8090" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	  SELECT MUI.USER_NO   
 	      , MU.USER_NM  
 	      , MU.DEPT_CD

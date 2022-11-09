@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUSM3040">
-  <select id="get_pivotLang" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+<mapper namespace="com.mom.backend.XUSM3040">
+  <select id="get_pivotLang" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	  SELECT LISTAGG(''''||MC.CODE||'''', ',') WITHIN GROUP (ORDER BY MC.SORT_NO, MC.CODE) AS PIVOT_LANG
 	  FROM   MOM_CODE MC
 	  WHERE  MC.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR} 
@@ -9,7 +9,7 @@
 	  AND    MC.GROUP_CD     = #{groupCd, jdbcType=VARCHAR}
 	  AND    MC.USE_YN = 'Y'
   </select>
-  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	  SELECT  A.MSG_TYPE 
 		    , MIN(A.MSG_TYPE_NM)  AS MSG_TYPE_NM
 		    , A.MSG_CD

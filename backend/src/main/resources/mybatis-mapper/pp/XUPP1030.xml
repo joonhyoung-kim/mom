@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUPP1030">
-	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+<mapper namespace="com.mom.backend.XUPP1030">
+	<select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 		SELECT MCD.COMPANY_CD
 		     , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -88,7 +88,7 @@
 
 	</select>
 	
-   <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL mom_demand_pkg.sp_create_manual_demand(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -102,7 +102,7 @@
 					                                          , #{description,      jdbcType=VARCHAR, mode=IN} 
 					                                          , #{userId,           jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-  <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL mom_demand_pkg.sp_create_manual_demand(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}

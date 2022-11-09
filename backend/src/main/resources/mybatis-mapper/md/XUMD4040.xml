@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUMD4040">
- <select id="get_checkShift" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+<mapper namespace="com.mom.backend.XUMD4040">
+ <select id="get_checkShift" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 	 SELECT SHIFT_CD
      FROM MOM_SHIFT_SCHEDULE
 	 WHERE 1=1
@@ -10,7 +10,7 @@
 	 AND   TO_CHAR(APPLY_DATE,'YYYY-MM-DD')  = #{applyDate, jdbcType=VARCHAR}
 	 AND   WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
    </select> 
-   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+   <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
    SELECT *
    FROM(SELECT COUNT(*) OVER() AS TOTAL_COUNT,  
                ROWNUM AS KEY_ID,
@@ -116,7 +116,7 @@
     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}	
     </if>           
 	</select>
-  <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_copy_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -124,10 +124,10 @@
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+					                                          , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.backend.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select> 
-  <select id="proc_customBtn1-2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_customBtn1-2" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd4040_wc_copy_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -135,27 +135,27 @@
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , #{fromWorkCenterCd, jdbcType=VARCHAR, mode=IN}
-					                                          , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+					                                          , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.backend.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-    <select id="proc_customBtn1-3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn1-3" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd4040_wg_dayoff_proc(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
-                                                              , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+                                                              , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.backend.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
-    <select id="proc_customBtn1-4" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn1-4" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd4040_wc_dayoff_proc(   #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,javaType=string,  jdbcType=VARCHAR , mode=IN}
 					                                          , #{divisionCd, jdbcType=VARCHAR, mode=IN}
 					                                          , TO_DATE(#{startDate,  jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
 					                                          , TO_DATE(#{endDate,    jdbcType=VARCHAR, mode=IN},'YYYY-MM-DD')
-                                                              , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.util.ListMapTypeHandler}
+                                                              , #{arrayParam1,javaType=Object,jdbcType=ARRAY, jdbcTypeName=VARCHAR_ARRAY_LIST, mode=IN, typeHandler=com.mom.backend.util.ListMapTypeHandler}
 					                                          , #{userId,     jdbcType=VARCHAR, mode=IN} )}    	              
   </select>  
   <insert id="create_createBtn1" parameterType="java.util.List">

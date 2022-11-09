@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUSM8100">
+<mapper namespace="com.mom.backend.XUSM8100">
     <!-- 발주확정 현황 -->
-    <select id="get_findBtn21" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">
+    <select id="get_findBtn21" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 	SELECT A.PO_NO
 	     , A.PO_SEQ
 	     , A.ITEM_ID
@@ -182,7 +182,7 @@
                             )
         </foreach>
     </insert>
-    <select id="proc_customBtn21-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+    <select id="proc_customBtn21-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
     { CALL MOM_MATERIAL_PKG.SP_UPSERT_PI_DTL( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
 	                                        , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
                                             , #{companyCd,   jdbcType=VARCHAR , mode=IN}

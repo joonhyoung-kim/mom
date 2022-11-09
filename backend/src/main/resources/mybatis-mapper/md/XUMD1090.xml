@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mom.XUMD1090">
+<mapper namespace="com.mom.backend.XUMD1090">
 
-  <select id="get_validateEx1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+  <select id="get_validateEx1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
     SELECT NVL(VAL_MSG,'PASS') AS VAL_MSG
          , MULTI_MSG      
     FROM    MOM_PROC_BOR
@@ -10,7 +10,7 @@
     AND     DIVISION_CD = #{divisionCd , jdbcType=VARCHAR}
     AND     CREATE_BY    = #{userId , jdbcType=VARCHAR}
   </select>
-  <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+  <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 	SELECT * 
 	FROM   ( SELECT COUNT(*) OVER() AS TOTAL_COUNT
 	              , A.*
@@ -85,7 +85,7 @@
     </if>	
 
 	</select>
-	  <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.dto.LowerHashMap" fetchSize="1000">
+	  <select id="get_findBtn2" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
 		SELECT MCD.COMPANY_CD
 		     , MCD.COMPANY_NM
 		     , MCD.DIVISION_CD
@@ -177,7 +177,7 @@
 
            
   </insert>  
-  <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -243,7 +243,7 @@
 
            
   </insert>  
-  <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_copyBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -309,7 +309,7 @@
 
            
   </insert>  
-  <select id="proc_editBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+  <select id="proc_editBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
           { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(      #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
@@ -375,7 +375,7 @@
 
            
   </insert>  
-   <select id="proc_excelUpBtnV1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.dto.LowerHashMap">  
+   <select id="proc_excelUpBtnV1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
            { CALL MOM_MASTER_INFO_PKG.xumd1090_create_proc(     #{p_err_code, jdbcType=VARCHAR, mode=OUT}
 					                                          , #{p_err_msg,  jdbcType=VARCHAR, mode=OUT}
 					                                          , #{companyCd,  javaType=string,  jdbcType=VARCHAR , mode=IN}
