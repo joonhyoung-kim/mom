@@ -2673,7 +2673,7 @@ depth2-menu-lk.is-show{background-color:#fff}
 /* /파일 업로드 */
 
 /*modal css */
-.modal {
+/*.modal {
   display: none;
   overflow: hidden;
   position: fixed;
@@ -2684,7 +2684,7 @@ depth2-menu-lk.is-show{background-color:#fff}
   z-index: 1050;
   -webkit-overflow-scrolling: touch;
   outline: 0;
-}
+}*/
 .modal.w-modal{
   display: block;
   overflow: hidden;

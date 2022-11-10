@@ -1,10 +1,6 @@
 
 var momSetup= {
- init: function() {	
-	       			  //customStyle
-
-			 
-             
+ init: function() {
                // auiGrid 
 		/*	  $('head').prepend('<link href="/mom/content/AUIGrid/AUIGrid_style.css" rel="stylesheet" type="text/css">');
 			  $('head').prepend('<link href="/mom/content/css/auigridEditor.css" rel="stylesheet">');
@@ -19,7 +15,9 @@ var momSetup= {
 		/*	  $('head').prepend('<script src="/webjars/jquery/3.6.0/dist/jquery.min.js"></script>');
 			  $('head').prepend('<script src="/webjars/jquery/3.6.0/dist/jquery.js"></script>');
 			  $('head').prepend('<script src="/mom/content/jquery-ui/jquery-ui.min.js"></script>');		*/			
-			  //material icon css	 
+			  //material icon css
+			  //spiner
+			  $('head').prepend('<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.js"></script>');
               $('head').prepend('<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">');
 			  //sash js
 			  $('head').append('<script src="/mom/content/css/sash-bootstrap5/HTML/sash/assets/js/custom.js"></script>');

@@ -70,8 +70,8 @@
   </select>	
   
   <select id="get_DD00012" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
-	  SELECT MC.COMPANY_CD
-	 	   , MC.COMPANY_NM
+	  SELECT MC.COMPANY_CD AS CODE
+	 	   , MC.COMPANY_NM AS LABEL
       FROM   MOM_COMPANY  MC
       WHERE  MC.USE_YN = 'Y'
      <if test = "companyCd != null and companyCd != ''">
@@ -80,8 +80,8 @@
       ORDER BY COMPANY_NM
   </select>	
   <select id="get_DD00013" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
-		 SELECT DIVISION_CD
-			  , DIVISION_NM
+		 SELECT DIVISION_CD AS CODE
+			  , DIVISION_NM AS LABEL
 	     FROM   MOM_DIVISION_V	
 	     WHERE 1=1
 	    <if test = "companyCd != null and companyCd != ''">

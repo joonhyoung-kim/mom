@@ -22,7 +22,7 @@ var VIEW= {
 		else if (index ==0 && btnId =='customBtn1-2'){
 			   
 			    if(AUIGrid.getCheckedRowItems(widget.grid[index]).length==0){
-				   $('#'+'gridPop-'+btnId).momModal('hide');
+				   $('#'+'gridPop-'+btnId).modal('hide');
 				   momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});				   
 				   return;
 			    }
@@ -48,7 +48,7 @@ var VIEW= {
 		else if(index ==0 && btnId =='customBtn1-3'){
 		
 			  if(AUIGrid.getCheckedRowItems(widget.grid[index]).length==0){
-				   $('#'+'gridPop-'+btnId).momModal('hide');
+				   $('#'+'gridPop-'+btnId).modal('hide');
 				   momWidget.messageBox({type:'danger', width:'400', height: '145', html: multiLang.transText('MESSAGE','MSG00034')});				   
 				   return;
 			  }

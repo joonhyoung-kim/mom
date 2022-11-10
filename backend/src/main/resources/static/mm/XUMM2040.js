@@ -59,7 +59,7 @@ var VIEW= {
 			let checkedItem = widget.getCheckedRowItems(widget.grid[0]);	
 			if(checkedItem.length==0){
                 widget.messageBox({type: 'warning', width: '400', height: '145', html: '상단에서 데이터 발주번호 선택해주세요! '});
-                $('#' +'defaultPop'+(index+1)).momModal('hide');
+                $('#' +'defaultPop'+(index+1)).modal('hide');
                 return;
 			}
 			

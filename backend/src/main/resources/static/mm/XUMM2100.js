@@ -38,7 +38,7 @@ var VIEW= {
 		if(index == 1){
 		    if(btnId == 'customGridPopBtn2-1'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
 			    if(checkItem.length==0){
-				    //$('#' +'gridPop-'+btnId).momModal('hide');
+				    //$('#' +'gridPop-'+btnId).modal('hide');
 				    result.msg = '상단에서 입고서 선택필수!';
 				    result.result = 'WARN';
 				    return;

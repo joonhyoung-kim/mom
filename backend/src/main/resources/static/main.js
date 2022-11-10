@@ -218,7 +218,7 @@ var index = {
 		$(document).on("click", "#btnChangePass", function() {
 			$("#nowPassword, #newPassword, #newPasswordConfirm").val("");
 			$('#pCancelBtn, .bntpopclose').css({display: ''});
-			$("#passwordPop").momModal('show');
+			$("#passwordPop").modal('show');
 //			nowPassword
 //			newPassword
 //			newPasswordConfirm
@@ -229,7 +229,7 @@ var index = {
 		});
 		
 		$("#pCancelBtn, .bntpopclose").click(function() {
-			$("#passwordPop").momModal('hide');
+			$("#passwordPop").modal('hide');
 		});
 		
 		$(document).on("click", "#btnLogout", function() {
@@ -371,7 +371,7 @@ var index = {
 		// 공지사항팝업 닫기
 		$(document).on("click", "#notiConfirmBtn, .bntpopclose", function() {
 			
-			$("#noticePop").momModal('hide');			
+			$("#noticePop").modal('hide');			
 			$("#notiConfirmBtn").removeClass('active');  
 			$("#notiConfirmBtn").addClass('disabled'); 
 			that.saveNowLocation(); 
@@ -530,7 +530,7 @@ var index = {
 			success: function(data) {
 				if(data.result == "success") {
 					momWidget.messageBox({type: "success", width: '400', height: '145', title: Language.lang['MESSAGES10547'], html : Language.lang['MESSAGES11766']});	
-					$("#passwordPop").momModal('hide');
+					$("#passwordPop").modal('hide');
 				} else {
 					momWidget.messageBox({type: "fail", width: '400', height: '145', title: Language.lang['MESSAGES10547'], html : Language.lang['MESSAGES11767']});
 				}
@@ -558,7 +558,7 @@ var index = {
 						if(popFlag == 'N' && data[0].boardId != null) {
 							$(".check").css({display:"none"});
 						}
-						$("#noticePop").momModal('show');	
+						$("#noticePop").modal('show');	
 						$("#notiConfirmBtn").removeClass('dsiabled');
 						$("#notiConfirmBtn").addClass('active');
 						$("#noticeTitle").text(data[0].boardTitle);

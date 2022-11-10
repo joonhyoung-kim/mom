@@ -69,18 +69,49 @@ var Login = {
 	
 	setComboBox: function() {
 		momWidget.splashShow(); 
-		var that = this;
-		var companyOptions   = {local: [],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};		
-		var divisionOptions  = {local: [],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
-		var langOptions      = {local: [{'value':'KR','label':'한국어'},{'value':'EN','label':'영어'},{'value':'CN','label':'중국어'}],textName : "label", valueName : "value", readonly : false, selectedIndex : 0}; 
+		let that = this;
+		let companyOptions   = {local: [],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
+		let divisionOptions  = {local: [],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
+		let langOptions     = [{'code':'KR','label':'한국어'},{'code':'EN','label':'영어'},{'code':'CN','label':'중국어'}];
 				
-		//that.getDivision($('#field-3').val());		
-		momWidget.setComboBox.set("#field-3", {width : '100%', dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0,theme: 'energyblue'}, companyOptions);	
-		momWidget.setComboBox.set("#field-4", {width : '100%', dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0,theme: 'energyblue'}, divisionOptions);		
-		momWidget.setComboBox.set("#field-5", {width : '100%', dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0,theme: 'energyblue'}, langOptions);	
-									
-			//that.rememberMeCheck();	
-		that.getCompany();
+		//that.getDivision($('#field-3').val());
+	$('#field-3').jqxComboBox({
+		    displayMember: "label",
+		    valueMember: "code",
+			width:'100%',
+			height: '30px',
+			dropDownHeight: '200px',
+			autoDropDownHeight: false,
+			searchMode: 'containsignorecase',
+			autoComplete: true,
+			selectedIndex: 0
+		});
+		$('#field-4').jqxComboBox({
+			displayMember: "label",
+			valueMember: "code",
+			width:'100%',
+			height: '30px',
+			dropDownHeight: '200px',
+			autoDropDownHeight: false,
+			searchMode: 'containsignorecase',
+			autoComplete: true,
+			selectedIndex: 0
+		});
+		$('#field-5').jqxComboBox({
+			displayMember: "label",
+			valueMember: "code",
+			width:'100%',
+			height: '30px',
+			dropDownHeight: '200px',
+			autoDropDownHeight: false,
+			searchMode: 'containsignorecase',
+			autoComplete: true,
+			selectedIndex: 0
+		});
+
+			//that.rememberMeCheck();
+		that.getCompany(companyOptions);
+		that.getLang(langOptions);
 		momWidget.splashHide(); 
 	},
 	login: function(loginParam) {
@@ -190,24 +221,26 @@ var Login = {
 			}
 		});
 	},
-	getCompany: function() {
+	getLang: function(option) {
+		$('#field-5').jqxComboBox('source', option);
+		$('#field-5').jqxComboBox({selectedIndex: 0});
+	},
+	getCompany: function(option) {
 		var param = {
 				userId      : "master",
 				password 	: "master",
 				comboType   : "company"
 		};
 		
-		
-		
+
 		$.ajax({
 		    url:"/login", 
 		    type:'post', // GET, PUT
 		    contentType: 'application/json',
 		    data: JSON.stringify(param),
 		    success: function(result){
-		    	var divisionOptions = {local: result, /*textName : "companyName",*/ textName : "companyNm", valueName : "companyCd", readonly : false};		
-				momWidget.setComboBox.set("#field-3", {width : '100%', dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, divisionOptions);
-		    	//top.location.href = common.contextPath() + "/main.html";
+				$('#field-3').jqxComboBox('source', result);
+				$('#field-3').jqxComboBox({selectedIndex: 0});
 			},
 			error:function(){  
 				//Login.init();
@@ -227,8 +260,8 @@ var Login = {
 			contentType: 'application/json',
 		    data: JSON.stringify(param),
 		    success: function(result){
-		    	var divisionOptions = {local: result, /*textName : "companyName",*/ textName : "divisionNm", valueName : "divisionCd", readonly : false};		
-				momWidget.setComboBox.set("#field-4", {width : '100%', dropDownHeight : '200px', autoDropDownHeight : false, searchMode : 'containsignorecase', autoComplete : true, selectedIndex : 0}, divisionOptions);
+				$('#field-4').jqxComboBox('source', result);
+				$('#field-4').jqxComboBox({selectedIndex: 0});
 		    	//top.location.href = common.contextPath() + "/main.html";
 			},
 			error:function(){  

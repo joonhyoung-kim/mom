@@ -804,7 +804,7 @@
 @media (min-width:800px) and (max-width:1920px) {
 	.gridArea-tm2h-h02-02-paging{
 	background: #f0f0f5;
-    height: 30.vh;
+    height: 30vh;
     border: none;
 }
 	}
@@ -1879,7 +1879,6 @@ border-color: #d8dce3 !important;
 .searcharea-gridPop-C6-R4 {
     padding-left: 0.7rem;
     border: none;
-    padding-top: rem;
     /* padding-bottom: 15px; */
     width: 100%;
     margin-left: -0.3rem;
@@ -1928,7 +1927,6 @@ border-color: #d8dce3 !important;
 .gridPop-searcharea-XUSM8040 {
     padding-left: 0.7rem;
     border: none;
-    padding-top: rem;
     /* padding-bottom: 15px; */
     width: 100%;
     margin-left: -0.3rem;
@@ -3611,13 +3609,13 @@ border-color: #d8dce3 !important;
 #mainPageTab{
  z-index:9999;
 }
-.modal {
-	/* z-index: 2147483547 !important; */
+/*.modal {
+	!* z-index: 2147483547 !important; *!
 	display: none;
 	float: none;
-	/* background-color: rgba(0, 0, 0, 0.1); */
-	/* overflow-y: scroll; */
-}
+	!* background-color: rgba(0, 0, 0, 0.1); *!
+	!* overflow-y: scroll; *!
+}*/
 .defaultPop {
 	z-index: 1050;
 /* 	display: none ; */
@@ -3644,7 +3642,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 17rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R2 {
@@ -3658,7 +3656,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 19rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;  
+    border: 1px solid #bdbdbd !important;
 }
 .remark {
 	border: 1px solid darkgrey;
@@ -3685,7 +3683,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 36rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R4-remark-in {
@@ -3701,7 +3699,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 42rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R4-remark-out {
@@ -3717,7 +3715,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 36rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R5-remark-in {
@@ -3733,7 +3731,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 46.6rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R5-remark-out {
@@ -3745,7 +3743,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 41rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
     margin-left: 34vw !important;
     margin-top: -86vh !important;
    
@@ -3763,7 +3761,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 36rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R6-remark-in {
@@ -3779,7 +3777,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 36rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R6-remark-out {
@@ -3795,7 +3793,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 46.8rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R1 {
@@ -3811,7 +3809,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 17rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R2 {
@@ -3827,7 +3825,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 19rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R2-remark-in {
@@ -3841,7 +3839,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 31rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R2-remark-out {
@@ -3857,7 +3855,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 25rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .btn-change {
@@ -3885,7 +3883,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 25rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 .gridPop-C3-R4{
 	z-index: 1050;
@@ -3900,7 +3898,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 25rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 .gridPop-C4-R4{
 	z-index: 1050;
@@ -3915,7 +3913,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 13rem !important;
     border-radius: 0.5rem;
-   /*  border: 1px solid #4d4d4e !important; */
+   /*  border: 1px solid #bdbdbd !important; */
 }
 .jqx-combobox-content-disabled {
     color: #040303;
@@ -3933,7 +3931,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 25rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 .defaultPop-C3-R3-remark-in {
     z-index: 1050;
@@ -3948,7 +3946,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 36rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 .defaultPop-C3-R3-remark-out {
     z-index: 1050;
@@ -3963,7 +3961,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 31rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 .defaultPop-C3-R4 {
     z-index: 1050;
@@ -3978,7 +3976,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 30rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R4-remark-in {
@@ -3992,7 +3990,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 42rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R4-remark-out {
@@ -4010,7 +4008,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 37rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .gridPop-C6-R4 {
@@ -4026,7 +4024,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 32rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .gridPop-C5-R4 {
@@ -4042,7 +4040,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 32rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .gridPop-C6-R4 {
@@ -4058,7 +4056,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 32rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C6-R4 {
@@ -4074,7 +4072,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 32rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .jqx-popup-material{
@@ -4131,7 +4129,7 @@ border-color: #d8dce3 !important;
     height: 25rem !important;
     width: 40rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R3-remark-in {
@@ -4145,7 +4143,7 @@ border-color: #d8dce3 !important;
     height: 36rem !important;
     width: 40rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C2-R3-remark-out {
@@ -4159,7 +4157,7 @@ border-color: #d8dce3 !important;
     height: 31rem !important;
     width: 40rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R5 {
@@ -4175,7 +4173,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 36rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C3-R5-remark-out {
@@ -4191,7 +4189,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 41rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
     
    
 }
@@ -4206,7 +4204,7 @@ border-color: #d8dce3 !important;
     background: white !important; 
     height: 46.7rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
    
 }
 .defaultPop-C5-R8 {
@@ -4222,7 +4220,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 52.6rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 
 .defaultPop-C5-R9-remark-in {
@@ -4238,7 +4236,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 63.5rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 .defaultPop-C5-R9-remark-out {
 	z-index: 1050;
@@ -4250,7 +4248,7 @@ border-color: #d8dce3 !important;
     background: white !important;
     height: 63.5rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
     margin-left: 18vw !important;
     margin-top: -94vh !important;
 }
@@ -4278,7 +4276,7 @@ input:focus{
     background: white !important;
     height: 30rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
 }
 .gridPop-C5-R5 {
     z-index: 1050;
@@ -4434,7 +4432,7 @@ input:focus{
     background: white !important; 
     height: 41.7rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
     
    
 }
@@ -4451,7 +4449,7 @@ input:focus{
     background: white !important; 
     height: 53rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
     
    
 }
@@ -4468,7 +4466,7 @@ input:focus{
     background: white !important; 
     height: 47rem !important;
     border-radius: 0.5rem;
-    border: 1px solid #4d4d4e !important;
+    border: 1px solid #bdbdbd !important;
     
    
 }
@@ -4753,8 +4751,25 @@ input:focus{
     border-radius: 5px;
 
 }
+#mask-1 {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:1000;
+    background-color:#000;
+    display:none;
+}
+#mask-2 {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:1000;
+    background-color:#000;
+    display:none;
+}
 .momMessageBox{
 	margin-top:18% !important;
+    border: 1px solid #bdbdbd;
 }
 .panelfooter {
     text-align: center;
