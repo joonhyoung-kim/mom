@@ -453,7 +453,7 @@ var momWidget = {
                 } else if (that.buttonProperty[index][i]['buttonType'] == 'CP') {
 
                     that.createCustomPop(index, that.buttonProperty[index][i]['popupGridId'], that.buttonProperty[index][i]['buttonId'], that.buttonProperty[index][i]['eventType']);
-                    that.setCustomComboBoxSet(index, your);
+                    that.setCustomComboBoxSet(index, that.buttonProperty[index][i]['buttonId'],your);
                     //that.buttonProperty[index][i]['customType'] = 'CP';
                 } else {
                     //that.buttonProperty[index][i]['customType'] = 'GRID';
@@ -849,19 +849,19 @@ var momWidget = {
                 that.findBtnClicked(index, {
                     startPage: 1,
                     endPage: 1
-                }, true, 'TOTAL', momWidget.pageProperty[0]['programId'], your);
+                }, true, 'TOTAL', that.pageProperty[index]['menuId'], your);
                 that.findBtnClicked(index, {
                     startPage: 1,
                     endPage: that.gridProperty[index][0]['pageRowCount']
-                }, true, 'INIT_PAGING', momWidget.pageProperty[0]['programId'], your);
+                }, true, 'INIT_PAGING', that.pageProperty[index]['menuId'], your);
                 //  that.findBtnClicked(index, {}, true, 'BACK',menuId,your);
             } else {
                 that.backWork[index] = 'Y';
                 that.findBtnClicked(index, {
                     startPage: 1,
                     endPage: 1
-                }, true, 'TOTAL', momWidget.pageProperty[0]['programId'], your);
-                that.findBtnClicked(index, {}, true, 'BACK', momWidget.pageProperty[0]['programId'], your);
+                }, true, 'TOTAL', that.pageProperty[index]['menuId'], your);
+                that.findBtnClicked(index, {}, true, 'BACK', that.pageProperty[index]['menuId'], your);
             }
 
         } else {//페이징 미사용
@@ -869,7 +869,7 @@ var momWidget = {
                 if (index > 0 && index % 10 == 0) {
 
                 } else {
-                    that.findBtnClicked(index, {}, true, 'INIT', momWidget.pageProperty[0]['programId'], your);
+                    that.findBtnClicked(index, {}, true, 'INIT', that.pageProperty[index]['menuId'], your);
                 }
 
 
@@ -1897,11 +1897,11 @@ var momWidget = {
         var html = '<div id = "split1" class="splitGrid">'
             + '<div>'
             + '<div id = "split2" class="splitGrid">'
-            + '<div id = ' + content + (index + 1) + ' class = "row tabcontentarea55"></div>'
+            + '<div id = ' + content + (index) + ' class = "row tabcontentarea55"></div>'
             + '<div id = ' + content + (index + 2) + ' class = "row tabcontentarea55"></div>'
             + '</div>'
             + '</div>'
-            + '<div id = ' + content + (index) + ' class = "row tabcontentarea1"></div>'
+            + '<div id = ' + content + (index+1) + ' class = "row tabcontentarea1"></div>'
             + '</div>';
         $(target).append(html);
         $('#split1').jqxSplitter({
@@ -1990,830 +1990,10 @@ var momWidget = {
         });
         return html;
     },
-    createGridArea: {
-        h00: function (index, gridId, gridSizeClass) {
-            var html = '<div class=' + '"col-xl-12 px-0 ' + gridSizeClass + '">'
-                + '<div class = "card" id="main-box' + index + '">'
-                + '<div class = "card-header ps-0 pe-2 pb-1 gridTab' + index + '"></div>'
-                + '<div class = "card-body grid-box' + index + '-h00">'
-                + '<div id=' + gridId + ' class="grid" data-name="페이지정보"></div>'
-                + '</div></div></div>';
-            return html;
-        },
-        h01: function (index, gridId, gridSizeClass) {
-            var html = '<div class=' + '"col-xl-12 px-0 ' + gridSizeClass + '">'
-                + '<div class = "card" id="main-box' + index + '">'
-                + '<div class = "card-header  ps-0 pe-2 pb-1 gridTab' + index + '"></div>'
-                + '<div class = "card-body grid-box' + index + '-h01">'
-                + '<div id=' + gridId + ' class="grid" data-name="페이지정보"></div>'
-                + '</div></div></div>';
-            return html;
-        },
-        h02: function (index, gridId, gridSizeClass) {
-            var html = '<div class=' + '"col-xl-12 px-0 ' + gridSizeClass + '">'
-                + '<div class = "card">'
-                + '<div class = "card-header  ps-0 pe-2 pb-1 gridTab' + index + '"></div>'
-                + '<div class = "card-body grid-box' + index + '-h02">'
-                + '<div id=' + gridId + ' class="grid" data-name="페이지정보"></div>'
-                + '</div></div></div>';
-            return html;
-        },
-        h03: function (index, gridId, gridSizeClass) {
-            var html = '<div class=' + '"col-xl-12 px-0 ' + gridSizeClass + '">'
-                + '<div class = "card">'
-                + '<div class = "card-header  ps-0 pe-2 pb-1 gridTab' + index + '"></div>'
-                + '<div class = "card-body grid-box' + index + '-h03">'
-                + '<div id=' + gridId + ' class="grid" data-name="페이지정보"></div>'
-                + '</div></div></div>';
-            return html;
-        }
-        /*
-		h02 : function() {
-
-		}	*/
-    },
-    createGridTabArea: {
-        rightTab: function (index, btnItem) {
-            var topHtml = '<div class="end widget-box2">';
-            var midHtml = '';
-            var botHtml = '';
-            for (var i = 0; i < btnItem.length; i++) {
-                /* midHtml +=   '<a id='+ btnItem[i].buttonId + ' class = "btntool gridTab" href="#">'
-               +     '<div class ="w-icon '+btnItem[i].buttonIcon+'"></div>'
-               +     '<div multi-lang="" class="textblock gridRightTab">'+btnItem[i].buttonNm+'</div>'
-        	   +     '</a>';		*/
-                if (btnItem[i].buttonId.indexOf('customBtn') >= 0) {
-                    let btnSeq = btnItem[i].buttonId.split('-')[1];
-                    let customBtnId = 'customBtn' + index + '-' + btnSeq;
-                    btnItem[i].buttonId = customBtnId;
-                    /* if(index>10&&index%10<10){
-							midHtml += '<button type="button" class="custom-btn btn btn-search" id='+ customBtnId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
-						}
-						else{
-							midHtml += '<button type="button" class="custom-btn btn btn-search" id='+ btnItem[i].buttonId+'><i class="mdi '+btnItem[i].buttonIcon+'"></i>'+btnItem[i].buttonNm+'</button>';
-						}*/
-                    midHtml += '<button type="button" class="custom-btn btn btn-search" id=' + btnItem[i].buttonId + '><i class="mdi ' + btnItem[i].buttonIcon + '"></i>' + btnItem[i].buttonNm + '</button>';
-                } else {
-                    midHtml += '<button type="button" class="btn btn-search" id=' + btnItem[i].buttonId + index + '><i class="mdi ' + btnItem[i].buttonIcon + '"></i>' + btnItem[i].buttonNm + '</button>';
-                }
 
 
-            }
-            botHtml = '</div>';
-            return topHtml + midHtml + botHtml;
-        },
-        leftTab: function (index, gridTitle, btnItem) {
-            var topHtml = '<div class="widget-box1 h-75 ms-2">';
-            var midHtml = '';
-            var botHtml = '';
-            midHtml += '<div class ="w-icon fa fa-align-justify icon"></div>'
-                + '<div multi-lang="" class="textblock gridLeftTab">' + gridTitle + '</div>';
-            botHtml = '</div>';
-            return topHtml + midHtml + botHtml;
-        }
-        /*h02 : function() {
-
-		}*/
-    },
-
-    createChangePop: {
-        password: function (index, title) {
-            var html = '<div id ="changePwPop' + (index + 1) + '"  class="modal modal-content modal-content-change-pop"style="display: none;height: 11rem;">' +
-                '<div class="modal-header" style="padding-bottom: 0.7rem;height: 32%;">' +
-                '<h6 class="modal-title" style="font-size: 1.5rem;">비밀번호변경</h6>' +
-                '<button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">×</span></button>' +
-                '</div>' +
-                '<div class="modal-body" style="height: 51%;">' +
-                '<div class="w-col w-col-3" style="margin-top: -0.5rem;margin-left: -0.2rem;">' +
-                '<div class="labelbox">' +
-                '<div class="circle">' +
-                '</div>' +
-                '<div class="textblock">현재비밀번호' +
-                '</div>' +
-                '</div>' +
-                '<input maxlength="256" id="nowPassword' + (index + 1) + '" type="text" class="w-input searchInputField" date-format="date" style="background: rgb(255, 255, 255);width: 18.5rem;">' +
-                '</div>' +
-                '<div class="w-col w-col-3" style="margin-top: -0.5rem;margin-left: 3.5rem;margin-right: 3.6rem;">' +
-                '<div class="labelbox">' +
-                '<div class="circle">' +
-                '</div>' +
-                '<div class="textblock">변경할비밀번호' +
-                '</div>' +
-                '</div>' +
-                '<input maxlength="256" id="changePassword' + (index + 1) + '" type="text" class="w-input searchInputField" date-format="date" style="background: rgb(255, 255, 255);width: 18.5rem;">' +
-                '</div>' +
-                '<button id ="saveBtnCp' + (index + 1) + '" class="btn btn-light" style="margin-top: 1.5rem;"><i class="mdi mdi-content-save-outline"></i>변경</button><button id ="closeBtnCp' + (index + 1) + '" class="btn btn-light" style="margin-top: 1.5rem;margin-left: 0.5rem;"><i class="mdi mdi-window-close"></i>' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>' +
-                '</div>' +
-                '</div>';
-            return html;
-        }
-    },
-    createFileUploadPop: {
-        excelUp: function (index, title) {
-            var html = '<div class="modal" id="excelUpPop' + (index + 1) + '" style="z-index: 9999;display: none;" aria-hidden="true">' +
-                '<div class="modal-dialog" role="document">' +
-                '<div class="modal-content excelUploadPop">' +
-                '<div class="modal-header-excelUp pt-3 pb-1">' +
-                '<div class="textblock modal-header-title-text excelUpPop-title">엑셀 업로드</div> <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>' +
-                '</div>' +
-                '<div class="modal-body">' +
-                '<div class="excel-input-box">' +
-                '<input type="file" class = "excel-input-text" accept=".xls, .xlsx, .csv" id="excelFile' + (index + 1) + '">' +
-                '<div class="progress">' +
-                '<div class="bar"></div>' +
-                '<div class="percent">0%</div>' +
-                '</div>' +
-                '<div id="status"></div>' +
-                '</div>' +
-                '<div class="excel-grid-box">' +
-                '<div id ="excelUpGrid' + (index + 1) + '" class="excel-up-grid">' +
-                '</div>' +
-                '</div>' +
-                '<div class="modal-footer excelUp"><div class="excel-up-footer"><button class="btn excel-up-pop-btn " disabled="disabled" type="button" id="exUpCheck' + (index + 1) + '"><i class="mdi mdi-file-find"></i>검사</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="exUpCheckDown' + (index + 1) + '" "><i class="mdi mdi-cloud-download"></i>검사결과</button>  <button class="btn excel-up-pop-btn " type="button" disabled="disabled" id="saveBtnExUp' + (index + 1) + '"><i class="mdi mdi-file-upload-outline"></i>업로드</button> <button class="btn excel-up-pop-btn" type="button" id="cancelBtnExUp' + (index + 1) + '"><i class="mdi mdi-window-close"></i>' + multiLang.transText('MESSAGE', 'MSG00036') + '</button></div</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-            return html;
-        },
-        progressBar: function (index, title) {
-            var html = '<div class="modal fade" id="pleaseWaitDialog" aria-hidden="true" >' +
-                '<div class="modal-dialog modal-process">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header">' +
-                '<h3>Upload processing...</h3>' +
-                '</div>' +
-                '<div class="modal-body">' +
-                '<div class="progress">' +
-                '<div class="bar"></div>' +
-                '<div class="percent">0%</div>' +
-                '</div>' +
-                '<div id="status"></div>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-            return html;
-        }
-    },
-    createPopup: {
-        defaultPop: function (index, colNum, rowNum, popupItem, popupTitle, remarkYn, remarkInline) {	//열3줄 colNum==3
-            var midHtml = '';
-            var botHtml = '';
-            var tmpCnt = 1;
-            var totalNum = popupItem.length;
-            var fieldCnt = remarkInline == 'N' ? 1 : popupItem.length % colNum;
-            var remarkInlineClass = remarkInline == 'Y' ? 'in' : 'out';
-            var defaultPopClass = remarkYn == 'Y' ? 'defaultPop-C' + colNum + '-R' + rowNum + '-remark-' + remarkInlineClass : 'defaultPop-C' + colNum + '-R' + rowNum;
-            var searchAreaClass = remarkYn == 'Y' ? 'R' + rowNum + '-remark-' + remarkInlineClass : 'R' + rowNum;
 
 
-            var topHtml = '<div id="defaultPop' + index + '" index=' + (index - 1) + ' class="modal ' + defaultPopClass + '">'
-                + '<div class="panelheader">'
-                + '<div class="modal-header-title">'
-                + '<div class ="fa fa-edit"></div>'
-                + '<div multi-lang="" id="popupTitle' + index + '" class ="textblock modal-header-title-text">' + popupTitle + '</div>'
-                + '</div>'
-                + '<div class = "modal-header-xbtn">'
-                + '<a href="#" class="bntpopclose"></a>'
-                + '</div>'
-                + '</div>'
-                + '<div class = "searcharea-pop ' + searchAreaClass + '">';
-            for (var i = 0; i < totalNum; i += colNum) {	//전체 돌리는 개수
-                if (tmpCnt == rowNum && fieldCnt == 1) { // 마지막 하나일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (tmpCnt == rowNum && fieldCnt == 2) { //마지막 2개일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>';
-                    if (remarkYn == 'Y') {
-                        midHtml += '</div>'
-                            + '<div class ="modal-contents-row">'
-                            + '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-
-                    } else {
-                        midHtml += '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-                    }
-
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (tmpCnt == rowNum && fieldCnt == 3) { //마지막 3개일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (tmpCnt == rowNum && fieldCnt == 4) { //마지막 4개일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 3].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 3].textClass + '>' + popupItem[i + 3].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 3].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (colNum == 1) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else if (colNum == 2) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>';
-                    if (tmpCnt == rowNum && remarkYn == 'Y') {
-                        midHtml += '</div>'
-                            + '<div class ="modal-contents-row">'
-                            + '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-
-                    } else {
-                        midHtml += '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-                    }
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else if (colNum == 3) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>';
-                    if (tmpCnt == rowNum && remarkYn == 'Y' && remarkInline == 'Y') {
-                        midHtml += '</div>'
-                            + '<div class ="modal-contents-row">'
-                            + '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 2].labelField
-                            + '</div>'
-                            + '</div>';
-
-                    } else {
-                        midHtml += '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 2].labelField
-                            + '</div>'
-                            + '</div>';
-                    }
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else if (colNum == 5) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 3].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 3].textClass + '>' + popupItem[i + 3].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 3].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 4].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 4].textClass + '>' + popupItem[i + 4].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 4].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                }
-
-            }
-            botHtml = '</div>'
-                + '<div class="panelfooter">'
-                + '<div class="footer-pop-btn-area">'
-                + '<button  id = "saveBtnDP' + index + '" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>' + multiLang.transText('MESSAGE', 'MSG00035') + '</button>'
-                + '<button  id = "cancelBtnDP' + index + '" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> ' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>'
-                + '</div>'
-                + '</div>';
-            return topHtml + midHtml + botHtml;
-        },
-        customPop: function (btnId, index, btnIndex, colNum, rowNum, popupItem, popupTitle, remarkYn, remarkInline, actionType) {	//열3줄 colNum==3
-            var midHtml = '';
-            var botHtml = '';
-            var tmpCnt = 1;
-            var totalNum = popupItem.length;
-            var fieldCnt = remarkInline == 'N' ? 1 : popupItem.length % colNum;
-            var remarkInlineClass = remarkInline == 'Y' ? 'in' : 'out';
-            var defaultPopClass = remarkYn == 'Y' ? 'defaultPop-C' + colNum + '-R' + rowNum + '-remark-' + remarkInlineClass : 'defaultPop-C' + colNum + '-R' + rowNum;
-            var searchAreaClass = remarkYn == 'Y' ? 'R' + rowNum + '-remark-' + remarkInlineClass : 'R' + rowNum;
-
-
-            var topHtml = '<div id="customPop-' + btnId + '" btnIndex = ' + btnIndex + ' actionType =' + actionType + ' class="modal customPop ' + defaultPopClass + '">'
-                + '<div class="panelheader">'
-                + '<div class="modal-header-title">'
-                + '<div class ="fa fa-edit"></div>'
-                + '<div multi-lang="" id="popupTitle' + index + '" class ="textblock modal-header-title-text">' + popupTitle + '</div>'
-                + '</div>'
-                + '<div class = "modal-header-xbtn">'
-                + '<a href="#" class="bntpopclose"></a>'
-                + '</div>'
-                + '</div>'
-                + '<div class = "searcharea-pop ' + searchAreaClass + '">';
-            for (var i = 0; i < totalNum; i += colNum) {	//전체 돌리는 개수
-                if (tmpCnt == rowNum && fieldCnt == 1) { // 마지막 하나일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (tmpCnt == rowNum && fieldCnt == 2) { //마지막 2개일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>';
-                    if (remarkYn == 'Y') {
-                        midHtml += '</div>'
-                            + '<div class ="modal-contents-row">'
-                            + '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-
-                    } else {
-                        midHtml += '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-                    }
-
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (tmpCnt == rowNum && fieldCnt == 3) { //마지막 3개일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (tmpCnt == rowNum && fieldCnt == 4) { //마지막 4개일떄
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 3].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 3].textClass + '>' + popupItem[i + 3].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 3].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-                } else if (colNum == 1) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else if (colNum == 2) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>';
-                    if (tmpCnt == rowNum && remarkYn == 'Y') {
-                        midHtml += '</div>'
-                            + '<div class ="modal-contents-row">'
-                            + '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-
-                    } else {
-                        midHtml += '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 1].labelField
-                            + '</div>'
-                            + '</div>';
-                    }
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else if (colNum == 3) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>';
-                    if (tmpCnt == rowNum && remarkYn == 'Y' && remarkInline == 'Y') {
-                        midHtml += '</div>'
-                            + '<div class ="modal-contents-row">'
-                            + '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 2].labelField
-                            + '</div>'
-                            + '</div>';
-
-                    } else {
-                        midHtml += '<div class ="w-col w-col-' + colNum + '">'
-                            + '<div class ="labelbox">'
-                            + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                            + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                            + '</div>'
-                            + popupItem[i + 2].labelField
-                            + '</div>'
-                            + '</div>';
-                    }
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else if (colNum == 5) {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 3].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 3].textClass + '>' + popupItem[i + 3].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 3].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 4].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 4].textClass + '>' + popupItem[i + 4].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 4].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                } else {
-                    midHtml += '<div class ="modal-contents-row">'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i].circleClass + '></div>'
-                        + '<div class =' + popupItem[i].textClass + '>' + popupItem[i].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 1].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 1].textClass + '>' + popupItem[i + 1].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 1].labelField
-                        + '</div>'
-                        + '<div class ="w-col w-col-' + colNum + '">'
-                        + '<div class ="labelbox">'
-                        + '<div class =' + popupItem[i + 2].circleClass + '></div>'
-                        + '<div class =' + popupItem[i + 2].textClass + '>' + popupItem[i + 2].popupNm + '</div>'
-                        + '</div>'
-                        + popupItem[i + 2].labelField
-                        + '</div>'
-                        + '</div>';
-                    if (rowNum > tmpCnt) {
-                        tmpCnt++;
-                    }
-
-                }
-
-            }
-            botHtml = '</div>'
-                + '<div class="panelfooter">'
-                + '<div class="footer-pop-btn-area">'
-                + '<button  id = "saveCustomPopBtnDP' + index + '" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>' + multiLang.transText('MESSAGE', 'MSG00035') + '</button>'
-                + '<button  id = "cancelCustomPopBtnDP' + index + '" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> ' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>'
-                + '</div>'
-                + '</div>';
-            return topHtml + midHtml + botHtml;
-        },
-
-        gridPop: function (index, gridPopIndex, menuId, btnId, popupTitle) {
-            var topHtml = '<div id="gridPop-' + btnId + '" gridIndex="' + gridPopIndex + '" class="modal  grid-pop' + index + ' gridPop-' + menuId + '">'
-                + '<div class="modal-dialog custom-dialog" role="document">'
-                + '<div class="modal-content custom-content">'
-                + '<div class="modal-header panelheader-gridPop">'
-                + '<div class="modal-title modal-header-title-gridPop">'
-                + '<div class ="fa fa-edit gridPop-title-icon"></div>'
-                + '<div id="popupTitle' + index + '" class ="textblock modal-header-title-text">' + popupTitle + '</div>'
-                + '</div>'
-                + '<button type="button" class="close gridPop-x-btn" data-dismiss="modal" aria-label="Close">'
-                + '<span aria-hidden="true">×</span></button>'
-                /*+     '</div>'*/
-                + '</div>'
-                + '<div class = "modal-body gridPop-searcharea-' + menuId + '">'
-                + '<div class = "container-fluid popup_main" id="popup_main' + gridPopIndex + '"></div>';
-            botHtml = '</div>'
-                + '<div class="py-2 modal-footer gridpop-panelfooter">'
-                + '<div class="footer-pop-btn-area">'
-                /*  +       '<button  id = "saveBtnCP'+index+'" class="btnpop save-pop-btn"><i class="mdi mdi-content-save-outline"></i>'+multiLang.transText('MESSAGE','MSG00035')+'</button>'*/
-                + '<button  id = "cancelBtnCP' + index + '" class="btnpop close-pop-btn"><i class="mdi mdi-window-close"></i> ' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>'
-                + '</div>'
-                + '</div></div>';
-            return topHtml + botHtml;
-        },
-        dropDownGridPop: function (gridIndex, colNum, rowNum, popupTitle, target, rowIndex) {
-            var topHtml = '<div rowIndex ="' + rowIndex + '" target="' + target + '" id="dropDownGridPop' + gridIndex + '" class="dropDownGrid modal gridPop-C' + colNum + '-R' + rowNum + '">'
-                /*  +    '<div class = "searcharea-gridPop-C'+colNum+'-R'+rowNum+'">'*/
-                + '<div class = "searcharea-gridPop-default">'
-                + '<div class="popup_main" id="popup_main' + gridIndex + '">'
-                + '<div class = "grid" id="grid' + gridIndex + '">'
-                + '</div>';
-            botHtml = '</div>';
-            return topHtml + botHtml;
-        },
-        calendarPop: function (index, target) {
-            let html = '<div id="calendar-pop" class="calendar-pop">'
-                /*+'<div id="calendar-main"></div>'*/
-                + '<input type="datetime-local" class = "calendar-pop-time-input" id="time-main"></input>'
-                + '<div class = "calendar-pop-footer" id="calendar-pop-footer">'
-                + '<button class = "calendar-pop-button left" id="saveBtnDT' + (index + 1) + '">' + multiLang.transText('MESSAGE', 'MSG00035') + '</button>'
-                + '<button class = "calendar-pop-button right" id="closeBtnDT' + (index + 1) + '">' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>'
-                + '</div>'
-                + '</div>';
-            return html;
-        },
-
-    },
 
     design: function (index, idx, color, align) {
         $('head').append('<style>.aui-grid-user-custom-header{background-color: #ff8000 !important;font-weight: bold;background: -webkit-gradient(linear, left top, left bottom, from(#ff8000),to(#ff8000));background: -webkit-linear-gradient(top, #ff8000, #ff8000);background: -moz-linear-gradient(top, #ff8000, #ff8000);background: -ms-linear-gradient(top, #ff8000, #ff8000);background: -o-linear-gradient(top, #ff8000, #ff8000);background: linear-gradient(top,#ff8000, #ff8000);}</style>');
@@ -3033,39 +2213,7 @@ var momWidget = {
 
         return param;
     },
-    // 검색조건 유효성체크
-    checkSearchProperty: function (index, param, your) { //인덱스  파라미터
-        var that = momWidget;
-        //param = (param == undefined || jQuery.isEmptyObject(param) || param == '' || param == null) == true ?   that.getSearchParam(index, '#searchArea'+(index+1),searchParam) : param;
-        if (that.searchProperty[index] != undefined && jQuery.isEmptyObject(momWidget.searchProperty) == false) {
-            for (var i = 0, max = momWidget.searchProperty[index].length; i < max; i++) {
-                if (that.searchProperty[index][i]['searchType'] == 'CP') {
-                    if (that.searchProperty[index][i]['columnRequire'] == 'Y' && (param[momWidget.searchProperty[index][i]['searchId'] + 'ED'] == undefined || param[momWidget.searchProperty[index][i]['searchId'] + 'ED'] == '' || param[momWidget.searchProperty[index][i]['searchId'] + 'SD'] == undefined || param[momWidget.searchProperty[index][i]['searchId'] + 'SD'] == '')) {
-                        that.messageBox({
-                            type: 'warning',
-                            width: '400',
-                            height: '145',
-                            html: momWidget.searchProperty[index][i]['searchNm'] + ' ' + multiLang.transText('MESSAGE', 'MSG00043')
-                        });
-                        return false;
-                    }
-                } else {
-                    if (that.searchProperty[index][i]['columnRequire'] == 'Y' && (param[momWidget.searchProperty[index][i]['searchId']] == undefined || param[momWidget.searchProperty[index][i]['searchId']] == '')) {
-                        that.messageBox({
-                            type: 'warning',
-                            width: '400',
-                            height: '145',
-                            html: momWidget.searchProperty[index][i]['searchNm'] + ' ' + multiLang.transText('MESSAGE', 'MSG00043')
-                        });
-                        return false;
-                    }
-                }
 
-
-            }
-        }
-        return true;
-    },
     syncData: function (index, item, rowIndex, dataField, refDataField, value) {
         var that = momWidget;
         var gridData = AUIGrid.getGridData(that.grid[index]);
@@ -4458,236 +3606,7 @@ var momWidget = {
 
 
     },
-    setCustomBtn: function (index, btnIndex, btnId, your, e) {
-        let that = momWidget;
-        let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
-        let checkedItems = [];
-        let param = [];
-        let queryId = that.pageProperty[index]['menuId'] + '.customBtn' + btnIndex;
-        let actionType = 'R';
-        let tmpYn = 'N';
-        let callInitResult = undefined;
-        let targetParam = '';
-        let actionMode = 'R';
-        let buttonParamText = {};
-        let buttonParamList = [];
-        let buttonParamMap = {};
-        let isProcess = 'Y';
-        for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
-            if (that.buttonProperty[index][i]['buttonId'] == btnId) {
-                targetParam = that.buttonProperty[index][i]['checkType'];
-                actionType = that.buttonProperty[index][i]['eventType'];
-                break;
-            }
-        }
-        if (actionType != 'R') {
-            if (targetParam == 'GRID_CHECK') {
-                param = that.getCheckedRowItems(that.grid[index], true);
-                if (param.length == 0) {
-                    return;
-                }
-            } else if (targetParam == 'GRID_SELECT') {
 
-            } else if (targetParam == 'GRID_ALL') {
-                param = AUIGrid.getGridData(that.grid[index]);
-                if (param.length == 0) {
-                    momWidget.messageBox({
-                        type: 'warning',
-                        width: '400',
-                        height: '145',
-                        html: multiLang.transText('MESSAGE', 'MSG00055')
-                    });
-                    return;
-                }
-
-            } else {
-                if (isCheckCol == true) {
-                    param = that.getCheckedRowItems(that.grid[index], true);
-                    if (param.length == 0) {
-                        return;
-                    }
-
-
-                } else {
-                    param = AUIGrid.getGridData(that.grid[index]);
-                    if (param.length == 0) {
-                        momWidget.messageBox({
-                            type: 'warning',
-                            width: '400',
-                            height: '145',
-                            html: multiLang.transText('MESSAGE', 'MSG00034')
-                        });
-                        return;
-                    }
-
-                }
-            }
-        }
-
-        for (var i = 0, max = that.columnProperty[index].length; i < max; i++) {
-            if (that.columnProperty[index][i]['columnRequire'] == 'Y') {
-                for (var j = 0, max2 = param.length; j < max2; j++) {
-                    if (param[j][that.columnProperty[index][i]['columnId']] == '' || param[j][that.columnProperty[index][i]['columnId']] == undefined) {
-                        momWidget.messageBox({
-                            type: 'warning',
-                            width: '400',
-                            height: '145',
-                            html: that.columnProperty[index][i]['columnNm'] + '필수입력!'
-                        });
-                        return;
-                    }
-
-                }
-
-            }
-        }
-        for (var i = 0, max = that.buttonProperty[index].length; i < max; i++) {
-            if (that.buttonProperty[index][i]['buttonId'] == 'customBtn' + btnIndex) {
-                //actionType = that.buttonProperty[index][i]['eventType'];
-                tmpYn = that.buttonProperty[index][i]['tempUseYn'];
-                buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
-                buttonParamList = buttonParamText.split(',');
-                for (let j = 0, max2 = buttonParamList.length; j < max2; j++) {
-                    buttonParamMap[buttonParamList[j].split('=')[0]] = buttonParamList[j].split('=')[1];
-                }
-                for (let k = 0, max3 = param.length; k < max3; k++) {
-                    param[k] = Object.assign(param[k], buttonParamMap);
-                }
-
-            }
-        }
-
-
-        if (tmpYn == 'Y') {
-            callInitResult = that.checkActionCallInit(index, 'D', param, btnId, your, e);
-            if (callInitResult['result'] != 'SUCCESS') {
-                let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
-                momWidget.messageBox({type: msgType, width: '400', height: '145', html: callInitResult['msg']});
-                momWidget.splashHide();
-                return;
-            }
-
-            param = callInitResult['param'];
-            mom_ajax('D', queryId, [param[0] == undefined ? {} : param[0]], function (result1, data1) {
-                if (result1 != 'SUCCESS') {
-                    momWidget.messageBox({
-                        type: 'danger',
-                        width: '400',
-                        height: '145',
-                        html: multiLang.transText('MESSAGE', 'MSG00047')
-                    });
-                    momWidget.splashHide();
-                    return;
-                }
-                callInitResult = that.checkActionCallInit(index, 'C', param, btnId, your, e);
-                if (callInitResult['result'] != 'SUCCESS') {
-                    let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
-                    momWidget.messageBox({type: msgType, width: '400', height: '145', html: callInitResult['msg']});
-                    momWidget.splashHide();
-                    return;
-                }
-
-                param = callInitResult['param'];
-                //param = callInitResult['param'];
-
-
-                mom_ajax('C', queryId, param, function (result2, data2) {
-                    if (result2 != 'SUCCESS') {
-                        momWidget.messageBox({
-                            type: 'danger',
-                            width: '400',
-                            height: '145',
-                            html: multiLang.transText('MESSAGE', 'MSG00048')
-                        });
-                        momWidget.splashHide();
-                        return;
-                    }
-                    callInitResult = that.checkActionCallInit(index, 'P', param, btnId, your, e);
-                    if (callInitResult['result'] != 'SUCCESS') {
-                        let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
-                        momWidget.messageBox({type: msgType, width: '400', height: '145', html: callInitResult['msg']});
-                        momWidget.splashHide();
-                        return;
-                    }
-
-
-                    param = callInitResult['param'];
-                    if (param['actionMode'] != undefined && param['actionMode'] != '') {
-                        actionMode = param['actionMode'];
-                    }
-                    mom_ajax('P', queryId, param[0], function (result3, data3) {
-                        if (data3[0]['p_err_code'] == 'E') {
-                            momWidget.messageBox({
-                                type: 'danger',
-                                width: '400',
-                                height: '145',
-                                html: multiLang.transText('MESSAGE', data3[0]['p_err_msg'] == null ? '프로시저 에러발생!' : data3[0]['p_err_msg'])
-                            });
-                            momWidget.splashHide();
-                            return;
-                        }
-                        isProcess = 'N';
-                    }, undefined, undefined, this, false, undefined, actionMode);
-
-                }, undefined, undefined, this, false);
-
-                callBackResult = that.checkActionCallBack(index, 'P', param, 'procBtn', your);
-                if (callBackResult['result'] != 'SUCCESS') {
-                    momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
-                    momWidget.splashHide();
-                    return;
-                }
-                if (isProcess == 'Y') {
-                    return;
-                }
-                momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['menuId'], your);
-                momWidget.messageBox({
-                    type: 'success',
-                    width: '400',
-                    height: '145',
-                    html: multiLang.transText('MESSAGE', 'MSG00001')
-                });
-                momWidget.splashHide();
-                return;
-            }, undefined, undefined, this, false);
-
-        } else {
-            callInitResult = that.checkActionCallInit(index, actionType, param, btnId, your, e);
-            if (callInitResult['result'] != 'SUCCESS') {
-                let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
-                momWidget.messageBox({type: msgType, width: '400', height: '145', html: callInitResult['msg']});
-                momWidget.splashHide();
-                return;
-            }
-
-
-            param = callInitResult['param'];
-            mom_ajax(actionType, queryId, param, function (result1, data1) {
-                if (result1 != 'SUCCESS') {
-                    momWidget.messageBox({
-                        type: 'danger',
-                        width: '400',
-                        height: '145',
-                        html: multiLang.transText('MESSAGE', 'MSG00049')
-                    });
-                    momWidget.splashHide();
-                    return;
-                }
-                isProcess = 'N';
-                momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['programId'], your);
-                momWidget.messageBox({
-                    type: 'success',
-                    width: '400',
-                    height: '145',
-                    html: multiLang.transText('MESSAGE', 'MSG00001')
-                });
-                momWidget.splashHide();
-                return;
-            }, undefined, undefined, this, false);
-        }
-
-
-    },
     setCustomPopBtn: function (index, popupIndex, btnId, your, e) {
         let that = momWidget;
         let callbackData = [];
@@ -4696,7 +3615,7 @@ var momWidget = {
         var actionType = $('#customPop-' + btnId).attr('actiontype');
 
 
-        that.setPopup(index, actionType, btnId, 'Y');
+        that.setCustomPopup(btnId, actionType, index);
 
         callInitResult = that.checkActionCallInit(index, actionType, [], btnId, your, e);
         if (callInitResult['result'] != 'SUCCESS') {
@@ -4705,7 +3624,9 @@ var momWidget = {
             return;
         }
 
-        $('#' + 'customPop-' + btnId).modal('show');
+        //$('#' + 'customPop-' + btnId).modal('show');
+        $('#' + 'customPop-' + btnId).css('display','block');
+        that.maskShow('1');
         that.htmlResize(index, your);
 
         callbackData = AUIGrid.getGridData(that.grid[index]);
@@ -4715,89 +3636,6 @@ var momWidget = {
             momWidget.splashHide();
             return;
         }
-
-
-    },
-    setCustomGridPopBtn: function (index, btnIndex, btnId, your, e) {
-        let that = momWidget;
-        //that.wait(0.5);
-        let totalParam = {};
-        let gridPopIndex = $('#' + 'gridPop-' + btnId).attr('gridIndex') == undefined ? 10 : Number($('#' + 'gridPop-' + btnId).attr('gridIndex')); //r그리드 id
-        let actionType = 'R';
-        let popupTitle = '';
-        let buttonNm = '팝업타이틀';
-        let popupBtnIndex = $('#grid' + gridPopIndex).length; //그리드 개수
-        let queryId = that.pageProperty[index]['menuId'] + '.findBtn' + gridPopIndex;
-
-        for (var i = 0, max = that.buttonProperty[index].length; i < max; i++) {
-            if (that.buttonProperty[index][i]['buttonId'] == 'customBtn' + btnIndex) {
-                queryId = that.buttonProperty[index][i]['popupGridId'] + '.findBtn' + gridPopIndex;
-                actionType = that.buttonProperty[index][i]['eventType'];
-                buttonNm = that.buttonProperty[index][i]['buttonNm'];
-                if (actionType == 'C') {
-                    $('#popupTitle' + gridPopIndex).append('(' + multiLang.transText('MESSAGE', 'MSG00039') + ')');
-                } else if (actionType == 'U') {
-                    $('#popupTitle' + gridPopIndex).append('(' + multiLang.transText('MESSAGE', 'MSG00040') + ')');
-                } else if (actionType == 'CP') {
-                    $('#popupTitle' + gridPopIndex).append('(' + multiLang.transText('MESSAGE', 'MSG00041') + ')');
-                }
-
-            }
-        }
-
-
-        let callInitResult = that.checkActionCallInit(index, 'C', totalParam, 'customGridPopBtn' + btnIndex, your, e);
-
-        if (callInitResult['result'] != 'SUCCESS') {
-            let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
-            momWidget.messageBox({
-                type: msgType,
-                width: '400',
-                height: '145',
-                html: multiLang.transText('MESSAGE', callInitResult['msg'])
-            });
-            momWidget.splashHide();
-            return;
-        }
-        totalParam = callInitResult['param'];
-        totalParam = Object.assign(totalParam, that.checkSearchParam(gridPopIndex - 1, {}, your));
-        callInitResult = that.checkActionCallInit(index, 'R', totalParam, 'customGridPopBtn' + btnIndex, your, e);
-        if (callInitResult['result'] != 'SUCCESS') {
-            momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callInitResult['msg']});
-            momWidget.splashHide();
-            return;
-        }
-        totalParam = Object.assign(callInitResult['param'], totalParam);
-        mom_ajax('R', queryId, totalParam, function (result1, data1) {
-            if (result1 != 'SUCCESS') {
-                momWidget.splashHide();
-                return;
-            }
-
-            AUIGrid.setGridData(that.grid[gridPopIndex - 1], data1);
-
-            // $('#findBtn'+gridPopIndex).attr('id','findBtn'+popupBtnIndex)
-            $('#popupTitle' + (index + 1)).text(buttonNm);
-            for (let i = 0; i <= 10; i++) {
-                if ($('#grid' + (gridPopIndex + i)).length > 0) {
-                    AUIGrid.clearFilterAll('#grid' + (gridPopIndex + i));
-                    AUIGrid.clearSortingAll('#grid' + (gridPopIndex + i));
-                    AUIGrid.resize('#grid' + (gridPopIndex + i));
-                }
-            }
-
-
-            $('#' + 'gridPop-' + btnId).modal('show');
-
-            // $('#'+'gridPop-'+btnId).modal('show');
-            //$('#'+'gridPop-'+btnId).draggable();
-            let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customBtn' + btnIndex, your, data1);
-            if (callBackResult['result'] != 'SUCCESS') {
-                momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
-                momWidget.splashHide();
-                return;
-            }
-        }, undefined, undefined, that, false);
 
 
     },
@@ -9389,136 +8227,6 @@ var momWidget = {
         }
     },
 
-    tm1st: function (index, splitRatio, content, target) {
-        var html = '<div id =' + content + index + ' class = "row tabcontentarea1"></div>';
-        $(target).append(html);
-        return html;
-    },
-    tm2h: function (index, splitRatio, content, target) {
-        var html = '<div id = "split1" class="splitGrid">'
-            + '<div id = "contentArea1" class = "row tabcontentarea55"></div>'
-            + '<div id = "contentArea2" class = "row tabcontentarea55"></div>'
-            + '</div>';
-        $(target).append(html);
-        $('#split1').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'horizontal',
-            panels: [{size: Number(splitRatio.substring(0, 1)) * 10 + '%'}, {size: Number(splitRatio.substring(1, 2)) * 10 + '%'}]
-        });
-        return html;
-    },
-    tm2v: function (index, splitRatio, content, target) {
-        var html = '<div id = "split' + index + '" class="splitGrid">'
-            + '<div id = "contentArea' + index + '" class = "row tabcontentarea' + index + '"></div>'
-            + '<div id = "contentArea' + (index + 1) + '" class = "row tabcontentarea' + index + '"></div>'
-            + '</div>';
-        $(target).append(html);
-        $('#split' + index).jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'vertical',
-            panels: [{size: Number(splitRatio.substring(0, 1)) * 10 + '%'}, {size: Number(splitRatio.substring(1, 2)) * 10 + '%'}]
-        });
-        return html;
-    },
-    tm3vh: function (index, splitRatio, content, target) {
-        var html = '<div id = "split1" class="splitGrid">'
-            + '<div>'
-            + '<div id = "split2" class="splitGrid">'
-            + '<div id = ' + content + (index + 1) + ' class = "row tabcontentarea55"></div>'
-            + '<div id = ' + content + (index + 2) + ' class = "row tabcontentarea55"></div>'
-            + '</div>'
-            + '</div>'
-            + '<div id = ' + content + (index) + ' class = "row tabcontentarea1"></div>'
-            + '</div>';
-        $(target).append(html);
-        $('#split1').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'vertical',
-            panels: [{size: Number(splitRatio.substring(0, 1)) * 10 + '%'}, {size: Number(splitRatio.substring(1, 2)) * 10 + '%'}]
-        });
-        $('#split2').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'horizontal',
-            panels: [{size: Number(splitRatio.substring(2, 3)) * 10 + '%'}, {size: Number(splitRatio.substring(3, 4)) * 10 + '%'}]
-        });
-        return html;
-    },
-    tm3hv: function (index, splitRatio, content, target) {
-        /*   var html     = '<div id = "split1" class="row splitGrid">'
-		                 +    '<div id = '+ content+(index+2)+' class = "row tabcontentarea1"></div>'
-                         +    '<div>'
-                         +      '<div id = "split2" class="row splitGrid">'
-                         +       '<div id = '+ content+(index)+' class = "row tabcontentarea55"></div>'
-                         +       '<div id = '+ content+(index+1)+' class = "row tabcontentarea55"></div>'
-                         +      '</div>'
-                         +    '</div>'
-                         + '</div>';*/
-        var html = '<div id = "split1" class="splitGrid">'
-            + '<div>'
-            + '<div id = ' + content + (index) + ' class = "row tabcontentarea1 split-grid"></div>'
-            + '</div>'
-            + '<div>'
-            + '<div id = "split2" class="splitGrid">'
-            + '<div id = ' + content + (index + 1) + ' class = "row tabcontentarea55"></div>'
-            + '<div id = ' + content + (index + 2) + ' class = "row tabcontentarea55"></div>'
-            + '</div>'
-            + '</div>'
-            + '</div>';
-        $(target).append(html);
-        $('#split1').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'horizontal',
-            panels: [{size: Number(splitRatio.substring(0, 1)) * 10 + '%'}, {size: Number(splitRatio.substring(1, 2)) * 10 + '%'}]
-        });
-        $('#split2').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'vertical',
-            panels: [{size: Number(splitRatio.substring(2, 3)) * 10 + '%'}, {size: Number(splitRatio.substring(3, 4)) * 10 + '%'}]
-        });
-        return html;
-    },
-    tm4vvh: function (index, splitRatio, content, target) {
-        var html = '<div id = "split1" class="splitGrid">'
-            + '<div>'
-            + '<div id = "split2" class="splitGrid">'
-            + '<div id = "contentArea1" class = "row tabcontentarea"></div>'
-            + '<div id = "contentArea2" class = "row tabcontentarea"></div>'
-            + '</div>'
-            + '</div>'
-            + '<div>'
-            + '<div id = "split3" class="splitGrid">'
-            + '<div id = "contentArea3" class = "row tabcontentarea"></div>'
-            + '<div id = "contentArea4" class = "row tabcontentarea"></div>'
-            + '</div>'
-            + '</div>'
-            + '</div>';
-        $(target).append(html);
-        $('#split1').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'vertical',
-            panels: [{size: Number(splitRatio.substring(0, 1)) * 10 + '%'}, {size: Number(splitRatio.substring(1, 2)) * 10 + '%'}]
-        });
-        $('#split2').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'vertical',
-            panels: [{size: Number(splitRatio.substring(2, 3)) * 10 + '%'}, {size: Number(splitRatio.substring(3, 4)) * 10 + '%'}]
-        });
-        $('#split3').jqxSplitter({
-            width: '100%',
-            height: '100%',
-            orientation: 'horizontal',
-            panels: [{size: Number(splitRatio.substring(4, 5)) * 10 + '%'}, {size: Number(splitRatio.substring(5, 6)) * 10 + '%'}]
-        });
-        return html;
-    },
     createGridArea: {
         h00: function (index, gridId, gridSizeClass) {
             var html = '<div class=' + '"col-xl-12 px-0 ' + gridSizeClass + '">'
@@ -10347,7 +9055,6 @@ var momWidget = {
 
         mom_ajax('R', 'XUSM3030.defaultInfo', {menuId: menuId, gridId: 1}, function (result1, data1) { //해당 페이지의 위젯정보 조회
             let that = momWidget;
-
             let popupString = data1[0]['popupProperty'] == undefined ? '[]' : data1[0]['popupProperty'];
             popupString = popupString == '[]' ? popupString : popupString.substr(1, popupString.length - 2);
             let popupProperty = JSON.parse(popupString);
@@ -10451,7 +9158,7 @@ var momWidget = {
 
             //that.setBtnEvent(index, your);					    // 버튼이벤트 세팅
             // that.setKeyEvent(index,your); 					    // 버튼이벤트 세팅 (엔터,기타..)
-        })
+        }, undefined, undefined, this, false);
     },
 
     isJson: function (item) {
@@ -10795,7 +9502,7 @@ var momWidget = {
                 }
                 $('td').removeClass('aui-grid-default-column');
                 that.splashHide();
-            }, undefined, undefined, this, true);
+            }, undefined, undefined, this, false);
             // }, 500);
 
 
@@ -10932,6 +9639,14 @@ var momWidget = {
             if (scrollbar[0] != undefined && scrollbar.css('display') != 'none') {
 
 
+            }
+            var nowGridData = AUIGrid.getGridData(that.grid[index]);
+            let prevCheckItem = [];
+            prevCheckItem = nowGridData.filter(function(event){
+                return event.gridId === that.prevKeyItem[index] ;
+            })
+            if(prevCheckItem.length==1){
+                AUIGrid.setCheckedRowsByValue(that.grid[index], 'gridId', prevCheckItem[0]['gridId']);
             }
         });
         AUIGrid.bind(that.grid[index], "cellEditBegin", function (e) {
@@ -12741,7 +11456,7 @@ var momWidget = {
 
             } else if (that.buttonProperty[index][i]['buttonType'] == 'CP') {
                 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function (e) {	 //커스텀 랍업
-                    that.setCustomPopBtn(index, e.target.id.split('customBtn')[1], e.target.id, your, e);
+                    that.setCustomPopBtn(index, e.currentTarget.id.split('customBtn')[1], e.currentTarget.id, your, e);
                 });
 
             } else if (that.buttonProperty[index][i]['buttonType'] == 'ST' || that.buttonProperty[index][i]['buttonType'] == 'EX') {
@@ -12860,7 +11575,8 @@ var momWidget = {
 
         });
         $(document).on('click', '#' + cancelCustomPopBtnId, function (e) {
-            $('.' + 'customPop').modal('hide');
+            //$('.' + 'customPop').modal('hide');
+            $('.' + 'customPop').css('display','none');
             that.maskHide('1');
 
         });
@@ -14230,11 +12946,21 @@ var momWidget = {
 
 
         $(document).on('click', '#' + createBtnId, function (e) {
-            var callbackData = [];
-            var targetArray = e.currentTarget.id.split('DP');
-            var buttonId = targetArray[0];
-            var actionType = 'C';
-            for (var k = 0, max = that.buttonProperty[index].length; k < max; k++) {
+            let callbackData = [];
+            let targetArray = e.currentTarget.id.split('DP');
+            let buttonId = targetArray[0];
+            let actionType = 'C';
+            let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
+            let param = that.getCheckedRowItems(that.grid[index]);
+            if (isCheckCol == true) {
+                if (param.length == 1 ) {
+                        that.prevKeyItem[index] = param[0]['gridId'] ;
+
+
+                }
+
+            }
+            for (let k = 0, max = that.buttonProperty[index].length; k < max; k++) {
                 if (that.buttonProperty[index][k]['buttonId'] + (index + 1) == buttonId) {
                     actionType = that.buttonProperty[index][k]['eventType'];
 
@@ -14253,7 +12979,7 @@ var momWidget = {
                 return;
             }
             //$('#popupTitle'+(index+1)).text('등록');
-            var popupTitle = that.gridExtraProperty[index]['popupTitle'];
+            let popupTitle = that.gridExtraProperty[index]['popupTitle'];
             $('#popupTitle' + (index + 1)).text('');
             $('#popupTitle' + (index + 1)).append(popupTitle + '(' + multiLang.transText('MESSAGE', 'MSG00039') + ')');
             //$('#' + 'defaultPop' + (index + 1)).modal("show");
@@ -14299,7 +13025,7 @@ var momWidget = {
                     momWidget.splashHide();
                     return;
                 }
-
+                that.prevKeyItem[index] = param[0]['gridId'];
             } else {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: '체크박스 설정필요!'});
                 momWidget.splashHide();
@@ -15372,14 +14098,14 @@ var momWidget = {
                         initParam = your.initParam;
                     }
                     momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn', momWidget.pageProperty[btnIndex]['menuId'], your);
-                    var nowGridData = AUIGrid.getGridData(that.grid[index]);
+                  /*  var nowGridData = AUIGrid.getGridData(that.grid[index]);
                     let prevCheckItem = [];
                        prevCheckItem = nowGridData.filter(function(e){
                         return e.gridId === that.prevKeyItem[index] ;
                     })
                     if(prevCheckItem.length==1){
                         AUIGrid.setCheckedRowsByValue(that.grid[index], 'gridId', prevCheckItem[0]['gridId']);
-                    }
+                    }*/
                     // $('#' +'defaultPop'+(index+1)).modal('hide');
                     momWidget.messageBox({
                         type: 'success',
@@ -15388,31 +14114,31 @@ var momWidget = {
                         html: multiLang.transText('MESSAGE', 'MSG00001')
                     });
                     momWidget.splashHide();
-                    return;
                 }, undefined, index, this, false);
-            }
 
+            }
+           return false;
 
         });
 
 
         $(document).on('click', '#' + saveCustomPopBtnId, function (e) {
             momWidget.splashShow();
-            var param = [];
-            var initParam = {};
+            let param = [];
+            let initParam = {};
             let searchResult = true;
-            let popupTitle = '#' + e.target.parentElement.parentElement.parentElement.id;
+            let popupTitle = '#' + e.currentTarget.parentElement.parentElement.parentElement.id;
             let tmpYn = 'N';
-            let btnIndex = $('.customPop.in').attr('btnIndex');
+            let btnIndex = $(popupTitle).attr('btnIndex');
             let index = Number(btnIndex.split('-')[0]) - 1;
             let buttonId = 'customBtn' + btnIndex;
             let actionType = $('#customPop-' + buttonId).attr('actionType');
             let gridPopYn = 'N';
             let queryId = that.pageProperty[index]['programId'] + '.' + buttonId;
             that.wait(0.5);
-            var buttonParam = [];
-            var extraParam = {};
-            var validateCheck = true;
+            let buttonParam = [];
+            let extraParam = {};
+            let validateCheck = true;
             let actionMode = 'C';
             let popupItem = that.customPopupProperty[buttonId];
             let popupId = '';
@@ -16187,13 +14913,13 @@ var momWidget = {
                     momWidget.splashHide();
                     return;
                 }
-
+                that.prevKeyItem[index] = param[0]['gridId'];
             } else {
                 momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '체크박스 설정필요!'});
                 momWidget.splashHide();
                 return;
             }
-            that.prevKeyItem[index] = param[0]['gridId'];
+
             if ($('#changePwBtn' + (index + 1)).length) {
                 that.maskShow('1');
                 $('#changePwBtn' + (index + 1)).css('display', 'block');
@@ -17298,36 +16024,7 @@ var momWidget = {
         $(".customPop").draggable();
 
     },
-    setCustomPopBtn: function (index, popupIndex, btnId, your, e) {
-        let that = momWidget;
-        let callbackData = [];
-        /*let targetArray = e.target.id.split('DP');
-        var buttonId = targetArray[0];*/
-        var actionType = $('#customPop-' + btnId).attr('actiontype');
 
-
-        that.setCustomPopup(btnId, actionType, index);
-
-        callInitResult = that.checkActionCallInit(index, actionType, [], btnId, your, e);
-        if (callInitResult['result'] != 'SUCCESS') {
-            momWidget.messageBox({type: 'warning', width: '400', height: '145', html: callInitResult['msg']});
-            momWidget.splashHide();
-            return;
-        }
-
-        $('#' + 'customPop-' + btnId).modal('show');
-        that.htmlResize(index, your);
-
-        callbackData = AUIGrid.getGridData(that.grid[index]);
-        let callBackResult = that.checkActionCallBack(index, actionType, [], 'createBtn', your, callbackData);
-        if (callBackResult['result'] != 'SUCCESS') {
-            momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
-            momWidget.splashHide();
-            return;
-        }
-
-
-    },
     // Level 2. 등록 팝업창 열기시 데이터 복사, by procCreateBtn, procEditBtn
     setCustomPopup: function (index, type, gridIndex) {
         let that = this;
@@ -18172,6 +16869,7 @@ var momWidget = {
     },
 
     messageBox: function (options) {
+        that = momWidget;
         if ($('.momMessageBoxSet').next().attr('class') == 'mm-backdrop fade in mm-stack') {
             $('.mm-backdrop.fade.in.mm-stack').remove();
         }
@@ -18355,6 +17053,7 @@ var momWidget = {
                 //$('.momMessageBoxSet').modal('hide');
                 $('.momMessageBoxSet').css('display', 'none');
                 $('.momMessageBoxSet').css('opacity', 0);
+                that.maskHide('2');
                 if (options.focusId != undefined) {
                     if (options.focusType == 'inputBox') {
                         $(options.focusId).focus();
@@ -18370,6 +17069,7 @@ var momWidget = {
                 });
             }
         }
+        that.maskShow('2');
         $('.momMessageBoxSet').css('display', 'block');
         $('.momMessageBoxSet').css('opacity', 1);
        // $('.momMessageBoxSet').modal('show');
@@ -18378,7 +17078,19 @@ var momWidget = {
         $('.btn-ok').focus();
     },
 
-    splashShow: function () {
+      splashShow: function () {
+        let spinnerHtml = '<div id="loader">'
+                        +   '<div className="spinner-border text-secondary" role="status" style="width: 4rem; height: 4rem;">'
+                        +     ' <span className="visually-hidden">Loading...</span>'
+                        +   '</div>'
+                        +  '</div>';
+        $('body').append(spinnerHtml);
+
+      },
+      splashHide: function () {
+       $('#loader').remove();
+    },
+    /*splashShow: function () {
         //console.log("");
         //console.log("[spinnerStart] : " + "[start]");
         //console.log("");
@@ -18416,13 +17128,13 @@ var momWidget = {
             animation: 'spinner-line-fade-default', // The CSS animation name for the lines
             direction: 1, // 회전 방향 시계 방향, 반시계 방향 [1: clockwise, -1: counterclockwise]
             speed: 1, // 회전 속도 [Rounds per second]
-    /*        trail: 74, // 꼬리 잔광 비율 [Afterglow percentage]
-            fps: 20, // 초당 프레임 수 [Frames per second when using setTimeout() as a fallback in IE 9]*/
+    /!*        trail: 74, // 꼬리 잔광 비율 [Afterglow percentage]
+            fps: 20, // 초당 프레임 수 [Frames per second when using setTimeout() as a fallback in IE 9]*!/
             fps: 20, // 초당 프레임 수 [Frames per second when using setTimeout() as a fallback in IE 9]
             zIndex: 2e9, // 인덱스 설정 [The z-index (defaults to 2000000000)]
             top: '-20%', // Top position relative to parent
             left: '50%', // Left position relative to parent
-           /* shadow: '0 0 1px transparent', // Box-shadow for the lines*/
+           /!* shadow: '0 0 1px transparent', // Box-shadow for the lines*!/
             position: 'absolute'
         };
 
@@ -18431,8 +17143,8 @@ var momWidget = {
         let target = document.getElementById("spinnerContainer1000");
         let spinner = new Spinner(opts).spin(target);
 
-    },
-    splashHide: function () {
+    },*/
+ /*   splashHide: function () {
         //console.log("");
         //console.log("[spinnerStop] : " + "[start]");
         //console.log("");
@@ -18445,21 +17157,30 @@ var momWidget = {
         catch (exception) {
             // console.error("catch : " + "not find spinnerLay1000");
         }
-    },
+    },*/
     maskShow: function (depth) {
         //화면의 높이와 너비를 구한다.
         let maskId = 'mask-'+depth;
         let mask = '<div id ='+maskId+'></div>';
         $('body').append(mask);
-        var maskHeight = $(document).height();
-        var maskWidth = $(window).width();
+        let maskHeight = $(document).height();
+        let maskWidth = $(window).width();
 
         //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채운다.
-        $('#mask-1').css({'width':maskWidth,'height':maskHeight});
+        $('#'+maskId).css({'width':maskWidth,'height':maskHeight});
 
         //애니메이션 효과
        // $('#mask').fadeIn(1000);
-        $('#mask-1').fadeTo("fast",0.5);
+        if(depth=='1'){
+            $('#'+maskId).fadeTo("fast",0.5);
+        }
+        else if(depth=='2'){
+            $('#'+maskId).fadeTo("fast",0.6);
+        }
+        else{
+            $('#'+maskId).fadeTo("fast",0.5);
+        }
+
     },
     maskHide: function (depth) {
         //링크 기본동작은 작동하지 않도록 한다.

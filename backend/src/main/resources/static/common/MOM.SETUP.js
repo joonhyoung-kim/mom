@@ -12,8 +12,8 @@ var momSetup= {
              
            
  			  //jquery js
-		/*	  $('head').prepend('<script src="/webjars/jquery/3.6.0/dist/jquery.min.js"></script>');
-			  $('head').prepend('<script src="/webjars/jquery/3.6.0/dist/jquery.js"></script>');
+		/*	  $('head').prepend('<script src="/webjars/jquery/3.6.1/dist/jquery.min.js"></script>');
+			  $('head').prepend('<script src="/webjars/jquery/3.6.1/dist/jquery.js"></script>');
 			  $('head').prepend('<script src="/mom/content/jquery-ui/jquery-ui.min.js"></script>');		*/			
 			  //material icon css
 			  //spiner
@@ -65,9 +65,11 @@ var momSetup= {
               $('head').prepend('<link href="/mom/content/css/sash-bootstrap5/HTML/sash/assets/switcher/demo.css" rel="stylesheet">');
               	
 			  //bootStrap css
-			 /* $('head').prepend('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">');*/
+			 /* $('head').prepend('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<!-- SPINNER-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.js"></script>');*/
 			  //favicon ico
-		      $('head').prepend('<link rel="shortcut icon" type="image/x-icon"href="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/favicon.ico">');		
+		      $('head').prepend('<link rel="shortcut icon" type="image/x-icon" href="/mom/content/css/sash-bootstrap5/HTML/sash/assets/images/brand/favicon.ico">');
 			
  }
 		

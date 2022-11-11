@@ -8,7 +8,7 @@
     	<parameter property="p_err_code" mode="OUT" jdbcType="VARCHAR" javaType = "string"/>   
     </parameterMap> -->
 	
-     <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">    
+     <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 		 SELECT COMPANY_CD
 		      , DIVISION_CD
 		      , AUTH_GROUP_CD

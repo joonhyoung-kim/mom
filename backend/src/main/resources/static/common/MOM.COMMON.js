@@ -1,9 +1,7 @@
 var language = undefined;
 var locale = sessionStorage.getItem('locale');
 var targetTab = undefined;
-var totalTabWidth = 0; 
-var homeFlag = undefined;
-var tabChange = undefined;
+var totalTabWidth = 0;
 var isClickMenu = undefined;
 
 var mCommon= {
@@ -128,7 +126,7 @@ leftMenuAuth: function(el,params) {
 			         '<path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>'+
 					'</svg>'+
 			 '</div>'+
-			 '<ul class="side-menu open" style="margin-right: 0px;">'+
+			 '<ul class="side-menu open" style="">'+
 			   '<li class="sub-category">'+
 			    '<h3>Main</h3>'+
 			   '</li>'+
@@ -2606,21 +2604,4 @@ function base64toBlob(base64Data, contentType) {
     }
     return new Blob(byteArrays, { type: contentType });
 }
-//2020.04.12 jhkim end
-// 2020.04.12 hyjeong begin
-(function( $ ) {
-	$.fn.replaceTag = function(newTag) {
-	    var originalElement = this[0]
-	    , originalTag = originalElement.tagName
-	    , startRX = new RegExp('^<'+originalTag, 'i')
-	    , endRX = new RegExp(originalTag+'>$', 'i')
-	    , startSubst = '<'+newTag
-	    , endSubst = newTag+'>'
-	    , newHTML = originalElement.outerHTML
-	    .replace(startRX, startSubst)
-	    .replace(endRX, endSubst);
-	    this.replaceWith(newHTML);
-	};
-})(jQuery);
-// 2020.04.12 hyjeong end
 

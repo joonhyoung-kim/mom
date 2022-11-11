@@ -35,6 +35,15 @@
                 CONNECT BY PRIOR A.MENU_ID = A.PARENT_MENU_ID 
                 ORDER SIBLINGS BY A.SORT_NO, A.MENU_ID        
     </select>
+	<select id="get_program" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+		SELECT     PROGRAM_ID AS CODE
+			 ,   PROGRAM_ID ||'('|| PROGRAM_NM ||')' AS LABEL
+		FROM     MOM_PROGRAM
+		WHERE   1=1
+		AND     USE_YN      = 'Y'
+		AND     PROGRAM_TYPE NOT IN ('DB')
+		ORDER BY LABEL
+	</select>
     <update id="upsert_menu" parameterType="java.util.HashMap" flushCache="true">
     MERGE INTO MOM_MENU MM
     USING (

@@ -73,6 +73,7 @@
 			     , TO_CHAR(MSS.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
 			  <!--    , MSS.WORK_CENTER_CD ||'_'||MSS.SHIFT_CD||'_'||MSS.APPLY_DATE AS KEY_ID -->
 			     , MSS.DESCRIPTION
+                 , ROWIDTOCHAR(MSS.ROWID) AS GRID_ID
         FROM     MOM_COM_DIV_V       MCD
 		       , MOM_SHIFT_SCHEDULE  MSS
 		       , MOM_SHIFT           MS

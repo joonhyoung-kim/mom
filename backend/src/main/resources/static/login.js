@@ -18,7 +18,7 @@ var Login = {
 		var that = this; 
 		var param = undefined;
 		$(document).on("click", "#loginBtn", function() {
-			momWidget.splashShow(); //스플래쉬생성
+			//momWidget.splashShow(); //스플래쉬생성
 			var msg = '';
 			param = {
 					      userId      : $("#loginId").val()  == undefined ? '' : $("#loginId").val(),
@@ -43,7 +43,7 @@ var Login = {
 		
 		$(document).on("keydown", "#password", function(e) {
 			if(e.keyCode == 13) {
-				momWidget.splashShow();
+				//momWidget.splashShow();
 //				var param = {
 //					userId : $("#loginId").val(),
 //					password : mCommon.sha256Set($("#password").val()),
@@ -68,7 +68,7 @@ var Login = {
 	}, 
 	
 	setComboBox: function() {
-		momWidget.splashShow(); 
+		//momWidget.splashShow();
 		let that = this;
 		let companyOptions   = {local: [],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
 		let divisionOptions  = {local: [],textName : "label", valueName : "value", readonly : false, selectedIndex : 0};
@@ -117,7 +117,7 @@ var Login = {
 	login: function(loginParam) {
 		var that = this; 		
 		var errorMessage = '';
-		momWidget.splashShow(); // 스플래쉬 생성		
+		//momWidget.splashShow(); // 스플래쉬 생성
 		var param = { // 로그인폼 값으로 파라미터 세팅
 			userId          : loginParam.userId       == '' ? errorMessage = '아이디 미입력!'  : loginParam.userId,
 			password 	    : loginParam.password     == '' ? errorMessage = '패스워드 미입력!' : loginParam.password,
@@ -236,6 +236,7 @@ var Login = {
 		$.ajax({
 		    url:"/login", 
 		    type:'post', // GET, PUT
+			async:true,
 		    contentType: 'application/json',
 		    data: JSON.stringify(param),
 		    success: function(result){
@@ -258,6 +259,7 @@ var Login = {
 			url:"/login",
 			method: "post",
 			contentType: 'application/json',
+			async:true,
 		    data: JSON.stringify(param),
 		    success: function(result){
 				$('#field-4').jqxComboBox('source', result);

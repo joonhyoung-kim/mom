@@ -4751,6 +4751,25 @@ input:focus{
     border-radius: 5px;
 
 }
+#loader {
+    top: 40vh;
+    left: 80vh;
+    position: fixed;
+    display: block;
+    opacity: 0.8;
+/*    width:3rem;
+    height:3rem;*/
+  /*  background: rgb(156, 154, 154);*/
+    z-index: 99;
+    text-align: center;
+}
+
+/*#loader>div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+}*/
 #mask-1 {
     position:absolute;
     left:0;
@@ -5080,9 +5099,14 @@ input:focus{
     margin-top: 0.2rem; 
 }
 .tabcontentarea1 {
+    margin-bottom: 0px;
+    background: #f0f0f5;
+    height:auto !important;
+}
+.tabcontentarea1.jqx-splitter-panel {
 	margin-bottom: 0px;
-	background: #f0f0f5;	
-	height:auto !important; 
+	background: #f0f0f5;
+    height: 100% !important;
 }
 .split-grid{
 	margin: 0;
