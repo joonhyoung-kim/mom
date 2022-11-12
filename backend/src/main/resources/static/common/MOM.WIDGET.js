@@ -39,15 +39,13 @@ var momWidget = {
     sortingInfo: [], // 그리드 필터 컬럼
     searchComboItems: [], // 검색조건필드 콤보박스 아이템 list
     preComboItems: [], // 검색조건필드 콤보박스 아이템 list
-    INFINITE: 100000000,
-    uploadFlag: 0,
-    popupPrevItem: [],
-    searchPrevItem: [],
+    popupPrevItem: [], //팝업 콤보박스 검색시에 사용되는 list
+    searchPrevItem: [], //검색조건 콤보박스 검색시에 사용되는 list
     editItem: [],
     prevKeyItem: {},
     downSequence: 100,
-    isInitSearch: false,
-    firstPageFlag: true,
+    isInitSearch: false, // 페이징시 최초 검색 여부
+    firstPageFlag: true, // 페이징시 첫번째 페이지 여부
     excelUpCheckYn: undefined, // 엑셀 업로드 검증 사용여부(Y/N)
     dateCheckParam: '-1', // 엑셀 업로드시 추가적인 벨리데이션(yyyymm형태)을 위한 변수
     upsertFlag: 'Y',
@@ -82,13 +80,13 @@ var momWidget = {
                 momWidget.splashHide();
                 return;
             }
-            var columnProp = []; // 메인그리드 컬럼정보
-            var excelDownProp = []; //엑셀다운그리드 컬럼정보
-            var excelUploadProp = []; // 엑셀업로드그리드 컬럼정보
-            var columnType = 'default';  //컬럼타입
-            var classItem = []; // 클래스 정보
-            var searchItem = []; // 검색 필드 클래스 정보
-            var popupItem = []; // 팝업 필드 클래스 정보
+            let columnProp = []; // 메인그리드 컬럼정보
+            let excelDownProp = []; //엑셀다운그리드 컬럼정보
+            let excelUploadProp = []; // 엑셀업로드그리드 컬럼정보
+            let columnType = 'default';  //컬럼타입
+            let classItem = []; // 클래스 정보
+            let searchItem = []; // 검색 필드 클래스 정보
+            let popupItem = []; // 팝업 필드 클래스 정보
             var labelField = '';
             var headerField = '';
             var circleClass = '';
@@ -4635,8 +4633,7 @@ var momWidget = {
                 }
 
                 that.splashShow();
-                that.firstPageFlag = true;
-                that.uploadFlag = 2;
+                that.firstPageFlag = true;           
                 // var param = [{}];
 //			var param = {};
                 var callBackParam = {};
@@ -4875,37 +4872,7 @@ var momWidget = {
                     $('#gridFile' + (index + 1)).val('');
                 });
             }
-
-            $(document).on('click', '#saveBtnEX' + (index + 1), function (e) {
-                $('#' + excelGridId).modal('hide');
-                that.uploadFlag = 2;
-                var param = [{}];
-
-                // that.splashShow();
-                var file;
-                if (index == 0) {
-                    file = gridFile1;
-                } else if (index == 1) {
-                    file = gridFile2;
-                } else if (index == 2) {
-                    file = gridFile3;
-                } else if (index == 3) {
-                    file = gridFile4;
-                } else if (index == 4) {
-                    file = gridFile5;
-                } else if (index == 5) {
-                    file = gridFile6;
-                }
-
-                excel_upload_new(file, that.grid[index], function () {
-                    that.uploadFlag = 0; // uploadFlag가 2로 설정돼서 웹엑셀 업로드 후
-                    // 조회버튼 누르면 성공했다는 메세지가 나오는 현상 수정
-                    that.splashHide();
-                    if (your != undefined && your.excelGridCallBack) {
-                        your.excelGridCallBack(index);
-                    }
-                });
-            });
+     
 
             $(document).on('click', '#cancelBtnEX' + (index + 1) + ', ' + '.bntpopclose', function (e) {
                 $('#' + excelGridId).modal('hide');
@@ -4982,77 +4949,6 @@ var momWidget = {
             });
 
             const pageId = pageId1;
-            $(document).on('click', '#saveBtnNEX' + (index + 1), function (e) {
-                that.firstPageFlag = true;
-                $('#' + excelPopId).modal('hide');
-                that.uploadFlag = 2;
-                // var param = [{}];
-                var param = {};
-                var callBackParam = {};
-                that.splashShow();
-                var file;
-                if (index == 0) {
-                    file = excelFile1;
-                } else if (index == 1) {
-                    file = excelFile2;
-                } else if (index == 2) {
-                    file = excelFile3;
-                } else if (index == 3) {
-                    file = excelFile4;
-                } else if (index == 4) {
-                    file = excelFile5;
-                } else if (index == 5) {
-                    file = excelFile6;
-                }
-
-                if (your != undefined && your.initParam != undefined) {
-                    param = your.initParam;
-                }
-                excel_upload(file, that.gridProperty[index]['queryId'], pageId, that.grid[index], JSON.stringify(param), function (result, data) {
-                    if (result == 'SUCCESS') {
-                        that.findBtnClicked(index, true, {}, function (result, data) {
-                            if (your != undefined && your.interfaceUrl != undefined) {// 변수수정
-                                mom_ajax('C', your.interfaceUrl, JSON.stringify({cudFlag: 'C'}));
-                            }
-                            if (that.firstPageFlag) {
-                                that.firstPageFlag = false;
-                                if (your != undefined && your.retrieveCallBack != undefined) {
-                                    your.retrieveCallBack('SUCCESS', data, param, undefined, {
-                                        'index': index,
-                                        'op': 'saveBtnNEX' + (index + 1)
-                                    }, your);
-                                    return;
-                                }
-                                var partialData = data.slice(that.startPage[index] - 1, that.endPage[index]);
-                                AUIGrid.setGridData(that.grid[index], partialData);
-                                that.messageBox({
-                                    type: 'success',
-                                    width: '400',
-                                    height: '145',
-                                    html: Language.lang['MESSAGES11193']
-                                });
-                            }
-                        }, {'index': index, 'op': 'saveBtnNEX' + (index + 1)}, your);
-                    } else {
-                        if (data['p_err_msg'] != undefined && data['p_err_msg'].length > 0) {
-                            that.messageBox({
-                                type: 'danger',
-                                width: '400',
-                                height: '145',
-                                html: Language.getLang(data['p_err_msg'])
-                            });
-                        } else {
-                            that.messageBox({
-                                type: 'danger',
-                                width: '400',
-                                height: '145',
-                                html: Language.lang['MESSAGES10821']
-                            });
-                        }
-                    }
-                }, undefined, {'index': index, 'op': 'saveBtnNEX' + (index + 1)}, your);
-
-            });
 
             $(document).on('click', '#cancelBtnNEX' + (index + 1) + ', ' + '.bntpopclose', function (e) {
                 $('#' + excelPopId).modal('hide');
