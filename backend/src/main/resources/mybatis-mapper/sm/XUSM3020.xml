@@ -374,7 +374,7 @@
 	AND    MC.USE_YN      = 'Y'
 	ORDER BY MC.COMPANY_CD, MC.DIVISION_CD, MC.SORT_NO
 	</select>
-    <insert id="upsert_excelUpBtn4"  parameterType="java.util.HashMap" flushCache="true" >
+    <insert id="upsert_saveBtn4"  parameterType="java.util.HashMap" flushCache="true" >
 	    MERGE INTO MOM_MESSAGE MM
 	    USING (
 	     

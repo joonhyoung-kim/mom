@@ -12,6 +12,7 @@
 		 SELECT COMPANY_CD
 		      , DIVISION_CD
 		      , AUTH_GROUP_CD
+		      , AUTH_GROUP_CD AS KEY_ID
 		      , AUTH_GROUP_NM
 		      , OUT_SOURCING_FLAG
 		      , ( SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(COMPANY_CD, DIVISION_CD, 'SM0001',OUT_SOURCING_FLAG,#{langCd, jdbcType=VARCHAR})
@@ -28,7 +29,8 @@
      </select>
      <select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
 		 SELECT LEVEL
-	          , A.MENU_ID        
+	          , A.MENU_ID
+		      , A.MENU_ID AS KEY_ID
 	          , (SELECT MENU_TYPE FROM MOM_MENU WHERE MENU_ID = A.MENU_ID) AS MENU_TYPE       
 		      , A.PARENT_MENU_ID
 		      , A.MENU_NM

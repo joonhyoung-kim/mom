@@ -31,6 +31,22 @@ var XUSM1040 = {
 
 
 	},
+	changePwCallInit: function(index, your, action, btnId, param, result){
+		if(index ==0 && btnId =='changePwBtn'){
+			$('#nowPassword1').val('');
+			$('#changePassword1').val('');
+		}
+	},
+	createCallBack: function(index,your,action,btnId,param,result,data) {  //등록버튼 팝업띄우고나서 호출되는 함수
+		if(index ==0){
+			$('#passwordDP1').val('');
+		}
+	},
+	copyCallBack: function(index,your,action,btnId,param,result,data) {  //등록버튼 팝업띄우고나서 호출되는 함수
+		if(index ==0 ){
+			$('#passwordDP1').val('');
+		}
+	},
 	savePopCallInit: function(index,your,action,btnId,param,result) {
 		if(index==0){		
 			for(var i=0,max=param.length; i<max;i++){

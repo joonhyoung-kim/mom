@@ -79,6 +79,60 @@
 					)				             
 			            </foreach>			               
         </insert>
+    <insert id="create_copyBtn1" parameterType="java.util.List">
+        INSERT INTO MOM_USER (
+        COMPANY_CD
+        , DIVISION_CD
+        , USER_NO
+        , USER_NM
+        , USER_NM_ENG
+        , PASSWORD
+        , POSITION
+        , EMAIL
+        , PHONE_NO
+        , TEL_NO
+        , FAX_NO
+        , DEPT_CD
+        , AUTH_GROUP_CD
+        , VENDOR_CD
+        , DEFAULT_LANGUAGE
+        , MAP_ADDRESS
+        , IP_ADDRESS
+        , USE_YN
+        , DESCRIPTION
+        , CREATE_BY
+        , CREATE_DATE
+        , UPDATE_BY
+        , UPDATE_DATE
+        )
+        VALUES(
+        <foreach item="item" collection="list" index="i" separator=" " open="">
+            #{item.companyCd,       jdbcType=VARCHAR}
+            , #{item.divisionCd,        jdbcType=VARCHAR}
+            , #{item.userNo,            jdbcType=VARCHAR}
+            , #{item.userNm,            jdbcType=INTEGER}
+            , #{item.userNmEng,         jdbcType=VARCHAR}
+            , #{item.encodePw,          jdbcType=VARCHAR}
+            , #{item.position,          jdbcType=VARCHAR}
+            , #{item.email,             jdbcType=VARCHAR}
+            , #{item.phoneNo,           jdbcType=VARCHAR}
+            , #{item.telNo,             jdbcType=VARCHAR}
+            , #{item.faxNo,          	 jdbcType=VARCHAR}
+            , #{item.deptCd,    		 jdbcType=VARCHAR}
+            , #{item.authGroupCd, 	     jdbcType=VARCHAR}
+            , #{item.vendorCd,          jdbcType=VARCHAR}
+            , #{item.defaultLanguuage,  jdbcType=VARCHAR}
+            , #{item.mapAddress,    	 jdbcType=VARCHAR}
+            , #{item.ipAddress, 		 jdbcType=VARCHAR}
+            , #{item.useYn,             jdbcType=VARCHAR}
+            , #{item.description,       jdbcType=VARCHAR}
+            , TRIM(#{item.userId,       jdbcType=VARCHAR})
+            , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+            , TRIM(#{item.userId,       jdbcType=VARCHAR})
+            , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.divisionCd, jdbcType=VARCHAR}, #{item.companyCd, jdbcType=VARCHAR})
+            )
+        </foreach>
+    </insert>
         <update id="modify_editBtn1" parameterType="java.util.List">     
          <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
            UPDATE MOM_USER

@@ -317,6 +317,8 @@ public class MomDao {
             	      }       	    	  
         	    	
         	    	  if(upsertRemainCount>0) {
+						  System.out.println("업서트카운트="+upsertCount);
+						  System.out.println("파람사이즈="+paramSize);
         	    		  for(int k=(upsertCount*1000)+1;k<paramSize;k++) {
             	    		  //splitParam = new ArrayList<>();
         	    			  splitParam.clear();

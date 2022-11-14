@@ -76,7 +76,7 @@ var XUSM2020 = {
 	},
 	searchCallInit: function(index,your,action,btnId,param,result) {
 		
-		if(index ==1 && btnId =='saveBtn2'){	
+		if(index ==1 && btnId =='saveBtn'){
 			var gridItem = AUIGrid.getGridData(momWidget.grid[index])
 			if(gridItem =='FAIL'){
 				result.result = 'FAIL';

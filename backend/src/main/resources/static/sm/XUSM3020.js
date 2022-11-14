@@ -85,8 +85,8 @@ var VIEW= {
 					
 		}
 		else if(index == 2 && btnId =='findBtn'){	
-			var checkedItem = momWidget.getCheckedRowItems(momWidget.grid[1]);
-			var item = param;
+			let checkedItem = momWidget.getCheckedRowItems(momWidget.grid[1]);
+			let item = param;
 			if(checkedItem.length ==0){
 				result.result = 'FAIL';
 				return;
@@ -100,7 +100,8 @@ var VIEW= {
             if(checkedItem.length == 0){
 	        result.result = 'FAIL';
 	        return;
-            }		
+            }
+
 					         param['msgType']     = 'CODE';		
 					         param['code']        = checkedItem[0]['code'];
 					         param['langGroupCd'] = checkedItem[0]['groupCd'] +'_'+  checkedItem[0]['code'];			         					        			
@@ -109,7 +110,7 @@ var VIEW= {
 		}
 
 	},	
-	savegGridCallInit: function(index,your,action,btnId,param,result) {
+	saveGridCallInit: function(index,your,action,btnId,param,result) {
 	     if(index ==3 && btnId =='saveBtn'){		           
 			checkedItem = widget.getCheckedRowItems(widget.grid[2]);
             if(checkedItem.length == 0){

@@ -2578,6 +2578,7 @@ border-color: #d8dce3 !important;
     margin-left: 6.5% !important;
     margin-top: 2% !important;
     width: 55rem;
+    z-index: 1100;
 }
 
 .passwordInputField {
@@ -3694,8 +3695,8 @@ border-color: #d8dce3 !important;
 	overflow: hidden !important; 
     width: 40rem !important;
     position: relative !important;
-    margin-left: 35% !important;
-    margin-top: -36% !important;
+    margin-left: 35vw !important;
+    margin-top: -85vh !important;
     background: white !important; 
     height: 42rem !important;
     border-radius: 0.5rem;
@@ -3814,14 +3815,12 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C3-R2 {
     z-index: 1050;
-/* 	display: none ; */
 	float: none !important;
-/* 	background-color: rgba(0, 0, 0, 0.1); */
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 35% !important;
-    margin-top: -36% !important;
+    margin-left: 10vw !important;
+    margin-top: -94vh !important;
     background: white !important; 
     height: 19rem !important;
     border-radius: 0.5rem;
@@ -3920,14 +3919,12 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C3-R3 {
     z-index: 1050;
-    /* display: none; */
     float: none !important;
-    /* background-color: rgba(0, 0, 0, 0.1); */
     overflow: hidden !important;
     width: 55rem !important;
     position: relative !important;
-    margin-left: 30% !important;
-    margin-top: -37.5% !important;
+    margin-left: 30vw !important;
+    margin-top: -85vh !important;
     background: white !important;
     height: 25rem !important;
     border-radius: 0.5rem;
@@ -4151,8 +4148,8 @@ border-color: #d8dce3 !important;
 	float: none !important;
 	overflow: hidden !important; 
     position: relative !important;
-    margin-left: 45rem !important;
-    margin-top: -64rem !important;
+    margin-left: 35vw !important;
+    margin-top: -80vh !important;
     background: white !important; 
     height: 31rem !important;
     width: 40rem !important;
@@ -4162,14 +4159,12 @@ border-color: #d8dce3 !important;
 }
 .defaultPop-C3-R5 {
     z-index: 1050;
-/* 	display: none ; */
 	float: none !important;
-/* 	background-color: rgba(0, 0, 0, 0.1); */
 	overflow: hidden !important; 
     width: 56rem !important;
     position: relative !important;
-    margin-left: 45rem !important;
-    margin-top: -64rem !important;
+    margin-left: 35vw !important;
+    margin-top: -88vh !important;
     background: white !important; 
     height: 36rem !important;
     border-radius: 0.5rem;
