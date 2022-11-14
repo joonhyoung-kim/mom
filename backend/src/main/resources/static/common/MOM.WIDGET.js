@@ -800,7 +800,7 @@ var momWidget = {
 
 
             that.excelUploadProperty[index] = excelUploadProp;
-            var excelUploadProp = that.excelUploadProperty[index];
+            that.excelUploadProp = that.excelUploadProperty[index];
             that.excelDownGrid[index] = AUIGrid.create('#excelGrid' + (index + 1), that.excelDownProperty[index], that.gridProperty[index]);
             that.excelTmpGrid[index] = AUIGrid.create('#excelTmpGrid' + (index + 1), that.excelUploadProperty[index], that.gridProperty[index]);
             var isExist = document.getElementById('grid' + (index + 1));
