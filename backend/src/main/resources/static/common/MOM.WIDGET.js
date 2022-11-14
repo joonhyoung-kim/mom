@@ -11061,7 +11061,7 @@ var momWidget = {
                 param.push(checkedItems[i]);
             }
             if (param.length >= 1000) {
-                that.splashHide();
+               // that.splashHide();
                 //$("#pleaseWaitDialog").modal('show');
 
             } else {
@@ -11073,12 +11073,12 @@ var momWidget = {
                 return;
             }
 
-            var actionType = $('#excelUpPop' + (index + 1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop' + (index + 1)).attr('actiontype');
+            let actionType = $('#excelUpPop' + (index + 1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop' + (index + 1)).attr('actiontype');
             let validateYn = $('#excelUpPop' + (index + 1)).attr('validateyn') == undefined ? 'N' : $('#excelUpPop' + (index + 1)).attr('validateyn');
             let queryId = validateYn == 'Y' ? that.pageProperty[index]['menuId'] + '.excelUpBtnV' + (index + 1) : that.pageProperty[index]['programId'] + '.excelUpBtn' + (index + 1);
 
             let tmpYn = $('#excelUpPop' + (index + 1)).attr('tmpYn') == undefined ? 'N' : $('#excelUpPop' + (index + 1)).attr('tmpYn');
-            setTimeout(function () {
+          
                 if (validateYn == 'Y') {
                     param[0].excelUpYn = 'Y';
                     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
@@ -11232,7 +11232,7 @@ var momWidget = {
                 }
 
 
-            }, 500);
+          
 
 
         });

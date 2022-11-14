@@ -9,14 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionDefinition;
@@ -25,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.mom.backend.util.FrameworkUtil;
-import com.mom.backend.util.Monitor;
 import com.mom.backend.util.PrintUtil;
 import com.mom.backend.util.ProgressInfo;
 import com.mom.backend.util.TestInnerResultHandler;
@@ -281,7 +276,7 @@ public class MomDao {
         long startTime = System.currentTimeMillis();   		
 		int resultCount = 0;	
 		int paramSize = param.size();
-        DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+        //DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
        // defaultTransactionDefinition.setName("Transaction");
         //defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);        	
         //TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
@@ -289,7 +284,7 @@ public class MomDao {
         	try {
         	      sqlSession1 = sqlSessionFactory.openSession(ExecutorType.BATCH); 		
         	      //sqlSession1 = SqlSessionFactorys.setSqlSession();
-        	      System.out.println("총데이터="+paramSize);
+        	     // System.out.println("총데이터="+paramSize);
         	      if(paramSize>=1000) {
         	    	  ProgressInfo.useYn = true;
         	    	  // 데이터가 1000 건이상일떄         	    	  
@@ -297,9 +292,9 @@ public class MomDao {
         	    	  int upsertCount = paramSize/1000;                     // 총 upsert 실행횟수
         	    	  int upsertRemainCount = paramSize - upsertCount*1000; // 잔여 데이터 개수
         	    	  int splitCount  = 0;                                  // 누적 upsert 실행횟수
-        	          //System.out.println("1000개단위 쿼리실행수="+upsertCount);
-        	          //System.out.println("1000개단위 잔여개수="+upsertRemainCount);
-        	          //System.out.println("누적 스플릿 카운트="+splitCount);
+        	          System.out.println("1000개단위 쿼리실행수="+upsertCount);
+        	          System.out.println("1000개단위 잔여개수="+upsertRemainCount);
+        	          System.out.println("누적 스플릿 카운트="+splitCount);
         	    	  List<Map<String,Object>> splitParam = new ArrayList<>();
         	    	  
         	    	  for(int i=0;i<upsertCount;i++) {                     
@@ -328,6 +323,7 @@ public class MomDao {
             	    		  for (Map<String, Object> param2 : splitParam) {
                 	    	  sqlSession1.insert(query, param2);
             	    		  }
+            	    		  System.out.println("최종이차파람="+splitParam);
             	    		  //ProgressInfo.successCount += resultCount+upsertRemainCount;
             	    		  ProgressInfo.successCount = paramSize;
                 	    	
