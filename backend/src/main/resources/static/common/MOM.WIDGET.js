@@ -859,7 +859,7 @@ var momWidget = {
                     startPage: 1,
                     endPage: 1
                 }, true, 'TOTAL', that.pageProperty[index]['menuId'], your);
-                that.findBtnClicked(index, {}, true, 'BACK', that.pageProperty[index]['menuId'], your);
+                //that.findBtnClicked(index, {}, true, 'BACK', that.pageProperty[index]['menuId'], your);
             }
 
         } else {//페이징 미사용
@@ -6883,7 +6883,7 @@ var momWidget = {
     },
     createFileUploadPop: {
         excelUp: function (index, title) {
-            var html = '<div class="modal" id="excelUpPop' + (index + 1) + '" style="z-index: 9999;display: none;" aria-hidden="true">' +
+            var html = '<div class="modal" id="excelUpPop' + (index + 1) + '" style="z-index: 1080;display: none;" aria-hidden="true">' +
                 '<div class="modal-dialog" role="document">' +
                 '<div class="modal-content excelUploadPop">' +
                 '<div class="modal-header-excelUp pt-3 pb-1">' +
@@ -11039,19 +11039,17 @@ var momWidget = {
 
         $(document).on('click', '#' + saveExUpBtnId, function (e) {
             // $('#excelUpPop'+(index+1)).modal('hide');
+           // that.wait(1);
             that.splashShow();
-            var bar = $('.bar');
-            var percent = $('.percent');
-            var status = $('#status');
+            let bar = $('.bar');
+            let percent = $('.percent');
+            let status = $('#status');
             bar.width('0%');
             percent.text('0%');
-
             status.empty();
-            var percentVal = '0%';
-            /*    bar.width(percentVal);
-                percent.html(percentVal);*/
-            var param = [];
-            var checkedItems = AUIGrid.getGridData(that.excelUpGrid[index]);
+            let percentVal = '0%';
+            let param = [];
+            let checkedItems = AUIGrid.getGridData(that.excelUpGrid[index]);
             if (checkedItems.length == 0) {
                 momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '데이터가 없습니다!'});
                 momWidget.splashHide();
@@ -11212,13 +11210,17 @@ var momWidget = {
                                 momWidget.splashHide();
                                 return;
                             }
-                            momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1), momWidget.pageProperty[index]['programId'], your);
+
+                               //momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1), momWidget.pageProperty[index]['programId'], your);
+
+
                             //$('#excelUpPop'+(index+1)).modal('hide');
                             momWidget.messageBox({
                                 type: 'success',
                                 width: '400',
                                 height: '145',
-                                html: multiLang.transText('MESSAGE', 'MSG00001')
+                                html: param.length+'건 업로드 성공'
+                               // html: multiLang.transText('MESSAGE', 'MSG00001')
                             });
                             momWidget.splashHide();
                             //$("#pleaseWaitDialog").modal('hide');

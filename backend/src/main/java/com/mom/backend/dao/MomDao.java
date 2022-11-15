@@ -305,8 +305,17 @@ public class MomDao {
         	    		  }
         	    		  splitCount += 1000; // 스플릿 카운트 누적 
         	    		  for (Map<String, Object> param1 : splitParam) {
-            	    	   sqlSession1.insert(query, param1); //  쿼리 실행결과 카운트 누적
+							  try{
+								  sqlSession1.insert(query, param1); //  쿼리 실행결과 카운트 누적
+							  }
+							  finally {
+								  sqlSession.flushStatements();
+								  //sqlSession.close();
+								  //sqlSession.clearCache();
+							  }
+
         	    		  }
+
             	    	  ProgressInfo.successCount = resultCount+=1000;
             	    	  
             	      }       	    	  
@@ -321,10 +330,21 @@ public class MomDao {
             	    		  
             	    		  //splitCount  += upsertRemainCount;
             	    		  for (Map<String, Object> param2 : splitParam) {
-                	    	  sqlSession1.insert(query, param2);
+								  try {
+									  sqlSession1.insert(query, param2);
+								  }
+								  finally {
+									  sqlSession.flushStatements();
+									  //sqlSession.close();
+									  //sqlSession.clearCache();
+								  }
             	    		  }
             	    		  System.out.println("최종이차파람="+splitParam);
             	    		  //ProgressInfo.successCount += resultCount+upsertRemainCount;
+							 // sqlSession.flushStatements();
+							  //sqlSession.close();
+							  sqlSession.clearCache();
+							  splitParam.clear();
             	    		  ProgressInfo.successCount = paramSize;
                 	    	
                 	      }     
@@ -380,7 +400,7 @@ public class MomDao {
             } finally {			
             	
             	sqlSession1.flushStatements();          	
-            	sqlSession1.close();
+            	//sqlSession1.close();
             	sqlSession1.clearCache();
             	long endTime = System.currentTimeMillis();
                 long resutTime = endTime - startTime;            

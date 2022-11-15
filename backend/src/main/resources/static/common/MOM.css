@@ -4755,7 +4755,7 @@ input:focus{
 /*    width:3rem;
     height:3rem;*/
   /*  background: rgb(156, 154, 154);*/
-    z-index: 99;
+    z-index: 2000;
     text-align: center;
 }
 
