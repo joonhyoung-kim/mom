@@ -8537,8 +8537,8 @@ var momWidget = {
                             //that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], 'N');
                         }
                     } else if (checkCount > 1) {
-                        let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);
-                        AUIGrid.setAllCheckedRows(e.pid, false);
+                       // let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);
+                       // AUIGrid.setAllCheckedRows(e.pid, false);
                         AUIGrid.setCheckedRowsByIds(e.pid, rowId);
                         /*	if(ischeck==true){
 						AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
@@ -8596,7 +8596,7 @@ var momWidget = {
 
                 }
                 if (checkCount == 0) {
-                    AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+                   // AUIGrid.setCheckedRowsByIds(e.pid, rowId);
 
                 } else if (checkCount == 1) {
 
@@ -8625,7 +8625,7 @@ var momWidget = {
 
                 }
                 if (checkCount == 0) {
-                    AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+                    //AUIGrid.setCheckedRowsByIds(e.pid, rowId);
 
                 } else if (checkCount == 1) {
                     //AUIGrid.setCheckedRowsByIds(e.pid, rowId);
@@ -10134,8 +10134,8 @@ var momWidget = {
             that.maskHide('1');
         });
         $(document).on('click', '#' + gridPopCancelBtnId, function (e) {
-            $(".grid-pop" + (index + 1)).modal('hide');
-            that.maskHide('1');
+			that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id,'1');
+           
         });
         $(document).on('click', '#' + gridPopSaveBtnId + (index + 1), function (e) {
             that.wait(0.5);
@@ -13711,7 +13711,7 @@ var momWidget = {
 
         });
         $(document).on('click', '.bntpopclose, ' + '#' + gridPopCancelBtnId, function () {
-            $('#dropDownGridPop' + (index + 1)).modal('hide');
+            that.modalHide('#','dropDownGridPop','1');
 
         });
         $(document).on('click', '#' + excelDownBtnId, function (e) {
@@ -15767,7 +15767,7 @@ var momWidget = {
             selectorId = '#';
         }
         modalId = selectorId + modal;
-        momWidget.maskShow(depthId);
+        momWidget.maskShow(depth);
         $(modalId).css('display','block');
 
 
@@ -15788,7 +15788,7 @@ var momWidget = {
         }
         modalId = selectorId + modal;
         $(modalId).css('display','none');
-        momWidget.maskHide(depthId);
+        momWidget.maskHide(depth);
     }
 
 }

@@ -589,7 +589,7 @@
 .gridArea-tm1st-h01-011{
 	background: #f0f0f5;
     /* height: 64.5vh; */
-     height: 10%; 
+     height: 20vh; 
     border: none;
 }
 .gridArea-tm1st-h01-021{
@@ -647,14 +647,14 @@
 	.gridArea-tm1st-h02-01{
 	background: #f0f0f5;
     border: none;
-    height:83vh;
+   /*  height:83vh; */
 }
 }
 @media (min-width:800px) and (max-width:1920px) {
 	.gridArea-tm1st-h02-021{
 	background: #f0f0f5;
     border: none;
-    /*  height:50vh; */
+/*     height:20vh; */ 
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
@@ -664,6 +664,7 @@
     height:83vh;
 }
 }
+
 .gridArea-tm1st-h02-011{
 	background: #f0f0f5;
     height: 40vh;
@@ -5112,7 +5113,7 @@ input:focus{
 .tabcontentarea1 {
     margin-bottom: 0px;
     background: #f0f0f5;
-   /*  height:auto !important; */
+        height: 30vh;
     
 }
 .tabcontentarea1.jqx-splitter-panel {

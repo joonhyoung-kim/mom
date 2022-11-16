@@ -113,21 +113,35 @@ var VIEW= {
 		}
 
 	},
-	/*searchCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==0 && btnId =='customBtn'){	
+	customCallInit: function(index,your,action,btnId,param,result) {
+	    if(index == 10){
+		
+		    var checkItem = widget.getCheckedRowItems(widget.grid[0]);
+			if(btnId == 'customGridPopBtn1-1'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
+
+		    }
+		    else if(btnId == 'customBtn1-2'){
+			    for(var i=0,max=param.length; i<max;i++){
+				    param[i]['inoutNo'] = checkItem[0]['departureNo'];
+			    }
+		    }
+		}
+		else if(index == 10){
+		    if(action='C'&& btnId == 'customBtn21-1'){ 
+			    for(var i=0,max=param.length; i<max;i++){
+				    param[i]['inoutNo']   = VIEW.inoutNo;
+					param[i]['inoutType'] = VIEW.inoutType;
+			    }
+		    }
+		}
+	},
+	searchCallInit: function(index,your,action,btnId,param,result) {
+		if(index ==0 && btnId =='customGridPopBtn1-1'){	
 	        param.groupCd = 'SM0012';
 					
 		}
 
-	}*//*,	
-	delCallInit: function(index,your,action,btnId,param,result) {
-		if(index ==0 && btnId =='delBtn'){	
-			 result.param['langCd2'] = data[0]['pivotLang']; 
-
-					
-		}
-
-	}	*/
+	}
 	
 };
 
