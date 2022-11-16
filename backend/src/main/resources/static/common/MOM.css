@@ -5110,16 +5110,11 @@ input:focus{
 /*  	border-top: 1px solid #b7b0b0; */
     margin-top: 0.2rem; 
 }
-.tabcontentarea1 {
-    margin-bottom: 0px;
-    background: #f0f0f5;
-    height:auto !important; 
-    
-}
+
 .tabcontentarea1.jqx-splitter-panel {
 	margin-bottom: 0px;
 	background: #f0f0f5;
-    height: 100% !important;
+    height:auto !important; 
 }
 .split-grid{
 	margin: 0;
@@ -5128,7 +5123,7 @@ input:focus{
     /* height: 100vh; */
 	margin-bottom: 0px;
 	background: #f0f0f5;	
-	height: 100% !important; 
+	height:auto !important; 
 }
 @media (min-width:800px) and (max-width:1920px) {
 .custom-dialog {
