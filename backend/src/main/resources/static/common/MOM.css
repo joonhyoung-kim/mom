@@ -647,7 +647,7 @@
 	.gridArea-tm1st-h02-01{
 	background: #f0f0f5;
     border: none;
-   /*  height:83vh; */
+     height:83vh; 
 }
 }
 @media (min-width:800px) and (max-width:1920px) {
@@ -5110,11 +5110,26 @@ input:focus{
 /*  	border-top: 1px solid #b7b0b0; */
     margin-top: 0.2rem; 
 }
+.tabcontentarea1 {
+    margin-bottom: 0px;
+    background: #f0f0f5;
+    height:auto !important; 
+    
+}
 
+@media (min-width:800px) and (max-width:1920px) {
 .tabcontentarea1.jqx-splitter-panel {
 	margin-bottom: 0px;
 	background: #f0f0f5;
     height:auto !important; 
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.tabcontentarea1.jqx-splitter-panel {
+	margin-bottom: 0px;
+	background: #f0f0f5;
+    height:100% !important; 
+}
 }
 .split-grid{
 	margin: 0;
