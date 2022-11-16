@@ -114,17 +114,18 @@ var VIEW= {
 
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
-	    if(index == 10){
-		
-		    var checkItem = widget.getCheckedRowItems(widget.grid[0]);
-			if(btnId == 'customGridPopBtn1-1'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
-
+	    if(index == 10){		
+			if(btnId == 'customBtn11-1'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
+  				let gridItems = AUIGrid.getGridData(widget.grid[index]);
+				        for(let i=0;i<gridItems.length;i++){
+					         gridItems[i]['msgType']     = $("#msgType2SP11").val();
+					         gridItems[i]['msgCd']       = $("#msgCd2SP11").val();		
+					         gridItems[i]['useYn']       = 'Y';				         
+					         gridItems[i]['description'] = '';	
+					    }
+			             result.param = gridItems;
 		    }
-		    else if(btnId == 'customBtn1-2'){
-			    for(var i=0,max=param.length; i<max;i++){
-				    param[i]['inoutNo'] = checkItem[0]['departureNo'];
-			    }
-		    }
+		 
 		}
 		else if(index == 10){
 		    if(action='C'&& btnId == 'customBtn21-1'){ 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUSM8040">
+ <!-- 구매요청 미발주 현황 -->
+  <select id="get_findBtn11" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+   	 SELECT MC.CODE AS LANG_CD2
+	       ,MC.CODE_NM AS LANG_NM
+	 FROM    MOM_CODE MC
+	 WHERE   MC.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR} 
+	 AND     MC.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	 AND     MC.GROUP_CD     = #{groupCd, jdbcType=VARCHAR}
+	 AND     MC.USE_YN = 'Y'
+  </select>
+    <insert id="upsert_customBtn11-1" parameterType="java.util.HashMap" flushCache="true">
+    MERGE INTO MOM_MESSAGE 
+        USING( SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                      #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                      #{langCd2, jdbcType=VARCHAR} as langCd2,
+                      #{msgType, jdbcType=VARCHAR} as msgType,
+                      #{msgCd, jdbcType=VARCHAR} as msgCd,
+                      #{msgNm, jdbcType=VARCHAR} as msgNm,      
+                      #{useYn, jdbcType=VARCHAR} as useYn,
+                      #{description, jdbcType=VARCHAR} as description,
+                      #{userId, jdbcType=VARCHAR} as createBy,
+                      MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                      #{userId, jdbcType=VARCHAR} as updateBy,
+                      MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
+               FROM DUAL
+               ) PARAM
+        ON ( COMPANY_CD  = PARAM.companyCd  AND
+             DIVISION_CD = PARAM.divisionCd AND
+             LANG_CD     = PARAM.langCd2    AND 
+             MSG_CD      = PARAM.msgCd )
+        WHEN MATCHED THEN 
+            UPDATE SET 
+            MSG_TYPE = PARAM.msgType
+          , MSG_NM   = PARAM.msgNm
+          , USE_YN   = PARAM.useYn
+          , DESCRIPTION = PARAM.description
+          , UPDATE_BY   = PARAM.updateBy
+          , UPDATE_DATE = PARAM.updateDate         
+        WHEN NOT MATCHED THEN
+            INSERT(   COMPANY_CD
+	                , DIVISION_CD
+	                , LANG_CD
+	                , MSG_TYPE
+	                , MSG_CD
+	                , MSG_NM
+	                , USE_YN
+	                , DESCRIPTION
+	                , CREATE_BY
+	                , CREATE_DATE
+	                , UPDATE_BY
+	                , UPDATE_DATE  )
+           VALUES ( PARAM.companyCd
+                  , PARAM.divisionCd
+                  , PARAM.langCd2
+                  , PARAM.msgType
+                  , PARAM.msgCd
+                  , PARAM.msgNm                            
+                  , PARAM.useYn
+                  , PARAM.description
+                  , PARAM.createBy
+                  , PARAM.createDate
+                  , PARAM.updateBy
+                  , PARAM.updateDate )
+    </insert>
+</mapper>
