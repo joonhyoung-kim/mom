@@ -5113,7 +5113,7 @@ input:focus{
 .tabcontentarea1 {
     margin-bottom: 0px;
     background: #f0f0f5;
-        height: 30vh;
+    height:auto !important; 
     
 }
 .tabcontentarea1.jqx-splitter-panel {
