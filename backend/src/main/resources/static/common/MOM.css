@@ -588,7 +588,8 @@
 }
 .gridArea-tm1st-h01-011{
 	background: #f0f0f5;
-    height: 64.5vh;
+    /* height: 64.5vh; */
+     height: 10%; 
     border: none;
 }
 .gridArea-tm1st-h01-021{
@@ -1912,7 +1913,8 @@ border-color: #d8dce3 !important;
     height: 100% !important;
 }
 .gridPop-XUSM8040 {
-    z-index: 1050;
+	/* height: 40vh; */
+   /*  z-index: 1050;
     border-radius: 0.5rem;
     float: none !important;
     overflow: hidden !important;
@@ -1922,16 +1924,30 @@ border-color: #d8dce3 !important;
     margin-top: -90rem !important;
     background: white !important;
     height: 32rem !important;
-    border: 1px solid rgb(77, 77, 78) !important;
+    border: 1px solid rgb(77, 77, 78) !important; */
 }
 .gridPop-searcharea-XUSM8040 {
+    border: none;
+    width: 100%;
+    position: relative;
+    background-color: rgb(248, 249, 250);
+    background-image: none;
+    background-position: left top;
+    background-size: auto;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
+    height: 100%;
+      
+}
+/* .gridPop-searcharea-XUSM8040 {
     padding-left: 0.7rem;
     border: none;
-    /* padding-bottom: 15px; */
+    padding-bottom: 15px;
     width: 100%;
     margin-left: -0.3rem;
     position: relative;
-    /* margin-bottom: 8px; */
+    margin-bottom: 8px;
     background-color: rgb(248, 249, 250);
     background-image: none;
     background-position: left top;
@@ -1940,7 +1956,7 @@ border-color: #d8dce3 !important;
     background-attachment: scroll;
     box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
     height: 24rem !important;
-}
+} */
 .gridPop-XUSM8060 {
   
 }
@@ -1974,7 +1990,7 @@ border-color: #d8dce3 !important;
     background-repeat: repeat;
     background-attachment: scroll;
     box-shadow: rgb(255 255 255 / 41%) 0px 1px 0px 0px inset;
-  /*   height: 47vh; */
+  /*   height: 47vh; 
 }
 .gridPop-searcharea-XUSM8110 {
     border: none;
@@ -5084,7 +5100,7 @@ input:focus{
 	margin-bottom: 0px;
 	background: #f0f0f5;	
 /*  	border-top: 1px solid #b7b0b0; */
-    margin-top: 0.2rem; 
+    /* margin-top: 0.2rem;  */
 }
 .tabcontentarea-widget{
     height: 86vh ;
@@ -5096,7 +5112,8 @@ input:focus{
 .tabcontentarea1 {
     margin-bottom: 0px;
     background: #f0f0f5;
-    height:auto !important;
+   /*  height:auto !important; */
+    
 }
 .tabcontentarea1.jqx-splitter-panel {
 	margin-bottom: 0px;
@@ -5117,22 +5134,26 @@ input:focus{
    /*  width:150vh !important; */
     width:auto;
     max-width:150vh !important;
+   
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
 .custom-dialog {
     width:auto;
     max-width:150vh !important;
+    
 }
 }
 @media (min-width:800px) and (max-width:1920px) {
 .custom-content {
       width:auto;
       max-width:150vh !important;
+     
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
 .custom-content {
+
 
 }
 }

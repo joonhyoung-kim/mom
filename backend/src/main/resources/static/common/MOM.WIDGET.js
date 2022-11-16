@@ -252,13 +252,25 @@ var momWidget = {
             } else if (searchRowcnt > 0 && searchRowcnt <= 3) {
                 searchLineCnt = 1;
                 searchStyle = 'h01';
-                classItem[0] = {
+                if(that.pageProperty[index]['templateId'] == "tm-4-vvh-555573"){
+				     classItem[0] = {
+                    // searchAreaClass:'searchArea-h01',
+                    searchAreaClass: '"col-xl-12' + ' searchArea-h01' + ' pt-2"',
+                    searchItemClass: '"col-xl-12 mb-2  align-self-center searchItem-h01"',
+                    labelBoxClass: '"mx-4 mt-2 labelbox-col3"',
+                    index: index + 1
+                }
+			    }
+			    else{
+				 classItem[0] = {
                     // searchAreaClass:'searchArea-h01',
                     searchAreaClass: '"col-xl-12' + ' searchArea-h01' + ' pt-2"',
                     searchItemClass: '"col-xl-3 mb-2  align-self-center searchItem-h01"',
                     labelBoxClass: '"mx-4 mt-2 labelbox-col3"',
                     index: index + 1
                 }
+			     }
+               
                 var searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
             } else if (searchRowcnt > 3 && searchRowcnt <= 6) {
                 searchLineCnt = 2;
@@ -10634,7 +10646,6 @@ var momWidget = {
                 return;
             }
             let columnProp = [];
-
             let activeId = e.target.parentElement.parentElement.parentElement.parentElement.id.split('DP');
             let targetId = activeId[0]; //선택자
             let clickedElment = e.target.parentElement.parentElement.parentElement.parentElement.id;
@@ -10654,11 +10665,11 @@ var momWidget = {
                     break;
                 }
             }
-            var fieldValue = $('#' + clickedElment).val();
-            var activeTop = $('#' + clickedElment).offset().top;
-            var activeLeft = $('#' + clickedElment).offset().left;
+            let fieldValue = $('#' + clickedElment).val();
+            let activeTop = $('#' + clickedElment).offset().top;
+            let activeLeft = $('#' + clickedElment).offset().left;
 
-            var dropdownGridId = (index + 1) * 100;
+            let dropdownGridId = (index + 1) * 100;
             let dropdownGridQueryId = that.popupProperty[index][dropDownGridIndex]['dropdownGridList'];
 
 
@@ -10668,14 +10679,14 @@ var momWidget = {
                     momWidget.splashHide();
                     return;
                 }
-                var gridString = data1[0]['gridProperty'] == undefined ? '[]' : data1[0]['gridProperty'];
-                var columnString = data1[0]['columnProperty'] == undefined ? '[]' : data1[0]['columnProperty'];
+                let gridString = data1[0]['gridProperty'] == undefined ? '[]' : data1[0]['gridProperty'];
+                let columnString = data1[0]['columnProperty'] == undefined ? '[]' : data1[0]['columnProperty'];
                 gridString = gridString.substr(1, gridString.length - 2);
                 columnString = columnString.substr(1, columnString.length - 2);
                 that.gridProperty[dropdownGridId] = JSON.parse(gridString);
                 that.columnProperty[dropdownGridId] = JSON.parse(columnString);
-                var gridExceptList = ['checkId', 'gridTitle', 'popupColNum', 'popupRowNum', 'popupTitle', 'headerColor', 'initSearch', 'showFindBtn'];
-                var gridExtraProp = {
+                let gridExceptList = ['checkId', 'gridTitle', 'popupColNum', 'popupRowNum', 'popupTitle', 'headerColor', 'initSearch', 'showFindBtn'];
+                let gridExtraProp = {
                     'checkId': 'checkId',
                     'gridTitle': 'gridTitle',
                     'popupColNum': 'popupColNum',
@@ -10685,13 +10696,13 @@ var momWidget = {
                     'initSearch': 'initSearch',
                     'showFindBtn': 'showFindBtn'
                 };
-                for (var i = 0, max = gridExceptList.length; i < max; i++) {
+                for (let i = 0, max = gridExceptList.length; i < max; i++) {
                     gridExtraProp[gridExceptList[i]] = that.gridProperty[dropdownGridId][0][gridExceptList[i]];
                     delete that.gridProperty[dropdownGridId][0][gridExceptList[i]];
                 }
                 that.gridExtraProperty[dropdownGridId] = gridExtraProp;
-                var popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3 : Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
-                var popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3 : Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
+                let popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3 : Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
+                let popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3 : Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
                 var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId + 1, popupColNum, popupRowNum, 'popup', targetId, 0);
                 var menuId = that.pageProperty[index]['programId'];
                 var isShow = $('#dropDownGridPop' + (dropdownGridId + 1)).css('display');
@@ -14012,9 +14023,10 @@ var momWidget = {
 
         for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
             if (that.buttonProperty[index][i]['buttonId'] == 'customBtn' + btnIndex) {
-                queryId = that.buttonProperty[index][i]['popupGridId'] + '.findBtn' + gridPopIndex;
-                actionType = that.buttonProperty[index][i]['eventType'];
-                buttonNm = that.buttonProperty[index][i]['buttonNm'];
+                queryId = that.buttonProperty[index][i]['popupGridId'] + '.findBtn' + gridPopIndex; //위젯에서 버튼에 설정한 드롭다운그리드 menu id + findBtn (조회쿼리)
+                actionType = that.buttonProperty[index][i]['eventType']; // 위젯기준 이벤트 타입
+                buttonNm = that.buttonProperty[index][i]['buttonNm'];    // 위젯기준 버튼명
+                //팝업 타이틀 설정 (위젯 이벤트 타입별로)
                 if (actionType == 'C') {
                     $('#popupTitle' + gridPopIndex).append('(' + multiLang.transText('MESSAGE', 'MSG00039') + ')');
                 } else if (actionType == 'U') {
@@ -14068,7 +14080,7 @@ var momWidget = {
             }
 
             //$('#' + 'gridPop-' + btnId).modal('show');
-            that.modalShow('id',$('gridPop-' + btnId),'1');
+            that.modalShow('id','gridPop-' + btnId,'1');
             // $('#'+'gridPop-'+btnId).modal('show');
             //$('#'+'gridPop-'+btnId).draggable();
             let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customBtn' + btnIndex, your, data1);

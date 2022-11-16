@@ -13,13 +13,9 @@ var timer;
 var index = {
 	pwValFlag: undefined,
 	init: function() {		
-		multiLang.transAll();
-		if(sessionStorage.length == 0 || JSON.parse(sessionStorage.loginMenuList).length==0){
-			//momWidget.messageBox({type:'warning', width:'400', height: '145', html: '1개 이상의 메뉴를 권한에 등록해주세요!'});			
-			alert('1개 이상의 메뉴를 권한에 등록해주세요!');
-			top.location.href = mCommon.contextPath() + "/login.html";
-		}
-		
+	  
+		 this.loginCheck();		
+		 multiLang.transAll();
 		 siteInfo =  JSON.parse(sessionStorage.getItem('siteInfo'));	
 		 locale = sessionStorage.getItem("locale");
 		 userName = sessionStorage.getItem("userName");
@@ -467,10 +463,26 @@ var index = {
         $("#leftMenuBar").sortable("option", "disabled", true);
     },
 	loginCheck: function() {
+		
 		if(localStorage.getItem("token") == null || '' || undefined){
-			 that.logout();
+			 alert("로그인 토큰미발급!");
+			 this.logout();
+			 return;
 		}
-		var time = 5000;
+		if(sessionStorage.length ==0){
+			//momWidget.messageBox({type:'warning', width:'400', height: '145', html: '1개 이상의 메뉴를 권한에 등록해주세요!'});			
+			alert('비정상 접급 감지');
+			this.logout();
+			return;
+		}
+		if(sessionStorage.length == 0 || JSON.parse(sessionStorage.loginMenuList).length==0){
+			//momWidget.messageBox({type:'warning', width:'400', height: '145', html: '1개 이상의 메뉴를 권한에 등록해주세요!'});			
+			alert('1개 이상의 메뉴를 권한에 등록해주세요!');
+			this.logout();
+			return;
+		}
+
+		/*var time = 5000;
 		var timerId = setInterval(function() {
 				
 		mom_ajax('R', 'XUSM1010.loginCheck', {menuId:$('#menuId').val(),gridId:$('#gridId').val(),programId:$('#programId').val()}, function(result, data) {
@@ -481,13 +493,12 @@ var index = {
 						sessionStorage.setItem("companyCd", '');
 						sessionStorage.setItem("locale", '');						
 						alert("토큰만료.재로그인 필요!");
-//						micammCommon.messageBox({type:"danger", width:"400", height: "145", html: "Session lost."}); 
 						clearInterval(timerId);
 						this.logout();
 					});
 				}
 		 }, undefined, undefined, this, false,'Y');
-		}, time);
+		}, time);*/
 
 		
 		//this.loginCheck();
@@ -504,6 +515,7 @@ var index = {
 		    sessionStorage.removeItem("userInfo");	
 		    sessionStorage.removeItem("loginMenuList");
 			location.href = mCommon.contextPath() + "/login.html";
+			return;
 	
 	},
 	passwordChange: function() {
