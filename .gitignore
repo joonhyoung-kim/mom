@@ -12,3 +12,4 @@ gen
 /.metadata/
 /.recommenders/
 /backend/.gitignore
+/backend/.factorypath
