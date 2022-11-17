@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUPP1050">
+    <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+	SELECT A.*
+	FROM   (
+	</if>  
+	        SELECT MIO.COMPANY_CD  
+	             , MIO.DIVISION_CD
+	             , MIS.ITEM_ID
+	             , MIS.LOCATION_CD
+	             , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MIS.COMPANY_CD, MIS.DIVISION_CD, MIS.LOCATION_CD) FROM DUAL) AS LOCATION_NM 
+	             , MSO.SO_NO
+	             , MSO.SO_SEQ        AS SEQ
+	             , MSO.SO_TYPE
+	             , MSO.SO_TYPE_NM
+	             , MSO.CUSTOMER_CD
+	             , MSO.CUSTOMER_NM
+	             , MSO.ITEM_NM
+	             , MSO.ITEM_SPEC
+	             , MSO.ITEM_TYPE
+	             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MSO.COMPANY_CD, MSO.DIVISION_CD, 'MD0002', MSO.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_TYPE_NM
+	             , MIO.ALLOCATE_QTY
+	             , MIO.SHIPPING_QTY
+	             , MIO.ALLOCATE_QTY - NVL(MIO.SHIPPING_QTY, 0) AS REMAIN_QTY
+	             , MIO.SALES_ORDER_ID
+	             , MSO.ORDER_QTY
+	             , MSO.SHIPPING_DATE
+	             , MIO.CREATE_BY        AS ALLOCATE_USER_NO
+	             ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MIO.COMPANY_CD, MIO.DIVISION_CD, MIO.CREATE_BY) FROM DUAL ) AS ALLOCATE_USER_NM
+	             , TO_CHAR(MIO.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS')  AS ALLOCATE_DATE
+	             , ROWIDTOCHAR(MIO.ROWID) AS GRID_ID
+                 , COUNT(*) OVER() AS TOTAL_COUNT
+                 , ROW_NUMBER() OVER(PARTITION BY MIO.COMPANY_CD,MIO.DIVISION_CD ORDER BY MIO.SALES_ORDER_ID  ) AS KEY_ID
+	        FROM   MOM_ITEM_STOCK_SO_ALLOCATE MIO
+	             , MOM_ITEM_STOCK MIS
+	             , MOM_SALES_ORDER_V MSO
+	        WHERE  MIO.COMPANY_CD    = MIS.COMPANY_CD
+	        AND    MIO.DIVISION_CD   = MIS.DIVISION_CD     
+	        AND    MIO.ITEM_STOCK_ID = MIS.ITEM_STOCK_ID
+	        AND    MIO.COMPANY_CD    = MSO.COMPANY_CD
+	        AND    MIO.DIVISION_CD   = MSO.DIVISION_CD     
+	        AND    MIO.SALES_ORDER_ID = MSO.SALES_ORDER_ID
+	        <if test="soNo != null and soNo != ''">
+	        AND    (UPPER(MSO.SO_NO) LIKE '%' || UPPER(#{soNo, jdbcType=VARCHAR}) || '%' )
+	        </if>
+	        <if test="soType != null and soType != ''">
+	        AND   MSO.SO_TYPE  IN (${soType})
+	        </if>
+	        <if test="itemIdNm != null and itemIdNm != ''">
+	        AND    (UPPER(MSO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MSO.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')	  
+	        </if>   
+	        <if test="customerCd != null and customerCd != ''">
+	        AND    MSO.CUSTOMER_CD = #{customerCd, jdbcType=VARCHAR}
+	        </if> 
+	        <if test="locationCd != null and locationCd != ''">
+	        AND    MIS.LOCATION_CD = #{locationCd, jdbcType=VARCHAR}
+	        </if> 
+	<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+	        ) A
+	WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+	</if>  
+    </select>
+</mapper>

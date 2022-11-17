@@ -44,7 +44,7 @@
 	                                        FROM   MOM_SO_CHANGE MSC
 	                                        WHERE  MSC.COMPANY_CD  = MSO.COMPANY_CD
 	                                        AND    MSC.DIVISION_CD = MSO.DIVISION_CD
-	                                        AND    MSC.CHANGE_TYPE = 'N' )
+	                                        AND    MSC.APPLY_FLAG = 'N' )
 	        <if test="soNo != null and soNo != ''">
 	        AND    (UPPER(MSO.SO_NO) LIKE '%' || UPPER(#{soNo, jdbcType=VARCHAR}) || '%' )
 	        </if>
