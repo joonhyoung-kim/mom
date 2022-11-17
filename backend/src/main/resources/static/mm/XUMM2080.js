@@ -98,8 +98,8 @@ var VIEW= {
 
 $(document).ready(function(event){	
 	momSetup.init();
-	momWidget.init(1, menuId, VIEW,'GRID');	
-	momWidget.init(2, menuId, VIEW,'GRID');	
-	momWidget.init(2, 'XUSM8080', VIEW,'DG');
+	momWidget.init(1, menuId, VIEW);	
+	momWidget.init(2, menuId, VIEW);	
+	momWidget.gridPopup.init(2,21,1,'XUSM8080', VIEW);
 	VIEW.init();
 });

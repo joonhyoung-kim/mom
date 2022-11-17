@@ -61,7 +61,7 @@ var momWidget = {
             let calendarPop = that.createPopup.calendarPop(index + 1, 'grid');
             $('body').append(calendarPop);
             //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');
-        } else if (index >= 0 && widgetType == 'DG') {
+        } else if (widgetType == 'DG') {	       
             index = (index + 1) * 10;
             gridId = 1;
         }
@@ -433,16 +433,17 @@ var momWidget = {
                 createFrontArea["tm4vvh"] = that.tm4vvh;
                 createFrontArea[templateName](index + 1, splitRatio, 'contentArea', "#front_main");
                 $('#contentArea' + (index + 1)).append(searchAreaHtml);
-            } else if (index > 0 && index % 10 == 0) {
-                var createFrontArea = {};
-                createFrontArea["tm1st"] = that.tm1st;
-                createFrontArea["tm2h"] = that.tm2h;
-                createFrontArea["tm2v"] = that.tm2v;
-                createFrontArea["tm3vh"] = that.tm3vh;
-                createFrontArea["tm3hv"] = that.tm3hv;
-                createFrontArea["tm4vvh"] = that.tm4vvh;
-                createFrontArea[templateName](index + 1, splitRatio, 'contentArea', "#popup_main" + (index + 1));
-                $('#contentArea' + (index + 1)).append(searchAreaHtml);
+            } else if (index > 0 && index % 10 == 0) {	            
+				        let createFrontArea = {};
+		                createFrontArea["tm1st"] = that.tm1st;
+		                createFrontArea["tm2h"] = that.tm2h;
+		                createFrontArea["tm2v"] = that.tm2v;
+		                createFrontArea["tm3vh"] = that.tm3vh;
+		                createFrontArea["tm3hv"] = that.tm3hv;
+		                createFrontArea["tm4vvh"] = that.tm4vvh;
+		                createFrontArea[templateName](index + 1, splitRatio, 'contentArea', "#popup_main" + (index + 1));
+		                $('#contentArea' + ((10*i) + 1)).append(searchAreaHtml);
+
             }
 
 
@@ -889,11 +890,11 @@ var momWidget = {
 
     },
     gridPopup: {
-        init: function (buttonIndex, gridIndex, menuId, your, widgetType) {
-            var that = momWidget;
+        init: function (parentIndex, popupIndex, gridIndex, menuId, your, widgetType) {
+            let that = momWidget;
 
             let gridId = gridIndex;
-            let index = (buttonIndex * 10 + gridIndex) - 1;
+            let index = popupIndex-1;
             that.your[index] = your; //스크립트 객체주입
 
 
@@ -10656,9 +10657,9 @@ var momWidget = {
             if (clickedElment == '' || clickedElment.indexOf('DP') == -1) {
                 return;
             }
-            if (fieldValue == '') {
-                return;
-            }
+           // if (fieldValue == '') {
+             //   return;
+           // }
             for (let i = 0, max1 = that.popupProperty[index].length; i < max1; i++) {
                 if (that.popupProperty[index][i].popupType == 'DG' && that.popupProperty[index][i].popupId == targetId) {
                     dropDownGridIndex = i;
@@ -13995,13 +13996,19 @@ var momWidget = {
                     return;
                 }
                 isProcess = 'N';
-                momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['programId'], your);
-                momWidget.messageBox({
-                    type: 'success',
-                    width: '400',
-                    height: '145',
-                    html: multiLang.transText('MESSAGE', 'MSG00001')
-                });
+                let callBackResult = that.checkActionCallBack(index, actionType, param, btnId, your, data1);
+            	  if (callBackResult['result'] != 'SUCCESS') {
+		                momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
+		                momWidget.splashHide();
+		                return;
+            	  }
+	                momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['menuId'], your);
+	                momWidget.messageBox({
+	                    type: 'success',
+	                    width: '400',
+	                    height: '145',
+	                    html: multiLang.transText('MESSAGE', 'MSG00001')
+	                });
                 momWidget.splashHide();
                 return;
             }, undefined, undefined, this, false);
@@ -14083,7 +14090,7 @@ var momWidget = {
             that.modalShow('id','gridPop-' + btnId,'1');
             // $('#'+'gridPop-'+btnId).modal('show');
             //$('#'+'gridPop-'+btnId).draggable();
-            let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customBtn' + btnIndex, your, data1);
+            let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customGridPopBtn' + btnIndex, your, data1);
             if (callBackResult['result'] != 'SUCCESS') {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
                 momWidget.splashHide();
@@ -15355,7 +15362,11 @@ var momWidget = {
             your.copyCallBack(index, your, action, btnId, param, result, data);
         } else if (your.customCallBack != undefined && (btnId.indexOf('customBtn') >= 0 && btnId.indexOf('saveBtn') == -1)) {
             your.customCallBack(index, your, action, btnId, param, result, data);
-        } else if (your.excelUpCallBack != undefined && btnId.indexOf('excelUpBtn') >= 0) {
+        }
+         else if (your.customCallBack != undefined && btnId.indexOf('customGridPopBtn') >= 0) {
+            your.customCallBack(index, your, action, btnId, param, result, data);
+        }        
+         else if (your.excelUpCallBack != undefined && btnId.indexOf('excelUpBtn') >= 0) {
             your.excelUpCallBack(index, your, action, btnId, param, result, data);
         } else if (your.excelDownCallBack != undefined && btnId.indexOf('excelDownBtn') >= 0) {
             your.excelDownCallBack(index, your, action, btnId, param, result, data);

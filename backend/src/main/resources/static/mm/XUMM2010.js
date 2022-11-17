@@ -82,12 +82,10 @@ var VIEW= {
 	
 	  
 	},
-		customCallInit: function(index,your,action,btnId,param,result) {
+	customCallInit: function(index,your,action,btnId,param,result) {
 		 let checkItem = widget.getCheckedRowItems(widget.grid[0]);
 		   if(index == 0){			    
 
-		    
-		
 	    }
 		else if(index == 1){
 			if(btnId == 'customGridPopBtn2-3'){ // 커스텀 버튼 실행시 1 삭제(D) 2 TMP삽입(C) 3 프로시저실행(P) actionType 으로 시점 제어가능  		
@@ -120,6 +118,12 @@ var VIEW= {
 		}
 		
 	    }
+	},
+		customCallBack: function(index,your,action,btnId,param,result,data) {
+	    if(index == 20 &&  btnId == 'customBtn21-1'){	
+		    widget.findBtnClicked(1, {}, true, btnId,menuId,VIEW);								   		   			
+		}
+	
 	}
 	
 };
@@ -128,6 +132,6 @@ $(document).ready(function(event){
 	momSetup.init();
 	momWidget.init(1, menuId, VIEW,'GRID');	
 	momWidget.init(2, menuId, VIEW,'GRID');	
-	momWidget.init(2, 'XUSM8060', VIEW,'DG');
+	momWidget.gridPopup.init(2,21,1,'XUSM8060', VIEW);
 	VIEW.init();
 });

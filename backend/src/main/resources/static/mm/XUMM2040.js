@@ -106,7 +106,8 @@ var VIEW= {
 
 $(document).ready(function(event){	
 	momSetup.init();
-	momWidget.init(1, menuId, VIEW,'GRID');	
-	momWidget.init(2, menuId, VIEW,'GRID');	
+	momWidget.init(1, menuId, VIEW);	
+	momWidget.init(2, menuId, VIEW);	
+	//momWidget.gridPopup.init(1,11,1,'XUSM8040', VIEW);
 	VIEW.init();
 });
