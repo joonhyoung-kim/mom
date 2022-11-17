@@ -1,100 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.backend.XUMD2010">
-		<select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
-			SELECT A.*
-			FROM   (SELECT MI.ITEM_ID
-			, MI.ITEM_NM
-			, MI.ITEM_GROUP_CD
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0001', MI.ITEM_GROUP_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_GROUP_NM
-			, MI.ITEM_TYPE
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_TYPE_NM
-			, MI.ITEM_SPEC
-			, MI.UNIT
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS UNIT_NM
-			, MI.PURCHASE_UNIT
-			,(SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.PURCHASE_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS PURCHASE_NM
-			, MI.PROCUREMENT_TYPE
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0004', MI.PROCUREMENT_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS PROCUREMENT_TYPE_NM
-			, MI.MATERIAL_TYPE
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0005', MI.MATERIAL_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS MATERIAL_TYPE_NM
-			, MI.NET_WEIGHT
-			, MI.NET_WEIGHT_UNIT
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.NET_WEIGHT_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS NET_WEIGHT_UNIT_NM
-			, MI.GROSS_WEIGHT
-			, MI.GROSS_WEIGHT_UNIT
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.GROSS_WEIGHT_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS GROSS_WEIGHT_UNIT_NM
-			, MI.IN_LOCATION_CD
-			, MI.OUT_LOCATION_CD
-			, MI.ISSUE_TYPE
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0006', MI.ISSUE_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ISSUE_TYPE_NM
-			, MI.ISSUE_UNIT
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.ISSUE_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ISSUE_UNIT_NM
-			, MI.VENDOR_CD
-			, MI.DEPARTURE_VENDOR_CD
-			, MI.TEST_REPORT_FLAG
-			, MI.IQC_FLAG
-			, MI.PQC_FLAG
-			, MI.FQC_FLAG
-			, MI.OQC_FLAG
-			, MI.RP_ITEM_ID
-			, MI.ITEM_CATEGORY_L
-			, MI.ITEM_CATEGORY_M
-			, MI.ITEM_CATEGORY_S
-			, MI.EXCEPTION_ISSUE_FLAG
-			, MI.COLOR
-			, MI.CUSTOMER_DIVISION_CD
-			, MI.MAKER
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0007', MI.MAKER, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS MAKER_NM
-			, MI.ABC_TYPE
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0008', MI.ABC_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ABC_TYPE_NM
-			, MI.DRAWING_NO
-			, MI.HS_CD
-			, MI.REORDER_POINT
-			, MI.SAFETY_STOCK_QTY
-			, MI.PHANTOM_FLAG
-			, MI.MRP_FLAG
-			, MI.USE_YN
-			, (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'SM0001', MI.USE_YN, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS USE_YN_NM
-			, MI.DESCRIPTION
-			, MI.CREATE_BY
-			, (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.CREATE_BY) FROM DUAL ) AS CREATEBYNM
-			, TO_CHAR(MI.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
-			, MI.UPDATE_BY
-			, MI.LOT_MANAGEMENT_YN
-			, MI.PRICE_SYNC_YN
-			, MI.PO_OVER_RECEIPT_RATE
-			, (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
-			, TO_CHAR(MI.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
-			, ROWIDTOCHAR(MI.ROWID) AS GRID_ID
-			, COUNT(*) OVER() AS TOTAL_COUNT
-			, ROW_NUMBER() OVER(PARTITION BY MCD.COMPANY_CD,MCD.DIVISION_CD ORDER BY MI.ITEM_ID) AS KEY_ID
-			FROM   MOM_COM_DIV_V MCD
-			, MOM_ITEM MI
-			WHERE  MCD.COMPANY_CD  = MI.COMPANY_CD
-			AND    MCD.DIVISION_CD = MI.DIVISION_CD
-			AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
-			AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
-			<if test="itemId != null and itemId != ''">
-				AND    (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
-			</if>
-			<if test="itemNm != null and itemNm != ''">
-				AND    (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm , jdbcType=VARCHAR}) || '%' )
-			</if>
-			<if test="itemType != null and itemType != ''">
-				AND    MI.ITEM_TYPE IN (${itemType})
-			</if>
-			<if test="itemSpec != null and itemSpec != ''">
-				AND    (MI.ITEM_SPEC LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' )
-			</if>
-			<if test="useYn != null and useYn != ''">
-			AND    MI.USE_YN = #{useYn, jdbcType=VARCHAR}
-		</if>
+    <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+    SELECT A.*
+    FROM   (
+     </if>
+            SELECT MI.ITEM_ID
+                 , MI.ITEM_NM
+                 , MI.ITEM_GROUP_CD
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0001', MI.ITEM_GROUP_CD, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_GROUP_NM
+                 , MI.ITEM_TYPE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_TYPE_NM
+                 , MI.ITEM_SPEC
+                 , MI.UNIT
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS UNIT_NM
+                 , MI.PURCHASE_UNIT
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.PURCHASE_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS PURCHASE_NM
+                 , MI.PROCUREMENT_TYPE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0004', MI.PROCUREMENT_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS PROCUREMENT_TYPE_NM
+                 , MI.MATERIAL_TYPE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0005', MI.MATERIAL_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS MATERIAL_TYPE_NM
+                 , MI.NET_WEIGHT
+                 , MI.NET_WEIGHT_UNIT
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.NET_WEIGHT_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS NET_WEIGHT_UNIT_NM
+                 , MI.GROSS_WEIGHT
+                 , MI.GROSS_WEIGHT_UNIT
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.GROSS_WEIGHT_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS GROSS_WEIGHT_UNIT_NM
+                 , MI.IN_LOCATION_CD
+                 , MI.OUT_LOCATION_CD
+                 , MI.ISSUE_TYPE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0006', MI.ISSUE_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ISSUE_TYPE_NM
+                 , MI.ISSUE_UNIT
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.ISSUE_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ISSUE_UNIT_NM
+                 , MI.VENDOR_CD
+                 , MI.DEPARTURE_VENDOR_CD
+                 , MI.TEST_REPORT_FLAG
+                 , MI.IQC_FLAG
+                 , MI.PQC_FLAG
+                 , MI.FQC_FLAG
+                 , MI.OQC_FLAG
+                 , MI.RP_ITEM_ID
+                 , MI.ITEM_CATEGORY_L
+                 , MI.ITEM_CATEGORY_M
+                 , MI.ITEM_CATEGORY_S
+                 , MI.EXCEPTION_ISSUE_FLAG
+                 , MI.COLOR
+                 , MI.CUSTOMER_DIVISION_CD
+                 , MI.MAKER
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0007', MI.MAKER, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS MAKER_NM
+                 , MI.ABC_TYPE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0008', MI.ABC_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ABC_TYPE_NM
+                 , MI.DRAWING_NO
+                 , MI.HS_CD
+                 , MI.REORDER_POINT
+                 , MI.SAFETY_STOCK_QTY
+                 , MI.PHANTOM_FLAG
+                 , MI.MRP_FLAG
+                 , MI.USE_YN
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'SM0001', MI.USE_YN, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS USE_YN_NM
+                 , MI.DESCRIPTION
+                 , MI.CREATE_BY
+                 , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.CREATE_BY) FROM DUAL ) AS CREATEBYNM
+                 , TO_CHAR(MI.CREATE_DATE,'YYYY-MM-DD HH24:MI:SS') AS CREATE_DATE
+                 , MI.UPDATE_BY
+                 , MI.LOT_MANAGEMENT_YN
+                 , MI.PRICE_SYNC_YN
+                 , MI.PO_OVER_RECEIPT_RATE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.UPDATE_BY) FROM DUAL ) AS UPDATEBYNM
+                 , TO_CHAR(MI.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+                 , ROWIDTOCHAR(MI.ROWID) AS GRID_ID
+                 , COUNT(*) OVER() AS TOTAL_COUNT
+                 , ROW_NUMBER() OVER(PARTITION BY MI.COMPANY_CD,MI.DIVISION_CD ORDER BY MI.ITEM_ID) AS KEY_ID
+       FROM   MOM_ITEM MI
+       WHERE  MI.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+       AND    MI.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	   <if test="itemId != null and itemId != ''">
+       AND    (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
+	   </if>
+	   <if test="itemNm != null and itemNm != ''">
+       AND    (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm , jdbcType=VARCHAR}) || '%' )
+	   </if>
+	   <if test="itemType != null and itemType != ''">
+       AND    MI.ITEM_TYPE IN (${itemType})
+	   </if>
+	   <if test="itemSpec != null and itemSpec != ''">
+       AND    (MI.ITEM_SPEC LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' )
+	   </if>
+	   <if test="useYn != null and useYn != ''">
+       AND    MI.USE_YN = #{useYn, jdbcType=VARCHAR}
+	   </if>
 	 ) A
-			<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
-				WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
-			</if>
-
+    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+    WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+    </if>
     </select>
     <insert id="create_createBtn1" parameterType="java.util.List">
         <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 

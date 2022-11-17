@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUPP1040">
+    <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+    SELECT A.*
+	FROM   (
+	</if>     
+            SELECT MSO.COMPANY_CD
+	             , MSO.DIVISION_CD
+	             , MSO.SO_NO
+	             , MSO.SO_SEQ           AS SEQ
+	             , MSO.SALES_ORDER_ID
+	             , MSO.SO_TYPE
+	             , MSO.SO_TYPE_NM
+	             , MSO.CUSTOMER_CD
+	             , MSO.CUSTOMER_NM
+	             , MSO.ITEM_ID
+	             , MSO.ITEM_NM
+	             , MSO.ITEM_SPEC
+	             , MSO.ITEM_TYPE
+	             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MSO.COMPANY_CD, MSO.DIVISION_CD, 'MD0002', MSO.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_TYPE_NM
+	             , MSO.STORAGE_LOCATION_CD
+	             , MSO.STORAGE_LOCATION_NM
+	             , MSO.ORDER_QTY
+	             , NVL(MIS.STOCK_QTY, 0)    AS STOCK_QTY
+	             , NVL(MIS.ALLOCATE_QTY,0 ) AS ALLOCATE_QTY
+	             , NVL(MIS.STOCK_QTY, 0) - NVL(MIS.ALLOCATE_QTY,0)  AS AVAILABLE_QTY 
+	             , ''                                               AS TO_ALLOCATE_QTY
+	             , MSO.SHIPPING_DATE
+	             , ROWIDTOCHAR(MSO.ROWID) AS GRID_ID
+	             , COUNT(*) OVER() AS TOTAL_COUNT
+	             , ROW_NUMBER() OVER(PARTITION BY MSO.COMPANY_CD,MSO.DIVISION_CD ORDER BY MSO.SO_NO, MSO.SO_SEQ  ) AS KEY_ID
+	             , MIS.ITEM_STOCK_ID
+	        FROM   MOM_SALES_ORDER_V MSO
+	             , MOM_ITEM_STOCK MIS 
+	        WHERE  MSO.COMPANY_CD  = MIS.COMPANY_CD(+)
+	        AND    MSO.DIVISION_CD = MIS.DIVISION_CD(+)
+	        AND    MSO.ITEM_ID     = MIS.ITEM_ID(+)
+	        AND    MSO.STORAGE_LOCATION_CD = MIS.LOCATION_CD(+)
+	        AND    MSO.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	        AND    MSO.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	        AND    MSO.SALES_ORDER_ID  IN ( SELECT MSC.SALES_ORDER_ID
+	                                        FROM   MOM_SO_CHANGE MSC
+	                                        WHERE  MSC.COMPANY_CD  = MSO.COMPANY_CD
+	                                        AND    MSC.DIVISION_CD = MSO.DIVISION_CD
+	                                        AND    MSC.CHANGE_TYPE = 'N' )
+	        <if test="soNo != null and soNo != ''">
+	        AND    (UPPER(MSO.SO_NO) LIKE '%' || UPPER(#{soNo, jdbcType=VARCHAR}) || '%' )
+	        </if>
+	        <if test="soType != null and soType != ''">
+	        AND   MSO.SO_TYPE  IN (${soType})
+	        </if>
+	        <if test="itemIdNm != null and itemIdNm != ''">
+	        AND    (UPPER(MSO.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MSO.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')    
+	        </if>
+	        <if test="customerCd != null and customerCd != ''">
+	        AND    MSO.CUSTOMER_CD = #{customerCd, jdbcType=VARCHAR}
+	        </if>
+	        <if test="availableQty != null and availableQty != ''">
+	        AND    NVL(MIS.STOCK_QTY, 0) - NVL(MIS.ALLOCATE_QTY,0) > 0
+	        </if>
+	<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+	       ) A
+	WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+	</if>                                  
+    </select>  
+    <delete id="remove_customBtn1-1" parameterType="java.util.List">
+        DELETE FROM MOM_PROC_SO_STOCK_ALLOCATE
+        <where>
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+            (    COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+            AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+            AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+            )
+            </foreach>
+        </where>
+    </delete>  
+    <insert id="create_customBtn1-1" parameterType="java.util.List">
+	    <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+        INTO MOM_PROC_SO_STOCK_ALLOCATE( COMPANY_CD
+                                       , DIVISION_CD
+                                       , SALES_ORDER_ID
+                                       , ALLOCATE_QTY
+                                       , ITEM_STOCK_ID
+                                       , VAL_MSG
+                                       , MULTI_MSG
+                                       , CREATE_BY
+                                       , CREATE_DATE )
+        VALUES
+                                      ( #{item.companyCd, jdbcType=VARCHAR}
+                                      , #{item.divisionCd, jdbcType=VARCHAR}
+                                      , #{item.salesOrderId, jdbcType=VARCHAR}
+                                      , #{item.toAllocateQty, jdbcType=NUMERIC}
+                                      , #{item.itemStockId, jdbcType=VARCHAR}
+                                      , #{item.valMsg, jdbcType=VARCHAR}
+                                      , #{item.multiMsg, jdbcType=VARCHAR}
+                                      , #{item.userId, jdbcType=VARCHAR}
+                                      , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                                      )
+        </foreach>
+    </insert>
+    <select id="proc_customBtn1-1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+        { CALL MOM_SO_PKG.SP_SO_STOCK_ALLOCATE( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+					                          , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+					                          , #{companyCd,   javaType=string,  jdbcType=VARCHAR , mode=IN}
+					                          , #{divisionCd,  jdbcType=VARCHAR, mode=IN}											  
+					                          , #{userId,      jdbcType=VARCHAR, mode=IN} )}    	              
+    </select>    
+</mapper>    
