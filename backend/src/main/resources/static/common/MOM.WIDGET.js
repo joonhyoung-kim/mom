@@ -11925,26 +11925,34 @@ var momWidget = {
             if (buttonId == undefined || buttonId == '') {
                 return;
             }
-            var param = [];
-            var initParam = {};
+            let param = [];
+            let initParam = {};
             let searchResult = true;
             let popupTitle = '#' + e.target.parentElement.parentElement.parentElement.id;
             let tmpYn = 'N';
             //let buttonId   = $('#defaultPop'+(index+1)).attr('btnId') == undefined ? 'createBtn'+(index+1):$('#defaultPop'+(index+1)).attr('btnId');
 
-            var actionType = $('#defaultPop' + (index + 1)).attr('actionType');
-            var btnPopYn = $('#defaultPop' + (index + 1)).attr('btnindex') == undefined ? 'N' : 'Y';
-            var btnIndex = $('#defaultPop' + (index + 1)).attr('btnindex') == undefined ? index : Number($('#defaultPop' + (index + 1)).attr('btnindex'));
-            var gridPopIndex = $('#defaultPop' + (index + 1)).attr('gridPopIndex') == undefined ? index + 1 : Number($('#defaultPop' + (index + 1)).attr('gridPopIndex'));
-            var gridPopYn = $('#defaultPop' + (index + 1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
-            var queryId = that.pageProperty[index]['programId'] + '.' + buttonId;
-            that.wait(1);
-            var buttonParam = [];
-            var extraParam = {};
-            var validateCheck = true;
+            let actionType = $('#defaultPop' + (index + 1)).attr('actionType');
+            let btnPopYn = $('#defaultPop' + (index + 1)).attr('btnindex') == undefined ? 'N' : 'Y';
+            let btnIndex = $('#defaultPop' + (index + 1)).attr('btnindex') == undefined ? index : Number($('#defaultPop' + (index + 1)).attr('btnindex'));
+            let gridPopIndex = $('#defaultPop' + (index + 1)).attr('gridPopIndex') == undefined ? index + 1 : Number($('#defaultPop' + (index + 1)).attr('gridPopIndex'));
+            let gridPopYn = $('#defaultPop' + (index + 1)).attr('gridPopIndex') == undefined ? 'N' : 'Y';
+            let queryId = that.pageProperty[index]['programId'] + '.' + buttonId;
+            that.wait(0.5);
+            let buttonParam = [];
+            let extraParam = {};
+            let validateCheck = true;
             let actionMode = 'C';
 
-
+            for(let i = 0, max = that.buttonProperty[index].length; i < max; i++){
+				if(that.buttonProperty[index][i]['buttonId']+(index+1) == buttonId){
+				  if(that.buttonProperty[index][i]['execButtonId'] != undefined && that.buttonProperty[index][i]['execButtonId'] != null && that.buttonProperty[index][i]['execButtonId'] != ''){
+		              queryId = that.pageProperty[index]['programId'] + '.' + that.buttonProperty[index][i]['execButtonId'];
+		              break;
+				  }
+				}
+	            
+            }
             if (buttonId.indexOf('createBtn') >= 0) {
                 actionMode = 'C';
             } else if (buttonId.indexOf('copyBtn') >= 0) {
@@ -11959,22 +11967,12 @@ var momWidget = {
                 actionMode = 'C';
             }
 
-
-            /*
-				callInitResult = that.checkActionCallInit(index, actionType, param, 'saveBtnDP', your,e);
-					if(callInitResult['result'] != 'SUCCESS') {
-					  momWidget.messageBox({type:'danger', width:'400', height: '145', html: callInitResult['msg']});
-					  momWidget.splashHide();
-				      return;
-					}
-				  	param = callInitResult['param'];	*/
-
-            var popupCount = that.popupProperty[index].length;
-            var popupItem = that.popupProperty[index];
+            let popupCount = that.popupProperty[index].length;
+            let popupItem = that.popupProperty[index];
             if (gridPopYn == 'Y') {
 
             } else {
-                for (var i = 0, max2 = popupCount; i < max2; i++) {
+                for (let i = 0, max2 = popupCount; i < max2; i++) {
                     let fieldValue = $('#' + popupItem[i]['popupId'] + 'DP' + (index + 1)).val() == undefined ? '' : $('#' + popupItem[i]['popupId'] + 'DP' + (index + 1)).val().trim();
                     let fieldValues = [];
 
@@ -11993,7 +11991,7 @@ var momWidget = {
                         if (that.popupProperty[index][i]['popupType'] == 'S' && fieldValue != '') {
                             let comboBoxItems = $('#' + popupItem[i]['popupId'] + 'DP' + (index + 1)).jqxComboBox('getItems');
                             containsYn = 'N';
-                            for (var j = 0, max3 = comboBoxItems.length; j < max3; j++) {
+                            for (let j = 0, max3 = comboBoxItems.length; j < max3; j++) {
                                 if (comboBoxItems[j]['value'] == fieldValue) {
                                     containsYn = 'Y';
                                 }
@@ -12024,8 +12022,8 @@ var momWidget = {
                             let comboBoxItems = $('#' + popupItem[i]['popupId'] + 'DP' + (index + 1)).jqxComboBox('getItems');
                             let containsYn = 'N';
                             fieldValues = $('#' + popupItem[i]['popupId'] + 'DP' + (index + 1)).jqxComboBox('getCheckedItems');
-                            for (var j = 0, max3 = comboBoxItems.length; j < max3; j++) {
-                                for (var h = 0, max3 = fieldValues.length; h < max3; h++) {
+                            for (let j = 0, max3 = comboBoxItems.length; j < max3; j++) {
+                                for (let h = 0, max3 = fieldValues.length; h < max3; h++) {
                                     if (comboBoxItems[j]['value'] == fieldValues[h]['value']) {
                                         containsYn = 'Y';
                                     }
@@ -12045,10 +12043,10 @@ var momWidget = {
                             }
                         } else if (that.popupProperty[index][i]['popupType'] == 'SS' && fieldValue != '') {
 
-                            var popupId = popupItem[i]['popupId'] + 'DP' + (index + 1);
-                            var searchString = $('#' + popupItem[i]['popupId'] + 'DP' + (index + 1)).val();
-                            var minLength = that.popupComboMinLength[index][popupId];
-                            var queryId2 = that.popupComboQueryId[index][popupId];
+                            let popupId = popupItem[i]['popupId'] + 'DP' + (index + 1);
+                            let searchString = $('#' + popupItem[i]['popupId'] + 'DP' + (index + 1)).val();
+                            let minLength = that.popupComboMinLength[index][popupId];
+                            let queryId2 = that.popupComboQueryId[index][popupId];
                             if (searchString.length < minLength) {
                                 that.messageBox({
                                     type: 'warning',
@@ -12715,11 +12713,19 @@ var momWidget = {
                 actionMode = 'C';
             }
 
-
+      		for(let i = 0, max = that.buttonProperty[index].length; i < max; i++){
+				if(that.buttonProperty[index][i]['buttonId']+(index+1) == buttonId){
+				  if(that.buttonProperty[index][i]['execButtonId'] != undefined && that.buttonProperty[index][i]['execButtonId'] != null && that.buttonProperty[index][i]['execButtonId'] != ''){
+		              queryId = that.pageProperty[index]['programId'] + '.' + that.buttonProperty[index][i]['execButtonId'];
+		              break;
+				  }
+				}
+	            
+            }
             if (gridPopYn == 'Y') {
 
             } else {
-                for (var i = 0, max2 = popupItem.length; i < max2; i++) {
+                for (let i = 0, max2 = popupItem.length; i < max2; i++) {
                     popupId = '#' + popupItem[i]['popupId'] + 'DP' + (index + 1);
                     popupComboId = $('#customPop-' + buttonId).find(popupId);
                     fieldValue = popupComboId.val() == undefined ? '' : popupComboId.val().trim();
@@ -12740,7 +12746,7 @@ var momWidget = {
                         if (popupItem[i]['popupType'] == 'S' && fieldValue != '') {
                             comboBoxItems = popupComboId.jqxComboBox('getItems');
                             containsYn = 'N';
-                            for (var j = 0, max3 = comboBoxItems.length; j < max3; j++) {
+                            for (let j = 0, max3 = comboBoxItems.length; j < max3; j++) {
                                 if (comboBoxItems[j]['value'] == fieldValue) {
                                     containsYn = 'Y';
                                 }
@@ -12771,8 +12777,8 @@ var momWidget = {
                             comboBoxItems = popupComboId.jqxComboBox('getItems');
                             let containsYn = 'N';
                             fieldValues = popupComboId.jqxComboBox('getCheckedItems');
-                            for (var j = 0, max3 = comboBoxItems.length; j < max3; j++) {
-                                for (var h = 0, max4 = fieldValues.length; h < max4; h++) {
+                            for (let j = 0, max3 = comboBoxItems.length; j < max3; j++) {
+                                for (let h = 0, max4 = fieldValues.length; h < max4; h++) {
                                     if (comboBoxItems[j]['value'] == fieldValues[h]['value']) {
                                         containsYn = 'Y';
                                     }
@@ -12791,9 +12797,9 @@ var momWidget = {
                                 return;
                             }
                         } else if (popupItem[i]['popupType'] == 'SS' && fieldValue != '') {
-                            var searchString = popupComboId.val();
-                            var minLength = that.popupComboMinLength[index][popupId];
-                            var queryId2 = that.popupComboQueryId[index][popupId];
+                            let searchString = popupComboId.val();
+                            let minLength = that.popupComboMinLength[index][popupId];
+                            let queryId2 = that.popupComboQueryId[index][popupId];
                             if (searchString.length < minLength) {
                                 that.messageBox({
                                     type: 'warning',
@@ -12817,7 +12823,7 @@ var momWidget = {
                                         return;
                                     }
 
-                                    for (var z = 0, max7 = data.length; z < max7; z++) {
+                                    for (let z = 0, max7 = data.length; z < max7; z++) {
                                         if (data[z]['code'] == searchString) {
                                             searchResult = true;
                                             break;
@@ -13796,8 +13802,11 @@ var momWidget = {
         let buttonParamMap = {};
         let isProcess = 'Y';
         for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
-            if (that.buttonProperty[index][i]['buttonId'] == btnId) {
-                targetParam = that.buttonProperty[index][i]['checkType'];
+            if (that.buttonProperty[index][i]['buttonId'] == btnId) {               
+                if(that.buttonProperty[index][i]['execButtonId'] != undefined && that.buttonProperty[index][i]['execButtonId'] != null && that.buttonProperty[index][i]['execButtonId'] != ''){
+		              queryId = that.pageProperty[index]['menuId'] + '.' + that.buttonProperty[index][i]['execButtonId'];		            
+				}
+				targetParam = that.buttonProperty[index][i]['checkType'];
                 actionType = that.buttonProperty[index][i]['eventType'];
                 break;
             }
@@ -13974,7 +13983,7 @@ var momWidget = {
             }, undefined, undefined, this, false);
 
         } else {
-            callInitResult = that.checkActionCallInit(index, actionType, param, btnId, your, e);
+                callInitResult = that.checkActionCallInit(index, actionType, param, btnId, your, e);
             if (callInitResult['result'] != 'SUCCESS') {
                 let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
                 momWidget.messageBox({type: msgType, width: '400', height: '145', html: callInitResult['msg']});
@@ -15392,7 +15401,7 @@ var momWidget = {
     },
     // 윈도우 리사이즈2
     htmlResize: function (index, your) {
-        var that = momWidget;
+        let that = momWidget;
 
         if (index == undefined) {
             /*	for(var i = 0; i < that.grid.length; i++) {
@@ -15413,6 +15422,9 @@ var momWidget = {
         } else {
             const i = index;
             $(window).resize(function (e) {
+		        //AUIGrid.resize(that.grid[i]);
+				let targetGrid = $('#grid'+(i+1)).parent().parent().parent();
+			
                 /*	let targetId = e.currentTarget.name;
 				let iframId = 'iframe#'+targetId;
 				let nowLoc = $(iframId).attr('src');
@@ -15422,15 +15434,31 @@ var momWidget = {
 
                     /*var height = document.getElementById('grid' + (i + 1)).children[0].clientHeight;
 					var width = document.getElementById('grid' + (i + 1)).children[0].clientWidth;*/
+                
+                    let height = targetGrid.height();
+                    let width = targetGrid.width();
+                    let maskHeight = $(document).height();
+      	            let maskWidth = $(window).width();
+                    if($('.aui-grid-paging-panel').length>0){
+	                 $(that.grid[i]).css('height', (height-50 ) + 'px');
+                     $(that.grid[i]).css('width', (width-4 ) + 'px');
+                     AUIGrid.resize(that.grid[i]);
+				    }
+				    else{
+					$(that.grid[i]).find('.aui-grid').css('height', (height-65 ) + 'px');
+                    $(that.grid[i]).find('.aui-grid').css('width', (width-4 ) + 'px');
+				    }
+                    
 
-                    var height = $('#grid' + (i + 1)).height();
-                    var width = $('#grid' + (i + 1)).width();
+                    //AUIGrid.resize(that.grid[i]);
 
-                    $(that.grid[i]).find('.aui-grid').css('height', (height - 27) + 'px');
-                    $(that.grid[i]).find('.aui-grid').css('width', (width - 27) + 'px');
 
-                    AUIGrid.resize(that.grid[i]);
-
+        if($('.grid-mask').length>0){
+	       //let maskHeight = $(document).height();
+      	   //let maskWidth = $(window).width();
+	       $('.grid-mask').css({'width':maskWidth,'height':maskHeight});
+		}
+ 
                 }, 100);
             });
 
@@ -15731,7 +15759,7 @@ var momWidget = {
     maskShow: function (depth) {
         //화면의 높이와 너비를 구한다.
         let maskId = 'mask-'+depth;
-        let mask = '<div id ='+maskId+'></div>';
+        let mask = '<div class = "grid-mask" id ='+maskId+'></div>';
         $('body').append(mask);
         let maskHeight = $(document).height();
         let maskWidth = $(window).width();

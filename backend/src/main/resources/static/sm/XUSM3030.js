@@ -1227,6 +1227,16 @@ var XUSM3030 = {
 					}
 			}, 
 			{
+				  dataField 	: 'execButtonId' 
+				, headerText 	: '실행버튼ID'
+				, width			:  150
+				, style			: 'my-column-style-edit2'	
+				, headerTooltip : { 
+				  show : true,
+				  tooltipHtml : '<div style="width:250px;"><p>실행하는버튼ID입력</p></div>'
+		        }
+			},
+			{
 				  dataField 	: 'buttonType' 
 				, headerText 	: '버튼타입'
 				, width			: 150
@@ -1254,16 +1264,7 @@ var XUSM3030 = {
 						valueField: 'value'
 					}
 			}, 
-			{
-				  dataField 	: 'execButtonId' 
-				, headerText 	: '실행버튼ID'
-				, width			:  150
-				, style			: 'my-column-style-edit2'	
-				, headerTooltip : { 
-				  show : true,
-				  tooltipHtml : '<div style="width:250px;"><p>실행하는버튼ID입력</p></div>'
-		        }
-			},
+		
 			{
 				  dataField 	: 'popupGridId' 
 				, headerText 	: '그리드ID(팝업)'
