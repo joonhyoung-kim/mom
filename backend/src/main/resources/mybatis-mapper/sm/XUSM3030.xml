@@ -254,6 +254,7 @@
 			  ,	BUTTON_SEQ
 			  ,	EVENT_TYPE
 			  , BUTTON_TYPE
+			  , EXEC_BUTTON_ID
 			  , POPUP_GRID_ID
 			  ,	BUTTON_PARAMETER
 			  ,	BUTTON_ICON 
@@ -716,6 +717,7 @@
 							   , CHECK_TYPE
 							   , POPUP_GRID_ID
 							   , BUTTON_TYPE
+							   , EXEC_BUTTON_ID
 							   , CREATE_BY
 						) VALUES(
                                #{item.companyCd,         jdbcType=VARCHAR}
@@ -734,6 +736,7 @@
 				             , #{item.checkType,         jdbcType=VARCHAR}
 				             , #{item.popupGridId,       jdbcType=VARCHAR}
 				             , #{item.buttonType,        jdbcType=VARCHAR}
+				             , #{item.execButtonId,        jdbcType=VARCHAR}
 				             , #{item.userId,            jdbcType=VARCHAR} 
 				        )			  			             
 	           </foreach>		      			               
