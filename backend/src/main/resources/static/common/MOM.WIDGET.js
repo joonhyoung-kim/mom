@@ -10894,15 +10894,15 @@ var momWidget = {
         });
         $(document).on('click', '#' + reportBtnId, function () {
             that.splashShow();
-
-
-            var param = that.getCheckedRowItems(that.grid[index]);
+            let param = that.getCheckedRowItems(that.grid[index]);
+            let fileType = 'pdf';
             if (param.length == 0) {
+	            momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '데이터 미선택!'});
                 return;
             }
             param[0].fileName = that.pageProperty[index]['programId'] + '_' + (index + 1);
             //param[0].fileType = 'xlsx';
-            param[0].fileType = 'pdf';
+            param[0].fileType = fileType;
             // param = that.checkSearchParam(index,param,your);
             $.ajax({
                 url: mCommon.contextPath() + '/createReport',
@@ -10917,13 +10917,14 @@ var momWidget = {
                 success: function (data) {
                     setTimeout(function () {
                         momWidget.splashHide();
-                        //window.open('../report-xlsx/'+param[0].fileName+'.'+param[0].fileType, '_blank','resizable=no,width=2000,height=1300,left=740,top=520');
+                        window.open('../report-'+fileType+'/'+param[0].fileName+'.'+param[0].fileType, '_blank','resizable=no,width=2000,height=1300,left=740,top=520');
                         //history.pushState(null, null, '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType)
-                        location.href = location.href;
+                        //location.href = location.href;
                         //location.href  = '../report-xlsx/'+param[0].fileName+'.'+param[0].fileType;
 
-                        location.href = '../report-pdf/' + param[0].fileName + '.' + param[0].fileType;
-                    }, 7000);
+                       // location.href = '../report-pdf/' + param[0].fileName + '.' + param[0].fileType;
+                    }, 5000);
+                    
                 },
                 error: function (e) {
                     momWidget.splashHide();
