@@ -19,7 +19,7 @@
                    FROM   MOM_SO_CHANGE MSC
                    WHERE  MSC.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
                    AND    MSC.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
-                   AND    MSC.CHANGE_TYPE !=  'C'
+                   AND    MSC.APPLY_FLAG  = 'N'
                    <if test="changeDateYn != null and changeDateYn != ''">
                    AND    MSC.CHANGE_DATE_YN = #{changeDateYn, jdbcType=VARCHAR}
                    </if>
