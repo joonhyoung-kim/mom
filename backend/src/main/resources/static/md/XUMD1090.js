@@ -2,8 +2,6 @@ var menuId = 'XUMD1090';
 var widget = momWidget;
 var that = undefined;
 var VIEW= {
-	initParam		: undefined, 
-	  
 	init: function() {	
 		that = this;	
 		//that.event();
@@ -20,7 +18,7 @@ var VIEW= {
 		} 
 	},
 	customCallInit: function(index,your,action,btnId,param,result) {
-	  var checkItem = widget.getCheckedRowItems(widget.grid[0]);
+	  let checkItem = widget.getCheckedRowItems(widget.grid[0]);
 	  if (index == 0){
 	    if(btnId == 'customGridPopBtn1-1'){
 	      if(checkItem.length==0){
@@ -31,6 +29,7 @@ var VIEW= {
 	      // 검색조건 초기화 
 	      $('#routingIdSP11').val('');
 	      $('#operationIdSP11').val('');
+	   
 	    }  
 	  }
 	  else if(index == 10){			    
@@ -51,6 +50,24 @@ var VIEW= {
 		}
 	  }
     },	
+    	customCallBack: function(index,your,action,btnId,param,result,data) {
+	    if(index == 0 && btnId == 'customGridPopBtn1-1'){	
+			let checkedItem = AUIGrid.getCheckedRowItems(widget.grid[0]);
+			let gridItem = AUIGrid.getGridData(widget.grid[10]);
+		    if(checkedItem.length==0){
+	        result.msg = '상단에서 품목별 작업장 관리 선택필수!';
+					result.result = 'WARN';
+					return;
+	       } 
+	       for(let i=0;i<gridItem.length;i++){
+		       if(gridItem[i]["routingId"] == checkedItem[0]['item']['routingId']){
+			     AUIGrid.setCellValue(widget.grid[10], i, "checkBox", 'Y');
+			   }
+	       }
+	       	   			
+		}
+	
+	},	  
 	cellClickCallBack: function(index,rowIndex,target,e) {
 	  if(index==0){
 		var item = e.item;	
@@ -70,14 +87,15 @@ var VIEW= {
 	      }, undefined, undefined, this, false);	
 		}, 200);
 	  }
-	},
+	
+	}
 };
 
 $(document).ready(function(event){	
 	momSetup.init();
 	momWidget.init(1, menuId, VIEW);
 	momWidget.init(2, menuId, VIEW);
-	momWidget.gridPopup.init(1,1,'XXDG0120', VIEW);
+	momWidget.gridPopup.init(1,11,1,'XXDG0120', VIEW);
 	/*momWidget.gridPopup.init(1,2,'XXDG0120', VIEW);*/
 	VIEW.init();
 });

@@ -8527,6 +8527,7 @@ var momWidget = {
 
                     }
                     if (checkCount == 0) {
+					    AUIGrid.setAllCheckedRows(e.pid, false);
                         AUIGrid.setCheckedRowsByIds(e.pid, rowId);
                         if (customCheckBox == 'Y') {
                             //that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], 'Y');
@@ -8550,6 +8551,7 @@ var momWidget = {
 
 
                         if (customCheckBox == 'Y') {
+						    
                             // that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], '');
                         }
 

@@ -120,7 +120,7 @@ public Map<String,Object> createReport(String fileName,String fileType,Map<Strin
             	   parameters.put(entry.getKey().toString(), entry.getValue().toString());
                }
             }   
-            parameters.put("REPORT_CONNECTION", connection);
+            parameters.put("reportConnection", connection);
             parameters.put("SUBREPORT_DIR", rootPath+jasperPath);
             
             System.out.println("파라미터?"+parameters); 
@@ -131,6 +131,7 @@ public Map<String,Object> createReport(String fileName,String fileType,Map<Strin
                
             if(fileType.equals("pdf")) {
             	 JasperExportManager.exportReportToPdfFile(jasperPrint, rootPath+filePath+fileName+"."+fileType); 
+            	 
             }
             else {
             	SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();

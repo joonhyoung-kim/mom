@@ -588,9 +588,8 @@
 }
 .gridArea-tm1st-h01-011{
 	background: #f0f0f5;
-    /* height: 64.5vh; */
-     height: 20vh; 
     border: none;
+    height: 63vh;
 }
 .gridArea-tm1st-h01-021{
 	background: #f0f0f5;
@@ -5133,10 +5132,10 @@ input:focus{
 	margin: 0;
 }
 .tabcontentarea11 {
-    /* height: 100vh; */
+     height: 100%;
 	margin-bottom: 0px;
 	background: #f0f0f5;	
-	/* height:auto !important;  */
+	
 }
 @media (min-width:800px) and (max-width:1920px) {
 .custom-dialog {
