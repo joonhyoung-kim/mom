@@ -10128,11 +10128,9 @@ var momWidget = {
             //$('.' + 'customPop').modal('hide');
             $('.' + 'customPop').css('display','none');
             that.maskHide('1');
-
         });
         $(document).on('click', '.' + gridPopXBtnId, function (e) {
-            $(".grid-pop" + (index + 1)).modal('hide');
-            that.maskHide('1');
+            that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.id,'1');
         });
         $(document).on('click', '#' + gridPopCancelBtnId, function (e) {
 			that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id,'1');
@@ -10892,6 +10890,7 @@ var momWidget = {
         $(document).on('click', '#' + changePwCencelBtn, function () {
             that.modalHide('id',$('changePwPop' + (index + 1)),'2')
         });
+        
         $(document).on('click', '#' + reportBtnId, function () {
             that.splashShow();
             let param = that.getCheckedRowItems(that.grid[index]);
@@ -10900,7 +10899,7 @@ var momWidget = {
 	            momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '데이터 미선택!'});
                 return;
             }
-            param[0].fileName = that.pageProperty[index]['programId'] + '_' + (index + 1);
+            param[0].fileName = that.pageProperty[index]['menuId'] + '_' + (index + 1);
             //param[0].fileType = 'xlsx';
             param[0].fileType = fileType;
             // param = that.checkSearchParam(index,param,your);
@@ -13718,10 +13717,10 @@ var momWidget = {
             that.maskHide('1');
 
         });
-        $(document).on('click', '.bntpopclose, ' + '#' + gridPopCancelBtnId, function () {
+      /*  $(document).on('click', '.bntpopclose, ' + '#' + gridPopCancelBtnId, function () {
             that.modalHide('#','dropDownGridPop','1');
 
-        });
+        });*/
         $(document).on('click', '#' + excelDownBtnId, function (e) {
             if (your != undefined && your['excelDownCallInit'] != undefined) {
                 your.excelDownCallInit(index, your);

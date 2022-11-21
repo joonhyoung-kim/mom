@@ -120,6 +120,9 @@ public Map<String,Object> createReport(String fileName,String fileType,Map<Strin
             	   parameters.put(entry.getKey().toString(), entry.getValue().toString());
                }
             }   
+            parameters.put("REPORT_CONNECTION", connection);
+            parameters.put("SUBREPORT_DIR", rootPath+jasperPath);
+            
             System.out.println("파라미터?"+parameters); 
             System.out.println("풀패스?"+ rootPath+jasperPath+fileName+".jasper");
             jasperPrint =  JasperFillManager.fillReport(rootPath+jasperPath+fileName+".jasper", parameters, connection);
