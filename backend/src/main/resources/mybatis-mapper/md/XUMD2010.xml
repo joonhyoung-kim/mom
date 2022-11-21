@@ -28,13 +28,17 @@
                  , MI.GROSS_WEIGHT_UNIT
                  , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.GROSS_WEIGHT_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS GROSS_WEIGHT_UNIT_NM
                  , MI.IN_LOCATION_CD
+                 , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.IN_LOCATION_CD) FROM DUAL) AS IN_LOCATION_NM
                  , MI.OUT_LOCATION_CD
+                 , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.OUT_LOCATION_CD) FROM DUAL) AS OUT_LOCATION_NM
                  , MI.ISSUE_TYPE
                  , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0006', MI.ISSUE_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ISSUE_TYPE_NM
                  , MI.ISSUE_UNIT
                  , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0003', MI.ISSUE_UNIT, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ISSUE_UNIT_NM
                  , MI.VENDOR_CD
+                 , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.VENDOR_CD) FROM DUAL ) AS VENDOR_NM
                  , MI.DEPARTURE_VENDOR_CD
+                 , (SELECT MOM_COMMON_PKG.FN_GET_PARTNER_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.DEPARTURE_VENDOR_CD) FROM DUAL ) AS DEPARTURE_VENDOR_NM
                  , MI.TEST_REPORT_FLAG
                  , MI.IQC_FLAG
                  , MI.PQC_FLAG
@@ -72,26 +76,26 @@
                  , ROWIDTOCHAR(MI.ROWID) AS GRID_ID
                  , COUNT(*) OVER() AS TOTAL_COUNT
                  , ROW_NUMBER() OVER(PARTITION BY MI.COMPANY_CD,MI.DIVISION_CD ORDER BY MI.ITEM_ID) AS KEY_ID
-       FROM   MOM_ITEM MI
-       WHERE  MI.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
-       AND    MI.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
-	   <if test="itemId != null and itemId != ''">
-       AND    (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
-	   </if>
-	   <if test="itemNm != null and itemNm != ''">
-       AND    (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm , jdbcType=VARCHAR}) || '%' )
-	   </if>
-	   <if test="itemType != null and itemType != ''">
-       AND    MI.ITEM_TYPE IN (${itemType})
-	   </if>
-	   <if test="itemSpec != null and itemSpec != ''">
-       AND    (MI.ITEM_SPEC LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' )
-	   </if>
-	   <if test="useYn != null and useYn != ''">
-       AND    MI.USE_YN = #{useYn, jdbcType=VARCHAR}
-	   </if>
-	 ) A
-    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+            FROM   MOM_ITEM MI
+            WHERE  MI.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+            AND    MI.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+	        <if test="itemId != null and itemId != ''">
+            AND    (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
+	        </if>
+	        <if test="itemNm != null and itemNm != ''">
+            AND    (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm , jdbcType=VARCHAR}) || '%' )
+	        </if>
+	        <if test="itemType != null and itemType != ''">
+            AND    MI.ITEM_TYPE IN (${itemType})
+	        </if>
+	        <if test="itemSpec != null and itemSpec != ''">
+            AND    (MI.ITEM_SPEC LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' )
+	        </if>
+	        <if test="useYn != null and useYn != ''">
+            AND    MI.USE_YN = #{useYn, jdbcType=VARCHAR}
+	        </if>
+	<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+	       ) A
     WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
     </if>
     </select>
