@@ -2248,287 +2248,7 @@ var momWidget = {
         // 동일하게 변경
         AUIGrid.updateRowsById(that.grid[index], items4update);
     },
-    /*	// 검색버튼을 누른 효과
-		: function(index, splash, param, retrieveCallBack, indexInfo, your) {
-			if(indexInfo != undefined && indexInfo['index'] != -1) {
-				index = (indexInfo != undefined && indexInfo['newIndex'] != undefined && indexInfo['newIndex'] != indexInfo['index']) ? indexInfo['newIndex'] : indexInfo['index'];
-			}
-
-			var that = this;
-			if(param == undefined || jQuery.isEmptyObject(param) || param == 'default') {
-				param = this.createParam4Form(index, '#form');
-				if(param <= 0) {
-					setTimeout(function() {
-						if(that.searchFilter[index][param * -1]['sortIndex'] == undefined || that.searchFilter[index][param * -1]['sortIndex'] == '') {
-							that.messageBox({type: 'warning', width: '400', height: '145', html: that.searchFilter[index][param * -1]['headerText'] + ' 은(는) 필수 항목입니다.'});
-							return;
-						}
-
-						var message = '';
-						var sortIndex = that.searchFilter[index][param * -1]['sortIndex'];
-
-						for(var i = 0; i < that.searchFilter[index].length; i++) {
-							if(that.searchFilter[index][i]['sortIndex'] != undefined && that.searchFilter[index][i]['sortIndex'] == sortIndex) {
-								if(message == '') {
-									message = that.searchFilter[index][i]['headerText'];
-								} else {
-									message += (', ' + that.searchFilter[index][i]['headerText']);
-								}
-							}
-						}
-
-						message += ' 중 적어도 1개는 필수 항목입니다.';
-						that.messageBox({type: 'warning', width: '400', height: '145', html: message});
-						return;
-					}, 40);
-
-					return;
-				}
-			}
-
-
-			 * if(document.getElementById('fromDate') != undefined &&
-			 * document.getElementById('toDate') != undefined) { if($('.h01 >
-			 * #fromDate').val() == '' || $('.h01 > #toDate').val() == '') {
-			 * that.messageBox({type: 'warning', width: '400', height: '145',
-			 * html: Language.lang['MESSAGES10250']}); return; } else
-			 * if($('#fromDate').val() > $('#toDate').val()) {
-			 * that.messageBox({type: 'warning', width: '400', height: '145',
-			 * html: Language.lang['MESSAGES10785']}); return; } }
-
-			var h01Area = document.querySelector('.h01');
-			if(h01Area != undefined) {
-				var fromDate = h01Area.querySelector('#fromDate');
-				var toDate = h01Area.querySelector('#toDate');
-				if(fromDate != undefined && toDate != undefined) {
-					if(fromDate.value == '' || toDate.value == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					} else if(Number(fromDate.value.replace(/-/gi,'')) > Number(toDate.value.replace(/-/gi,''))) {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10785']});
-						return;
-					}
-				} else if(fromDate != undefined) {
-					if($('#fromDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					}
-				} else if(toDate != undefined) {
-					if($('#toDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES11240']});
-						return;
-					}
-				}
-			}
-			var h02Area = document.querySelector('.h02');
-			if(h02Area != undefined) {
-				var fromDate = h02Area.querySelector('#fromDate');
-				var toDate = h02Area.querySelector('#toDate');
-				if(fromDate != undefined && toDate != undefined) {
-					if(fromDate.value == '' || toDate.value == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					} else if(Number(fromDate.value.replace(/-/gi,'')) > Number(toDate.value.replace(/-/gi,''))) {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10785']});
-						return;
-					}
-				} else if(fromDate != undefined) {
-					if($('#fromDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					}
-				} else if(toDate != undefined) {
-					if($('#toDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES11240']});
-						return;
-					}
-				}
-			}
-			var h03Area = document.querySelector('.h03');
-			if(h03Area != undefined) {
-				var fromDate = h03Area.querySelector('#fromDate');
-				var toDate = h03Area.querySelector('#toDate');
-				if(fromDate != undefined && toDate != undefined) {
-					if(fromDate.value == '' || toDate.value == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					} else if(Number(fromDate.value.replace(/-/gi,'')) > Number(toDate.value.replace(/-/gi,''))) {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10785']});
-						return;
-					}
-				} else if(fromDate != undefined) {
-					if($('#fromDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					}
-				} else if(toDate != undefined) {
-					if($('#toDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES11240']});
-						return;
-					}
-				}
-			}
-			var h04Area = document.querySelector('.h04');
-			if(h04Area != undefined) {
-				var fromDate = h04Area.querySelector('#fromDate');
-				var toDate = h04Area.querySelector('#toDate');
-				if(fromDate != undefined && toDate != undefined) {
-					if(fromDate.value == '' || toDate.value == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					} else if(Number(fromDate.value.replace(/-/gi,'')) > Number(toDate.value.replace(/-/gi,''))) {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10785']});
-						return;
-					}
-				} else if(fromDate != undefined) {
-					if($('#fromDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					}
-				} else if(toDate != undefined) {
-					if($('#toDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES11240']});
-						return;
-					}
-				}
-			}
-			var h05Area = document.querySelector('.h05');
-			if(h05Area != undefined) {
-				var fromDate = h05Area.querySelector('#fromDate');
-				var toDate = h05Area.querySelector('#toDate');
-
-				if(fromDate != undefined && toDate != undefined) {
-					if(fromDate.value == '' || toDate.value == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					} else if(Number(fromDate.value.replace(/-/gi,'')) > Number(toDate.value.replace(/-/gi,''))) {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10785']});
-						return;
-					}
-				} else if(fromDate != undefined) {
-					if($('#fromDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-						return;
-					}
-				} else if(toDate != undefined) {
-					if($('#toDate').val() == '') {
-						that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES11240']});
-						return;
-					}
-				}
-			}
-			// 날짜체크 부분 수정 - 210322 / gyp
-			var fromDate = document.getElementById('fromDate');
-			var toDate = document.getElementById('toDate');
-
-			if(fromDate != undefined && toDate != undefined) {
-				if(fromDate.value == '' || toDate.value == '') {
-					that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-					return;
-				} else if(Number(fromDate.value.replace(/-/gi,'')) > Number(toDate.value.replace(/-/gi,''))) {
-					that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10785']});
-					return;
-				}
-			} else if(fromDate != undefined) {
-				if($('#fromDate').val() == '') {
-					that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-					return;
-				}
-			} else if(toDate != undefined) {
-				if($('#toDate').val() == '') {
-					that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES11240']});
-					return;
-				}
-			}
-
-			if(document.getElementById('moFromDate') != undefined && document.getElementById('moToDate') != undefined) {
-				if($('#moFromDate').val() == '' || $('#moToDate').val() == '') {
-					that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10250']});
-					return;
-				} else if($('#moFromDate').val() > $('#moToDate').val()) {
-					that.messageBox({type: 'warning', width: '400', height: '145', html: Language.lang['MESSAGES10785']});
-					return;
-				}
-			}
-
-			// ///////////////////////////////////////////////////////////
-			var paramPair = {param : param, callBackParam : undefined};
-			var message = this.procCallInit(index, 'R', paramPair, indexInfo, your);
-			if(message == 'BREAK') {
-				return;
-			} else if(message != 'SUCCESS') {
-				this.splashHide();
-				this.messageBox({type: 'warning', width: '400', height: '145',  html: message});
-
-				return;
-			}
-			param = paramPair['param'];
-			// ///////////////////////////////////////////////////////////
-
-			this.entireIsDone[index] = 'INIT';
-			this.entireDatas[index] = undefined;
-
-			this.currentPage[index] = 1;
-			this.pageNumber[index] = 0;
-
-			this.startPage[index] = 1;
-			this.gridProperty[index]['pageRowCount'] == this.gridProperty[index]['pageRowCount'] == undefined ? this.INFINITE : this.gridProperty[index]['pageRowCount'];
-			this.endPage[index] = this.gridProperty[index]['pageRowCount'];
-			var sortParam = momWidget.sortParam[index];
-			var sortColumn = undefined;
-			var sortType = undefined;
-			var orderbyParam = "";
-
-			for(var loop = 0; loop <sortParam.length ; loop++) {
-				sortColumn = sortParam[loop].dataField;
-				sortType = sortParam[loop].sortType;
-				sortType = sortType == -1 ? "DESC" : "ASC";
-				var sortText = sortColumn.replace(/[A-Z]/g, function(upp, i, st) {
-				    sortColumn = sortColumn.replace("/"+upp+"/gi","_"+upp);
-				    	return "_"+upp;
-
-					});
-				    sortColumn = sortText.toUpperCase();
-				    if(loop == sortParam.length-1){
-				    	  orderbyParam =  orderbyParam+ sortColumn+" "+sortType;
-				    }
-				    else{
-				    	  orderbyParam =  orderbyParam+ sortColumn+" "+sortType+",";
-				    }
-			}
-
-			for(var loop = 0,max=that.indexColumn[index].length; loop <max ; loop++) {
-				const INDEX = that.indexColumn[index][loop]['INDEX'];
-			    const dataField = that.columnProperty[index][INDEX]['dataField'];
-			    const sortIndex = that.indexColumn[index][i]['sortIndex'] - 1;
-			    const asc = that.columnProperty[index][INDEX]['sort'];
-				that.sortParam[index][sortIndex] = {dataField : data_field, sortType : asc};
-
-			}
-			param.orderbyParam = orderbyParam;
-			param['startPage'] = this.startPage[index];
-			param['endPage'] = this.endPage[index];
-
-			const entireProcess = ++(this.entireProcess[index]);
-
-			if(splash) {
-				this.splashShow();
-			}
-
-			if(index == 0 && this.grid[index+1] != undefined) {
-				if(your != undefined) {
-					if(your.noClear == undefined) {
-						AUIGrid.clearGridData(this.grid[index+1]);
-					}
-				}
-			}
-
-			this.retrievePartial(index, param, entireProcess, retrieveCallBack, indexInfo, your);
-		},*/
-
-    // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // 셀클릭 관련
-
+   
 
     setCustomComboBoxSet: function (index, btnId, your) {
         var that = momWidget;
@@ -8295,6 +8015,8 @@ var momWidget = {
             let rowId = item[rowIdField];
             let rowIdValue = [];
             let dropdownGridYn = 'N';
+            let exceptId ='' ;
+            let exceptVal = '' ;
             let dropDownGridIndex = 0;
             let rowIndex = $('#dropDownGridPop' + (index + 1)).length == 0 ? 0 : Number($('#dropDownGridPop' + (index + 1)).attr('rowIndex'));
             let target = $('#dropDownGridPop' + (index + 1)).length == 0 ? '' : $('#dropDownGridPop' + (index + 1)).attr('target');
@@ -8343,6 +8065,8 @@ var momWidget = {
                     $('#calendar-pop').offset({top: activeTop, left: activeLeft});
                 }
                 if (that.columnProperty[index][i]['columnId'] == 'checkBox') {
+				    exceptId  = that.columnProperty[index][i]['dataFormat'];
+				    exceptVal = item[exceptId];
                     customCheckBox = 'Y';
                 }
             }
@@ -8519,7 +8243,10 @@ var momWidget = {
                 let checkCount = 0;
                 if (selectionMode == 'singleCell' || selectionMode == 'singleRow') {
                     for (let i = 0, max = gridData.length; i < max; i++) {
-                        if (AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])) { //체크되어있따면
+					if (customCheckBox == 'Y' && gridData[i]['checkBox']=='Y') {
+						  checkCount++;
+					}
+                    else if (AUIGrid.isCheckedRowById(e.pid, gridData[i][rowIdField])) { //체크되어있따면
 
                             checkCount++;
                         }
@@ -8539,9 +8266,9 @@ var momWidget = {
                             //that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], 'N');
                         }
                     } else if (checkCount > 1) {
-                       // let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);
-                       // AUIGrid.setAllCheckedRows(e.pid, false);
-                        AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+					
+					 AUIGrid.setCheckedRowsByIds(e.pid, rowId);
+                        // let ischeck = AUIGrid.isCheckedRowById(e.pid, rowId);                   
                         /*	if(ischeck==true){
 						AUIGrid.addUncheckedRowsByIds(e.pid, rowId);
 					}
@@ -8549,10 +8276,9 @@ var momWidget = {
 						AUIGrid.setCheckedRowsByIds(e.pid, rowId);
 					}*/
 
-
                         if (customCheckBox == 'Y') {
-						    
-                            // that.syncData(index,e.item, e.rowIndex, 'checkBox', that.columnProperty[0][1]['columnId'], '');
+						     that.customCheckAll(index,false,exceptId,exceptVal);
+                          
                         }
 
                     } else {
@@ -15758,6 +15484,22 @@ var momWidget = {
             // console.error("catch : " + "not find spinnerLay1000");
         }
     },*/
+       customCheckAll: function (index,isCheck,exceptId,exceptVal) {
+	    let that = momWidget;
+	    let checkVal = isCheck == true ? 'Y' : 'N';
+        let gridData = AUIGrid.getGridData(that.grid[index]);
+          for (let i = 0, max = gridData.length; i < max;i++) {              
+	             if(gridData[i][exceptId] == exceptVal ){
+		         
+				 }
+				 else{
+					   AUIGrid.setCellValue(that.grid[index], i, "checkBox", checkVal);
+				 }
+		       
+		  }
+        
+   
+    },
     maskShow: function (depth) {
         //화면의 높이와 너비를 구한다.
         let maskId = 'mask-'+depth;
