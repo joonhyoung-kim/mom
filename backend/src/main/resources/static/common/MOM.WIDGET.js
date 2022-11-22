@@ -52,7 +52,7 @@ var momWidget = {
 
     //background: #6c5ffc !important;
     init: function (index, menuId, your, widgetType) {
-        var that = momWidget;
+        let that = momWidget;
         let gridId = index;
         index--;
         if (index == 0 && widgetType != 'DG') {
@@ -87,16 +87,16 @@ var momWidget = {
             let classItem = []; // 클래스 정보
             let searchItem = []; // 검색 필드 클래스 정보
             let popupItem = []; // 팝업 필드 클래스 정보
-            var labelField = '';
-            var headerField = '';
-            var circleClass = '';
-            var textClass = '';
-            var dropdownTmp = {};
-            var gridString = data1[0]['gridProperty'] == undefined ? '[]' : data1[0]['gridProperty'];
-            var columnString = data1[0]['columnProperty'] == undefined ? '[]' : data1[0]['columnProperty'];
-            var searchString = data1[0]['searchProperty'] == undefined ? '[]' : data1[0]['searchProperty'];
-            var buttonString = data1[0]['buttonProperty'] == undefined ? '[]' : data1[0]['buttonProperty'];
-            var popupString = data1[0]['popupProperty'] == undefined ? '[]' : data1[0]['popupProperty'];
+            let labelField = '';
+            let headerField = '';
+            let circleClass = '';
+            let textClass = '';
+            let dropdownTmp = {};
+            let gridString = data1[0]['gridProperty'] == undefined ? '[]' : data1[0]['gridProperty'];
+            let columnString = data1[0]['columnProperty'] == undefined ? '[]' : data1[0]['columnProperty'];
+            let searchString = data1[0]['searchProperty'] == undefined ? '[]' : data1[0]['searchProperty'];
+            let buttonString = data1[0]['buttonProperty'] == undefined ? '[]' : data1[0]['buttonProperty'];
+            let popupString = data1[0]['popupProperty'] == undefined ? '[]' : data1[0]['popupProperty'];
             that.searchComboItems = {};
             that.editItem[index] = {};
             // that.preComboItems[index] = {};
@@ -144,8 +144,8 @@ var momWidget = {
 			  */
 
             if (Array.isArray(that.gridProperty[index]) == true && that.gridProperty[index].length != 0) {
-                var gridExceptList = ['checkId', 'gridTitle', 'popupColNum', 'popupRowNum', 'popupTitle', 'headerColor', 'initSearch', 'showFindBtn'];
-                var gridExtraProp = {
+                let gridExceptList = ['checkId', 'gridTitle', 'popupColNum', 'popupRowNum', 'popupTitle', 'headerColor', 'initSearch', 'showFindBtn'];
+                let gridExtraProp = {
                     'checkId': 'checkId',
                     'gridTitle': 'gridTitle',
                     'popupColNum': 'popupColNum',
@@ -155,16 +155,16 @@ var momWidget = {
                     'initSearch': 'initSearch',
                     'showFindBtn': 'showFindBtn'
                 };
-                var searchBtn = '';
-                var templateInfo = '';
-                var searchRowcnt = that.searchProperty[index].length;
-                var searchBtnColSize = "col-xl-3";
+                let searchBtn = '';
+                let templateInfo = '';
+                let searchRowcnt = that.searchProperty[index].length;
+                let searchBtnColSize = "col-xl-3";
                 if (searchRowcnt % 3 == 1) {
                     searchBtnColSize = "col-xl-9";
                 } else if (searchRowcnt % 3 == 2) {
                     searchBtnColSize = "col-xl-6";
                 }
-                for (var i = 0, max = gridExceptList.length; i < max; i++) {
+                for (let i = 0, max = gridExceptList.length; i < max; i++) {
                     gridExtraProp[gridExceptList[i]] = that.gridProperty[index][0][gridExceptList[i]];
                     delete that.gridProperty[index][0][gridExceptList[i]];
                 }
@@ -180,21 +180,22 @@ var momWidget = {
                 }
 
                 // var popupTemplateInfo = ;
-                var splitNum = Number(templateInfo[1]);
-                var splitType = templateInfo[2];
-                var splitRatio = templateInfo[3];
-                var templateName = 'tm' + splitNum + splitType;
+                let splitNum = Number(templateInfo[1]);
+                let splitType = templateInfo[2];
+                let splitRatio = templateInfo[3];
+                let templateName = 'tm' + splitNum + splitType;
             }
 
 
             //var searchRowcnt = that.searchProperty[index].length;
-            var searchLineCnt = 0;
-            var searchStyle = 'h00';
-            var remarkYn = 'N'
-            var remarkInline = 'Y';
-            var popupTotalNum = that.popupProperty[index].length;
-            var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupColNum']);
-            var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupRowNum']);
+            let searchLineCnt = 0;
+            let searchStyle = 'h00';
+            let remarkYn = 'N'
+            let remarkInline = 'Y';
+            let popupTotalNum = that.popupProperty[index].length;
+            let popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupColNum']);
+            let popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupRowNum']);
+            let searchAreaHtml = '' ;
             if (popupTotalNum % popupColNum == 1) {
                 remarkInline = 'N';
             }
@@ -270,8 +271,7 @@ var momWidget = {
                     index: index + 1
                 }
 			     }
-               
-                var searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
+                 searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
             } else if (searchRowcnt > 3 && searchRowcnt <= 6) {
                 searchLineCnt = 2;
                 searchStyle = 'h02';
@@ -282,7 +282,7 @@ var momWidget = {
                     index: index + 1
 
                 }
-                var searchAreaHtml = that.createSearchArea.h02(classItem, searchItem, searchBtn);
+                 searchAreaHtml = that.createSearchArea.h02(classItem, searchItem, searchBtn);
             } else if (searchRowcnt > 6 && searchRowcnt <= 9) {
                 searchLineCnt = 3;
                 searchStyle = 'h03';
@@ -293,7 +293,7 @@ var momWidget = {
                     index: index + 1
 
                 }
-                var searchAreaHtml = that.createSearchArea.h03(classItem, searchItem, searchBtn);
+                 searchAreaHtml = that.createSearchArea.h03(classItem, searchItem, searchBtn);
             } else {
                 classItem[0] = {
                     // searchAreaClass:'searchArea-h01',
@@ -302,11 +302,11 @@ var momWidget = {
                     labelBoxClass: '"mx-4 mt-2 labelbox-col3"',
                     index: index + 1
                 }
-                var searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
+                 searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
 
             }
 
-            for (var i = 0, max = that.popupProperty[index].length; i < max; i++) {
+            for (let i = 0, max = that.popupProperty[index].length; i < max; i++) {
                 if (that.popupProperty[index][i]['columnRequire'] == "Y") {
                     circleClass = 'circle-bg-orange';
                     textClass = 'textblock-orange';
@@ -329,7 +329,7 @@ var momWidget = {
                     labelField = '<input  id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="time"  class="w-input popupInputField"></input>';
 
                 } else if (that.popupProperty[index][i]['popupType'] == 'P') {
-                    labelField = '<input maxlength="50" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn' + (index + 1) + '" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings"style="font-size: 1.25rem;"></i></button>';
+                    labelField = '<input maxlength="50" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="password"  class="w-input passwordInputField" date-format="date"></input><button id="changePwBtn' + (index + 1) + '" type="button" class="btn btn-icon  btn-change" style="display: none;"><i class="mdi mdi-settings" style="font-size: 1.25rem;"></i></button>';
 
                 } else if (that.popupProperty[index][i]['popupType'] == 'DS') {
                     labelField = '<textarea class="remark C' + popupColNum + '"  rows="5" maxlength="500" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '></textarea>';
@@ -637,11 +637,8 @@ var momWidget = {
                     }
                     mom_ajax('R', dropDownQueryId, param, function (result2, data2) {
                         if (data2.length == 0) {
-                            return;
-
-
-
                             momWidget.splashHide();
+                            return;
                         }
                         dropdownTmp[columnId] = data2;
                         // that.columnDropdown[index]= dropdownTmp;
@@ -1020,13 +1017,14 @@ var momWidget = {
 
 
                 //var searchRowcnt = that.searchProperty[index].length;
-                var searchLineCnt = 0;
-                var searchStyle = 'h00';
-                var remarkYn = 'N'
-                var remarkInline = 'Y';
-                var popupTotalNum = that.popupProperty[index].length;
-                var popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupColNum']);
-                var popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupRowNum']);
+                let searchLineCnt = 0;
+                let searchStyle = 'h00';
+                let remarkYn = 'N'
+                let remarkInline = 'Y';
+                let popupTotalNum = that.popupProperty[index].length;
+                let popupColNum = that.gridExtraProperty[index]['popupColNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupColNum']);
+                let popupRowNum = that.gridExtraProperty[index]['popupRowNum'] == undefined ? 3 : Number(that.gridExtraProperty[index]['popupRowNum']);
+                let searchAreaHtml = '';
                 if (popupTotalNum % popupColNum == 1) {
                     remarkInline = 'N';
                 }
@@ -1091,7 +1089,7 @@ var momWidget = {
                         labelBoxClass: '"mx-4 mt-2 labelbox-col3"',
                         index: index + 1
                     }
-                    var searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
+                     searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
                 } else if (searchRowcnt > 3 && searchRowcnt <= 6) {
                     searchLineCnt = 2;
                     searchStyle = 'h02';
@@ -1102,7 +1100,7 @@ var momWidget = {
                         index: index + 1
 
                     }
-                    var searchAreaHtml = that.createSearchArea.h02(classItem, searchItem, searchBtn);
+                     searchAreaHtml = that.createSearchArea.h02(classItem, searchItem, searchBtn);
                 } else if (searchRowcnt > 6 && searchRowcnt <= 9) {
                     searchLineCnt = 3;
                     searchStyle = 'h03';
@@ -1113,7 +1111,7 @@ var momWidget = {
                         index: index + 1
 
                     }
-                    var searchAreaHtml = that.createSearchArea.h03(classItem, searchItem, searchBtn);
+                     searchAreaHtml = that.createSearchArea.h03(classItem, searchItem, searchBtn);
                 } else {
                     classItem[0] = {
                         // searchAreaClass:'searchArea-h01',
@@ -1122,7 +1120,7 @@ var momWidget = {
                         labelBoxClass: '"mx-4 mt-2 labelbox-col3"',
                         index: index + 1
                     }
-                    var searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
+                     searchAreaHtml = that.createSearchArea.h01(classItem, searchItem, searchBtn);
 
                 }
 
@@ -1447,8 +1445,8 @@ var momWidget = {
                         }
                         mom_ajax('R', dropDownQueryId, param, function (result2, data2) {
                             if (data2.length == 0) {
-                                return;
                                 momWidget.splashHide();
+                                return;
                             }
                             dropdownTmp[columnId] = data2;
                             // that.columnDropdown[index]= dropdownTmp;
@@ -3052,7 +3050,7 @@ var momWidget = {
     // Level 3. 팝업창 생성을 위한 HTML 동적 생성, by createPopUp
     createPopUpHtml: {
         modal: function () {
-            var html =
+            let html =
                 '<div id="#{modalId}" class="modal gridPopup">'
                 + '    <div id="panel" class="panel messagebox col2">'
                 + '        <div class="panel-body">'
@@ -3089,7 +3087,7 @@ var momWidget = {
         },
 
         row: function () {
-            var html =
+            let html =
                 '<div class="b5">'
                 + '    <div class="w-row">'
                 + '        '
@@ -3153,7 +3151,7 @@ var momWidget = {
         },
 
         col3: function () {
-            var html =
+            let html =
                 '<div class="w-col w-col-' + colNum + '">'
                 + '    <div class="w-clearfix listitem">'
                 + '	    <div class="w-col w-col-6">'
@@ -3172,59 +3170,59 @@ var momWidget = {
         },
 
         input: function () {
-            var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';
+            let html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';
             return html;
         },
 
         number: function () {
-            var html = '<input style="float:right;" maxlength="100" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
+            let html = '<input style="float:right;" maxlength="100" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
             return html;
         },
 
         number1: function () {
-            var html = '<input style="float:right;" maxlength="1" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
+            let html = '<input style="float:right;" maxlength="1" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
             return html;
         },
 
         number4: function () {
-            var html = '<input style="float:right;" maxlength="4" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
+            let html = '<input style="float:right;" maxlength="4" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
             return html;
         },
 
         number6: function () {
-            var html = '<input style="float:right;" maxlength="6" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
+            let html = '<input style="float:right;" maxlength="6" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
             return html;
         },
 
         textarea: function () {
-            var html = '<textarea style="resize: none;" id="#{id}" type="text" class="w-input textbox w490px"></textarea>';
+            let html = '<textarea style="resize: none;" id="#{id}" type="text" class="w-input textbox w490px"></textarea>';
             return html;
         },
 
         select: function () {
-            var html = '<select style="float:right;" id="#{id}" class="w-select fieldbox #{wSize}"></select>';
+            let html = '<select style="float:right;" id="#{id}" class="w-select fieldbox #{wSize}"></select>';
             return html;
         },
 
         calendar: function () {
-            var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="datepicker" date-format="date" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';
+            let html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="datepicker" date-format="date" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';
             return html;
         },
 
         file: function () {
-            var html = '<input name="file" id="#{id}" type="file" accept="image" style="float:left; width:100%;">'
+            let html = '<input name="file" id="#{id}" type="file" accept="image" style="float:left; width:100%;">'
             return html;
         },
 
         password: function () {
-            var html = '<input style="float:right;" maxlength="50" id="#{id}" input-type="password" type="password" class="w-input fieldbox #{wSize}"></input>';
+            let html = '<input style="float:right;" maxlength="50" id="#{id}" input-type="password" type="password" class="w-input fieldbox #{wSize}"></input>';
             return html;
         }
     },
     // Level 3. 엑셀 업로드 체크 팝업창 생성을 위한 HTML 동적 생성, by excelUploadPopUp
     createExcelCheckPopUpHtml: {
         modal: function () {
-            var html =
+            let html =
                 '<div id="listPop49" class="modal">'
                 + '	<div id="panel" class="panel messagebox w85p excelCheckPopPanel">'
                 + '		<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
@@ -3240,10 +3238,10 @@ var momWidget = {
                 + '				</div>'
                 + '				<div class="w-clearfix cardheard"style="position: relative;height: 1.3em;">'
                 + '                 <div id="expArea" style="display:inline-block;float: left;position: relative;right: -%;top: -0.8em;">'
-                + '                  <div multi-lang="" id="uploadIcon"style="background-color : rgb(255 69 69);width: 50px;height: 16px;border: 1px solid gray;" class="textblock"></div>'
+                + '                  <div multi-lang="" id="uploadIcon" style="background-color : rgb(255 69 69);width: 50px;height: 16px;border: 1px solid gray;" class="textblock"></div>'
                 + '                  <div multi-lang="" style="position: relative;top: -0.3em;" id="uploadErrorCountText" class="textblock">MESSAGES12568</div>'
-                + '                  <div multi-lang=""id="uploadErrorCount"class="textblock"style="position: relative;top: -0.3em;"></div>'
-                + '                  <div multi-lang=""id="uploadErrorCountText2"class="textblock"style="position: relative;top: -0.24em;">MESSAGES12569</div>'
+                + '                  <div multi-lang="" id="uploadErrorCount"class="textblock"style="position: relative;top: -0.3em;"></div>'
+                + '                  <div multi-lang="" id="uploadErrorCountText2"class="textblock"style="position: relative;top: -0.24em;">MESSAGES12569</div>'
                 + '					<div class="w-clearfix combo-area" id="checkComboArea">'
                 //				+'						<div multi-lang="" style="display:none;" class="textblock floatl"></div>'
                 + '						<select id="checkComboBox" class="w-select fieldbox small"></select>'
@@ -3300,7 +3298,7 @@ var momWidget = {
     // Level 3. 엑셀 업로드 rpa 팝업창 생성을 위한 HTML 동적 생성
     createExcelNewPopUpHtml: {
         modal: function () {
-            var html =
+            let html =
                 '<div id="#{modalId}" class="modal">'
                 + '  <div id="panel" class="panel messagebox w400">'
                 + ' 	<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
@@ -3343,7 +3341,7 @@ var momWidget = {
         let callbackData = [];
         /*let targetArray = e.target.id.split('DP');
 				var buttonId = targetArray[0];*/
-        var actionType = $('#customPop-' + btnId).attr('actiontype');
+        let actionType = $('#customPop-' + btnId).attr('actiontype');
 
 
         that.setCustomPopup(btnId, actionType, index);
@@ -3374,14 +3372,14 @@ var momWidget = {
 
     // 체크된 아이템 얻기
     getSelectedItems: function (gridId) {
-        var selectedItems = AUIGrid.getSelectedItems(gridId);
-        var param = [];
+        let selectedItems = AUIGrid.getSelectedItems(gridId);
+        let param = [];
         if (selectedItems.length <= 0) {
             return [];
         }
-        var str = "";
-        var i, rowItem, rowInfoObj, dataField;
-        var selectionMode = AUIGrid.getProp(myGridID, "selectionMode");
+        let str = "";
+        let i, rowItem, rowInfoObj, dataField;
+        let selectionMode = AUIGrid.getProp(myGridID, "selectionMode");
 
         // 셀 선택모드
         if (selectionMode == "singleCell" || selectionMode == "multipleCells") {
@@ -3398,8 +3396,8 @@ var momWidget = {
     },
     // 체크된 아이템 얻기
     getCheckedRowItems: function (gridId, msgShow) {
-        var checkedItems = AUIGrid.getCheckedRowItems(gridId);
-        var param = [];
+        let checkedItems = AUIGrid.getCheckedRowItems(gridId);
+        let param = [];
         if (checkedItems.length <= 0) {
             if (msgShow) {
                 momWidget.messageBox({
@@ -3413,7 +3411,7 @@ var momWidget = {
             momWidget.splashHide();
             return param;
         }
-        for (var i = 0; i < checkedItems.length; i++) {
+        for (let i = 0; i < checkedItems.length; i++) {
             param.push(checkedItems[i]['item']);
         }
         return param;
@@ -3422,9 +3420,9 @@ var momWidget = {
 
     // Level2, 팝업창 크기 조절, by procCreateBtn, procEditBtn
     popUpSizeSet: function (index) {
-        var $popup = $('#' + this.popUpSetting[index]);
-        var labelWidth = $popup.find('.listitem .w-col.w-col-4, .listitem .w-col.w-col-5').width();
-        var col1Size = $popup.find('.listitem .w-col.w-col-4').width() / 4;
+        let $popup = $('#' + this.popUpSetting[index]);
+        let labelWidth = $popup.find('.listitem .w-col.w-col-4, .listitem .w-col.w-col-5').width();
+        let col1Size = $popup.find('.listitem .w-col.w-col-4').width() / 4;
         col1Size = col1Size < 1 ? $popup.find('.listitem .w-col.w-col-5').width() / 5 : col1Size;
 
         $popup.find('.col1-label').width(labelWidth);
@@ -3435,10 +3433,10 @@ var momWidget = {
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // cancelBtn3, bntpopclose
     procPopUpCancelBtn: function (index, your) {
-        var that = this;
+        let that = this;
 
-        var cancelBtn3Id = 'cancelBtn' + (index + 1);
-        var isExist = document.getElementById(cancelBtn3Id);
+        let cancelBtn3Id = 'cancelBtn' + (index + 1);
+        let isExist = document.getElementById(cancelBtn3Id);
         if (isExist != undefined) {
             $(document).on('click', '.bntpopclose, #cancelBtn' + (index + 1), function () {
                 $('#listPop' + (index / 2)).modal('hide');
@@ -3456,7 +3454,7 @@ var momWidget = {
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Edit 버튼 이벤트 핸들러
     procEditBtn: function (index, your) {
-        var that = this.grid == undefined ? this.momWidget : this;
+        let that = this.grid == undefined ? this.momWidget : this;
 
         if (that.gridProperty[index]['editId'] == undefined || that.gridProperty[index]['editId'] == false || that.gridProperty[index]['editId'] == '') {
             return;
@@ -3474,12 +3472,12 @@ var momWidget = {
 			 * 바랍니다.'}); return; }
 			 */
 
-            var rowIndex = $(this).attr('row-index');
-            var selectedItem = AUIGrid.getItemByRowIndex(that.grid[index], rowIndex);
+            let rowIndex = $(this).attr('row-index');
+            let selectedItem = AUIGrid.getItemByRowIndex(that.grid[index], rowIndex);
             that.createPopUp(index, your);
             that.popUpDataSetCopy(index, 'EDIT', selectedItem);
 
-            var message = that.procCallInit(index, 'CW', {param: selectedItem, callBackParam: undefined}, {
+            let message = that.procCallInit(index, 'CW', {param: selectedItem, callBackParam: undefined}, {
                 index: index,
                 op: 'editBtn' + (index + 1)
             }, your);
@@ -3503,16 +3501,16 @@ var momWidget = {
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // 복사버튼 이벤트 핸들러
     procCopyBtn: function (index, your) {
-        var that = this.grid == undefined ? this.momWidget : this;
+        let that = this.grid == undefined ? this.momWidget : this;
 
-        var copyBtnId = 'copyBtn' + (index + 1);
+        let copyBtnId = 'copyBtn' + (index + 1);
 
-        var linkCopyBtn = 'linkCopyBtn' + (index + 1);
-        var isExist = document.getElementById(copyBtnId);
+        let linkCopyBtn = 'linkCopyBtn' + (index + 1);
+        let isExist = document.getElementById(copyBtnId);
 
         if (isExist != undefined) {
             $(document).on('click', '#' + copyBtnId, function (e) {
-                var selectedItem = AUIGrid.getCheckedRowItems(that.grid[index], true);
+                let selectedItem = AUIGrid.getCheckedRowItems(that.grid[index], true);
                 if (selectedItem.length < 1) {
                     that.messageBox({
                         type: 'warning',
@@ -3552,7 +3550,7 @@ var momWidget = {
 
                 that.popUpDataSetCopy(index, 'COPY', selectedItem);
 
-                var message = that.procCallInit(index, 'CW', {
+                let message = that.procCallInit(index, 'CW', {
                     param: selectedItem,
                     callBackParam: undefined
                 }, {index: index, op: 'copyBtn' + (index + 1)}, your);
@@ -3575,7 +3573,7 @@ var momWidget = {
         isExist = document.getElementById(linkCopyBtn);
         if (isExist != undefined) {
             $(document).on('click', '#' + linkCopyBtn, function (e) {
-                var selectedItem = AUIGrid.getCheckedRowItems(that.grid[index], true);
+                let selectedItem = AUIGrid.getCheckedRowItems(that.grid[index], true);
                 if (selectedItem.length < 1) {
                     that.messageBox({
                         type: 'warning',
@@ -3601,7 +3599,7 @@ var momWidget = {
                 that.createPopUp(index, your);
                 that.popUpDataSetCopy(index, 'COPY', selectedItem);
 
-                var message = that.procCallInit(index, 'CW', {
+                let message = that.procCallInit(index, 'CW', {
                     param: selectedItem,
                     callBackParam: undefined
                 }, {index: index, op: 'linkCopyBtn' + (index + 1)}, your);
@@ -4353,172 +4351,6 @@ var momWidget = {
                 $('#file' + (index + 1)).val('');
                 $('#' + excelPopId).modal('show');
             });
-            $(document).on('click', '#excelUpConfirmBtn99', function (e) {
-                if ($('.NotPassStyle').length > 0) {
-                    that.messageBox({
-                        type: 'warning',
-                        width: '400',
-                        height: '145',
-                        html: Language.lang['MESSAGES12567']
-                    });
-                    your['initMessage'] = undefined;
-                    return;
-                }
-
-                that.splashShow();
-                that.firstPageFlag = true;           
-                // var param = [{}];
-//			var param = {};
-                var callBackParam = {};
-//				var file;
-//				if(index == 0) {
-//					file = file1;
-//				} else if(index == 1) {
-//					file = file2;
-//				} else if(index == 2) {
-//					file = file3;
-//				} else if(index == 3) {
-//					file = file4;
-//				} else if(index == 4) {
-//					file = file5;
-//				} else if(index == 5) {
-//					file = file6;
-//				}
-                var checkedHeader = [];
-                var gridDatas = AUIGrid.getGridData(momWidget.grid[98]);
-                for (var i = 0; i < that.columnProperty[98].length; i++) {
-
-                    if (that.columnProperty[98][i]['headerRenderer'] != undefined) {
-                        if (that.columnProperty[98][i]['headerRenderer']['checked']) {
-                            checkedHeader.push(that.columnProperty[98][i]);
-                        }
-                    } else if (!that.excelCheckBox || (that.excelCheckBox && that.columnProperty[98][i]['message'] == 'KEY')) {
-                        checkedHeader.push(that.columnProperty[98][i]);
-                    }
-                }
-                var param = [];
-                for (var i = 0; i < gridDatas.length; i++) {
-                    param[i] = {};
-                    for (var j = 0; j < checkedHeader.length; j++) {
-                        var headerTmp = checkedHeader[j]['dataField'];
-                        param[i][headerTmp] = gridDatas[i][checkedHeader[j]['dataField']];
-                        var paramTmp = param[i][headerTmp] + '';
-                        if (checkedHeader[j]['dataType'] == 'numeric' && paramTmp.charAt(paramTmp.length - 1) == '.') {
-                            param[i][headerTmp] = gridDatas[i][checkedHeader[j]['dataField']].replace('.', '').replace(',', '');
-                        }
-                    }
-                }
-
-                var paramPair = {param: param, callBackParam: undefined};
-                var message = that.procCallInit(index, 'L', paramPair, {index: index, op: 'excelUpConfirmBtn99'}, your);
-                if (message != 'SUCCESS') {
-                    that.splashHide();
-                    that.messageBox({type: 'warning', width: '400', height: '145', html: message});
-
-                    return;
-                }
-
-                param = paramPair['param'];
-                mom_ajax('L', that.gridProperty[index]['queryId'], JSON.stringify(param), function (result, data) {
-                    var message = that.procCallBack(index, 'L', result, data, param, undefined, {
-                        'index': index,
-                        'op': 'excelUpConfirmBtn99'
-                    }, your);
-                    if (your != undefined && your.interfaceUrl != undefined) { // 200805 / chs / IF 프로시저 호출 공통 처리
-                        mom_ajax('C', your.interfaceUrl, JSON.stringify({cudFlag: 'C'}));
-                    }
-//				if(message == 'SUCCESS') {
-//					return;
-//				}
-
-                    that.splashHide();
-
-                    if (result == 'SUCCESS') {
-                        that.findBtnClicked(index, true, {}, function (result, data) {
-                            if (your != undefined && your.interfaceUrl != undefined) {// 변수수정
-                                mom_ajax('C', your.interfaceUrl, JSON.stringify({cudFlag: 'C'})); // excel 업로드 시 IF 프로시저 호출
-                            }
-                            if (that.firstPageFlag) {
-                                that.firstPageFlag = false;
-                                if (your != undefined && your.retrieveCallBack != undefined) {
-                                    your.retrieveCallBack('SUCCESS', data, param, undefined, {
-                                        'index': index,
-                                        'op': 'excelUpConfirmBtn' + (index + 1)
-                                    }, your);
-                                    return;
-                                }
-                                // 2020.08.27 박연주 action 처리 직후 페이징된 페이지 전체 선택 후
-                                // 삭제 시 해당 페이지외 전체 데이터 삭제되는 현상 수정 start
-                                var partialData = data.slice(that.startPage[index] - 1, that.endPage[index]);
-                                AUIGrid.setGridData(that.grid[index], partialData);
-                                // 2020.08.27 박연주 action 처리 직후 페이징된 페이지 전체 선택 후
-                                // 삭제 시 해당 페이지외 전체 데이터 삭제되는 현상 수정 end
-                                that.messageBox({
-                                    type: 'success',
-                                    width: '400',
-                                    height: '145',
-                                    html: Language.lang['MESSAGES11193']
-                                });
-                            }
-                        }, {'index': index, 'op': 'excelUpConfirmBtn' + '99'}, your);
-                    } else {
-                        if (data['p_err_msg'] != undefined && data['p_err_msg'].length > 0) {
-                            that.messageBox({
-                                type: 'danger',
-                                width: '400',
-                                height: '145',
-                                html: Language.getLang(data['p_err_msg'])
-                            });
-                        } else {
-                            that.messageBox({
-                                type: 'danger',
-                                width: '400',
-                                height: '145',
-                                html: Language.lang['MESSAGES10821']
-                            });
-                        }
-                    }
-                    $('#' + excelPopId).modal('hide');
-                }, undefined, {'index': index, 'op': 'excelUpConfirmBtn99'}, your);
-//				excel_upload(file, that.gridProperty[index]['queryId'], pageId, that.grid[index], JSON.stringify(param), function(result, data) {
-//					if(result == 'SUCCESS') {
-//						that.findBtnClicked(index, true, {}, function(result, data) {
-//							if(your != undefined && your.interfaceUrl != undefined) {// 변수수정
-//		                        mom_ajax('C', your.interfaceUrl, JSON.stringify({cudFlag: 'C'})); // excel
-//																									// 업로드
-//																									// 시 IF
-//																									// 프로시저
-//																									// 호출
-//		                     }
-//							if(that.firstPageFlag){
-//								that.firstPageFlag = false;
-//								if(your != undefined && your.retrieveCallBack != undefined) {
-//									your.retrieveCallBack('SUCCESS', data, param, undefined, {'index' : index, 'op' : 'saveBtnEX' + (index + 1)}, your);
-//									return;
-//								}
-//								// 2020.08.27 박연주 action 처리 직후 페이징된 페이지 전체 선택 후
-//								// 삭제 시 해당 페이지외 전체 데이터 삭제되는 현상 수정 start
-//								var partialData = data.slice(that.startPage[index] - 1, that.endPage[index]);
-//								AUIGrid.setGridData(that.grid[index], partialData);
-//								// 2020.08.27 박연주 action 처리 직후 페이징된 페이지 전체 선택 후
-//								// 삭제 시 해당 페이지외 전체 데이터 삭제되는 현상 수정 end
-//
-//								that.messageBox({type:'success', width:'400', height: '145', html: Language.lang['MESSAGES11193']});
-//							}
-//						}, {'index' : index, 'op' : 'excelUpConfirmBtn' + '99'}, your);
-//					} else {
-//						// that.splashHide();
-//						if(data['p_err_msg'] != undefined && data['p_err_msg'].length > 0) {
-//							that.messageBox({type:'danger', width:'400', height: '145', html:Language.getLang(data['p_err_msg'])});
-//						} else {
-//							that.messageBox({type:'danger', width:'400', height: '145', html:Language.lang['MESSAGES10821']});
-//						}
-//					}
-//				}, undefined, {'index' : index, 'op' : 'excelUpConfirmBtn' + (index + 1)}, your);
-
-                that.splashHide();
-                $('#listPop49').modal('hide');
-            });
 
             $(document).on('click', '#verificationBtn99', function (e) {
                 that.splashShow();
@@ -4855,7 +4687,7 @@ var momWidget = {
                 if ($(btns[i]).closest('.card, .wcalc320').find('.w-widget-auigrid').length < 1) {
                     $(btns[i]).hide();
                 }
-                ;
+
             }
         }
     },
@@ -5397,7 +5229,7 @@ var momWidget = {
     },
 
     setPlanIdDate: function (mode) {
-        var that = this;
+        let that = this;
 
         if ($('#planId').val() == '') {
             return;
@@ -5962,9 +5794,9 @@ var momWidget = {
                 var today = new Date();
                 var year = undefined; // 년도
                 var month = undefined;
-                ;  // 월
+                  // 월
                 var date = undefined;
-                ;  // 날짜
+                  // 날짜
                 if (defaultValue == 'TODAY') {
                     year = today.getFullYear(); // 년도
                     month = today.getMonth();  // 월
@@ -6085,9 +5917,9 @@ var momWidget = {
                 var today = new Date();
                 var year = undefined; // 년도
                 var month = undefined;
-                ;  // 월
+                  // 월
                 var date = undefined;
-                ;  // 날짜
+                 // 날짜
                 const defaultValueArray = defaultValue.split('/');
                 let defaultValue1 = defaultValueArray[0] == undefined ? '' : defaultValueArray[0];
                 let defaultValue2 = defaultValueArray[1] == undefined ? '' : defaultValueArray[1];
@@ -9820,7 +9652,7 @@ var momWidget = {
             fromIndex = param.fromIndex;
             toIndex = param.toIndex;
             isCheckCol = that.gridProperty[fromIndex][0]['showRowCheckColumn'];
-            ;
+
             if (isCheckCol == true) {
                 fromItem = that.getCheckedRowItems(that.grid[fromIndex]);
                 if (fromItem.length == 0) {
@@ -9834,7 +9666,7 @@ var momWidget = {
                     momWidget.splashHide();
                     return;
                 } else {
-                    fromItem = fromItem;
+                   // fromItem = fromItem;
                 }
 
             } else {
@@ -11147,7 +10979,7 @@ var momWidget = {
             targetIndex = param.targetIndex;
             addIndex = param.addIndex;
             isCheckCol = that.gridProperty[targetIndex][0]['showRowCheckColumn'];
-            ;
+
             if (isCheckCol == true) {
                 targetItem = that.getCheckedRowItems(that.grid[targetIndex]);
                 if (targetItem.length == 0) {
@@ -11213,7 +11045,6 @@ var momWidget = {
             if (callBackResult['result'] != 'SUCCESS') {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
                 momWidget.splashHide();
-                return;
             }
         });
 
@@ -13970,9 +13801,9 @@ var momWidget = {
                 var today = new Date();
                 var year = undefined; // 년도
                 var month = undefined;
-                ;  // 월
+                  // 월
                 var date = undefined;
-                ;  // 날짜
+                  // 날짜
                 if (defaultValue == 'TODAY') {
                     year = today.getFullYear(); // 년도
                     month = today.getMonth();  // 월
@@ -14411,9 +14242,9 @@ var momWidget = {
                 var today = new Date();
                 var year = undefined; // 년도
                 var month = undefined;
-                ;  // 월
+                  // 월
                 var date = undefined;
-                ;  // 날짜
+                  // 날짜
                 if (defaultValue == 'TODAY') {
                     year = today.getFullYear(); // 년도
                     month = today.getMonth();  // 월
