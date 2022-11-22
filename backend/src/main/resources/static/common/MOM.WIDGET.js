@@ -155,7 +155,7 @@ var momWidget = {
                     'initSearch': 'initSearch',
                     'showFindBtn': 'showFindBtn'
                 };
-                let searchBtn = '';
+                var searchBtn = '';
                 let templateInfo = '';
                 let searchRowcnt = that.searchProperty[index].length;
                 let searchBtnColSize = "col-xl-3";
@@ -182,12 +182,12 @@ var momWidget = {
                 // var popupTemplateInfo = ;
                 let splitNum = Number(templateInfo[1]);
                 let splitType = templateInfo[2];
-                let splitRatio = templateInfo[3];
-                let templateName = 'tm' + splitNum + splitType;
+                var splitRatio = templateInfo[3];
+                var templateName = 'tm' + splitNum + splitType;
             }
 
 
-            //var searchRowcnt = that.searchProperty[index].length;
+            let searchRowcnt = that.searchProperty[index].length;
             let searchLineCnt = 0;
             let searchStyle = 'h00';
             let remarkYn = 'N'

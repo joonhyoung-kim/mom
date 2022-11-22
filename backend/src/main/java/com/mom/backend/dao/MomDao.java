@@ -448,9 +448,10 @@ public class MomDao {
 			}
         } catch(Exception e) {
         	System.out.println("에러="+resultCount);
+        	//System.out.println("에러메시지="+e.getMessage());
         	//dataSourceTransactionManager.rollback(transactionStatus);
         	//sqlSession1.rollback();
-        	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage()+"치즈",e.getCause());
+        	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage(),e.getCause());
     		throw cdae;
         } finally {
         	sqlSession1.flushStatements();

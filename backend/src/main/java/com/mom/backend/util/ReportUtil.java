@@ -82,9 +82,12 @@ public Map<String,Object> createReport(String fileName,String fileType,Map<Strin
         	String jasperPath = "";
         	String filePath = "";      	
             // Log log4j configuration  
-        	if(fileType.equals("pdf")) {
-        		jasperPath = "\\src\\main\\resources\\static\\report-design\\";
-        		filePath = "\\src\\main\\resources\\static\\report-pdf\\";
+        	if(fileType.equals("pdf")) {				
+				jasperPath = "\\src\\main\\resources\\static\\report-design\\"; 
+				filePath = "\\src\\main\\resources\\static\\report-pdf\\";
+				        		
+        		//jasperPath = "\\report-design\\";
+        		//filePath   = "\\report-pdf\\";
         		   
         	}
         	else {
@@ -99,7 +102,7 @@ public Map<String,Object> createReport(String fileName,String fileType,Map<Strin
             //URL resource = getClass().getClassLoader().getResource("report1.jrxml");
            // String filePath = resource.getPath();
              String rootPath = System.getProperty("user.dir");
-            //String rootPath = "C:\\MOM\\apache-tomcat-8.5.77\\webapps\\MOM\\WEB-INF\\classes\\static\\report-design";
+            //String rootPath = "C:\\MOM\\apache-tomcat-8.5.77\\webapps\\MOM\\WEB-INF\\classes\\static";
             System.out.println("현재 프로젝트의 경로 : "+rootPath );
             
           // jasperReport = JasperCompileManager.compileReport(filePath);  
