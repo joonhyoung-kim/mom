@@ -336,6 +336,8 @@ var momWidget = {
                     remarkYn = 'Y';
                 } else if (that.popupProperty[index][i]['popupType'] == 'DG') {
                     labelField = '<select maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '  class="gridPop' + (index + 1) + ' grid-popup popupSelectField"></select>';
+                } else if (that.popupProperty[index][i]['popupType'] == 'FA') {
+                    labelField = '<input id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="file" class="file-input" accept=".xls, .xlsx, .csv, .jasper" ></input>';
                 } else {
                     labelField = '<input maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
                 }
@@ -9623,6 +9625,7 @@ var momWidget = {
         let gridPopCancelBtnId = 'cancelBtnCP' + (index + 1);
         let moveBtnId = 'moveBtn' + (index + 1);
         let gridPopXBtnId = 'gridPop-x-btn';
+        let fileId = 'fileBlobDP'+ (index + 1);
 
         /*	var isExist = document.getElementById(findBtnId);
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
@@ -10809,6 +10812,13 @@ var momWidget = {
           
 
 
+        });
+         $(document).on('change', '#' + fileId , function (e) {
+            //that.splashShow();
+            let fileName = $('#'+e.currentTarget.id)[0].files[0].name;
+            let extension = fileName.split('.')[1];
+            $('#'+e.currentTarget.id+'-info').text('1건 등록됨');
+            $('#'+e.currentTarget.id+'-name').text('파일명: '+fileName);
         });
         $(document).on('change', '#' + excelFile, function (e) {
             that.splashShow();
@@ -13935,7 +13945,19 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({disabled: false});
-                    } else { // 텍스트
+                    }  else if (popupProperty[index][i]['popupType'] == 'FA') { //파일업로드
+                        if($('.file-label').length>0){
+							 $('.file-label').remove();
+							 $('.file-label-text').remove();
+							 $('.file-label-list').remove();
+					    }
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().remove();
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-name class="file-label-name"></label>');  
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-info class="file-label-info"> 0건 등록됨</label>');           
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" for='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+' class="file-label" style="cursor: pointer">파일첨부</label>'); 
+                                   
+						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
+                    }else { // 텍스트
 
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');

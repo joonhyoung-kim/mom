@@ -559,7 +559,53 @@
     height:calc(100% - 0.9rem);
     border: none;
 }
-
+.file-label{
+  width: 7.5rem;
+  border: 1px solid rgb(77,77,77);
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ededed;
+  border-color: darkgrey;
+  font-family: Aritadsb, sans-serif;
+  height: 2.2rem;
+  font-size: 1.2rem;
+  padding-top: 0.2rem;
+  color: transparent;
+  text-shadow: 0 0 0 black;
+}
+.file-label-info{
+  left: 8rem;
+  top: -1.9rem;
+  position: relative;
+  font-family: Aritadsb, sans-serif;
+  border-radius: 5px;
+  border-color: #a9a9a9 !important;
+  border: 1px solid rgb(77,77,77);
+  float: left;
+  font-size: 1.2rem;
+  width: 6rem;
+  border:none;
+}
+.file-label-name{
+  top: 0.5rem;
+  left: -6.1rem;
+  position: relative;
+  font-family: Aritadsb, sans-serif;
+  float: left;
+  width: 9rem;
+  font-size: 1.2rem;
+  padding: 0.24rem;
+  padding-bottom: 0.23rem;
+  border: none;
+  white-space: nowrap;
+}
+.file-input{
+	  display: none !important;
+}
 
 .gridArea-tm2v-h00-011{
 	background: #f0f0f5;

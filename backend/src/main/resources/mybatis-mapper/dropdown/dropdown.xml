@@ -355,4 +355,5 @@
                     AND    MIC.PUR_RETURN_YN = 'Y' )
     ORDER BY MPC.PO_TYPE_NM
     </select>         
+    
 </mapper>
