@@ -975,21 +975,50 @@
 	  height:100% !important
 }
 }
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm3vh-h00-01{
 	background: #f0f0f5;
-    height:calc(100% - 0.22rem);
+    height:45.7vh;
     border: none;
 }
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm3vh-h00-01{
+	background: #f0f0f5;
+    height:46.3vh;
+    border: none;
+}
+}
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm3vh-h00-02{
 	background: #f0f0f5;
-    height:100%;
+    height:86.2vh;
     border: none;
 }
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm3vh-h00-02{
+	background: #f0f0f5;
+    height:89.2vh;
+    border: none;
+}
+}
+
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm3vh-h00-03{
 	background: #f0f0f5;
-    height:100%;
+    height:42.5vh;
     border: none;
 }
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm3vh-h00-03{
+	background: #f0f0f5;
+    height:44.2vh;
+    border: none;
+}
+}
+
 .gridArea-tm3hv-h00-01{
 	background: #f0f0f5;
     height:calc(100% - 0.22rem);
