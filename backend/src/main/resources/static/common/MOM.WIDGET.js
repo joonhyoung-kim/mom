@@ -15430,6 +15430,66 @@ var momWidget = {
 		var blobUrl = URL.createObjectURL(blob);// blobUrl을 src에 넣으면 5초이상 재생가능
 		return blob;
 	}
+    },
+     getPivotDate: function (fromDateText,toDateText,dateType,dateInterval){ // 1.from 날짜(yyyy-mm-dd) 2.to날짜(yyyy-mm-dd), 3.년월일 (d,m,y) , 4.간격값(+-정수숫자)
+	 const fromDate = moment(fromDateText);
+     const toDate = moment(toDateText);
+     if(fromDate>toDate){
+	   momWidget.messageBox({
+                    type: 'warning',
+                    width: '400',
+                    height: '145',
+                    html: '시작일은 종료일보다 작아야합니다.'
+                });
+      }
+	 let days = toDate.diff(fromDate, 'days');
+	 let pivotDateText = fromDateText;
+	 let pivotText = '';
+	   for (let i = 0, max = days; i < max;i++) {  		  
+		  pivotText += ",'" + pivotDateText + "'";
+		  pivotDateText = moment(pivotDateText).add(dateInterval,dateType).format("YYYY-MM-DD");
+	   }
+	   return pivotText.replace(',','');
+       
+    },
+    changePivotGrid: function (gridId,searchData){ // 1.from 날짜(yyyy-mm-dd) 2.to날짜(yyyy-mm-dd), 3.년월일 (d,m,y) , 4.간격값(+-정수숫자)	
+	  	if(searchData.length > 0) {
+		    momWidget.splashShow();	  
+			let columnLayout = AUIGrid.getColumnLayout(gridId);	
+			let changeColumn = [];
+				
+				for(let i = 0; i <= columnLayout.length; i++) {
+					if(columnLayout[i] != undefined && columnLayout[i].headerText != undefined) {
+						changeColumn.push(columnLayout[i]);
+					}
+				}		
+				  for (let i = 0, max = searchData.length; i < max;i++) {  
+					$.each(searchData[i], function(key, value) {
+						
+					 if(key.match('-')){
+						let tmpData = key.replace(/\'/gi, "");
+						delete searchData[i][key];
+						searchData[i][tmpData] = value;
+						let columnObj = {							
+						dataField: key.replace(/\'/gi, ""),
+						dataType: "string",
+						formatString: "",
+						headerText: key.replace(/\'/gi, ""),
+						style: "aui-grid-default-column-right",
+						width : 120,
+						visible: true
+							};
+						changeColumn.push(columnObj);
+					 }
+				    });	
+				  }
+				
+				
+				AUIGrid.changeColumnLayout(gridId, changeColumn);
+			}
+			
+			AUIGrid.setGridData(gridId, searchData);
+			momWidget.splashHide();	      
     }
 
 }
