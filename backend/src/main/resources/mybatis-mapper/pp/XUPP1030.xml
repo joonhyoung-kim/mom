@@ -17,9 +17,6 @@
                  , MD.ITEM_ID
                  , MI.ITEM_NM
                  , MI.ITEM_TYPE
-                 , MI.LOT_MANAGEMENT_YN
-                 , MI.PRICE_SYNC_YN  
-                 , MI.PO_OVER_RECEIPT_RATE 
                  , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MD.COMPANY_CD,MD.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_TYPE_NM     
                  , MI.ITEM_SPEC
                  , TO_CHAR(MD.DUE_DATE ,'YYYY-MM-DD') AS DUE_DATE
@@ -37,7 +34,7 @@
                  , TO_CHAR(MD.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
                  , CASE WHEN NVL(MWO.GOOD_QTY, 0) > 0 THEN 'N' 
 		           ELSE 'Y'
-		          END               AS MODIFY_YN   
+		           END               AS MODIFY_YN   
 		         , ROWIDTOCHAR(MD.ROWID) AS GRID_ID
 	             , COUNT(*) OVER() AS TOTAL_COUNT
 	             , ROW_NUMBER() OVER(PARTITION BY MD.COMPANY_CD,MD.DIVISION_CD ORDER BY MD.DEMAND_ID ) AS ROW_CNT 
@@ -102,6 +99,7 @@
         <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
         UPDATE MOM_DEMAND 
         SET    PRIORITY    = #{item.priority, jdbcType=NUMERIC}
+             , DUE_DATE    = TO_DATE(#{item.dueDate,  jdbcType=VARCHAR},'YYYY-MM-DD')       
              , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
              , UPDATE_BY   = #{item.userId, jdbcType=VARCHAR}
              , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})

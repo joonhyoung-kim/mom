@@ -43,12 +43,13 @@
 			     , MSOV.CUSTOMER_ITEM_ID
 			     , MSOV.SALES_ITEM_ID
 			     , MSOV.SALES_ORDER_ID  
-			     , MSOV.SALES_ORDER_ID  AS GRID_ID 
+			     , MSOV.SALES_ORDER_ID  AS KEY_ID 
+			     , MSOV.CANCEL_DATE
 			     , MSOV.UPDATE_DATE
 			     , MSOV.UPDATE_BY  
-			     , MSOV.UPDATEBYNM
+			     , MSOV.UPDATE_BY_NM
 			     , COUNT(*) OVER() AS TOTAL_COUNT
-	             , ROW_NUMBER() OVER(PARTITION BY MSOV.COMPANY_CD,MSOV.DIVISION_CD ORDER BY MSOV.SO_NO, MSOV.SO_SEQ  ) AS KEY_ID
+	             , ROW_NUMBER() OVER(PARTITION BY MSOV.COMPANY_CD,MSOV.DIVISION_CD ORDER BY MSOV.SO_NO, MSOV.SO_SEQ  ) AS ROW_COUNT
 		    FROM   MOM_SALES_ORDER_V MSOV
 		    WHERE  MSOV.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 			AND    MSOV.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
@@ -67,7 +68,7 @@
 		    </if>
     <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
 	       ) A
-	WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+	WHERE ROW_COUNT BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
 	</if>   		    
     </select>
 </mapper>

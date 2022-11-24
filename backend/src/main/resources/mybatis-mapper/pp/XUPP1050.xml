@@ -6,11 +6,12 @@
 	SELECT A.*
 	FROM   (
 	</if>  
-	        SELECT MIO.COMPANY_CD  
-	             , MIO.DIVISION_CD
+	        SELECT MSSA.COMPANY_CD  
+	             , MSSA.DIVISION_CD
 	             , MIS.ITEM_ID
 	             , MIS.LOCATION_CD
-	             , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MIS.COMPANY_CD, MIS.DIVISION_CD, MIS.LOCATION_CD) FROM DUAL) AS LOCATION_NM 
+	             , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MIS.COMPANY_CD, MIS.DIVISION_CD, MIS.LOCATION_CD) FROM DUAL) AS LOCATION_NM
+	             , MSSA.ITEM_STOCK_ID 
 	             , MSO.SO_NO
 	             , MSO.SO_SEQ        AS SEQ
 	             , MSO.SO_TYPE
@@ -21,27 +22,28 @@
 	             , MSO.ITEM_SPEC
 	             , MSO.ITEM_TYPE
 	             , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MSO.COMPANY_CD, MSO.DIVISION_CD, 'MD0002', MSO.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ITEM_TYPE_NM
-	             , MIO.ALLOCATE_QTY
-	             , MIO.SHIPPING_QTY
-	             , MIO.ALLOCATE_QTY - NVL(MIO.SHIPPING_QTY, 0) AS REMAIN_QTY
-	             , MIO.SALES_ORDER_ID
+	             , MSSA.ALLOCATE_QTY
+	             , MSSA.SHIPPING_QTY
+	             , MSSA.CANCEL_QTY
+	             , MSSA.ALLOCATE_QTY - NVL(MSSA.SHIPPING_QTY, 0) - NVL(MSSA.CANCEL_QTY, 0)AS REMAIN_QTY
+	             , MSSA.SALES_ORDER_ID
 	             , MSO.ORDER_QTY
 	             , MSO.SHIPPING_DATE
-	             , MIO.CREATE_BY        AS ALLOCATE_USER_NO
-	             ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MIO.COMPANY_CD, MIO.DIVISION_CD, MIO.CREATE_BY) FROM DUAL ) AS ALLOCATE_USER_NM
-	             , TO_CHAR(MIO.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS')  AS ALLOCATE_DATE
-	             , ROWIDTOCHAR(MIO.ROWID) AS GRID_ID
+	             , MSSA.CREATE_BY        AS ALLOCATE_USER_NO
+	             ,(SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MSSA.COMPANY_CD, MSSA.DIVISION_CD, MSSA.CREATE_BY) FROM DUAL ) AS ALLOCATE_USER_NM
+	             , TO_CHAR(MSSA.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS')  AS ALLOCATE_DATE
+	             , ROWIDTOCHAR(MSSA.ROWID) AS KEY_ID
                  , COUNT(*) OVER() AS TOTAL_COUNT
-                 , ROW_NUMBER() OVER(PARTITION BY MIO.COMPANY_CD,MIO.DIVISION_CD ORDER BY MIO.SALES_ORDER_ID  ) AS KEY_ID
-	        FROM   MOM_ITEM_STOCK_SO_ALLOCATE MIO
+                 , ROW_NUMBER() OVER(PARTITION BY MSSA.COMPANY_CD,MSSA.DIVISION_CD ORDER BY MSSA.SALES_ORDER_ID, MSSA.ITEM_STOCK_ID  ) AS ROW_COUNT
+	        FROM   MOM_SO_STOCK_ALLOCATE MSSA
 	             , MOM_ITEM_STOCK MIS
 	             , MOM_SALES_ORDER_V MSO
-	        WHERE  MIO.COMPANY_CD    = MIS.COMPANY_CD
-	        AND    MIO.DIVISION_CD   = MIS.DIVISION_CD     
-	        AND    MIO.ITEM_STOCK_ID = MIS.ITEM_STOCK_ID
-	        AND    MIO.COMPANY_CD    = MSO.COMPANY_CD
-	        AND    MIO.DIVISION_CD   = MSO.DIVISION_CD     
-	        AND    MIO.SALES_ORDER_ID = MSO.SALES_ORDER_ID
+	        WHERE  MSSA.COMPANY_CD     = MIS.COMPANY_CD
+	        AND    MSSA.DIVISION_CD    = MIS.DIVISION_CD     
+	        AND    MSSA.ITEM_STOCK_ID  = MIS.ITEM_STOCK_ID
+	        AND    MSSA.COMPANY_CD     = MSO.COMPANY_CD
+	        AND    MSSA.DIVISION_CD    = MSO.DIVISION_CD     
+	        AND    MSSA.SALES_ORDER_ID = MSO.SALES_ORDER_ID
 	        <if test="soNo != null and soNo != ''">
 	        AND    (UPPER(MSO.SO_NO) LIKE '%' || UPPER(#{soNo, jdbcType=VARCHAR}) || '%' )
 	        </if>
@@ -59,7 +61,7 @@
 	        </if> 
 	<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
 	        ) A
-	WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+	WHERE ROW_COUNT BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
 	</if>  
     </select>
 </mapper>

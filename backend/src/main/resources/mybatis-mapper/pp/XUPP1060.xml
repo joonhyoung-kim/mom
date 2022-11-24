@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUPP1060">
+    <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+    SELECT A.*
+    FROM   (
+    </if>     
+            SELECT CMP.PROBLEM_TYPE     
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(CMP.COMPANY_CD, CMP.DIVISION_CD, 'PP0012', CMP.PROBLEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS PROBLEM_TYPE_NM     
+                 , CMP.PROBLEM_REASON
+                 , CMP.PROBLEM_LEVEL
+                 , CMP.ROOT_ITEM_ID
+                 , CMP.PARENT_ITEM_ID
+                 , CMP.ITEM_ID
+                 , MI.ITEM_NM
+                 , MI.ITEM_SPEC
+                 , MI.ITEM_TYPE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD, MI.DIVISION_CD, 'MD0002', MI.ITEM_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS ITEM_TYPE_NM
+                 , CMP.WORK_CENTER_CD
+                 , (SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(CMP.COMPANY_CD, CMP.DIVISION_CD, CMP.WORK_CENTER_CD) FROM DUAL)   AS WORK_CENTER_NM
+                 , ( SELECT TO_CHAR(MAX(MSS.APPLY_DATE), 'YYYY-MM-DD')
+                     FROM   MOM_SHIFT_SCHEDULE MSS
+                     WHERE  MSS.COMPANY_CD     = CMP.COMPANY_CD
+                     AND    MSS.DIVISION_CD    = CMP.DIVISION_CD
+                     AND    MSS.WORK_CENTER_CD = CMP.WORK_CENTER_CD ) AS  WS_END_DATE
+                 , CMP.CREATE_BY   AS CREATE_USER_NO
+                 , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(CMP.COMPANY_CD, CMP.DIVISION_CD, CMP.CREATE_BY) FROM DUAL ) AS CREATE_USER_NM
+                 , TO_CHAR(CMP.CREATE_DATE ,'YYYY-MM-DD HH24:MI:SS')  AS CREATE_DATE        
+                 , CMP.COMPANY_CD
+                 , CMP.DIVISION_CD
+                 , CMP.PLAN_TYPE
+                 , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(CMP.COMPANY_CD, CMP.DIVISION_CD, 'PP0011', CMP.PLAN_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL)  AS PLAN_TYPE_NM
+                 , ROWIDTOCHAR(CMP.ROWID)            AS KEY_ID
+                 , COUNT(*) OVER() AS TOTAL_COUNT
+                 , ROW_NUMBER() OVER(PARTITION BY CMP.COMPANY_CD, CMP.DIVISION_CD ORDER BY CMP.ROOT_ITEM_ID, CMP.PARENT_ITEM_ID, CMP.ITEM_ID, CMP.PROBLEM_TYPE, CMP.PROBLEM_REASON ) AS ROW_COUNT
+            FROM   CAL_MST_PROBLEM_REPORT CMP
+                 , MOM_ITEM MI
+            WHERE  CMP.COMPANY_CD  = MI.COMPANY_CD(+)
+            AND    CMP.DIVISION_CD = MI.DIVISION_CD(+)
+            AND    CMP.ITEM_ID     = MI.ITEM_ID(+)
+            AND    CMP.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+            AND    CMP.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+            <if test="planType != null and planType != ''">
+            AND    CMP.PLAN_TYPE = #{planType, jdbcType=VARCHAR}
+            </if>
+            <if test="problemType != null and problemType != ''">
+            AND    CMP.PROBLEM_TYPE  IN (${problemType})
+            </if>
+            <if test="problemReason != null and problemReason != ''">
+            AND    (UPPER(CMP.PROBLEM_REASON) LIKE '%' || UPPER(#{problemReason, jdbcType=VARCHAR}) || '%' )
+            </if>
+            <if test="itemIdNm != null and itemIdNm != ''">
+            AND    (UPPER(CMP.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(CMP.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')    
+            </if>
+            <if test="itemType != null and itemType != ''">
+            AND    MI.ITEM_TYPE IN (${itemType})
+            </if>
+    <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+           ) A
+    WHERE ROW_COUNT BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+    </if>
+    </select>  
+    <select id="get_findBtn2" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+    SELECT CMD.DEMAND_ID
+	     , TO_CHAR(CMD.DUE_DATE ,'YYYY-MM-DD')  AS DUE_DATE 
+	     , CMD.QTY
+	     , CMD.ITEM_ID
+	FROM   CAL_MST_DEMAND CMD
+	WHERE  CMD.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
+	AND    CMD.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+	AND    CMD.PLAN_TYPE    = #{planType, jdbcType=VARCHAR}
+	AND    CMD.ITEM_ID      = #{itemId, jdbcType=VARCHAR}
+	ORDER BY CMD.DUE_DATE
+	       , CMD.DEMAND_ID
+    </select>
+</mapper>    

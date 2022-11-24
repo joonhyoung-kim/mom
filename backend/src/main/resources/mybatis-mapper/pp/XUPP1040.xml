@@ -28,9 +28,10 @@
 	             , NVL(MIS.STOCK_QTY, 0) - NVL(MIS.ALLOCATE_QTY,0)  AS AVAILABLE_QTY 
 	             , ''                                               AS TO_ALLOCATE_QTY
 	             , MSO.SHIPPING_DATE
+	             , MSO.SALES_ORDER_ID     AS KEY_ID
 	             , ROWIDTOCHAR(MSO.ROWID) AS GRID_ID
 	             , COUNT(*) OVER() AS TOTAL_COUNT
-	             , ROW_NUMBER() OVER(PARTITION BY MSO.COMPANY_CD,MSO.DIVISION_CD ORDER BY MSO.SO_NO, MSO.SO_SEQ  ) AS KEY_ID
+	             , ROW_NUMBER() OVER(PARTITION BY MSO.COMPANY_CD,MSO.DIVISION_CD ORDER BY MSO.SO_NO, MSO.SO_SEQ  ) AS ROW_COUNT
 	             , MIS.ITEM_STOCK_ID
 	        FROM   MOM_SALES_ORDER_V MSO
 	             , MOM_ITEM_STOCK MIS 
@@ -40,11 +41,6 @@
 	        AND    MSO.STORAGE_LOCATION_CD = MIS.LOCATION_CD(+)
 	        AND    MSO.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
 	        AND    MSO.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
-	        AND    MSO.SALES_ORDER_ID  IN ( SELECT MSC.SALES_ORDER_ID
-	                                        FROM   MOM_SO_CHANGE MSC
-	                                        WHERE  MSC.COMPANY_CD  = MSO.COMPANY_CD
-	                                        AND    MSC.DIVISION_CD = MSO.DIVISION_CD
-	                                        AND    MSC.APPLY_FLAG = 'N' )
 	        <if test="soNo != null and soNo != ''">
 	        AND    (UPPER(MSO.SO_NO) LIKE '%' || UPPER(#{soNo, jdbcType=VARCHAR}) || '%' )
 	        </if>
@@ -62,7 +58,7 @@
 	        </if>
 	<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
 	       ) A
-	WHERE KEY_ID BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+	WHERE ROW_COUNT BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
 	</if>                                  
     </select>  
     <delete id="remove_customBtn1-1" parameterType="java.util.List">
