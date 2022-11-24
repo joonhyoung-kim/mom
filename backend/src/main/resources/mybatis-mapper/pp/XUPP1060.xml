@@ -70,7 +70,7 @@
 	WHERE  CMD.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
 	AND    CMD.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
 	AND    CMD.PLAN_TYPE    = #{planType, jdbcType=VARCHAR}
-	AND    CMD.ITEM_ID      = #{itemId, jdbcType=VARCHAR}
+	AND    CMD.ITEM_ID      = #{rootItemId, jdbcType=VARCHAR}
 	ORDER BY CMD.DUE_DATE
 	       , CMD.DEMAND_ID
     </select>

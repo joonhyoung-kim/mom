@@ -20,7 +20,7 @@ var VIEW= {
 	    if(index==0){
 		    var item = e.item;	
 			setTimeout(function() {
-	            momWidget.findBtnClicked(1, {itemId:item['itemId'],planType:item['planType']}, true, 'CELLCLICK',menuId,VIEW);
+	            momWidget.findBtnClicked(1, {rootItemId:item['rootItemId'],planType:item['planType']}, true, 'CELLCLICK',menuId,VIEW);
     		},200);
 	    }
 	},
