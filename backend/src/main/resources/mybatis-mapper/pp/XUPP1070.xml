@@ -6,42 +6,47 @@
 	SELECT A.*
 	FROM   (
 	</if>   
-	        SELECT CEP.WORK_CENTER_CD
-	             , (SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(CEP.COMPANY_CD, CEP.DIVISION_CD, CEP.WORK_CENTER_CD)
-	                FROM   DUAL)  AS WORK_CENTER_NM
-	             , CEP.ITEM_ID
-	             , MIN(MI.ITEM_NM)   AS ITEM_NM
-	             , MIN(MI.ITEM_SPEC) AS ITEM_SPEC 
-	             , TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')  AS PLAN_DATE      
-	             , SUM(CEP.PLAN_QTY) AS PLAN_QTY
-	             , CEP.COMPANY_CD
-	             , CEP.DIVISION_CD
-	             , CEP.WORK_CENTER_CD||'_'|| CEP.ITEM_ID ||'_'||TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')          AS KEY_ID
-	             , COUNT(*) OVER() AS TOTAL_COUNT
-	             , ROW_NUMBER() OVER(PARTITION BY CEP.COMPANY_CD, CEP.DIVISION_CD ORDER BY CEP.WORK_CENTER_CD, CEP.ITEM_ID, TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')  ) AS ROW_COUNT
-	             <if test="pivot != '' and pivot != null">
-	             ${pivot}
-	             </if>
-	        FROM   CAL_EXP_PRODUCTION_PLAN CEP
-	             , MOM_ITEM MI
-	        WHERE  CEP.COMPANY_CD   = MI.COMPANY_CD
-	        AND    CEP.DIVISION_CD  = MI.DIVISION_CD
-	        AND    CEP.ITEM_ID      = MI.ITEM_ID  
-	        AND    CEP.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
-	        AND    CEP.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
-	        AND    CEP.PLAN_TYPE    = 'PRE'
-	        AND    CEP.PLAN_DATE BETWEEN TO_DATE(#{planDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD') AND TO_DATE(#{planDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD')     
-	        <if test="itemIdNm != null and itemIdNm != ''">
-	        AND    (UPPER(CEP.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')    
+	        <if test="pivot != null and pivot != ''">
+	        SELECT *
+	        FROM   (
 	        </if>
-	        <if test="workCenterCd != null and workCenterCd != ''">
-	        AND    CEP.WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
-	        </if>
-	        GROUP BY CEP.COMPANY_CD
-	               , CEP.DIVISION_CD
-	               , CEP.WORK_CENTER_CD
-	               , CEP.ITEM_ID
-	               , TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')
+	                SELECT CEP.WORK_CENTER_CD
+			             , (SELECT MOM_COMMON_PKG.FN_GET_WORK_CENTER_NAME(CEP.COMPANY_CD, CEP.DIVISION_CD, CEP.WORK_CENTER_CD)
+			                FROM   DUAL)  AS WORK_CENTER_NM
+			             , CEP.ITEM_ID
+			             , MIN(MI.ITEM_NM)   AS ITEM_NM
+			             , MIN(MI.ITEM_SPEC) AS ITEM_SPEC 
+			             , TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')  AS PLAN_DATE      
+			             , SUM(CEP.PLAN_QTY) AS PLAN_QTY
+			             , CEP.COMPANY_CD
+			             , CEP.DIVISION_CD
+			             , CEP.WORK_CENTER_CD||'_'|| CEP.ITEM_ID ||'_'||TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')          AS KEY_ID
+			             , COUNT(*) OVER() AS TOTAL_COUNT
+			             , ROW_NUMBER() OVER(PARTITION BY CEP.COMPANY_CD, CEP.DIVISION_CD ORDER BY CEP.WORK_CENTER_CD, CEP.ITEM_ID, TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')  ) AS ROW_COUNT
+			        FROM   CAL_EXP_PRODUCTION_PLAN CEP
+			             , MOM_ITEM MI
+			        WHERE  CEP.COMPANY_CD   = MI.COMPANY_CD
+			        AND    CEP.DIVISION_CD  = MI.DIVISION_CD
+			        AND    CEP.ITEM_ID      = MI.ITEM_ID  
+			        AND    CEP.COMPANY_CD   = #{companyCd, jdbcType=VARCHAR}
+			        AND    CEP.DIVISION_CD  = #{divisionCd, jdbcType=VARCHAR}
+			        AND    CEP.PLAN_TYPE    = 'PRE'
+			        AND    CEP.PLAN_DATE BETWEEN TO_DATE(#{planDateSD, jdbcType=VARCHAR}, 'YYYY-MM-DD') AND TO_DATE(#{planDateED, jdbcType=VARCHAR}, 'YYYY-MM-DD')     
+			        <if test="itemIdNm != null and itemIdNm != ''">
+			        AND    (UPPER(CEP.ITEM_ID) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemIdNm, jdbcType=VARCHAR}) || '%')    
+			        </if>
+			        <if test="workCenterCd != null and workCenterCd != ''">
+			        AND    CEP.WORK_CENTER_CD = #{workCenterCd, jdbcType=VARCHAR}
+			        </if>
+			        GROUP BY CEP.COMPANY_CD
+			               , CEP.DIVISION_CD
+			               , CEP.WORK_CENTER_CD
+			               , CEP.ITEM_ID
+			               , TO_CHAR(CEP.PLAN_DATE ,'YYYY-MM-DD')
+	        <if test="pivot != null and pivot != ''">
+            )
+            PIVOT(SUM(PLAN_QTY) FOR PLAN_DATE IN(${pivot}))
+            </if>       
 	<if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
 	       ) A
 	WHERE ROW_COUNT BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
