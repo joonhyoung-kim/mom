@@ -18,7 +18,7 @@ var momWidget = {
     excelDownProperty: [], // 엑셀 다운로드 컬럼 세팅 속성(aui grid 기준에 맞게 가공)
     excelUploadProperty: [], // 엑셀 다운로드 컬럼 세팅 속성(aui grid 기준에 맞게 가공)
     columnProp: [], // 컬럼 세팅 속성(aui grid 기준에 맞게 가공)
-
+    columnLayout: [], //그리드 컬럼 레이아웃
     excelDownGridData: [], // 엑셀다운로드 그리드 data 임시 보관(풀스캔시 활용)
     backWork: [], // 페이징시 풀스캔(전체조회) 중인지 여부
     totalRowCount: [], // 페이징시 풀스캔(전체조회) 전체 카운트(전체 조회건수) 저장
@@ -831,6 +831,7 @@ var momWidget = {
                 that.columnProp[index] = filteredColumnProp;
 
                 that.grid[index] = AUIGrid.create('#grid' + (index + 1), filteredColumnProp, that.gridProperty[index][0]);
+                that.columnLayout[index] = AUIGrid.getColumnLayout('#grid' + (index + 1));
             }
 
 
@@ -7530,6 +7531,19 @@ var momWidget = {
                 } else if (btnId == 'PAGING') {
 
                 } else {
+	               $.each(data, function (i) {	
+				  let keys = Object.keys(data[i]);	
+				  let filterKey  = '';
+				  let filterData = '';
+				  $.each(keys, function (index,key) {
+  				    if(key.includes("'")){
+		              filterKey = key.replace(/\'/gi, "");
+		              filterData = data[i][key];
+				      delete data[i][key];
+					  data[i][filterKey] = filterData;
+					}
+				})     
+			});
                     AUIGrid.setGridData(that.grid[index], data);
                     if (that.sortingInfo[index] != undefined && that.sortingInfo[index].length > 0) {
                         AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);
@@ -15431,9 +15445,11 @@ var momWidget = {
 		return blob;
 	}
     },
-     getPivotDate: function (fromDateText,toDateText,dateType,dateInterval){ // 1.from 날짜(yyyy-mm-dd) 2.to날짜(yyyy-mm-dd), 3.년월일 (d,m,y) , 4.간격값(+-정수숫자)
+     getPivotDate: function (index,fromDateText,toDateText,dateType,dateInterval){ // 1.from 날짜(yyyy-mm-dd) 2.to날짜(yyyy-mm-dd), 3.년월일 (d,m,y) , 4.간격값(+-정수숫자)
+     let that = momWidget;
 	 const fromDate = moment(fromDateText);
      const toDate = moment(toDateText);
+     let columnLayout = that.columnLayout[index]; 
      if(fromDate>toDate){
 	   momWidget.messageBox({
                     type: 'warning',
@@ -15442,55 +15458,36 @@ var momWidget = {
                     html: '시작일은 종료일보다 작아야합니다.'
                 });
       }
+     let changeColumn = [];				
+	for(let i = 0; i <= columnLayout.length; i++) {
+		if(columnLayout[i] != undefined && columnLayout[i].headerText != undefined) {
+			changeColumn.push(columnLayout[i]);
+		}
+	}	
 	 let days = toDate.diff(fromDate, 'days');
 	 let pivotDateText = fromDateText;
 	 let pivotText = '';
-	   for (let i = 0, max = days; i < max;i++) {  		  
+	 let columnObj = {};
+	   for (let i = 0, max = days; i <= max;i++) {  		  
 		  pivotText += ",'" + pivotDateText + "'";
-		  pivotDateText = moment(pivotDateText).add(dateInterval,dateType).format("YYYY-MM-DD");
-	   }
-	   return pivotText.replace(',','');
-       
-    },
-    changePivotGrid: function (gridId,searchData){ // 1.from 날짜(yyyy-mm-dd) 2.to날짜(yyyy-mm-dd), 3.년월일 (d,m,y) , 4.간격값(+-정수숫자)	
-	  	if(searchData.length > 0) {
-		    momWidget.splashShow();	  
-			let columnLayout = AUIGrid.getColumnLayout(gridId);	
-			let changeColumn = [];
-				
-				for(let i = 0; i <= columnLayout.length; i++) {
-					if(columnLayout[i] != undefined && columnLayout[i].headerText != undefined) {
-						changeColumn.push(columnLayout[i]);
-					}
-				}		
-				  for (let i = 0, max = searchData.length; i < max;i++) {  
-					$.each(searchData[i], function(key, value) {
-						
-					 if(key.match('-')){
-						let tmpData = key.replace(/\'/gi, "");
-						delete searchData[i][key];
-						searchData[i][tmpData] = value;
-						let columnObj = {							
-						dataField: key.replace(/\'/gi, ""),
+		  columnObj = {							
+						dataField: pivotDateText,
 						dataType: "string",
 						formatString: "",
-						headerText: key.replace(/\'/gi, ""),
+						headerText: pivotDateText,
 						style: "aui-grid-default-column-right",
 						width : 120,
 						visible: true
-							};
-						changeColumn.push(columnObj);
-					 }
-				    });	
-				  }
-				
-				
-				AUIGrid.changeColumnLayout(gridId, changeColumn);
-			}
-			
-			AUIGrid.setGridData(gridId, searchData);
-			momWidget.splashHide();	      
+		  };
+		  changeColumn.push(columnObj);
+		  pivotDateText = moment(pivotDateText).add(dateInterval,dateType).format("YYYY-MM-DD");
+	   }
+	   
+	   AUIGrid.changeColumnLayout(that.grid[index], changeColumn);
+	   return pivotText.replace(',','');
+       
     }
+
 
 }
 
