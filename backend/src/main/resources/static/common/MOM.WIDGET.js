@@ -41,6 +41,7 @@ var momWidget = {
     preComboItems: [], // 검색조건필드 콤보박스 아이템 list
     popupPrevItem: [], //팝업 콤보박스 검색시에 사용되는 list
     searchPrevItem: [], //검색조건 콤보박스 검색시에 사용되는 list
+    uploadFile: [], //파입업로드용 list
     editItem: [],
     prevKeyItem: {},
     downSequence: 100,
@@ -49,6 +50,7 @@ var momWidget = {
     excelUpCheckYn: undefined, // 엑셀 업로드 검증 사용여부(Y/N)
     dateCheckParam: '-1', // 엑셀 업로드시 추가적인 벨리데이션(yyyymm형태)을 위한 변수
     upsertFlag: 'Y',
+    
 
     //background: #6c5ffc !important;
     init: function (index, menuId, your, widgetType) {
@@ -2824,61 +2826,6 @@ var momWidget = {
     return result;
 },*/
 
-    // 팝업 파라미터 가져오기
-    getPopupParam: function (index, your, extraParam) {
-        var that = this;
-        var param = {};
-        var popupId = '';
-        var searchId = '';
-        var checkedItem = [];
-        var listItem = [];
-        var mapItem = {};
-
-        //param = that.getCheckedRowItems(index) == 'FAIL'? []:that.getCheckedRowItems(index);
-        for (var i = 0; i < that.popupProperty[index].length; i++) {
-            popupId = that.popupProperty[index][i]['popupId'];
-            popupType = that.popupProperty[index][i]['popupType'];
-            searchId = that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1);
-            that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1);
-            /*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
-				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
-				for(var j=0;j<checkedItem.length;j++){
-					 mapItem[popupId] = checkedItem[j]['value'];
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
-
-				}
-
-				param[popupId]= listItem;
-			}*/
-            if (Object.keys(extraParam).length > 0 && i == 0) {
-                mapItem[popupId] = $('#' + searchId).val();
-                mapItem['typeMap'] = extraParam['typeMap'] == undefined ? '' : extraParam['typeMap'];
-                mapItem['typeList'] = extraParam['typeList'] == undefined ? '' : extraParam['typeList'];
-                //listItem[j] = JSON.parse(JSON.stringify(mapItem));
-
-
-            } else if (Object.keys(extraParam).length > 0 && i > 0) {
-                mapItem[popupId] = $('#' + searchId).val();
-            }
-
-
-            param[popupId] = $('#' + searchId).val();
-
-
-            if (Object.keys(extraParam).length > 0 && i == (that.popupProperty[index].length) - 1) {
-                param['arrayParam'] = [mapItem];
-            }
-
-            if (popupType == 'SS' || popupType == 'MS') {
-                //$('#'+searchId).jqxComboBox({source:[]});
-                // let searchMinLen = that.searchComboMinLength[index][popupId+'SP'+(index+1)];
-                //$('#'+searchId).jqxComboBox({ displayMember: "label", valueMember: "code", width: 210, height: 30,dropDownHeight: 120,disabled: false,searchMode: 'containsignorecase',placeHolder: 'enter '+searchMinLen +' or more characters',minLength: searchMinLen,remoteAutoComplete: false});
-            }
-        }
-        return [param];
-    },
     // 커스텀팝업 파라미터 가져오기
     getCustomPopupParam: function (index, btnId, your, extraParam) {
         var that = momWidget;
@@ -9045,7 +8992,7 @@ var momWidget = {
         var checkedItem = [];
         var listItem = [];
         var mapItem = {};
-
+        that.uploadFile[index].length = 0;
         //param = that.getCheckedRowItems(index) == 'FAIL'? []:that.getCheckedRowItems(index);
         for (var i = 0; i < that.popupProperty[index].length; i++) {
             popupId = that.popupProperty[index][i]['popupId'];
@@ -9074,9 +9021,14 @@ var momWidget = {
             } else if (Object.keys(extraParam).length > 0 && i > 0) {
                 mapItem[popupId] = $('#' + searchId).val();
             }
-
-
-            param[popupId] = $('#' + searchId).val();
+           
+            if(popupType == 'FA'){
+	           that.uploadFile[index] = that.getfileToBlob($('#'+popupId)[0].files[0]);
+			}
+			else{
+				 param[popupId] = $('#' + searchId).val();
+			}
+           
 
 
             if (Object.keys(extraParam).length > 0 && i == (that.popupProperty[index].length) - 1) {
@@ -12194,7 +12146,44 @@ var momWidget = {
                 }, undefined, index, this, false, undefined, actionMode);
 
             } else {
-                mom_ajax(actionType, queryId, param, function (result, data) {
+				if(that.uploadFile[index].length >0){
+					//FormData 새로운 객체 생성 
+					let formData = new FormData();
+					// 넘길 데이터를 담아준다. 
+				var data = {   
+				    "userId"    : $("#userId").val(),
+				    "title"     : $("#title").val(),
+				    "contents"  :  $("#contents").val()
+				}
+				
+				// input class 값 
+				let fileInput = $('#fileBlobDP'+(index+1));
+				// fileInput 개수를 구한다.
+				let file = fileInput[0].files[index];
+				let blobFile = that.uploadFile[index];
+				//let fileToBlob = that.getfileToBlob(file);
+				  // 'key'라는 이름으로 위에서 담은 data를 formData에 append한다. type은 json  
+				  formData.append('blob',blobFile , file.fileName); // (key,value,파일명)
+				  formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
+				  // ajax 처리 부분 * 
+				$.ajax({
+				      url: 'url',
+				      data: formData,
+				      contentType: false,               // * 중요 *
+				      processData: false,               // * 중요 *
+				      enctype : 'multipart/form-data',  // * 중요 *
+				      success: function(data) {
+				        if (result.SUCCESS == true) {
+				         alert("성공");
+				        } else {
+				         alert("실패");
+				         }
+				      }
+				});
+				  
+				}
+				else{
+					 mom_ajax(actionType, queryId, param, function (result, data) {
                     if (data.length == undefined || data.length == 0 || data[0]['p_err_code'] == 'E') {
                         momWidget.messageBox({
                             type: 'danger',
@@ -12237,6 +12226,8 @@ var momWidget = {
                     });
                     momWidget.splashHide();
                 }, undefined, index, this, false);
+				}
+               
 
             }
            return false;
@@ -15021,13 +15012,14 @@ var momWidget = {
                     let maskHeight = $(document).height();
       	            let maskWidth = $(window).width();
                     if($('.aui-grid-paging-panel').length>0){
-	                 $(that.grid[i]).css('height', (height-50 ) + 'px');
+	                 $(that.grid[i]).css('height', (height-40 ) + 'px');
                      $(that.grid[i]).css('width', (width-4 ) + 'px');
                      AUIGrid.resize(that.grid[i]);
 				    }
 				    else{
 					$(that.grid[i]).find('.aui-grid').css('height', (height-65 ) + 'px');
                     $(that.grid[i]).find('.aui-grid').css('width', (width-4 ) + 'px');
+                    AUIGrid.resize(that.grid[i]);
 				    }
                     
 
@@ -15425,6 +15417,19 @@ var momWidget = {
         modalId = selectorId + modal;
         $(modalId).css('display','none');
         momWidget.maskHide(depth);
+    },
+    getfileToBlob: function (file){
+	var reader = new FileReader();
+	reader.readAsDataURL(file);
+	reader.onload = function(event){
+		var dataURL = event.target.result;
+		var base64 = dataURL.substr(dataURL.indexOf('base64,')+7);
+		var file_etc = dataURL.substring(dataURL.indexOf(':')+1,dataURL.indexOf(';'));
+        				
+		var blob = b64toBlob(base64,file_etc);
+		var blobUrl = URL.createObjectURL(blob);// blobUrl을 src에 넣으면 5초이상 재생가능
+		return blob;
+	}
     }
 
 }

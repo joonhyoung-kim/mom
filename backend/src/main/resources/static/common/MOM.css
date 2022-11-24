@@ -549,16 +549,35 @@
     padding-top: 0.4rem;
    
 }
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm2v-h00-01{
 	background: #f0f0f5;
     border: none;
-    height:calc(100% - 0.9rem); 
+    height:88.8vh; 
 }
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm2v-h00-01{
+	background: #f0f0f5;
+    border: none;
+    height:90.8vh; 
+}
+}
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm2v-h00-02{
 	background: #f0f0f5;
-    height:calc(100% - 0.9rem);
+    height:86.3vh; 
     border: none;
 }
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm2v-h00-02{
+	background: #f0f0f5;
+    height:89.4vh; 
+    border: none;
+}
+}
+
 .file-label{
   width: 7.5rem;
   border: 1px solid rgb(77,77,77);
@@ -617,10 +636,20 @@
     height:70vh; 
     border: none;
 }
+
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm2v-h01-01{
 	background: #f0f0f5;
-    height:93.6%;
+    height:84.1vh;
     border: none;
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm2v-h01-01{
+	background: #f0f0f5;
+    height:87.7vh;
+    border: none;
+}
 }
 .gridArea-tm2v-h01-011{
 	background: #f0f0f5;
@@ -654,14 +683,14 @@
 	.gridArea-tm1st-h01-01{
 	background: #f0f0f5;
     border: none;
-    height:83vh;  
+    height:82vh;  
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
 	.gridArea-tm1st-h01-01{
 	background: #f0f0f5;
     border: none;
-    height:88vh;
+    height:86vh;
 }
 }
 .gridArea-tm1st-h01-01-footer{
@@ -685,7 +714,7 @@
 	.gridArea-tm1st-h02-01{
 	background: #f0f0f5;
     border: none;
-     height:78vh;
+     height:77vh;
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
@@ -796,16 +825,26 @@
     border: none;
 }
 }
+
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm2h-h01-01{
 	background: #f0f0f5;
-    height: 89.2%;
+    height: 42vh;
     border: none;
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm2h-h01-01{
+	background: #f0f0f5;
+    height:43vh;
+    border: none;
+}
 }
 @media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm2h-h00-02{
 	background: #f0f0f5;
    /*  height: 40vh; */
-    height:42.5vh;
+    height:44vh;
     border: none;
 }
 }
@@ -813,7 +852,7 @@
 .gridArea-tm2h-h00-02{
 	background: #f0f0f5;
    /*  height: 40vh; */
-    height:43vh;
+    height:44.3vh;
     border: none;
 }
 }
@@ -823,10 +862,20 @@
     height: 94%;
     border: none;
 }
+
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm2h-h00-02-paging{
 	background: #f0f0f5;
-    height: 40vh;
+    height: 42.7vh;
     border: none;
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm2h-h00-02-paging{
+	background: #f0f0f5;
+    height: 44.2vh;
+    border: none;
+}
 }
 .gridArea-tm2h-h02-01-footer{
 	background: #f0f0f5;
@@ -836,14 +885,14 @@
 @media (min-width:800px) and (max-width:1920px) {
 	.gridArea-tm2h-h02-01-paging{
 	background: #f0f0f5;
-    height: 35.2vh !important;
+    height: 35.9vh !important;
     border: none;
 }
 	}
 @media (min-width:1921px) and (max-width:2560px)  {
 	.gridArea-tm2h-h02-01-paging{
 	background: #f0f0f5;
-    height: 39vh !important;
+    height: 39.2vh !important;
     border: none;
 }
 	}
@@ -871,7 +920,7 @@
 @media (min-width:1921px) and (max-width:2560px)  {
 	.gridArea-tm2h-h02-01{
 	background: #f0f0f5;
-    height: 36vh;
+    height: 39vh;
     border: none;
 }
 }
@@ -950,15 +999,13 @@
 @media (min-width:800px) and (max-width:1920px) {
  .gridArea-tm3hv-h00-02{
 	 background: #f0f0f5;
-/*      height:calc(100% - 1.5vh); */
-     height:40.7vh;
+     height:42.5vh;
      border: none;
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
  .gridArea-tm3hv-h00-02{
 	 background: #f0f0f5;
-/*      height:calc(100% - 1.5vh); */
      height:43.8vh;
      border: none;
 }
@@ -966,15 +1013,13 @@
 @media (min-width:800px) and (max-width:1920px) {
  .gridArea-tm3hv-h00-03{
 	 background: #f0f0f5;
-/*      height:calc(100% - 1.5vh); */
-     height:40.7vh;
+     height:42.5vh;
      border: none;
 }
 }
 @media (min-width:1921px) and (max-width:2560px)  {
  .gridArea-tm3hv-h00-03{
 	 background: #f0f0f5;
-/*      height:calc(100% - 1.5vh); */
      height:43.8vh;
      border: none;
 }
@@ -982,7 +1027,7 @@
 @media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm3hv-h01-01{
 	 background: #f0f0f5;
-     height:calc(100% - 1.9vh); 
+     height:42vh; 
      border: none;
 }
 }
@@ -993,17 +1038,37 @@
      border: none;
 }
 }
+
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm4vvh-h01-01{
 	background: #f0f0f5;
-    height:81.5vh;
+    height:84.5vh;
     border: none;
 }
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm4vvh-h01-01{
+	background: #f0f0f5;
+    height:87.7vh;
+    border: none;
+}
+}
+@media (min-width:800px) and (max-width:1920px) {
+.gridArea-tm4vvh-h01-02{
+	background: #f0f0f5;
+    height:86.3vh; 
+    border: none;
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
 .gridArea-tm4vvh-h01-02{
 	background: #f0f0f5;
     /* height: 92%; */
-    height:98.8%; 
+    height:89vh; 
     border: none;
 }
+}
+
 .gridArea-tm3hv-h02-01{
 	background: #f0f0f5;
    /*  height: 17.5rem; */
@@ -1028,13 +1093,33 @@
    width: 13vw !important;
  /*   left: -5rem; */
 }
-
+@media (min-width:800px) and (max-width:1920px) {
 .gridArea-tm4vvh-h01-03{
 	background: #f0f0f5;
-   /*  height: 17.5rem; */
-   /* height: 76%; */
-    height:calc(100% - 5.8rem); 
+    height:60.6vh; 
     border: none;
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm4vvh-h01-03{
+	background: #f0f0f5;
+    height:62.6vh; 
+    border: none;
+}
+}
+@media (min-width:800px) and (max-width:1920px) {
+.gridArea-tm4vvh-h00-04{
+	background: #f0f0f5;
+    border: none;
+    height:25.3vh; 
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.gridArea-tm4vvh-h00-04{
+	background: #f0f0f5;
+    border: none;
+    height:26.3vh; 
+}
 }
 .gridArea-tm4vvh-h00-02{
 	background: #f0f0f5;
@@ -1047,12 +1132,7 @@
  /*    height:calc(100% - 4.9rem);  */
     border: none;
 }
-.gridArea-tm4vvh-h00-04{
-	background: #f0f0f5;
-    border: none;
-    /*   height: 95.5%; */
-    height:99%; 
-}
+
 
 .gridArea-h01 {
 	background: #f0f0f5;
