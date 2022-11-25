@@ -60,7 +60,7 @@ var momWidget = {
         if (index == 0 && widgetType != 'DG') {
             let changePwPop = that.createChangePop.password(index, '비밀번호변경');
             $('body').append(changePwPop);
-            let calendarPop = that.createPopup.calendarPop(index + 1, 'grid');
+            let calendarPop = that.createPopup.calendarPop(index, 'grid');
             $('body').append(calendarPop);
             //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');
         } else if (widgetType == 'DG') {	       
