@@ -1318,7 +1318,7 @@ var XUSM3030 = {
 				, style			: 'my-column-style-edit'	
 				, headerTooltip : { 
 				  show : true,
-				  tooltipHtml : '<div style="width:300px;"><p>버튼 이벤트시 자동으로 세팅할 파라미터</p><p>GRID_CHECK : 그리드에서 체크된 레코드</P><P>GRID_SELECT: 그리드에서 선택된 레코드</p><P>GRID_ALL: 그리드 전체</p></div>'
+				  tooltipHtml : '<div style="width:300px;"><p>버튼 이벤트시 자동으로 세팅할 파라미터</p><p>GRID_CHECK : 그리드에서 체크된 레코드</P><P>GRID_SELECT: 그리드에서 선택된 레코드</p><P>GRID_ALL: 그리드 전체</p><P>NONE: 파라미터없음</p></div>'
 		        }
 			}];
 
