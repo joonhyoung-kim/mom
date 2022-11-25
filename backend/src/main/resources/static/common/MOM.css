@@ -721,6 +721,20 @@
     height:86vh;
 }
 }
+@media (min-width:800px) and (max-width:1920px) {
+	.gridArea-tm1st-h01-01-paging{
+	background: #f0f0f5;
+    border: none;
+    height:82vh;  
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+	.gridArea-tm1st-h01-01-paging{
+	background: #f0f0f5;
+    border: none;
+    height:86vh;
+}
+}
 .gridArea-tm1st-h01-01-footer{
 	background: #f0f0f5;
     height: 94vh;

@@ -2745,87 +2745,7 @@ var momWidget = {
 
 
     },
-    controlPaging: function (result, data, index, e) {
-        var that = momWidget;
 
-        $('.aui-grid-paging-number.aui-grid-paging-number-selected').removeClass('aui-grid-paging-number-selected');
-        $('#click').addClass('aui-grid-paging-number-selected');
-        var startPage = 1;
-        var endPage = 1;
-        var nextPagingNum = 1;
-        var prevNum = 1;
-        var infoHtml = '';
-        var endPageNum = Math.ceil(that.totalRowCount[index] / that.gridProperty[index][0]['pageRowCount']); //마지막 페이징번호
-        var endPageRow = Math.ceil(endPageNum / 10) * 10;
-        startPage = data[0]['id'];
-        endPage = data[data.length - 1]['id'];
-
-        if (e.target.classList.contains('aui-grid-paging-first')) {
-            nextPagingNum = 1;
-            infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-            $('#grid' + (index + 1)).find('.aui-grid-paging-panel').prepend(infoHtml);
-        } else if (e.target.classList.contains('aui-grid-paging-last')) {
-            nextPagingNum = endPageRow - 9;  //다음에 선택될버튼
-            infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-            $('.aui-grid-paging-panel').prepend(infoHtml);
-            infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-            $('#grid' + (index + 1)).find('.aui-grid-paging-panel').prepend(infoHtml);
-        } else if (e.target.classList.contains('aui-grid-paging-prev')) {
-            prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
-            nextPagingNum = Math.floor(prevNum / 10) * 10 + 1 - 10 + 10;  //다음에 선택될버튼
-            infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-            $('#grid' + (index + 1)).find('.aui-grid-paging-panel').prepend(infoHtml);
-        } else if (e.target.classList.contains('aui-grid-paging-next')) {
-            prevNum = Number($('.aui-grid-paging-panel').find('#click')[0].innerText);
-            nextPagingNum = Math.ceil(prevNum / 10) * 10 + 1 - 10;  //다음에 선택될버튼
-            infoHtml = '<span class="aui-grid-paging-info-text" style="position: absolute;"></span>';
-            $('#grid' + (index + 1)).find('.aui-grid-paging-panel').prepend(infoHtml);
-        } else {
-            nextPagingNum = Number(e.target.innerHTML);  //다음에 선택될버튼
-        }
-
-        var nextCount = (nextPagingNum * that.gridProperty[index][0]['pageRowCount']) - that.gridProperty[index][0]['pageRowCount'] + 1;
-        var pagingRow = Math.ceil(nextPagingNum / 10);
-
-        AUIGrid.setGridData(that.grid[index], data);
-
-
-        if (that.sortingInfo[index] != undefined && that.sortingInfo[index].length > 0) {
-            AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);
-        }
-        for (var i = 0, max1 = data.length; i < max1; i++) {
-            //AUIGrid.setCellValue(that.grid[index], 0, "seq", i+1);
-            AUIGrid.updateRow(that.grid[index], {id: startPage + i}, i, false);
-        }
-
-        $('#grid' + (index + 1)).find('.aui-grid-paging-info-text')[0].innerText = "현재페이징 : " + nextPagingNum + " / 전체페이징 : " + endPageNum + "( " + nextCount + "~" + that.totalRowCount[index] + " 개 )";
-        // AUIGrid.updateRowsById(that.grid[index], data,false);
-        //AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);
-        // AUIGrid.refreshRows(that.grid[index], data, "my-flash-style", 200);
-
-
-    },
-    wait: function (sec) {
-        let start = Date.now(), now = start;
-        while (now - start < sec * 1000) {
-            now = Date.now();
-        }
-    },
-    /*	checkValidDate: function(value) {
-	var result = true;
-	try {
-	    var date = value.split("-");
-	    var y = parseInt(date[0], 10),
-	        m = parseInt(date[1], 10),
-	        d = parseInt(date[2], 10);
-	    // yyyy-mm-dd (윤달고려하여적용)
-	    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
-	    result = dateRegex.test(d+'-'+m+'-'+y);
-	} catch (err) {
-		result = false;
-	}
-    return result;
-},*/
 
     // 커스텀팝업 파라미터 가져오기
     getCustomPopupParam: function (index, btnId, your, extraParam) {
@@ -7432,6 +7352,7 @@ var momWidget = {
 
                         startPage = data[0]['id'];
                         endPage = data[data.length - 1]['id'];
+                        data = that.changePivotData(data);
                         AUIGrid.setGridData(that.grid[index], data);
 
                         if (that.sortingInfo[index] != undefined && that.sortingInfo[index].length > 0) {
@@ -7501,6 +7422,7 @@ var momWidget = {
 
                         startPage = data[0]['id'];
                         endPage = data[data.length - 1]['id'];
+                        that.changePivotData(data)
                         AUIGrid.setGridData(that.grid[index], data);
 
                         if (that.sortingInfo[index] != undefined && that.sortingInfo[index].length > 0) {
@@ -7531,19 +7453,7 @@ var momWidget = {
                 } else if (btnId == 'PAGING') {
 
                 } else {
-	               $.each(data, function (i) {	
-				  let keys = Object.keys(data[i]);	
-				  let filterKey  = '';
-				  let filterData = '';
-				  $.each(keys, function (index,key) {
-  				    if(key.includes("'")){
-		              filterKey = key.replace(/\'/gi, "");
-		              filterData = data[i][key];
-				      delete data[i][key];
-					  data[i][filterKey] = filterData;
-					}
-				})     
-			});
+	            that.changePivotData(data)
                     AUIGrid.setGridData(that.grid[index], data);
                     if (that.sortingInfo[index] != undefined && that.sortingInfo[index].length > 0) {
                         AUIGrid.setSorting(that.grid[index], that.sortingInfo[index]);
@@ -8954,7 +8864,7 @@ var momWidget = {
 
         var nextCount = (nextPagingNum * that.gridProperty[index][0]['pageRowCount']) - that.gridProperty[index][0]['pageRowCount'] + 1;
         var pagingRow = Math.ceil(nextPagingNum / 10);
-
+		data = that.changePivotData(data);
         AUIGrid.setGridData(that.grid[index], data);
 
 
@@ -15478,8 +15388,22 @@ var momWidget = {
 	   AUIGrid.changeColumnLayout(that.grid[index], changeColumn);
 	   return pivotText.replace(',','');
        
-    }
-
-
+    },
+    changePivotData: function (data){ 
+    	$.each(data, function (i) {	
+				  let keys = Object.keys(data[i]);	
+				  let filterKey  = '';
+				  let filterData = '';
+				  $.each(keys, function (index,key) {
+  				    if(key.includes("'")){
+		              filterKey = key.replace(/\'/gi, "");
+		              filterData = data[i][key];
+				      delete data[i][key];
+					  data[i][filterKey] = filterData;
+					}
+				})     
+			});
+             return data;
+     }
 }
 
