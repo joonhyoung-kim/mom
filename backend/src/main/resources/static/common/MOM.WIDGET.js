@@ -9006,25 +9006,16 @@ var momWidget = {
         var checkedItem = [];
         var listItem = [];
         var mapItem = {};
-        that.uploadFile[index].length = 0;
-        //param = that.getCheckedRowItems(index) == 'FAIL'? []:that.getCheckedRowItems(index);
+        if(that.uploadFile[index]!=undefined && that.uploadFile[index].length>0){
+			that.uploadFile[index].length = 0;
+		}
+        
         for (var i = 0; i < that.popupProperty[index].length; i++) {
             popupId = that.popupProperty[index][i]['popupId'];
             popupType = that.popupProperty[index][i]['popupType'];
             searchId = that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1);
             that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1);
-            /*	if(that.popupProperty[index][i]['popupType'] =='M' && Object.keys(extraParam).length >0){
-				checkedItem = $('#'+searchId).jqxComboBox('getCheckedItems');
-				for(var j=0;j<checkedItem.length;j++){
-					 mapItem[popupId] = checkedItem[j]['value'];
-					 mapItem['typeMap']  = extraParam['typeMap'] == undefined ? '':extraParam['typeMap'];
-					 mapItem['typeList'] = extraParam['typeList'] == undefined ? '':extraParam['typeList'];
-					 listItem[j] = JSON.parse(JSON.stringify(mapItem));
 
-				}
-
-				param[popupId]= listItem;
-			}*/
             if (Object.keys(extraParam).length > 0 && i == 0) {
                 mapItem[popupId] = $('#' + searchId).val();
                 mapItem['typeMap'] = extraParam['typeMap'] == undefined ? '' : extraParam['typeMap'];
@@ -12160,7 +12151,8 @@ var momWidget = {
                 }, undefined, index, this, false, undefined, actionMode);
 
             } else {
-				if(that.uploadFile[index].length >0){
+	
+				if(that.uploadFile[index] !=undefined &&that.uploadFile[index].length >0){
 					//FormData 새로운 객체 생성 
 					let formData = new FormData();
 					// 넘길 데이터를 담아준다. 
