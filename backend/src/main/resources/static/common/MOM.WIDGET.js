@@ -12094,11 +12094,6 @@ var momWidget = {
 					//FormData 새로운 객체 생성 
 					let formData = new FormData();
 					// 넘길 데이터를 담아준다. 
-				var data = {   
-				    "userId"    : $("#userId").val(),
-				    "title"     : $("#title").val(),
-				    "contents"  :  $("#contents").val()
-				}
 				
 				// input class 값 
 				let fileInput = $('#fileBlobDP'+(index+1));
