@@ -16,6 +16,12 @@ var momSetup= {
 			  $('head').prepend('<script src="/webjars/jquery/3.6.1/dist/jquery.js"></script>');
 			  $('head').prepend('<script src="/mom/content/jquery-ui/jquery-ui.min.js"></script>');		*/			
 			  //material icon css
+			  let spinnerHtml = '<div id="loader">'
+                        +   '<div className="spinner-border text-secondary" role="status" style="width: 4rem; height: 4rem;">'
+                        +     ' <span className="visually-hidden">Loading...</span>'
+                        +   '</div>'
+                        +  '</div>';
+               $('body').append(spinnerHtml);
 			  //spiner
 			  $('head').prepend('<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.js"></script>');
               $('head').prepend('<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">');

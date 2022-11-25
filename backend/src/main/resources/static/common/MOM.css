@@ -4961,7 +4961,7 @@ input:focus{
     top: 40vh;
     left: 80vh;
     position: fixed;
-    display: block;
+    display: none;
     opacity: 0.8;
 /*    width:3rem;
     height:3rem;*/

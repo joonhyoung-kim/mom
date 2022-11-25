@@ -22,7 +22,7 @@ var momWidget = {
     excelDownGridData: [], // 엑셀다운로드 그리드 data 임시 보관(풀스캔시 활용)
     backWork: [], // 페이징시 풀스캔(전체조회) 중인지 여부
     totalRowCount: [], // 페이징시 풀스캔(전체조회) 전체 카운트(전체 조회건수) 저장
-
+    extraColumnLayout: [], //커스텀 하게 변하는 컬럼
     columnDropdown: [], // 그리드 컬럼에 콤보박스 사용할 경우 해당 list 보관
     columnDropdownReSearch: [], // 그리드 컬럼에 콤보박스 사용할 경우 (조인조건으로 사용할 특정 컬럼들보관)
     dropdownProperty: [], // 그리드 컬럼에 콤보박스 사용할 경우 해당 속성 보관
@@ -186,6 +186,25 @@ var momWidget = {
                 let splitType = templateInfo[2];
                 var splitRatio = templateInfo[3];
                 var templateName = 'tm' + splitNum + splitType;
+                if(that.gridProperty[index][0]['groupingFields']!=undefined && that.gridProperty[index][0]['groupingSummary']!=undefined){
+	  			let groupingArray = that.gridProperty[index][0]['groupingFields'].split(",");
+                let groupingSummaryArray = that.gridProperty[index][0]['groupingSummary'].split(",");
+                if(groupingArray.length==1&&that.gridProperty[index][0]['groupingFields']==''){
+						delete that.gridProperty[index][0]['groupingFields'];
+     	        }
+     	        else{
+	                that.gridProperty[index][0]['groupingFields'] = groupingArray;
+				}
+				if(groupingSummaryArray.length==1&&that.gridProperty[index][0]['groupingSummary']==''){
+						delete that.gridProperty[index][0]['groupingSummary'];
+     	        }
+     	        else{
+	                that.gridProperty[index][0]['groupingSummary'] = groupingSummaryArray;
+				}
+				}
+              
+                that.extraColumnLayout[index] = [];
+                
             }
 
 
@@ -7175,8 +7194,10 @@ var momWidget = {
         return isjson;
     },
     // 검색버튼을 누른 효과
-    findBtnClicked: function (index, param, splash, btnId, menuId, your, callBackFunc, event) { 	//momWidget.findBtnClicked(1, [], true, 'findBtn1', 'PGIDXX002', MOMXX000, function(result, data)
+    findBtnClicked: function (index, param, splash, btnId, menuId, your, callBackFunc, event) { 	//momWidget.findBtnClicked(1, [], true, 'findBtn1', 'PGIDXX002', MOMXX000, function(result, data)       
         var that = this;
+        //that.splashShow();
+
         var callInitResult = undefined;
         var callBackResult = undefined;
         var checkSearchParam = {};
@@ -7194,9 +7215,7 @@ var momWidget = {
         }
 
 
-        if (splash == true) {
-            that.splashShow();
-        }
+       
 
         // param = that.pageProperty[index]['param'];
         initParam = that.checkInitParam(index, param, your); //init param 설정시 세팅
@@ -7305,10 +7324,12 @@ var momWidget = {
                     //AUIGrid.setGridData(that.grid[index], data);
                 } else if (btnId == 'TOTAL') {
                     that.totalRowCount[index] = data.length == 0 ? 0 : data[0]['totalCount'];
+                    //that.splashHide();
+                    
                 } else if (btnId == 'INIT_PAGING') {
                     if (data.length == 0) {
-                        AUIGrid.setGridData(that.grid[index], data);
-
+                       // AUIGrid.setGridData(that.grid[index], data);
+						that.splashHide();
                     } else if (that.gridProperty[index][0]['pageRowCount'] > that.totalRowCount[index]) {
                         var pageTotalNum = Math.ceil(that.totalRowCount[index] / that.gridProperty[index][0]['pageRowCount']);
                         var pagingBtnHtml = '';
@@ -7377,7 +7398,7 @@ var momWidget = {
                         //AUIGR//뒤에 버튼추가해야함
 
                         //AUIGrid.addRow(that.grid[index], data, "first");
-
+					that.splashHide();
 
                     } else {
                         var pageTotalNum = Math.ceil(that.totalRowCount[index] / that.gridProperty[index][0]['pageRowCount']);
@@ -7450,8 +7471,9 @@ var momWidget = {
 
 
                     }
+                    
                 } else if (btnId == 'PAGING') {
-
+					//that.splashHide();
                 } else {
 	            that.changePivotData(data)
                     AUIGrid.setGridData(that.grid[index], data);
@@ -7476,10 +7498,10 @@ var momWidget = {
                     return;
                 }
                 $('td').removeClass('aui-grid-default-column');
-                that.splashHide();
+               // that.wait(0.5);
+              // that.splashHide();
             }, undefined, undefined, this, false);
-            // }, 500);
-
+               
 
         }
 
@@ -7610,6 +7632,7 @@ var momWidget = {
         let result = 'SUCCESS';
 
         AUIGrid.bind(momWidget.grid[index], "ready", function (e) {
+	        //that.splashHide();
             let scrollbar = $(e.pid).find('.aui-hscrollbar');
             if (scrollbar[0] != undefined && scrollbar.css('display') != 'none') {
 
@@ -9498,7 +9521,12 @@ var momWidget = {
 			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
 				return;excelUpCancelBtnId
 			}*/
-
+		   $(document).ajaxStart(function () {
+		      that.splashShow();
+		   });
+		   $(document).ajaxStop(function () {
+			  that.splashHide();
+			});
         $(document).on('click', '#' + moveBtnId, function (e) {
             let fromIndex = index; //복사할 인덱스
             let toIndex = fromIndex + 1; //이동할 인덱스
@@ -13307,7 +13335,12 @@ var momWidget = {
                     return;
                 }
 
-            } else {
+            } 
+            else if (targetParam == 'NONE') {
+	
+			}
+			
+            else {
                 if (isCheckCol == true) {
                     param = that.getCheckedRowItems(that.grid[index], true);
                     if (param.length == 0) {
@@ -15166,16 +15199,15 @@ var momWidget = {
     },
 
       splashShow: function () {
-        let spinnerHtml = '<div id="loader">'
-                        +   '<div className="spinner-border text-secondary" role="status" style="width: 4rem; height: 4rem;">'
-                        +     ' <span className="visually-hidden">Loading...</span>'
-                        +   '</div>'
-                        +  '</div>';
-        $('body').append(spinnerHtml);
+	    momWidget.maskShow('1');
+        $('#loader').css('display','block');
+        //$('body').append(spinnerHtml);
 
       },
       splashHide: function () {
-       $('#loader').remove();
+	   momWidget.maskHide('1');
+	   $('#loader').css('display','none');
+       //$('#loader').remove();
     },
     /*splashShow: function () {
         //console.log("");
@@ -15370,6 +15402,7 @@ var momWidget = {
 	 let pivotDateText = fromDateText;
 	 let pivotText = '';
 	 let columnObj = {};
+	 that.extraColumnLayout[index].length = 0;
 	   for (let i = 0, max = days; i <= max;i++) {  		  
 		  pivotText += ",'" + pivotDateText + "'";
 		  columnObj = {							
@@ -15382,9 +15415,10 @@ var momWidget = {
 						visible: true
 		  };
 		  changeColumn.push(columnObj);
+		  that.extraColumnLayout[index].push(pivotDateText);
 		  pivotDateText = moment(pivotDateText).add(dateInterval,dateType).format("YYYY-MM-DD");
 	   }
-	   
+	   AUIGrid.clearGridData(that.grid[index]);
 	   AUIGrid.changeColumnLayout(that.grid[index], changeColumn);
 	   return pivotText.replace(',','');
        
