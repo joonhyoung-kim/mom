@@ -29,8 +29,8 @@
 	             , COUNT(*) OVER()      AS TOTAL_COUNT
 	             , ROW_NUMBER() OVER(PARTITION BY MSO.COMPANY_CD,MSO.DIVISION_CD ORDER BY MSO.SO_NO, MSO.SO_SEQ  ) AS ROW_COUNT
 	        FROM   MOM_SALES_ORDER_V MSO
-	        WHERE  MSO.COMPANY_CD  = 'CALCES'
-	        AND    MSO.DIVISION_CD = 'DEV1'
+	        WHERE  MSO.COMPANY_CD    = #{companyCd, jdbcType=VARCHAR}
+	        AND    MSO.DIVISION_CD   = #{divisionCd, jdbcType=VARCHAR}	  
 	        AND    MSO.CHANGE_YN   = 'Y'    
 	        <if test="soNo != null and soNo != ''">
 	        AND    (UPPER(MSO.SO_NO) LIKE '%' || UPPER(#{soNo, jdbcType=VARCHAR}) || '%' )
