@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -158,22 +159,22 @@ public class MomController {
 		
 	}
 	
-@PostMapping("/request/{query}/{action}")  //등록 컨트롤러
-public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>>  param) { 
+@PostMapping("/request/file/{query}/{action}")  //등록 컨트롤러
+public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>>  param,MultipartHttpServletRequest multipartRequest) { 	
 	query = frameworkUtil.removeDummy(query, action);
-	param = frameworkUtil.createParam(param, action);
 	List<Map<String,Object>> result =  new ArrayList<>();
 	PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 	PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-	try {
-		if(action.equals("P")) {
-			result = momService.procMapList(query, param);
+	try {		
+		MultipartFile file = multipartRequest.getFile("blob");
+		 if(!file.isEmpty()){			
+			 param = frameworkUtil.createFileParam(param, action,file);
 		}
-		else {
+		 else {
+			 param = frameworkUtil.createParam(param, action);
+		 }
 			result = momService.createMapList(query, param);
 			//System.out.println("결과1?"+result);
-		}
-		
 	}
 	catch (CustomDataAccessException e) {
 		System.out.println(e.getMsg());

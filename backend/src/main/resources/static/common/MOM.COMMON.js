@@ -28,7 +28,6 @@ leftMenuAuth: function(el,params) {
 				var loginMenuList = JSON.parse(sessionStorage.getItem("loginMenuList"));
 				var bookMarkList = JSON.parse(params.bookMarkList);
 				var displayOrderList = JSON.parse(params.displayOrder);
-				var searchMenuList   = JSON.parse(params.searchMenu);
 				var menuList = [];
 				var searchCount = 1;
 				if(loginMenuList == null || loginMenuList == '' || loginMenuList == undefined) {
@@ -1375,7 +1374,7 @@ leftMenuAuth: function(el,params) {
 
 
 
-function mom_ajax(type, url, param, call_back, call_back_param, index_info, your, async,commitYn,actionMode) {	
+function mom_ajax(type, url, param, call_back, call_back_param, index_info, your, async,commitYn,actionMode,file) {	
 	var siteInfo = JSON.parse(sessionStorage.getItem('siteInfo'));	
 	var userInfo = undefined;
 	var jsonString = JSON.stringify(param);
@@ -1481,10 +1480,9 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			param.userId = siteInfo.userId;
 		}*/
 	}
-	else if (type == 'C' || type == 'CU' || type=='CP'){
-		url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
-		userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
-		type = 'POST';	
+	else if (type == 'C' || type == 'CU' || type=='CP'){	
+		    userInfo = JSON.parse(sessionStorage.getItem('userInfo'))[0];
+			type = 'POST';	
 		if(param.length==0){
 				excelUpYn = param[0] == undefined ? 'N':param[0].excelUpYn;
 		        sessionId = param[0] == undefined ? '':param[0].sessionId;
@@ -1492,9 +1490,9 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			    param = JSON.stringify(param);
 		}
 		else{
-			excelUpYn = param[0].excelUpYn == undefined ? 'N':param[0].excelUpYn;
-		    sessionId = param[0].sessionId == undefined ? '':param[0].sessionId;
-			for(var i = 0;i<param.length;i++){
+			  excelUpYn = param[0].excelUpYn == undefined ? 'N':param[0].excelUpYn;
+		      sessionId = param[0].sessionId == undefined ? '':param[0].sessionId;
+			  for(var i = 0;i<param.length;i++){
 				if(param[i].hasOwnProperty('') == true){
 					delete param[i][''];
 				}
@@ -1512,13 +1510,26 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				       }
 				}
 
-			}
-			    param = JSON.stringify(param);
+			  }
+		}   			    
+		if(file != undefined && file != null){
+		  let fileInput = $('#fileBlobDP'+(index+1));
+		  let file = fileInput[0].files[index];
+		  let formData = new FormData();
+		  let blobFile = that.uploadFile[index];
+		  formData.append('blob',blobFile , file.fileName); // (key,value,파일명)
+		  formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
+		  url = mCommon.contextPath() + '/request/file/com.mom.backend.' + url+'/'+type;
+		  
 		}
+		else{
+		 	  url = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
+			  param = JSON.stringify(param);
+		
+		}
+		
 			
-		/*if(param.userId == '' || param.userId == undefined){
-			param.userId = siteInfo.userId;
-		}*/
+
 		
 	}
 	else if (type == 'U'){
@@ -1586,8 +1597,119 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
     var bar = $('.bar');
     var percent = $('.percent');
     var status = $('#status');
-    //var sessionId = Math.floor(Math.random() * 10000000000000001);
-	//type == 'U'? '' : (type == 'D' ? undefined : param),	
+    if(file != undefined && file != null){
+		    $.ajax({
+			type 		: type,
+			url  		: url,
+			data 		: param,
+			async		: async,
+			timeout 	: 30000000,
+			dataType 	: type == 'U'? 'text' : (type == 'D' ? 'json' : 'json'),
+			contentType : type == 'U'? 'application/json; charset=UTF-8' : (type == 'D' ? 'application/json; charset=UTF-8' : 'application/json; charset=UTF-8'),
+				      data: formData,
+				      contentType: false,               // * 중요 *
+				      processData: false,               // * 중요 *
+				      enctype : 'multipart/form-data',  // * 중요 *
+			//contentType : type == 'U'? 'application/json; charset=UTF-8' : (type == 'D' ? 'application/x-www-form-urlencoded; charset=UTF-8' : 'application/json; charset=UTF-8'),
+	/*	xhr: function() { //XMLHttpRequest 재정의 가능
+					var xhr = $.ajaxSettings.xhr();
+					xhr.upload.onprogress = function(e) { 
+					
+					};
+					return xhr;
+					},*/
+		beforeSend: function (xhr) {
+	              xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
+	            if(excelUpYn =='Y'&&param.length>=1000){
+	            	 bar.width('0%');
+                     percent.html('0%');
+                      //console.log("프로그래스최초");
+	            	 // progress Modal 열기
+	            	   interval = setInterval(function() {
+	            			$.ajax({
+	            				url:mCommon.contextPath() + '/progressBar',
+	            				method: "get",
+	            				contentType: 'application/json',
+	            				data : {sessionId:sessionId,type:'excelUpload'},
+	            				success: function(data){
+		                            if(data.percent==0){
+			                               //console.log("프로그래스0=");
+			                               return;
+									}
+	            					//console.log("프로그래스리턴="+data.percent);
+	            					var percentComplete = Math.floor((data.percent / paramSize) * 100);
+	  	            		            
+		                        
+		                            var percentVal = percentComplete + '%';
+		                            bar.width(percentVal);
+		                            percent.html(percentVal+' '+paramSize+'/'+data.percent);
+	            				},
+	            				error: function(e) {
+	            					if(e.responseJSON.status == 401){
+	            						that.showVaildationMessage('D','CHECK ID OR PASSWORD!'); 
+	            						 momWidget.splashHide();
+	            						 return;
+	            					}
+	            					else{
+		                                  bar.width('0%');
+		                                  percent.text('0%');  
+		                                  //console.log("프로그래스에러");
+	            						  momWidget.splashHide();
+	            						  return;
+	            					}
+	            					
+	            					
+	            				}
+	            			});	            				            		      
+	            		}, 100);	            	   
+	
+
+	            }
+	             
+
+
+	    },		 
+/*	    complete:function(){
+	    	 if(excelUpYn =='Y'){
+            // progress Modal 닫기
+            $("#pleaseWaitDialog").modal('hide');
+            }
+
+        },*/
+	
+		success     : function(data) {
+			clearInterval(interval);
+			if(call_back != undefined) {
+			/*	if(data['result'] == 'success') {
+					call_back('SUCCESS', data, param, call_back_param, index_info, your);
+				} else {
+					call_back('FAIL', data, param, call_back_param, index_info, your);
+				}*/
+				call_back('SUCCESS', data, param, call_back_param, index_info, your);
+			}
+		}, error	: function(error) {
+			clearInterval(interval);
+			if(call_back != undefined) {
+				if(error.getResponseHeader('token-expired') == 'Y'){
+					//momWidget.messageBox({type:'warning', width:'400', height: '145', html: '세션 유효시간만료!'});
+					alert('세션 유효시간만료!');
+					momWidget.splashHide();
+					top.location.href = mCommon.contextPath() + "/login.html";
+					return;
+				}
+			
+				
+				call_back('ERROR', error, param, call_back_param, index_info, your);
+			}
+		}, fail		: function(fail) {
+			clearInterval(interval);
+			if(call_back != undefined) {
+				call_back('FAIL', fail, param, call_back_param, index_info, your);
+			}
+		}
+	});
+    }
+    else{
 	$.ajax({
 		type 		: type,
 		url  		: url,
@@ -1694,6 +1816,9 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			}
 		}
 	});
+    }
+	
+	
 }
 
 function excel_upload(file_id, url, page, grid, param, call_back, callBackParam, indexInfo, your) {

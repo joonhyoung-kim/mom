@@ -12092,18 +12092,17 @@ var momWidget = {
 	
 				if(that.uploadFile[index] !=undefined &&that.uploadFile[index].length >0){
 					//FormData 새로운 객체 생성 
-					let formData = new FormData();
+				
 					// 넘길 데이터를 담아준다. 
 				
 				// input class 값 
-				let fileInput = $('#fileBlobDP'+(index+1));
+			
 				// fileInput 개수를 구한다.
-				let file = fileInput[0].files[index];
-				let blobFile = that.uploadFile[index];
+				
+				
 				//let fileToBlob = that.getfileToBlob(file);
 				  // 'key'라는 이름으로 위에서 담은 data를 formData에 append한다. type은 json  
-				  formData.append('blob',blobFile , file.fileName); // (key,value,파일명)
-				  formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
+				  
 				  // ajax 처리 부분 * 
 				$.ajax({
 				      url: 'url',

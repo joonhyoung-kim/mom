@@ -1,5 +1,9 @@
 package com.mom.backend.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -434,6 +439,29 @@ public class FrameworkUtil {
 			// locale);
 		}
 		//System.out.println("마지막총개수?"+list.size());
+		return listMapParam;
+	}
+	public  List<Map<String, Object>> createFileParam(List<Map<String, Object>> list, String actionType ,MultipartFile file) {
+		List<Map<String, Object>> listMapParam = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (int i = 0; i < list.size(); i++) { 
+			map = list.get(i);	
+			if(map.get("fileType").equals("RP")) {
+				System.out.println("리포트파람 생성진입");
+				try {
+					map.put("report",convertFileToByte(file));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+				listMapParam.add(map);
+			}
+			else {
+				map.put("report",file);	
+				listMapParam.add(map);
+			}																						 			
+		
+
+		}
 		return listMapParam;
 	}
 
@@ -865,5 +893,44 @@ public class FrameworkUtil {
 		// System.out.println(df.format(currentDate.getTime()));
 		return df.format(now);
 	}
+	//파일을 byte[] 로 변환
+	public  byte[] convertFileToByte(MultipartFile mfile) throws Exception {
+			File file = new File(mfile.getOriginalFilename());
+			file.createNewFile();
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(mfile.getBytes());
+			
+			byte[] returnValue = null;		
+			ByteArrayOutputStream baos = null;	    
+		    FileInputStream fis = null;
+		  
+		    try {
+		    	
+		    	baos = new ByteArrayOutputStream();
+		    	fis = new FileInputStream(file);
+		    		    	
+		        byte[] buf = new byte[1024];
+		        int read = 0;
+		        
+		        while ((read=fis.read(buf,0,buf.length)) != -1){
+		        	baos.write(buf,0,read);
+		        }
+		        
+		        returnValue = baos.toByteArray();
+		   
+		    } catch (Exception e) {
+		        throw e;
+		    } finally {
+		            if (baos != null) {
+		            	baos.close();
+		            }
+		            if (fis != null) {
+		            	fis.close();
+		            }
+		    }
+		    
+		    fos.close();
+		    return returnValue;
+		}
 
 }
