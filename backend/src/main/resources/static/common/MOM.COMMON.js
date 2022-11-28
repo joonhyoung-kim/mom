@@ -1400,11 +1400,11 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		actionMode = type;
 	}
 	if(file != undefined && file != null){
-		  let fileInput = $('#fileBlobDP'+(index+1));
-		  let file = fileInput[0].files[index];
-		  let blobFile = that.uploadFile[index];
-		  formData.append('blob',blobFile , file.fileName); // (key,value,파일명)
-		  formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
+		  let fileInput = $('#fileBlobDP'+(index_info+1));
+		  let fileItem = fileInput[0].files[index_info];
+		  let blobFile = that.uploadFile[index_info];
+		  formData.append('blob',blobFile , fileItem.name); // (key,value,파일명)
+		  //formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
 		  urlPath = mCommon.contextPath() + '/request/file/com.mom.backend.' + url+'/'+type;
 		  
 	}
@@ -1520,7 +1520,13 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				}
 
 			  }
-			  	  param = JSON.stringify(param);
+			  	if(file != undefined && file != null){
+				     formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
+				}
+				else{
+					 param = JSON.stringify(param);
+				}
+			  	 
 		}   			    
 
 	}
@@ -1589,23 +1595,19 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
     var status = $('#status');
     if(file != undefined && file != null){
 		    $.ajax({
-			type 		: type,
+			type 		: 'post',
 			url  		: urlPath,
-			data 		: param,
-			async		: async,
+			data 		: formData,
+			async		: false,
 			timeout 	: 30000000,
-			dataType 	: type == 'U'? 'text' : (type == 'D' ? 'json' : 'json'),
-			contentType : type == 'U'? 'application/json; charset=UTF-8' : (type == 'D' ? 'application/json; charset=UTF-8' : 'application/json; charset=UTF-8'),
-				      data: formData,
-				      contentType: false,               // * 중요 *
-				      processData: false,               // * 중요 *
-				      enctype : 'multipart/form-data',  // * 중요 *
-		beforeSend: function (xhr) {
+			contentType : false,
+			processData: false, 
+			enctype : 'multipart/form-data',
+		    beforeSend: function (xhr) {
 	              xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
-	    },		 
+	        },		 
 
-		success     : function(data) {
-			clearInterval(interval);
+		    success     : function(data) {			
 			if(call_back != undefined) {
 			/*	if(data['result'] == 'success') {
 					call_back('SUCCESS', data, param, call_back_param, index_info, your);
@@ -1614,8 +1616,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				}*/
 				call_back('SUCCESS', data, param, call_back_param, index_info, your);
 			}
-		}, error	: function(error) {
-			clearInterval(interval);
+		}, error	: function(error) {			
 			if(call_back != undefined) {
 				if(error.getResponseHeader('token-expired') == 'Y'){
 					//momWidget.messageBox({type:'warning', width:'400', height: '145', html: '세션 유효시간만료!'});
@@ -1629,7 +1630,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				call_back('ERROR', error, param, call_back_param, index_info, your);
 			}
 		}, fail		: function(fail) {
-			clearInterval(interval);
+			
 			if(call_back != undefined) {
 				call_back('FAIL', fail, param, call_back_param, index_info, your);
 			}

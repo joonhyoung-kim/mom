@@ -8,7 +8,7 @@
          , MF.FILE_TYPE
          , MF.FILE_NM
 		 , MF.PARAMETER
-		 , UTL_RAW.CAST_TO_VARCHAR2(DBMS_LOB.SUBSTR(MF.FILE_BLOB)) AS FILE_BLOB
+		 , UTL_RAW.CAST_TO_VARCHAR2(DBMS_LOB.SUBSTR(MF.FILE_BLOB,DBMS_LOB.GETLENGTH(MF.FILE_BLOB))) AS FILE_BLOB
 		 , MF.DESCRIPTION
 		 , MF.CREATE_BY
 		 , MF.CREATE_DATE
@@ -24,6 +24,10 @@
   </select>
 
    <insert id="create_createBtn1" parameterType="java.util.List">
+   <selectKey keyProperty ="seq" resultType="String" order="BEFORE">
+   SELECT 'FM' || LPAD(FILE_UPLOAD_SEQ.NEXTVAL,5,'0') AS SEQ
+   FROM   DUAL  
+   </selectKey>
     <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
      INTO MOM_FILE (
                   COMPANY_CD
@@ -41,7 +45,7 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.fileId, jdbcType=VARCHAR}
+                , #{seq, jdbcType=VARCHAR}
                 , #{item.fileType, jdbcType=VARCHAR}
                 , #{item.fileNm, jdbcType=VARCHAR}
                 , #{item.parameter, jdbcType=VARCHAR}

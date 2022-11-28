@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -160,13 +161,14 @@ public class MomController {
 	}
 	
 @PostMapping("/request/file/{query}/{action}")  //등록 컨트롤러
-public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>>  param,MultipartHttpServletRequest multipartRequest) { 	
+public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) { 	
 	query = frameworkUtil.removeDummy(query, action);
 	List<Map<String,Object>> result =  new ArrayList<>();
 	PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 	PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 	try {		
-		MultipartFile file = multipartRequest.getFile("blob");
+		//MultipartFile file = multipartRequest.getFile("blob");
+		 MultipartFile file = multipartRequest;
 		 if(!file.isEmpty()){			
 			 param = frameworkUtil.createFileParam(param, action,file);
 		}

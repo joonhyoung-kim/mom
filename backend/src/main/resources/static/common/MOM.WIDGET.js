@@ -50,7 +50,7 @@ var momWidget = {
     excelUpCheckYn: undefined, // 엑셀 업로드 검증 사용여부(Y/N)
     dateCheckParam: '-1', // 엑셀 업로드시 추가적인 벨리데이션(yyyymm형태)을 위한 변수
     upsertFlag: 'Y',
-    
+
 
     //background: #6c5ffc !important;
     init: function (index, menuId, your, widgetType) {
@@ -8939,9 +8939,8 @@ var momWidget = {
         var checkedItem = [];
         var listItem = [];
         var mapItem = {};
-        if(that.uploadFile[index]!=undefined && that.uploadFile[index].length>0){
-			that.uploadFile[index].length = 0;
-		}
+
+       
         
         for (var i = 0; i < that.popupProperty[index].length; i++) {
             popupId = that.popupProperty[index][i]['popupId'];
@@ -8961,7 +8960,8 @@ var momWidget = {
             }
            
             if(popupType == 'FA'){
-	           that.uploadFile[index] = that.getfileToBlob($('#'+popupId)[0].files[0]);
+	    
+	         
 			}
 			else{
 				 param[popupId] = $('#' + searchId).val();
@@ -8981,6 +8981,7 @@ var momWidget = {
         }
         return [param];
     },
+
     // 커스텀팝업 파라미터 가져오기
     getCustomPopupParam: function (index, btnId, your, extraParam) {
         var that = momWidget;
@@ -10710,10 +10711,16 @@ var momWidget = {
         });
          $(document).on('change', '#' + fileId , function (e) {
             //that.splashShow();
-            let fileName = $('#'+e.currentTarget.id)[0].files[0].name;
+            let file = $('#'+e.currentTarget.id)[0].files[0];
+            let fileId = '#'+e.currentTarget.id;
+      
+            let fileName = file.name;
             let extension = fileName.split('.')[1];
-            $('#'+e.currentTarget.id+'-info').text('1건 등록됨');
-            $('#'+e.currentTarget.id+'-name').text('파일명: '+fileName);
+            if(that.uploadFile[index]!= undefined && that.uploadFile[index] != ''){
+			   that.uploadFile[index].length = 0;
+		    }
+	           that.getfileToBlob(index,file,fileId);    
+          
         });
         $(document).on('change', '#' + excelFile, function (e) {
             that.splashShow();
@@ -12088,36 +12095,45 @@ var momWidget = {
                     }, undefined, index, this, false, undefined, actionMode);
                 }, undefined, index, this, false, undefined, actionMode);
 
-            } else {
-	
-				if(that.uploadFile[index] !=undefined &&that.uploadFile[index].length >0){
-					//FormData 새로운 객체 생성 
-				
-					// 넘길 데이터를 담아준다. 
-				
-				// input class 값 
-			
-				// fileInput 개수를 구한다.
-				
-				
-				//let fileToBlob = that.getfileToBlob(file);
-				  // 'key'라는 이름으로 위에서 담은 data를 formData에 append한다. type은 json  
-				  
-				  // ajax 처리 부분 * 
-				$.ajax({
-				      url: 'url',
-				      data: formData,
-				      contentType: false,               // * 중요 *
-				      processData: false,               // * 중요 *
-				      enctype : 'multipart/form-data',  // * 중요 *
-				      success: function(data) {
-				        if (result.SUCCESS == true) {
-				         alert("성공");
-				        } else {
-				         alert("실패");
-				         }
-				      }
-				});
+            } else {	
+				if(that.uploadFile[index] !=undefined && that.uploadFile[index]!= null && that.uploadFile[index]!= ''){
+					  let fileInput = $('#fileBlobDP'+(index+1));
+		              let file      = fileInput[0].files[index];
+		              
+					 mom_ajax(actionType, queryId, param, function (result, data) {
+                    if (data.length == undefined || data.length == 0 || data[0]['p_err_code'] == 'E') {
+                        momWidget.messageBox({
+                            type: 'danger',
+                            width: '400',
+                            height: '145',
+                            html: multiLang.transText('MESSAGE', data[0]['p_err_msg'])
+                        });
+                        momWidget.splashHide();
+                        return;
+                    }
+                    callBackResult = that.checkActionCallBack(index, actionType, {}, 'createBtn' + index, your);
+                    if (callBackResult['result'] != 'SUCCESS') {
+                        momWidget.messageBox({
+                            type: 'danger',
+                            width: '400',
+                            height: '145',
+                            html: callBackResult['msg']
+                        });
+                        momWidget.splashHide();
+                        return;
+                    }
+                    if (your.initParam != undefined && your.initParam != '') {
+                        initParam = your.initParam;
+                    }
+                    momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn', momWidget.pageProperty[btnIndex]['menuId'], your);
+                    momWidget.messageBox({
+                        type: 'success',
+                        width: '400',
+                        height: '145',
+                        html: multiLang.transText('MESSAGE', 'MSG00001')
+                    });
+                    momWidget.splashHide();
+                }, undefined, index, this, false,'Y',actionType,file);
 				  
 				}
 				else{
@@ -15360,17 +15376,27 @@ var momWidget = {
         $(modalId).css('display','none');
         momWidget.maskHide(depth);
     },
-    getfileToBlob: function (file){
-	var reader = new FileReader();
-	reader.readAsDataURL(file);
-	reader.onload = function(event){
+    getfileToBlob: function (index,file,fileId){		
+		var that = momWidget;
+		//that.splashShow();
+	    let fileInfo = $(fileId+'-info');
+        let fileNameText = $(fileId+'-name');
+		var reader = new FileReader();
+		reader.readAsDataURL(file);
+		
+		reader.onload = function(event){
+		
 		var dataURL = event.target.result;
 		var base64 = dataURL.substr(dataURL.indexOf('base64,')+7);
 		var file_etc = dataURL.substring(dataURL.indexOf(':')+1,dataURL.indexOf(';'));
         				
-		var blob = b64toBlob(base64,file_etc);
-		var blobUrl = URL.createObjectURL(blob);// blobUrl을 src에 넣으면 5초이상 재생가능
-		return blob;
+		var blob = that.b64toBlob(base64,file_etc);
+		
+		var blobUrl = URL.createObjectURL(blob);// 동영상 파일은 blobUrl을 src에 넣으면 5초이상 재생가능
+	    that.uploadFile[index] = blob;
+		fileInfo.text('1건 등록됨');
+        fileNameText.text('파일명: '+file.name);
+        //that.splashHide();
 	}
     },
      getPivotDate: function (index,fromDateText,toDateText,dateType,dateInterval){ // 1.from 날짜(yyyy-mm-dd) 2.to날짜(yyyy-mm-dd), 3.년월일 (d,m,y) , 4.간격값(+-정수숫자)
@@ -15417,7 +15443,7 @@ var momWidget = {
 	   return pivotText.replace(',','');
        
     },
-    changePivotData: function (data){ 
+    changePivotData: function(data){ 
     	$.each(data, function (i) {	
 				  let keys = Object.keys(data[i]);	
 				  let filterKey  = '';
@@ -15432,6 +15458,39 @@ var momWidget = {
 				})     
 			});
              return data;
-     }
+     },
+     //base64를 Blob으로 변환
+  b64toBlob: function(b64Data,contentType){
+    	  let sliceSize=512;
+    	  const byteCharacters = atob(b64Data);
+    	  const byteArrays = [];
+
+    	  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    	    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    	    const byteNumbers = new Array(slice.length);
+    	    for (var i = 0; i < slice.length; i++) {
+    	      byteNumbers[i] = slice.charCodeAt(i);
+    	    }
+
+    	    const byteArray = new Uint8Array(byteNumbers);
+    	    byteArrays.push(byteArray);
+    	  }
+
+    	  const blob = new Blob(byteArrays, {type: contentType});
+    	  return blob;
+    	},
+    	   //blob 데이터를 파일로 다운 
+    blobToFile: function(theBlob, fileName){
+        //return new File([theBlob], fileName, { lastModified: new Date().getTime(), type: theBlob.type })
+          const blob = new Blob([this.content], {type: 'text/plain'}) // Blob 객체는 생성자로 파일로 만들고자 하는 것과 그것의 타입 두가지를 받는다. 따라서 js에서 활용할 수 있도록 게시글의 내용을 텍스트 형식으로 객체를 생성한다.
+		  const url = window.URL.createObjectURL(theBlob) //Blob 객체를 나타내는 URL를 포함한 다음과 같은 DOMString를 생성한다. Blob URL은 생성된 window의 document에서만(브라우저) 유효하기 때문에 다른 브라우저에서는 활용할 수 없다.
+		  const a = document.createElement("a") //생성하는 태그는 DOM에 붙는 태그가 아닌, 다운로드 기능만을 수행하기 위해 만든다. 따라서 링크, 다운로드 속성을 만드는데 다운로드 속성의 innerText는 자유롭게 작성해도 된다. 다만 파일의 확장자는 제대로 만들어야 제대로된 파일이 만들어져 다운로드 기능을 제공할 수 있다.
+		  a.href = url //URL.revokeObjectURL()은 URL.createObjectURL()을 통해 생성한 기존 URL을 해제(폐기)한다.revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 가비지콜렉터가 동작하지 않는다
+		  a.download = `${this.$store.state.nickname}_${this.title}.md`
+		  a.click()
+		  a.remove()
+		  window.URL.revokeObjectURL(url);
+    }
 }
 

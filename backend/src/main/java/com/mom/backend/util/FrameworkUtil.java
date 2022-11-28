@@ -449,14 +449,14 @@ public class FrameworkUtil {
 			if(map.get("fileType").equals("RP")) {
 				System.out.println("리포트파람 생성진입");
 				try {
-					map.put("report",convertFileToByte(file));
+					map.put("fileBlob",convertFileToByte(file));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
 				listMapParam.add(map);
 			}
 			else {
-				map.put("report",file);	
+				map.put("fileBlob",file);	
 				listMapParam.add(map);
 			}																						 			
 		
