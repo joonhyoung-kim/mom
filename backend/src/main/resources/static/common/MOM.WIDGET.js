@@ -15457,7 +15457,7 @@ var momWidget = {
         				
 		var blob = that.b64toBlob(base64,file_etc);
 		
-		var blobUrl = URL.createObjectURL(blob);// 동영상 파일은 blobUrl을 src에 넣으면 5초이상 재생가능
+		//var blobUrl = URL.createObjectURL(blob);// 동영상 파일은 blobUrl을 src에 넣으면 5초이상 재생가능
 	    that.uploadFile[index] = blob;
 		fileInfo.text('1건 등록됨');
         fileNameText.text('파일명: '+file.name);
