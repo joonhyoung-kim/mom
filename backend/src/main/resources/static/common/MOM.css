@@ -5632,6 +5632,12 @@ input:focus{
 .text20 {
 	font-size: 18px;
 }
+#descript-popUp{
+	resize: none;
+    width: 58%;
+    height: 100%;
+    border: #A9A9A9 1px solid;
+}
 .txt18 {
 	font-size: 18px;
 	line-height: 28px;

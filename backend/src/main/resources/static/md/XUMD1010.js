@@ -1,6 +1,5 @@
-
 var menuId = 'XUMD1010';
-var XUMD1010 = {
+var VIEW =  {
 	initParam		:  undefined,
 	columnProperty1	: undefined,
 	createdFlag		: undefined,
@@ -11,6 +10,6 @@ var XUMD1010 = {
 
 $(function(){
 	momSetup.init();
-	momWidget.init(1, menuId, XUMD1010);
-	XUMD1010.init();
+	momWidget.init(1, menuId, VIEW);
+	VIEW.init();
 });

@@ -8404,7 +8404,7 @@ var momWidget = {
                         height: 30,
                         dropDownHeight: 120,
                         disabled: false,
-                        searchMode: 'none'
+                        searchMode: 'containsignorecase'
                     });
                     popupComboId.on('bindingComplete', function (e) {
                         //maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
@@ -15557,14 +15557,14 @@ var momWidget = {
 		  a.remove()
 		  window.URL.revokeObjectURL(url);
     },
-   arrayBufferToBase64:function(buffer) {
-	var binary = '';
-	var bytes = new Uint8Array( buffer );
-	var len = bytes.byteLength;
-	for (var i = 0; i < len; i++) {
-		binary += String.fromCharCode( bytes[ i ] );
-	}
-	return window.btoa( binary );
-}
+    arrayBufferToBase64:function(buffer) {
+		var binary = '';
+		var bytes = new Uint8Array( buffer );
+		var len = bytes.byteLength;
+		for (var i = 0; i < len; i++) {
+			binary += String.fromCharCode( bytes[ i ] );
+		}
+		return window.btoa( binary );
+    }
 }
 
