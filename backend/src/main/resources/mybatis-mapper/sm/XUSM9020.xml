@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.backend.XUSM9020">
-  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+	<resultMap id="get_findBtn1_result" type="com.mom.backend.dto.LowerHashMap">
+	<result property="COMPANY_CD"       column="COMPANY_CD"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="DIVISION_CD"      column="DIVISION_CD"         jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_ID"          column="FILE_ID"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="KEY_ID"           column="FILE_ID"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_TYPE"        column="FILE_TYPE"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_NM"          column="FILE_NM"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="PARAMETER"        column="PARAMETER"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_BLOB"        column="FILE_BLOB"           jdbcType="BLOB"     javaType="byte[]"/>
+	<result property="DESCRIPTION"      column="DESCRIPTION"         jdbcType="NVARCHAR" javaType="String"/>
+	<result property="CREATE_BY"        column="CREATE_BY"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="CREATE_DATE"      column="CREATE_DATE"         jdbcType="NVARCHAR" javaType="String"/>
+	<result property="UPDATE_BY"        column="UPDATE_BY"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="UPDATE_DATE"      column="UPDATE_DATE"         jdbcType="NVARCHAR" javaType="String"/>
+	</resultMap>
+  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" resultMap="get_findBtn1_result">
     SELECT MF.COMPANY_CD
          , MF.DIVISION_CD
          , MF.FILE_ID
          , MF.FILE_TYPE
          , MF.FILE_NM
 		 , MF.PARAMETER
-		 , UTL_RAW.CAST_TO_VARCHAR2(DBMS_LOB.SUBSTR(MF.FILE_BLOB,DBMS_LOB.GETLENGTH(MF.FILE_BLOB))) AS FILE_BLOB
+		 , MF.FILE_BLOB
 		 , MF.DESCRIPTION
 		 , MF.CREATE_BY
 		 , MF.CREATE_DATE
@@ -62,10 +77,8 @@
     <update id="modify_editBtn1" parameterType="java.util.List">
      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_FILE
-      SET    FILE_TYPE = #{item.fileType, jdbcType=VARCHAR}
-           , FILE_NM = #{item.fileNm, jdbcType=VARCHAR}
+      SET    FILE_NM = #{item.fileNm, jdbcType=VARCHAR}
            , PARAMETER = #{item.parameter, jdbcType=VARCHAR}
-           , FILE_BLOB = #{item.fileBlob, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}
            , UPDATE_DATE = MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})

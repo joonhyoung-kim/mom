@@ -445,20 +445,16 @@ public class FrameworkUtil {
 		List<Map<String, Object>> listMapParam = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (int i = 0; i < list.size(); i++) { 
-			map = list.get(i);	
-			if(map.get("fileType").equals("RP")) {
-				System.out.println("리포트파람 생성진입");
+			    map = list.get(i);	
+				//System.out.println("리포트파람 생성진입");
 				try {
 					map.put("fileBlob",convertFileToByte(file));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
 				listMapParam.add(map);
-			}
-			else {
-				map.put("fileBlob",file);	
-				listMapParam.add(map);
-			}																						 			
+			
+																							 			
 		
 
 		}

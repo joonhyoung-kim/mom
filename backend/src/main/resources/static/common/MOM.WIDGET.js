@@ -358,7 +358,7 @@ var momWidget = {
                 } else if (that.popupProperty[index][i]['popupType'] == 'DG') {
                     labelField = '<select maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '  class="gridPop' + (index + 1) + ' grid-popup popupSelectField"></select>';
                 } else if (that.popupProperty[index][i]['popupType'] == 'FA') {
-                    labelField = '<input id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="file" class="file-input" accept=".xls, .xlsx, .csv, .jasper" ></input>';
+                    labelField = '<input id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="file" class="file-input" accept=".xls, .xlsx, .csv, .jasper,.jpg,.png" ></input>';
                 } else {
                     labelField = '<input maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
                 }
@@ -9487,6 +9487,7 @@ var momWidget = {
         var excelUpCancelBtnId = 'cancelBtnExUp' + (index + 1);
         var saveBtnId = 'saveBtn' + (index + 1);
         var saveBtnIdV = 'saveBtnV' + (index + 1);
+        var exportFileBtnId = 'fileDownBtn' + (index + 1);;
         let procBtnId = 'procBtn' + (index + 1);
         var savePopBtnId = 'saveBtn' + 'DP' + (index + 1);
         var dropdownGridId = 'saveBtn' + 'DG' + (index + 1);
@@ -9518,16 +9519,39 @@ var momWidget = {
         let gridPopXBtnId = 'gridPop-x-btn';
         let fileId = 'fileBlobDP'+ (index + 1);
 
-        /*	var isExist = document.getElementById(findBtnId);
-			if(isExist == undefined || that.pageProperty[index]['programId'] == undefined || that.pageProperty[index]['programId'] == '') {
-				return;excelUpCancelBtnId
-			}*/
-		   $(document).ajaxStart(function () {
-		      that.splashShow();
-		   });
-		   $(document).ajaxStop(function () {
-			  that.splashHide();
-			});
+          $(document).on('click', '#' + exportFileBtnId, function (e) {
+	         checkedItem = that.getCheckedRowItems(that.grid[index]);	         
+                if (checkedItem.length == 0) {
+                    momWidget.messageBox({
+                        type: 'warning',
+                        width: '400',
+                        height: '145',
+                        html: multiLang.transText('MESSAGE', 'MSG00034')
+                    });
+                    momWidget.splashHide();
+                    return;
+                }
+                let fileType= checkedItem[0]['fileType'];
+                let extend = '.txt';
+                if(fileType =='EX'){
+	   				extend = '.xlsx';
+			    }
+			    else if(fileType =='RP'){
+				     extend = '.jasper';
+			    }
+			    else if(fileType =='IM'){
+				     extend = '.jpg';
+			    }
+			    else{
+				
+			    }
+                let byteArray = checkedItem[0]['fileBlob']; //byts 데이터
+                let base64 = that.arrayBufferToBase64(byteArray); //base64인코딩
+                let blobFile = that.b64toBlob(base64,"application/octet-stream"); //blob 변환
+             
+             
+                that.blobToFile(blobFile,checkedItem[0]['fileNm'],extend);
+         });
         $(document).on('click', '#' + moveBtnId, function (e) {
             let fromIndex = index; //복사할 인덱스
             let toIndex = fromIndex + 1; //이동할 인덱스
@@ -13878,6 +13902,19 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#ededed');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background', '#ededed');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({disabled: true});
+                    }else if (popupProperty[index][i]['popupType'] == 'FA') { //파일업로드
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr("disabled", false); 
+                        if($('.file-label').length>0){
+							 $('.file-label').remove();
+							 $('.file-label-name').remove();
+							 $('.file-label-info').remove();
+					    }
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().remove();
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-name class="file-label-name"></label>');  
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-info class="file-label-info"> 0건 등록됨</label>');           
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" for='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+' class="file-label" style="cursor: pointer">파일첨부</label>'); 
+                                   
+						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
                     } else { // 텍스트
 
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
@@ -13895,11 +13932,12 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({disabled: false});
-                    }  else if (popupProperty[index][i]['popupType'] == 'FA') { //파일업로드
+                    } else if (popupProperty[index][i]['popupType'] == 'FA') { //파일업로드
+                       $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr("disabled", false); 
                         if($('.file-label').length>0){
 							 $('.file-label').remove();
-							 $('.file-label-text').remove();
-							 $('.file-label-list').remove();
+							 $('.file-label-name').remove();
+							 $('.file-label-info').remove();
 					    }
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().remove();
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-name class="file-label-name"></label>');  
@@ -13948,7 +13986,9 @@ var momWidget = {
                             $('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
                         } else {
 
-
+                             if(typeof(checkedItems[i][popupProperty[index][j]['popupId']])=='object'){
+	                              continue;
+							}
                             $('#' + popupProperty[index][j]['popupId'] + 'DP' + btnIndex).val(checkedItems[i][popupProperty[index][j]['popupId']]);
                         }
 
@@ -13968,7 +14008,20 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#ededed');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background', '#ededed');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({disabled: true});
-                    } else { // 텍스트
+                    }else if (popupProperty[index][i]['popupType'] == 'FA') { //파일업로드
+                        if($('.file-label').length>0){
+							 $('.file-label').remove();
+							 $('.file-label-name').remove();
+							 //$('.file-label-info').remove();
+					    }
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().remove();    
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-name class="file-label-name"></label>');  
+                        //$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-info class="file-label-info"> 0건 등록됨</label>');           
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" for='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+' class="file-label" style="cursor: pointer">파일첨부</label>');    
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr("disabled", true);                            
+						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
+                    }
+                     else { // 텍스트
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#ededed');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('color', '#817b7b');
@@ -13983,7 +14036,19 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({disabled: false});
-                    } else { // 텍스트
+                    } else if (popupProperty[index][i]['popupType'] == 'FA') { //파일업로드
+                        if($('.file-label').length>0){
+							 $('.file-label').remove();
+							 $('.file-label-name').remove();
+							 //$('.file-label-info').remove();
+					    }
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().remove();  
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-name class="file-label-name"></label>');  
+                        //$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" id='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+'-info class="file-label-info"> 0건 등록됨</label>');           
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" for='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+' class="file-label" style="cursor: pointer">파일첨부</label>');      
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr("disabled", true);                                
+						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
+                    }else { // 텍스트
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('color', 'black');
@@ -15460,7 +15525,7 @@ var momWidget = {
              return data;
      },
      //base64를 Blob으로 변환
-  b64toBlob: function(b64Data,contentType){
+   b64toBlob: function(b64Data,contentType){
     	  let sliceSize=512;
     	  const byteCharacters = atob(b64Data);
     	  const byteArrays = [];
@@ -15481,16 +15546,25 @@ var momWidget = {
     	  return blob;
     	},
     	   //blob 데이터를 파일로 다운 
-    blobToFile: function(theBlob, fileName){
+    blobToFile: function(theBlob, fileName,fileType){
         //return new File([theBlob], fileName, { lastModified: new Date().getTime(), type: theBlob.type })
-          const blob = new Blob([this.content], {type: 'text/plain'}) // Blob 객체는 생성자로 파일로 만들고자 하는 것과 그것의 타입 두가지를 받는다. 따라서 js에서 활용할 수 있도록 게시글의 내용을 텍스트 형식으로 객체를 생성한다.
+          //const blob = new Blob([this.content], {type: 'text/plain'}) // Blob 객체는 생성자로 파일로 만들고자 하는 것과 그것의 타입 두가지를 받는다. 따라서 js에서 활용할 수 있도록 게시글의 내용을 텍스트 형식으로 객체를 생성한다.
 		  const url = window.URL.createObjectURL(theBlob) //Blob 객체를 나타내는 URL를 포함한 다음과 같은 DOMString를 생성한다. Blob URL은 생성된 window의 document에서만(브라우저) 유효하기 때문에 다른 브라우저에서는 활용할 수 없다.
 		  const a = document.createElement("a") //생성하는 태그는 DOM에 붙는 태그가 아닌, 다운로드 기능만을 수행하기 위해 만든다. 따라서 링크, 다운로드 속성을 만드는데 다운로드 속성의 innerText는 자유롭게 작성해도 된다. 다만 파일의 확장자는 제대로 만들어야 제대로된 파일이 만들어져 다운로드 기능을 제공할 수 있다.
 		  a.href = url //URL.revokeObjectURL()은 URL.createObjectURL()을 통해 생성한 기존 URL을 해제(폐기)한다.revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 가비지콜렉터가 동작하지 않는다
-		  a.download = `${this.$store.state.nickname}_${this.title}.md`
+		  a.download = fileName+fileType;
 		  a.click()
 		  a.remove()
 		  window.URL.revokeObjectURL(url);
-    }
+    },
+   arrayBufferToBase64:function(buffer) {
+	var binary = '';
+	var bytes = new Uint8Array( buffer );
+	var len = bytes.byteLength;
+	for (var i = 0; i < len; i++) {
+		binary += String.fromCharCode( bytes[ i ] );
+	}
+	return window.btoa( binary );
+}
 }
 
