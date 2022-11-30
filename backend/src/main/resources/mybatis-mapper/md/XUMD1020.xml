@@ -158,25 +158,24 @@
        </foreach>
       </where>
   </delete>
-  <insert id="upsert_excelUpBtn1" parameterType="java.util.List">
+  <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap"  flushCache="true">
       MERGE INTO MOM_LOCATION 
-            USING( <foreach item="item" collection="list" index="i" separator="UNION" open="" close="">
-                     SELECT #{item.companyCd, jdbcType=VARCHAR} as companyCd,
-                            #{item.divisionCd, jdbcType=VARCHAR} as divisionCd,
-                            #{item.plantCd, jdbcType=VARCHAR} as plantCd,
-                            #{item.locationCd, jdbcType=VARCHAR} as locationCd,
-                            #{item.locationNm, jdbcType=VARCHAR} as locationNm,
-                            #{item.locationGroupCd, jdbcType=VARCHAR} as locationGroupCd,
-                            #{item.locationType, jdbcType=VARCHAR} as locationType,
-                            #{item.partnerCd, jdbcType=VARCHAR} as partnerCd,
-                            #{item.useYn, jdbcType=VARCHAR} as useYn,
-                            #{item.description, jdbcType=VARCHAR} as description,
-                            #{item.userId, jdbcType=VARCHAR} as createBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as createDate,
-                            #{item.userId, jdbcType=VARCHAR} as updateBy,
-                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR}) as updateDate
-                     FROM DUAL
-                   </foreach> ) PARAM
+            USING( 
+                     SELECT #{companyCd, jdbcType=VARCHAR} as companyCd,
+                            #{divisionCd, jdbcType=VARCHAR} as divisionCd,
+                            #{plantCd, jdbcType=VARCHAR} as plantCd,
+                            #{locationCd, jdbcType=VARCHAR} as locationCd,
+                            #{locationNm, jdbcType=VARCHAR} as locationNm,
+                            #{locationGroupCd, jdbcType=VARCHAR} as locationGroupCd,
+                            #{locationType, jdbcType=VARCHAR} as locationType,
+                            #{partnerCd, jdbcType=VARCHAR} as partnerCd,
+                            #{useYn, jdbcType=VARCHAR} as useYn,
+                            #{description, jdbcType=VARCHAR} as description,
+                            #{userId, jdbcType=VARCHAR} as createBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as createDate,
+                            #{userId, jdbcType=VARCHAR} as updateBy,
+                            MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{companyCd, jdbcType=VARCHAR},#{divisionCd, jdbcType=VARCHAR}) as updateDate
+                     FROM DUAL ) PARAM
             ON ( COMPANY_CD = PARAM.companyCd AND
                  DIVISION_CD = PARAM.divisionCd AND
                  LOCATION_CD = PARAM.locationCd )

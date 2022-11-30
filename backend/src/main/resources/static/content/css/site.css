@@ -2891,7 +2891,7 @@ font-size: 15px;  }
  .close-btn:hover { color: white;  } 
  .close-icon { margin-top: 0px;
 margin-right: 0px;  } 
- .pop-body { padding: 10px;  } 
+ .pop-body { padding: 10px; height: 100%; } 
  .panel-heading { color: white;  } 
  .pop-footer { height: 35px;
 line-height: 35px;

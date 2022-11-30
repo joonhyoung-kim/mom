@@ -119,8 +119,8 @@ var Login = {
 		var errorMessage = '';
 		//momWidget.splashShow(); // 스플래쉬 생성
 		var param = { // 로그인폼 값으로 파라미터 세팅
-			userId          : loginParam.userId       == '' ? errorMessage = '아이디 미입력!'  : loginParam.userId,
-			password 	    : loginParam.password     == '' ? errorMessage = '패스워드 미입력!' : loginParam.password,
+			userId          : loginParam.userId       == '' ? errorMessage = '아이디/패스워드 미입력!'  : loginParam.userId,
+			password 	    : loginParam.password     == '' ? errorMessage = '아이디/패스워드 미입력!' : loginParam.password,
 			companyCd 	    : loginParam.companyCd    == '' ? errorMessage = '컴퍼니 미선택!'  : loginParam.companyCd,
 		    companyName 	: loginParam.companyName  == '' ? errorMessage = '컴퍼니 미선택!'  : loginParam.companyName,		
 			divisionCd 	    : loginParam.divisionCd   == '' ? errorMessage = '디비전 미선택!'  : loginParam.divisionCd,
@@ -273,7 +273,7 @@ var Login = {
 	},
 	showVaildationMessage: function(typeCode,message) {
 		if(typeCode == 'D'){
-			  momWidget.messageBox({type:'danger', width:'400', height: '240', html: message});
+			  momWidget.messageBox({type:'danger', width:'400', height: '145', html: message});
 			  
 			  momWidget.splashHide();
 		      return;

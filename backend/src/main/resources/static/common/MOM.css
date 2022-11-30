@@ -4900,8 +4900,7 @@ input:focus{
 	background-repeat: no-repeat;
 }
 .panel-body {
-/* 	display: inline; */
-	/* background-color: #f8f9fa; */
+
 	background-color: #ffffff;
 	font-family: "Malgun Gothic", sans-serif;
 	height: 52%;
@@ -5637,6 +5636,9 @@ input:focus{
     width: 58%;
     height: 100%;
     border: #A9A9A9 1px solid;
+}
+.panel-footer{
+	height: 5vh
 }
 .txt18 {
 	font-size: 18px;
