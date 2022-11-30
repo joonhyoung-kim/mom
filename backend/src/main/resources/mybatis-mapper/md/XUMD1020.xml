@@ -113,7 +113,6 @@
            AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
            AND  LOCATION_CD = #{item.locationCd, jdbcType=VARCHAR}
         )
-<<<<<<< HEAD
        </foreach>
       </where>
   </delete>
@@ -137,9 +136,9 @@
                      FROM DUAL ) PARAM
             ON ( COMPANY_CD = PARAM.companyCd AND
                  DIVISION_CD = PARAM.divisionCd AND
-=======
         </foreach>
         </where>
+      </insert>
     </delete>
     <insert id="upsert_excelUpBtn1" parameterType="java.util.HashMap" flushCache="true">
         MERGE 
