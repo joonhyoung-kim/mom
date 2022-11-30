@@ -10471,25 +10471,45 @@ var momWidget = {
 
 
         });
-        $(document).on('click', '#' + exUpCheckBtnId, function () {
-            let uploadItems = AUIGrid.getGridData(momWidget.excelUpGrid[index]);
-            if (uploadItems.length == 0) {
+        $(document).on('click', '#' + exUpCheckBtnId, function (e) {
+		    let btnId = e.currentTarget.id;
+            let param = AUIGrid.getGridData(momWidget.excelUpGrid[index]);
+            if (param.length == 0) {
                 momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '데이터가없습니다!'});
+                return;
             }
-            mom_ajax('D', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), [], function (result1, data1) {
-                if (result1 != 'SUCCESS') {
+            let buttonPropArray = JSON.parse(JSON.stringify(that.buttonProperty[index]));
+			let buttonParamText = '';
+			let buttonParamList = [];
+			let buttonParamMap  = {};
+			
+			buttonPropArray.forEach((map1, i, list1) => {
+		    if (map1['buttonId'] == 'excelUpBtnV') {
+			       buttonParamText = map1['buttonParameter'];
+				   buttonParamList = buttonParamText.split(',');
+			}
+		    buttonParamList.forEach((map2, j, list2) => {
+		       buttonParamMap[buttonParamList[j].split('=')[0]] =  buttonParamList[j].split('=')[1];
+		    });
+		    param.forEach((map3, k, list3) => {
+		       param[k] = Object.assign(param[k], buttonParamMap);
+		    });
+		
+        });
+            mom_ajax('D', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), [param[0] == undefined ? {} : param[0]], function (result1, data1) {
+                if (result1 != 'SUCCESS' ) {
                     momWidget.splashHide();
-                    momWidget.messageBox({type: 'danger', width: '400', height: '145', html: 'tmp테이블 삭제실패!'});
+                    momWidget.messageBox({type: 'danger', width: '400', height: '145', html: 'tmp 테이블 삭제실패!'});
                     return;
                 }
-                mom_ajax('C', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), uploadItems, function (result2, data2) {
-                    if (result2 != 'SUCCESS') {
+                mom_ajax('C', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), param, function (result2, data2) {
+                    if (result2 != 'SUCCESS' || data2[0]['p_err_code']=='E') {
                         momWidget.splashHide();
                         momWidget.messageBox({type: 'danger', width: '400', height: '145', html: 'tmp테이블 삽입실패!'});
                         return;
                     }
-                    mom_ajax('P', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), [], function (result3, data3) {
-                        if (result3 != 'SUCCESS') {
+                    mom_ajax('P', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), param[0], function (result3, data3) {
+                        if (result3 != 'SUCCESS' || data3[0]['p_err_code']=='E') {
                             momWidget.splashHide();
                             momWidget.messageBox({type: 'danger', width: '400', height: '145', html: '프로시저 호출실패!'});
                             return;

@@ -1916,14 +1916,20 @@ function excelUploadGrid(file, index,grid,validate) {
 					  }
 				    }
         			else if(columnInfo[key] == "date"){
-	    				if(moment(excelData[i][key].replace(/ /g,""), 'YYYY-MM-DD',true).isValid() || moment(excelData[i][key].replace(/ /g,""), 'YYYYMMDD',true).isValid() || moment(excelData[i][key].replace(/ /g,""), 'YYYY/MM/DD',true).isValid()){
-			                   let date = moment(excelData[i][key]);  			        //'YYYY-MM-DD HH:mm:ss'          			                  			            			                   
-			                   excelData[i][key] = moment(date).add(52, "seconds").format('YYYY-MM-DD 00:00:00'); 
-			                 
-		                }
-		                else{
-							excelData[i][key] = excelData[i][key].replace(/^\s+|\s+$/g,'').replace(/\,/g,'').trim();
-					    }
+			             let date = moment(excelData[i][key]);  			             			                  			            			                   
+			             let columnPropArray = momWidget.columnProperty[index]; 
+						 columnPropArray.forEach((map1, j, list1) => {
+	                        if( map1['columnId'] == headerInfo[key]){
+			                  if(map1['dataFormat']=='yyyy-mm-dd'){
+				                excelData[i][key] = moment(date).format('YYYY-MM-DD');
+			                  }
+							  else{
+							    excelData[i][key] = moment(date).format('YYYY-MM-DD HH:mm:ss');
+							  }
+						    }		      
+		 				  });
+		                
+		            
 				    }
         			excelData[i][headerInfo[key]] = excelData[i][key];
         			excelData[i]['NEW'] = 'Y';			
