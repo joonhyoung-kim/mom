@@ -1,15 +1,20 @@
 var menuId = 'XUMD1030';
-var XUMD1030= {
-	initParam		:  undefined,
-	columnProperty1	: undefined,
-	createdFlag		: undefined,
-	init: function() {
-		var that = this;		
-	} 		
+var widget = momWidget;
+var that = undefined;
+var VIEW= {
+  initParam   : undefined, 
+    
+  init: function() {  
+    that = this;  
+    that.event();
+  },
+  event: function(e) {
+  
+  },
 };
 
-$(document).ready(function(event){	
-	momSetup.init();
-	momWidget.init(1, menuId, XUMD1030); 
-	XUMD1030.init();
+$(document).ready(function(event){  
+  momSetup.init();
+  momWidget.init(1, menuId, VIEW);  
+  VIEW.init();
 });

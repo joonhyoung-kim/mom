@@ -894,6 +894,9 @@ public class FrameworkUtil {
 	//파일을 byte[] 로 변환
 	public  byte[] convertFileToByte(MultipartFile mfile) throws Exception {
 			return mfile.getBytes();
+			
+			
+			
 		}
 
 }
