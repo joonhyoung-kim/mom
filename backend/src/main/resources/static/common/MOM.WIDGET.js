@@ -10569,7 +10569,22 @@ var momWidget = {
                 momWidget.splashHide();
                 return;
             }
-
+         
+            let buttonPropArray = JSON.parse(JSON.stringify(that.buttonProperty[index]));
+			let buttonParamText = '';
+			let buttonParamMap  = {};
+			
+			buttonPropArray.forEach((map1, i, list1) => {
+		    if (map1['buttonId'] == 'excelUpBtnV') {
+			       buttonParamText = map1['buttonParameter'];			   
+				   buttonParamMap = that.getButtonParamArray(buttonParamText);		
+		    param.forEach((map3, k, list3) => {
+		       param[k] = Object.assign(param[k], buttonParamMap);
+		    });
+			}
+		
+		
+        });
             let actionType = $('#excelUpPop' + (index + 1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop' + (index + 1)).attr('actiontype');
             let validateYn = $('#excelUpPop' + (index + 1)).attr('validateyn') == undefined ? 'N' : $('#excelUpPop' + (index + 1)).attr('validateyn');
             let queryId = validateYn == 'Y' ? that.pageProperty[index]['menuId'] + '.excelUpBtnV' + (index + 1) : that.pageProperty[index]['programId'] + '.excelUpBtn' + (index + 1);
@@ -10579,7 +10594,7 @@ var momWidget = {
                 if (validateYn == 'Y') {
                     param[0].excelUpYn = 'Y';
                     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
-                    mom_ajax(actionType, queryId, [], function (result, data) {
+                    mom_ajax(actionType, queryId, param[0], function (result, data) {
                         bar.width('100%');
                         percent.text('100%' + ' ' + param.length + '/' + param.length);
                         // percent.html(percentVal+' '+paramSize+'/'+data.percent);
