@@ -15571,7 +15571,7 @@ var momWidget = {
     },
     getButtonParamArray: function(splitText){
       let buttonParamList = splitText.split(',');
-	  let buttonParamMap = '';
+	  let buttonParamMap = {};
       buttonParamList.forEach((map, i, list) => {
 		       buttonParamMap[buttonParamList[i].split('=')[0]] =  buttonParamList[i].split('=')[1];
 		    });
