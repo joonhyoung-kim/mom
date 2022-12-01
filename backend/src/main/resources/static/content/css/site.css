@@ -1184,7 +1184,7 @@ text-align: center;white-space: nowrap; vertical-align: middle; line-height:12px
 /** 1.Basic List Item *************************************************************************************/
 
 /** 2.Forms Form ******************************************************************************************/
-.w-form { display:block; /*margin-bottom: 0;*/ vertical-align: middle }
+.w-form { display:block; vertical-align: middle;margin-top: 0.4rem; }
 .w-form+div{display: block;}
 .w-form .w-row {margin-left: 0px; margin-right: 0px; padding:1px 0;}
 .w-form .w-row label, .form-inline label {line-height: 26px;/*vertical-align:middle; min-height:30px; padding: 5px 0 5px 0;*/}

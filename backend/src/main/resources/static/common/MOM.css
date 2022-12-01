@@ -5638,7 +5638,8 @@ input:focus{
     border: #A9A9A9 1px solid;
 }
 .panel-footer{
-	height: 5vh
+	/* height: 5vh */
+	height:30%;
 }
 .txt18 {
 	font-size: 18px;
