@@ -7328,6 +7328,7 @@ var momWidget = {
                     
                 } else if (btnId == 'INIT_PAGING') {
                     if (data.length == 0) {
+					    AUIGrid.clearGridData(that.grid[index]);
                        // AUIGrid.setGridData(that.grid[index], data);
 						that.splashHide();
                     } else if (that.gridProperty[index][0]['pageRowCount'] > that.totalRowCount[index]) {
