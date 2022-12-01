@@ -1609,11 +1609,6 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 
 		    success     : function(data) {			
 			if(call_back != undefined) {
-			/*	if(data['result'] == 'success') {
-					call_back('SUCCESS', data, param, call_back_param, index_info, your);
-				} else {
-					call_back('FAIL', data, param, call_back_param, index_info, your);
-				}*/
 				call_back('SUCCESS', data, param, call_back_param, index_info, your);
 			}
 		}, error	: function(error) {			
@@ -1646,14 +1641,6 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		timeout 	: 30000000,
 		dataType 	: type == 'U'? 'text' : (type == 'D' ? 'json' : 'json'),
 		contentType : type == 'U'? 'application/json; charset=UTF-8' : (type == 'D' ? 'application/json; charset=UTF-8' : 'application/json; charset=UTF-8'),
-		//contentType : type == 'U'? 'application/json; charset=UTF-8' : (type == 'D' ? 'application/x-www-form-urlencoded; charset=UTF-8' : 'application/json; charset=UTF-8'),
-	/*	xhr: function() { //XMLHttpRequest 재정의 가능
-					var xhr = $.ajaxSettings.xhr();
-					xhr.upload.onprogress = function(e) { 
-					
-					};
-					return xhr;
-					},*/
 		beforeSend: function (xhr) {
 	              xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
 	            if(excelUpYn =='Y'&&param.length>=1000){
@@ -1721,6 +1708,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 				} else {
 					call_back('FAIL', data, param, call_back_param, index_info, your);
 				}*/
+				
 				call_back('SUCCESS', data, param, call_back_param, index_info, your);
 			}
 		}, error	: function(error) {

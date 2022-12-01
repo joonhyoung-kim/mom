@@ -577,7 +577,10 @@
     border: none;
 }
 }
-
+.change-pw-title{
+	font-size: 1.5rem;
+    font-family: Aritadsb, sans-serif;
+}
 .file-label{
   width: 7.5rem;
   border: 1px solid rgb(77,77,77);
@@ -595,6 +598,13 @@
   padding-top: 0.2rem;
   color: transparent;
   text-shadow: 0 0 0 black;
+  cursor: pointer;
+}
+.close-file-up-btn {
+    margin-top: -2.4rem;
+    left: 1rem;
+    float: right;
+    position: relative;
 }
 .file-label-info{
   left: 8rem;
@@ -621,6 +631,21 @@
   padding-bottom: 0.23rem;
   border: none;
   white-space: nowrap;
+}
+.filePop-label-name {
+    top: -2.2rem;
+    left: 8.5rem;
+    position: relative;
+    font-family: Aritadsb, sans-serif;
+    float: left;
+    width: 9rem;
+    font-size: 1.2rem;
+    padding: 0.24rem;
+    padding-bottom: 0.23rem;
+    border: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .file-input{
 	  display: none !important;
@@ -2791,7 +2816,16 @@ border-color: #d8dce3 !important;
     width: 55rem;
     z-index: 1100;
 }
-
+.modal-content-file-up-pop {
+    top: 10%;
+    left: 23%;
+    position: absolute;
+    opacity: 1 !important;
+    margin-left: -20rem !important;
+    margin-top: 2rem !important;
+    width: 40rem;
+    z-index: 1100;
+}
 .passwordInputField {
     display: inline-block;
     width: 10rem;
@@ -4156,21 +4190,37 @@ border-color: #d8dce3 !important;
     border-radius: 0.5rem;
     border: 1px solid #bdbdbd !important;
 }
+@media (min-width:800px) and (max-width:1920px) {
 .defaultPop-C3-R3-remark-out {
     z-index: 1050;
-    /* display: none; */
     float: none !important;
-    /* background-color: rgba(0, 0, 0, 0.1); */
     overflow: hidden !important;
     width: 55rem !important;
     position: relative !important;
     margin-left: 30% !important;
-    margin-top: -37.5% !important;
+    margin-top: -87vh !important;
     background: white !important;
     height: 31rem !important;
     border-radius: 0.5rem;
     border: 1px solid #bdbdbd !important;
 }
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.defaultPop-C3-R3-remark-out {
+    z-index: 1050;
+    float: none !important;
+    overflow: hidden !important;
+    width: 55rem !important;
+    position: relative !important;
+    margin-left: 30% !important;
+    background: white !important;
+    margin-top: -84vh !important;
+    height: 31rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #bdbdbd !important;
+}
+}
+
 .defaultPop-C3-R4 {
     z-index: 1050;
 /* 	display: none ; */

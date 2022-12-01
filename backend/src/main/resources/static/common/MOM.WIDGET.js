@@ -50,6 +50,13 @@ var momWidget = {
     excelUpCheckYn: undefined, // 엑셀 업로드 검증 사용여부(Y/N)
     dateCheckParam: '-1', // 엑셀 업로드시 추가적인 벨리데이션(yyyymm형태)을 위한 변수
     upsertFlag: 'Y',
+    splash: undefined,
+	splash1: undefined,
+	splash2: undefined,
+    splashName1: 'spinner1_',
+    splashName2: 'spinner2_',
+    splashIds: [],
+    splashInitFlag: true,
 
 
     //background: #6c5ffc !important;
@@ -58,10 +65,13 @@ var momWidget = {
         let gridId = index;
         index--;
         if (index == 0 && widgetType != 'DG') {
+	        that.splashShow('load');
             let changePwPop = that.createChangePop.password(index, '비밀번호변경');
             $('body').append(changePwPop);
             let calendarPop = that.createPopup.calendarPop(index, 'grid');
             $('body').append(calendarPop);
+            let uploadFilePop = that.createFileUploadPop.fileUp(index, '파일업로드');
+             $('body').append(uploadFilePop);
             //$('head').append('<style type="text/css">.aui-grid-edit-column-left{background:#c7e8fd !important;color:black !important;text-align: left !important;}.aui-grid-edit-column-center{background:#c7e8fd !important;color:black !important;text-align: center !important;}.aui-grid-edit-column-right {background:#c7e8fd !important;color:black !important;text-align: right !important;}.aui-grid-default-column-center {background-color:rgb(250 250 250) !important;text-align: center !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-left {background-color:rgb(250 250 250) !important;text-align: left !important;font-size: 1em !important;cursor: default !important;}.aui-grid-default-column-right {background-color:rgb(250 250 250) !important;text-align: right !important;font-size: 1em !important;cursor: default !important;}</style>');
         } else if (widgetType == 'DG') {	       
             index = (index + 1) * 10;
@@ -515,6 +525,7 @@ var momWidget = {
                 sortType = that.columnProperty[index][i]['sortMethod'] == 'ASC' ? 1 : -1;
                 sortNo = that.columnProperty[index][i]['sortNo'] == '' ? 0 : that.columnProperty[index][i]['sortNo'];
                 isCellMerge = that.columnProperty[index][i]['cellMerge'] == '' ? false : that.columnProperty[index][i]['cellMerge'] == 'Y' ? true : false;
+                isFileUp = that.columnProperty[index][i]['columnType'] == 'FA' ? 'Y' : 'N';
                 // groupHeader  = that.columnProperty[index][i]['columnType'] == 'G' ? 'Y': 'N';
 
                 if (sortNo > 0) {
@@ -524,16 +535,11 @@ var momWidget = {
                 //that.columnProperty[index].splice(i,1);
 
                 columnProp[i] = {
-                    dataField: columnId
-                    ,
-                    headerText: that.columnProperty[index][i]['columnNm']
-                    ,
-                    dataType: that.columnProperty[index][i]['dataType']
-                    ,
-                    formatString: that.columnProperty[index][i]['dataFormat']
-                    ,
-                    editable: that.columnProperty[index][i]['columnEditable'] == 'Y' ? true : that.columnProperty[index][i]['columnCreate'] == 'Y' ? true : false
-                    ,
+                    dataField: columnId,
+                    headerText: that.columnProperty[index][i]['columnNm'],
+                    dataType: that.columnProperty[index][i]['dataType'],
+                    formatString: that.columnProperty[index][i]['dataFormat'],
+                    editable: that.columnProperty[index][i]['columnEditable'] == 'Y' ? true : that.columnProperty[index][i]['columnCreate'] == 'Y' ? true : false,
                     style: that.columnProperty[index][i]['columnAlign'] == 'LEFT' ? 'aui-grid-' + columnType + '-column-left' : that.columnProperty[index][i]['columnAlign'] == 'RIGHT' ? 'aui-grid-' + columnType + '-column-right' : 'aui-grid-' + columnType + '-column-center'
                     ,
                     visible: gridShow
@@ -710,62 +716,27 @@ var momWidget = {
                     }, undefined, undefined, this, false, 'Y');
 
                 } else if (isCalendar == 'Y') {
-                    /*columnProp[i].dateInputFormat = "yyymmdd"; // 실제 데이터의 형식 지정
-				 				columnProp[i].formatString = "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
-				 				columnProp[i].dateType = 'date';
-				 				columnProp[i].width = 160;
-				 				columnProp[i].renderer = {
-																type : "IconRenderer",
-																iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-																iconHeight : 16,
-																iconPosition : "aisleRight",
-																iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-																	"default" : "../content/icon/calendar-icon.png" // default
-																},
-																onClick : function(event) {
-																	// 달력 아이콘 클릭하면 실제로 달력을 띄움.
-																	// 즉, 수정으로 진입함.
-																	AUIGrid.openInputer(event.pid);
-															    }
-
-								};
-								columnProp[i].editRenderer = {
-																	type : "JQCalendarRenderer", // jquery-datepicker 달력 렌더러 사용
-																	defaultFormat : "yyyymmdd", // 달력 선택 시 데이터에 적용되는 날짜 형식
-																	uncheckDateValue : "-", // Clear 버턴 클릭 시 적용될 값.
-																	showEditorBtn : false,
-																	showEditorBtnOver : false,
-																	onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-																	openDirectly : true, // 에디팅 진입 시 바로 달력 열기
-
-																	jqOpts : {
-																		changeMonth: true,
-																		changeYear: true,
-																		selectOtherMonths : true,
-																		showOtherMonths: true,
-																		dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-																		monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
-																	}
-							   };*/
+                  
 
                 }
+                else if(isFileUp = 'Y'){
+					columnProp[i].filter = {
+                         showIcon: false
+                    };
+                    columnProp[i].renderer = {
+                        type: "TemplateRenderer"
+                    };
+                     /*columnProp[i].labelFunction = function (rowIndex, columnIndex, value, item) {
+                           	if (!value) return "";
+							var template = '<div class="my_div">';
+							template += '<img src=""><br>';
+							template += '<a class="my_a_tag" target="_blank" title="">';
+							template += '</a></div>';
+							return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
+				     };*/
+				}
 
-                /*	  if(groupHeader =='Y'){
-				          var childrenTmp =[];
-				          var childrenColumn = JSON.parse(momWidget.columnProperty[index][i]['groupingColumn'].replace(/\'/gi, '"'));
-				          for(var k=0,max4=that.columnProperty[index].length;k<max4;k++){
-					           for(var k2=0,max5=Object.keys(childrenColumn[0]).length;k2<max5;k2++){
-						             if(that.columnProperty[index][k]['columnId'] == childrenColumn[0]['columnId'+(k2+1)] ){
-							             childrenTmp.push(columnProp[k]);
-										 delete columnProp[k];
-
-
-									 }
-					           }
-						  }
-						  columnProp.children = childrenTmp;
-
-						} */
+             
 
 
             }
@@ -6307,7 +6278,7 @@ var momWidget = {
         password: function (index, title) {
             var html = '<div id ="changePwPop' + (index + 1) + '"  class="modal modal-content modal-content-change-pop"style="display: none;height: 11rem;">' +
                 '<div class="modal-header" style="padding-bottom: 0.7rem;height: 32%;">' +
-                '<h6 class="modal-title" style="font-size: 1.5rem;">비밀번호변경</h6>' +
+                '<h6 class="modal-title change-pw-title" style="">비밀번호변경</h6>' +
                 '<button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">×</span></button>' +
                 '</div>' +
                 '<div class="modal-body" style="height: 51%;">' +
@@ -6335,9 +6306,27 @@ var momWidget = {
             return html;
         }
     },
+
     createFileUploadPop: {
+	      fileUp: function (index, title) {
+            let html = '<div id ="fileUploadPop' + (index + 1) + '"  class="modal modal-content modal-content-file-up-pop"style="display: none;height: 6.6rem;">' +
+                '<div class="modal-header" style="padding-bottom: 0.7rem;height: 32%;">' +
+                '<h6 class="modal-title change-pw-title" style="">파일첨부</h6>' +
+                '<button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">×</span></button>' +
+                '</div>' +
+                '<div class="modal-body" style="height: 51%;">' +
+                '<div class="w-col w-col-8" style="margin-top: -0.5rem;margin-left: -0.2rem;">' +
+ 			     '<label type="text" for="fileBlobDP1" class="file-label" style="cursor: pointer">파일첨부</label>' +
+		         '<label type="text" id="fileBlobDP1-name" class="filePop-label-name">파일명:XUMM9435_1_TEST_0001</label>'+
+		         '<input id="fileBlobDP1" type="file" class="file-input" accept=".xls, .xlsx, .csv, .jasper,.jpg,.png" >'+
+                '</div>' +
+                '<button id ="saveBtnFP' + (index + 1) + '" class="btn btn-light" style="margin-top: -0.7rem;"><i class="mdi mdi-content-save-outline"></i>업로드</button><button id ="closeBtnFP' + (index + 1) + '" class="btn btn-light close-file-up-btn" style=""><i class="mdi mdi-window-close"></i>' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>' +
+                '</div>' +
+                '</div>';
+            return html;
+        },
         excelUp: function (index, title) {
-            var html = '<div class="modal" id="excelUpPop' + (index + 1) + '" style="z-index: 1080;display: none;" aria-hidden="true">' +
+            let html = '<div class="modal" id="excelUpPop' + (index + 1) + '" style="z-index: 1080;display: none;" aria-hidden="true">' +
                 '<div class="modal-dialog" role="document">' +
                 '<div class="modal-content excelUploadPop">' +
                 '<div class="modal-header-excelUp pt-3 pb-1">' +
@@ -7196,8 +7185,8 @@ var momWidget = {
     // 검색버튼을 누른 효과
     findBtnClicked: function (index, param, splash, btnId, menuId, your, callBackFunc, event) { 	//momWidget.findBtnClicked(1, [], true, 'findBtn1', 'PGIDXX002', MOMXX000, function(result, data)       
         var that = this;
-        //that.splashShow();
-
+       that.splashShow();
+       
         var callInitResult = undefined;
         var callBackResult = undefined;
         var checkSearchParam = {};
@@ -7502,7 +7491,7 @@ var momWidget = {
                 }
                 $('td').removeClass('aui-grid-default-column');
                // that.wait(0.5);
-              // that.splashHide();
+               that.splashHide();
             }, undefined, undefined, this, false);
                
 
@@ -9490,6 +9479,7 @@ var momWidget = {
         var reportBtnId = 'reportBtn' + (index + 1);
         var changePwBtnId = 'changePwBtn' + (index + 1);
         var changePwSaveBtn = 'saveBtnCp' + (index + 1);
+        var fileUpSaveBtn = 'saveBtnFp' + (index + 1);
         var changePwCencelBtn = 'closeBtnCp' + (index + 1);
         var callInitResult = undefined;
         var callBackResult = undefined;
@@ -9501,7 +9491,9 @@ var momWidget = {
         let calendarPopSaveBtnId = 'saveBtnDT' + (index + 1);
         let calendarPopCloseBtnId = 'closeBtnDT' + (index + 1);
         let gridPopSaveBtnId = 'saveBtnCP';
+        
         let gridPopCancelBtnId = 'cancelBtnCP' + (index + 1);
+        let fileUpCloseBtnId = 'closeBtnFP' + (index + 1);
         let moveBtnId = 'moveBtn' + (index + 1);
         let gridPopXBtnId = 'gridPop-x-btn';
         let fileId = 'fileBlobDP'+ (index + 1);
@@ -9604,6 +9596,10 @@ var momWidget = {
         });
         $(document).on('click', '#' + gridPopCancelBtnId, function (e) {
 			that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id,'1');
+           
+        });
+         $(document).on('click', '#' + fileUpCloseBtnId, function (e) {
+			that.modalHide('id',e.currentTarget.parentElement.parentElement.id,'1');
            
         });
         $(document).on('click', '#' + gridPopSaveBtnId + (index + 1), function (e) {
@@ -10311,7 +10307,7 @@ var momWidget = {
             let modalDiv = $('#changePwPop' + (index + 1));
             modalDiv.modal({backdrop: false, show: true});
             modalDiv.draggable({handle: ".modal-header"});
-            that.modalShow('id',$('changePwPop' + (index + 1)),'2');
+            that.modalShow('id','changePwPop' + (index + 1),'2');
             let callInitResult = that.checkActionCallInit(index, 'CHPW', [], 'changePwBtn', your, e);
             if (callInitResult['result'] != 'SUCCESS') {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callInitResult['msg']});
@@ -10358,7 +10354,7 @@ var momWidget = {
         });
 
         $(document).on('click', '#' + changePwCencelBtn, function () {
-            that.modalHide('id',$('changePwPop' + (index + 1)),'2')
+            that.modalHide('id','changePwPop' + (index + 1),'2')
         });
         
         $(document).on('click', '#' + reportBtnId, function () {
@@ -15300,8 +15296,95 @@ var momWidget = {
         $('.momMessageBoxSet').css('z-index', 99999999);
         $('.btn-ok').focus();
     },
+ splashInit: function() {
+    	if(this.splashInitFlag) {
+            var that = this;
+            $(window).resize(function() {
+                // for(var i in that.splashIds) {
+                    that.splashResize('#' + that.splashIds[0], 'load');
+                    that.splashResize('#' + that.splashIds[1]);
+                // }
+            });
 
-      splashShow: function () {
+            this.splashInitFlag = false;
+        }
+    },
+    
+    splashSet: function(options) {
+    	options = options || {};
+    	this.splashInit();
+        
+        var el = $('body');
+        el = $(el);
+        el.uniqueId();
+        
+        // var id = $('body').attr('id');
+        this.splashIds.push(el.attr('id'));
+        var fontSize = options.fontSize || '50px';
+        var background = options.background || 'rgba(0, 0, 0, 0.2)'
+        var html = 	 '<div id="#{id}" style="display:none; position: fixed; top:#{top}; text-align: center;font-size: #{fontSize};z-index: 99999999999;background: #{background}; color:white;">' 
+                	+	'<div class="w-icon fa fa-spinner fa-spin" style="position: fixed;"></div>';
+        
+        html += (options['load'] != undefined ? '<br /><br /><br /><div></div>' : '');
+        html += '</div>';
+        
+        if(options['load'] != undefined) {
+        	el.find('#' + this.splashName2 + el.attr('id')).remove();
+        	el.prepend(html.replace(/#{id}/gi, this.splashName1 + el.attr('id')).replace(/#{fontSize}/gi, fontSize).replace(/#{background}/gi, background).replace(/#{top}/gi, el.offset().top + 'px'));
+        } else {
+        	el.find('#' + this.splashName2 + el.attr('id')).remove();
+        	el.prepend(html.replace(/#{id}/gi, this.splashName2 + el.attr('id')).replace(/#{fontSize}/gi, fontSize).replace(/#{background}/gi, background).replace(/#{top}/gi, el.offset().top + 'px'));
+        }
+        
+        for(var i in this.splashIds) {
+        	this.splashResize('#' + this.splashIds[i], options['load']);
+        }
+        
+        if(options != undefined) {
+        	return '#' + this.splashName1 + el.attr('id');
+        }
+        
+        return '#' + this.splashName2 + el.attr('id');
+    },
+    
+    splashResize: function(el, load) {
+        var height = $(el).height();
+        var width = $(el).width();
+        var spinner = undefined;
+        if(load != undefined) {
+        	spinner = $('#' + this.splashName1 + $(el).attr('id'));
+        } else {
+        	spinner = $('#' + this.splashName2 + $(el).attr('id'));
+        }
+        
+        spinner.width(width);
+        spinner.height(height);
+        spinner.find('.fa').css('top',  '35vh');
+    },
+    
+    splashShow: function(load) {
+    	if(load != undefined) {
+	        if(this.splash1 == undefined && this.splashIds[0] == undefined) {
+	            var ret = this.splashSet({load:load});
+	        }
+	       
+	        $('#' + this.splashName1 + this.splashIds[0]).show();
+	    } else {
+    		if(this.splash2 == undefined && this.splashIds[1] == undefined) {
+    			var ret = this.splashSet();
+	        }
+	       
+	        $('#' + this.splashName2 + this.splashIds[1]).show();
+    	}
+    },
+    
+    splashHide: function(load) {
+    	 	
+    		$('#' + this.splashName1 + this.splashIds[0]).hide();    	   		
+    		$('#' + this.splashName2 + this.splashIds[1]).hide();
+    	
+    },
+     /*splashShow: function () {
 	    momWidget.maskShow('1');
         $('#loader').css('display','block');
         //$('body').append(spinnerHtml);
@@ -15311,7 +15394,7 @@ var momWidget = {
 	   momWidget.maskHide('1');
 	   $('#loader').css('display','none');
        //$('#loader').remove();
-    },
+    },*/
     /*splashShow: function () {
         //console.log("");
         //console.log("[spinnerStart] : " + "[start]");
