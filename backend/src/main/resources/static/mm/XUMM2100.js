@@ -78,6 +78,5 @@ $(document).ready(function(event){
 	momWidget.init(1, menuId, VIEW,'GRID');	
 	momWidget.init(2, menuId, VIEW,'GRID');	
 	momWidget.gridPopup.init(2,21,1,'XUSM8100', VIEW);
-	XUSM8080
 	VIEW.init();
 });

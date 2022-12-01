@@ -11038,7 +11038,10 @@ var momWidget = {
             if ($('#changePwBtn' + (index + 1)).length) {
                 $('#changePwBtn' + (index + 1)).css('display', 'none');
             }
-            that.setPopup(index, actionType, 'createBtn' + (index + 1), 'N');
+            
+	            that.setPopup(index, actionType, 'createBtn' + (index + 1), 'N');
+            
+           
             $('#defaultPop' + (index + 1)).attr('actionType', actionType);
             $('#defaultPop' + (index + 1)).attr('btnId', buttonId);
             callInitResult = that.checkActionCallInit(index, actionType, [], 'createBtn', your, e);
@@ -13047,7 +13050,7 @@ var momWidget = {
             //$('#' + 'defaultPop' + (index + 1)).modal("show");
             that.maskShow('1');
             $('#' + 'defaultPop' + (index + 1)).css('display', 'block');
-
+  		    
             that.setPopup(index, 'U', 'editBtn' + (index + 1), 'N');
             $('#defaultPop' + (index + 1)).attr('actionType', actionType);
             $('#defaultPop' + (index + 1)).attr('btnId', buttonId);
@@ -13771,7 +13774,8 @@ var momWidget = {
                     queryId = dropdownId;
                     //   paramMap[i] = ;
                 }
-                mom_ajax('R', nameSpace + '.' + queryId, paramMap[0] == undefined ? {} : paramMap[0], function (result, data) {
+                if($('#' + popupId).jqxComboBox('getItems') == undefined ){
+	            mom_ajax('R', nameSpace + '.' + queryId, paramMap[0] == undefined ? {} : paramMap[0], function (result, data) {
                     if (result != 'SUCCESS') {
                         momWidget.splashHide();
                         return;
@@ -13798,6 +13802,11 @@ var momWidget = {
                     }
                     // $('#'+popupId).jqxComboBox('focus');
                 }, undefined, undefined, that, false);
+                }
+                else{
+		
+				}
+             
             } else if (popupType == 'SS' || popupType == 'MS') {
                 $('#' + popupId).jqxComboBox('clear');
             } else if (popupType == 'C') {
@@ -14205,7 +14214,7 @@ var momWidget = {
 
         }
 
-
+        $("#defaultPop" + (index + 1)).addClass('set-done');
         $("#defaultPop" + (index + 1)).draggable();
         $(".customPop").draggable();
 
