@@ -7833,13 +7833,29 @@ input:focus{
 .main-search-field{
 	margin-top: 0.3rem;
 }
+@media (min-width:800px) and (max-width:1920px) {
+.side-app-fold{
+	padding: 0;
+    height: calc(100vh - 80px);
+    position:fixed;
+    width: calc(100% - 4.2vw); 
+}
+}
+@media (min-width:1921px) and (max-width:2560px)  {
+.side-app-fold{
+	padding: 0;
+    height: calc(100vh - 80px);
+    position:fixed;
+    width: calc(100% - 3.2vw);
+}
+}
+
  .app-content .side-app {
     padding: 0;
-   /*  width: 100%; */
     height: calc(100vh - 90px);
     position:fixed;
     width: calc(100% - 270px);
-  /*   height: 100% */
+ 
 } 
 .boardTitle3 {
 	position: relative;

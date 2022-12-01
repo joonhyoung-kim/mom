@@ -89,6 +89,15 @@ var index = {
 
            
 		});
+		$(document).on("click", "#side-hidebar", function(event) {
+			if($('#main-page').attr('class')=='side-app'){
+				 $('#main-page').attr('class','side-app-fold');		
+			}
+			else{
+				$('#main-page').attr('class','side-app');		
+			}
+	             	
+		});
 	$(document).on("keydown", "#main-search", function(event) {
 			if (event.keyCode == 13){				
 				  var seachText = document.getElementById("main-search").value;
