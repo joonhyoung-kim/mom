@@ -10480,20 +10480,17 @@ var momWidget = {
             }
             let buttonPropArray = JSON.parse(JSON.stringify(that.buttonProperty[index]));
 			let buttonParamText = '';
-			let buttonParamList = [];
 			let buttonParamMap  = {};
 			
 			buttonPropArray.forEach((map1, i, list1) => {
 		    if (map1['buttonId'] == 'excelUpBtnV') {
-			       buttonParamText = map1['buttonParameter'];
-				   buttonParamList = buttonParamText.split(',');
-			}
-		    buttonParamList.forEach((map2, j, list2) => {
-		       buttonParamMap[buttonParamList[j].split('=')[0]] =  buttonParamList[j].split('=')[1];
-		    });
+			       buttonParamText = map1['buttonParameter'];			   
+				   buttonParamMap = that.getButtonParamArray(buttonParamText);		
 		    param.forEach((map3, k, list3) => {
 		       param[k] = Object.assign(param[k], buttonParamMap);
 		    });
+			}
+		
 		
         });
             mom_ajax('D', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), [param[0] == undefined ? {} : param[0]], function (result1, data1) {
@@ -15571,6 +15568,14 @@ var momWidget = {
 			binary += String.fromCharCode( bytes[ i ] );
 		}
 		return window.btoa( binary );
+    },
+    getButtonParamArray: function(splitText){
+      let buttonParamList = splitText.split(',');
+	  let buttonParamMap = '';
+      buttonParamList.forEach((map, i, list) => {
+		       buttonParamMap[buttonParamList[i].split('=')[0]] =  buttonParamList[i].split('=')[1];
+		    });
+     return buttonParamMap;
     }
 }
 
