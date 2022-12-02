@@ -1400,8 +1400,9 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		actionMode = type;
 	}
 	if(file != undefined && file != null){
-		  let fileInput = $('#fileBlobDP'+(index_info+1));
-		  let fileItem = fileInput[0].files[index_info];
+		  //let fileInput = $('#fileBlobDP'+(index_info+1));
+		 // let fileItem = fileInput[0].files[index_info];
+		  let fileItem = file;
 		  let blobFile = that.uploadFile[index_info];
 		  formData.append('blob',blobFile , fileItem.name); // (key,value,파일명)
 		  //formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));

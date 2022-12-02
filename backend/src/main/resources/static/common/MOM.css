@@ -601,10 +601,10 @@
   cursor: pointer;
 }
 .close-file-up-btn {
-    margin-top: -2.4rem;
+/*     margin-top: -2.4rem;
     left: 1rem;
     float: right;
-    position: relative;
+    position: relative; */
 }
 .file-label-info{
   left: 8rem;
@@ -632,20 +632,28 @@
   border: none;
   white-space: nowrap;
 }
+.file-up-pop-header{
+    position: relative;
+    float: left;
+    width: 100%;
+    min-height: 1px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
 .filePop-label-name {
     top: -2.2rem;
     left: 8.5rem;
+    width:40.5rem;
     position: relative;
     font-family: Aritadsb, sans-serif;
     float: left;
-    width: 9rem;
     font-size: 1.2rem;
     padding: 0.24rem;
     padding-bottom: 0.23rem;
-    border: none;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border: 1px solid #bdbdbd;
 }
 .file-input{
 	  display: none !important;
@@ -2816,15 +2824,29 @@ border-color: #d8dce3 !important;
     width: 55rem;
     z-index: 1100;
 }
+.file-up-grid-footer{
+    margin-top: -1.1rem;
+    position: relative;
+    left: rem;
+    left: 1.8rem;
+    border: none;
+}
 .modal-content-file-up-pop {
     top: 10%;
+    height: 23.5rem;
     left: 23%;
     position: absolute;
-    opacity: 1 !important;
-    margin-left: -20rem !important;
-    margin-top: 2rem !important;
-    width: 40rem;
+    width: 52rem;
     z-index: 1100;
+    opacity: 1 !important;
+    margin-left: 6vw !important;
+    margin-top: 2vh !important;
+    display: none
+}
+.file-up-grid{
+	position: relative;
+    height: 12rem;
+    margin-top: 1.8rem;
 }
 .passwordInputField {
     display: inline-block;
@@ -3257,13 +3279,16 @@ border-color: #d8dce3 !important;
 	cursor: pointer;
 	color: #fff;
 }
-/* .aui-grid-header-panel .aui-grid-table tr td {
-	border-top:1px solid #cbcffd !important;
-	border-right: 1px solid #cbcffd !important;
-	border-bottom: 1px solid #cbcffd !important;
-	border-left:none;
-} */
-
+.file-up-col{
+	cursor: pointer;
+}
+.grid-col-icon {
+    font-size: 1.7rem;
+    top: 0.2rem;
+    position: relative;
+    display: inline-block;
+    margin-left: 1.1rem;
+}
 .card.h350 {
 	height: 350px;
 }
@@ -7749,6 +7774,28 @@ input:focus{
     padding-left: 0.75rem;
     /* margin-top: 1rem; */
     /* top: -1rem; */
+}
+.file-label:hover{
+  background: #9d9c9c;
+}
+.btn:hover{
+	position: relative;
+    margin-left: 0.4rem;
+    display: inline-block;
+    padding: 0.4rem 12px 6px;
+    margin-bottom: 0px;
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.42857;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 4px;
+    background: #9d9c9c;
+    color: black;
+    border: 1px solid rgb(127, 129, 133);
 }
 .btn:visited {
 	background:red !important;

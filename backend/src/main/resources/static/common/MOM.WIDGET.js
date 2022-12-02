@@ -719,21 +719,19 @@ var momWidget = {
                   
 
                 }
-                else if(isFileUp = 'Y'){
+                else if(isFileUp == 'Y'){
 					columnProp[i].filter = {
                          showIcon: false
                     };
                     columnProp[i].renderer = {
                         type: "TemplateRenderer"
                     };
-                     /*columnProp[i].labelFunction = function (rowIndex, columnIndex, value, item) {
-                           	if (!value) return "";
-							var template = '<div class="my_div">';
-							template += '<img src=""><br>';
-							template += '<a class="my_a_tag" target="_blank" title="">';
-							template += '</a></div>';
+                     columnProp[i].labelFunction = function (rowIndex, columnIndex, value, headerText, item) {                        
+							var template = '<div id="fileUpCol'+(index+1)+'" rowIndex ='+rowIndex+' class="file-up-col">';
+							template += '<div class="fa fa-folder-open grid-col-icon" target="_blank" title=""></div>';
+							template += '</div>';
 							return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-				     };*/
+				     };
 				}
 
              
@@ -6309,18 +6307,24 @@ var momWidget = {
 
     createFileUploadPop: {
 	      fileUp: function (index, title) {
-            let html = '<div id ="fileUploadPop' + (index + 1) + '"  class="modal modal-content modal-content-file-up-pop"style="display: none;height: 6.6rem;">' +
-                '<div class="modal-header" style="padding-bottom: 0.7rem;height: 32%;">' +
+            let html = '<div id ="fileUploadPop' + (index + 1) + '"  class="modal modal-content modal-content-file-up-pop"style="">' +
+                '<div class="modal-header" style="padding-bottom: 0.7rem;">' +
                 '<h6 class="modal-title change-pw-title" style="">파일첨부</h6>' +
                 '<button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">×</span></button>' +
                 '</div>' +
-                '<div class="modal-body" style="height: 51%;">' +
-                '<div class="w-col w-col-8" style="margin-top: -0.5rem;margin-left: -0.2rem;">' +
- 			     '<label type="text" for="fileBlobDP1" class="file-label" style="cursor: pointer">파일첨부</label>' +
-		         '<label type="text" id="fileBlobDP1-name" class="filePop-label-name">파일명:XUMM9435_1_TEST_0001</label>'+
-		         '<input id="fileBlobDP1" type="file" class="file-input" accept=".xls, .xlsx, .csv, .jasper,.jpg,.png" >'+
+                '<div class="modal-body" style="">' +
+                '<div class="file-up-pop-header" style="height:2.5rem;margin-top: -1rem;margin-left: -0.2rem;">' +
+ 			     '<label type="text" for="fileBlobFP1" class="file-label" style="cursor: pointer">파일첨부</label>' +
+		         '<label type="text" id="fileBlobFP1-name" class="filePop-label-name">파일명:</label>'+
+		         '<input id="fileBlobFP1" type="file" class="file-input" accept=".xls, .xlsx, .csv, .jasper,.jpg,.png" >'+
                 '</div>' +
-                '<button id ="saveBtnFP' + (index + 1) + '" class="btn btn-light" style="margin-top: -0.7rem;"><i class="mdi mdi-content-save-outline"></i>업로드</button><button id ="closeBtnFP' + (index + 1) + '" class="btn btn-light close-file-up-btn" style=""><i class="mdi mdi-window-close"></i>' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>' +
+                '<div id="fileUpGrid1" class="file-up-grid"></div>'+
+                 '<div class="modal-footer file-up-grid-footer" style="">' +
+                '<button id ="saveBtnFP' + (index + 1) + '" class="btn btn-light" style=""><i class="fa fa-upload"></i>업로드</button>'+
+                '<button id ="downBtnFP' + (index + 1) + '" class="btn btn-light" style=""><i class="fa fa-download"></i>다운</button>'+
+                '<button id ="delBtnFP' + (index + 1) + '" class="btn btn-light" style=""><i class="mdi mdi-trash-can-outline"></i>삭제</button>'+
+                '<button id ="closeBtnFP' + (index + 1) + '" class="btn btn-light close-file-up-btn" style=""><i class="mdi mdi-window-close"></i>' + multiLang.transText('MESSAGE', 'MSG00036') + '</button>' +  
+                '</div>' +             
                 '</div>' +
                 '</div>';
             return html;
@@ -9479,7 +9483,7 @@ var momWidget = {
         var reportBtnId = 'reportBtn' + (index + 1);
         var changePwBtnId = 'changePwBtn' + (index + 1);
         var changePwSaveBtn = 'saveBtnCp' + (index + 1);
-        var fileUpSaveBtn = 'saveBtnFp' + (index + 1);
+        var fileUpSaveBtnId = 'saveBtnFp' + (index + 1);
         var changePwCencelBtn = 'closeBtnCp' + (index + 1);
         var callInitResult = undefined;
         var callBackResult = undefined;
@@ -9496,8 +9500,107 @@ var momWidget = {
         let fileUpCloseBtnId = 'closeBtnFP' + (index + 1);
         let moveBtnId = 'moveBtn' + (index + 1);
         let gridPopXBtnId = 'gridPop-x-btn';
-        let fileId = 'fileBlobDP'+ (index + 1);
+        let fileDPId = 'fileBlobDP'+ (index + 1);
+        let fileFPId = 'fileBlobFP'+ (index + 1);
+        let fileUpColId = 'fileUpCol'+ (index+1);
+        $(document).on('click', '#'+fileUpSaveBtnId, function(e) {
+		  if(that.uploadFile[index] !=undefined && that.uploadFile[index]!= null && that.uploadFile[index]!= ''){
+			 return;
+		  }
+		  let menuId = that.pageProperty[0]['menuId'];
+		  let gridId = (index+1);
+		  let frileKeyId = menuId +'_'+ gridId+'_'+'';
+		  let fileInput = $('#fileBlobFP'+gridId);
+		  let file      = fileInput[0].files[index];	
+		  let fileNm = file.Nm;
+		  let fileExtend = fileNm.split('.')[1];   
+		  let fileType = fileExtend == '' ? 'ETC':fileExtend;
+		  let param = [{fileKeyId:'',fileNm:fileNm,fileType:fileType}];       
+			   mom_ajax('C', menuId+'.'+'fileUp'+gridId, param, function (result, data) {
+                    if (data.length == undefined || data.length == 0 || data[0]['p_err_code'] == 'E') {
+                        momWidget.messageBox({
+                            type: 'danger',
+                            width: '400',
+                            height: '145',
+                            html: multiLang.transText('MESSAGE', data[0]['p_err_msg'])
+                        });
+                        momWidget.splashHide();
+                        return;
+                    }
+                    delete that.uploadFile[index]; //blob파일삭제
+                    momWidget.messageBox({
+                        type: 'success',
+                        width: '400',
+                        height: '145',
+                        html: multiLang.transText('MESSAGE', 'MSG00001')
+                    });
+                    momWidget.splashHide();
+                }, undefined, index, this, false,'Y',actionType,file);
+		});
+	    $(document).on('click', '#'+fileUpColId, function(e) {
+			//AUIGrid.resize(that.grid[index2], $(window).width() * 0.4 - 48, 150);
+			let rowIndex = e.currentTarget.getAttribute('rowindex');
+			if(rowIndex == undefined || rowIndex == '' ){
+				return;
+			}
+			let fileManagerId = 'fileBlobFP'+(index+1);
+			let fileNameText  = fileManagerId+'-name';
+			$('#'+fileManagerId).val(''); //파일 선택 초기화
+			delete that.uploadFile[index]; //blob파일삭제
+			$('#'+fileNameText).text('파일명:');
+			let item = AUIGrid.getItemByRowIndex(that.grid[index], Number(rowIndex));
+			    let col1 = {
+                      dataField: 'fileNm'
+                    , headerText: '파일명'
+                    , headerStyle: "my-header-style-default"
+                    , dataType: "string"
+                    , formatString: ""
+                    , editable: false
+                    , style: 'aui-grid-default-column-left'
+                    , visible: true
+                };
+                let col2 = {
+                      dataField: 'fileTypeNm'
+                    , headerText: '타입'
+                    , headerStyle: "my-header-style-default"
+                    , dataType: "string"
+                    , formatString: ""
+                    , editable: false
+                    , style: 'aui-grid-default-column-center'
+                    , visible: true
+                    , width: 120
+                };
+                let col3 = {
+                      dataField: 'createDate'
+                    , headerText: '등록일자'
+                    , headerStyle: "my-header-style-default"
+                    , dataType: "string"
+                    , formatString: ""
+                    , editable: false
+                    , style: 'aui-grid-default-column-center'
+                    , visible: true
+                    , width: 120
+                };
+            let columnProp = [col1,col2,col3];    
+            let gridProp = {showRowCheckColumn: true
+            };
+			AUIGrid.create('#fileUpGrid' + (index + 1), columnProp, gridProp);	
+			that.modalShow	('#','fileUploadPop'+(index+1),'1');
+			AUIGrid.resize('#fileUpGrid' + (index + 1));
+			let menuId = that.pageProperty[0]['menuId'];
+			let gridId = index+1;
+			mom_ajax('R', menuId+'.' + 'fileUp' + gridId, {menuId:menuId,gridId:gridId,fileKeyId:item['fileKeyId']}, function (result1, data1) {
+                    if (result1 != 'SUCCESS' || data1.length==0) {
+	                    AUIGrid.clearGridData('#fileUpGrid' + (index + 1));
+	                    //AUIGrid.setGridData('#fileUpGrid' + (index + 1), []);
+                        momWidget.splashHide();
+                        return;
+                    }
+                    AUIGrid.setGridData('#fileUpGrid' + (index + 1), data1);
 
+            }, undefined, undefined, that, false);
+			
+		});
           $(document).on('click', '#' + exportFileBtnId, function (e) {
 	         checkedItem = that.getCheckedRowItems(that.grid[index]);	         
                 if (checkedItem.length == 0) {
@@ -9599,7 +9702,8 @@ var momWidget = {
            
         });
          $(document).on('click', '#' + fileUpCloseBtnId, function (e) {
-			that.modalHide('id',e.currentTarget.parentElement.parentElement.id,'1');
+			that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.id,'1');
+			
            
         });
         $(document).on('click', '#' + gridPopSaveBtnId + (index + 1), function (e) {
@@ -10150,7 +10254,7 @@ var momWidget = {
                 columnString = columnString.substr(1, columnString.length - 2);
                 that.gridProperty[dropdownGridId] = JSON.parse(gridString);
                 that.columnProperty[dropdownGridId] = JSON.parse(columnString);
-                let gridExceptList = ['checkId', 'gridTitle', 'popupColNum', 'popupRowNum', 'popupTitle', 'headerColor', 'initSearch', 'showFindBtn'];
+                let gridExceptList = ['checkId', 'gridTitle', 'popupColNum', 'popupRowNum', 'popupTitle', 'headerColor', 'initSearch', 'showFindBtn','filePath'];
                 let gridExtraProp = {
                     'checkId': 'checkId',
                     'gridTitle': 'gridTitle',
@@ -10159,7 +10263,8 @@ var momWidget = {
                     'popupTitle': 'popupTitle',
                     'headerColor': 'headerColor',
                     'initSearch': 'initSearch',
-                    'showFindBtn': 'showFindBtn'
+                    'showFindBtn': 'showFindBtn',
+                    'filePath': 'filePath'
                 };
                 for (let i = 0, max = gridExceptList.length; i < max; i++) {
                     gridExtraProp[gridExceptList[i]] = that.gridProperty[dropdownGridId][0][gridExceptList[i]];
@@ -10169,6 +10274,7 @@ var momWidget = {
                 let popupColNum = that.gridExtraProperty[dropdownGridId]['popupColNum'] == undefined ? 3 : Number(that.gridExtraProperty[dropdownGridId]['popupColNum']);
                 let popupRowNum = that.gridExtraProperty[dropdownGridId]['popupRowNum'] == undefined ? 3 : Number(that.gridExtraProperty[dropdownGridId]['popupRowNum']);
                 var popupHtml = that.createPopup.dropDownGridPop(dropdownGridId + 1, popupColNum, popupRowNum, 'popup', targetId, 0);
+                
                 var menuId = that.pageProperty[index]['programId'];
                 var isShow = $('#dropDownGridPop' + (dropdownGridId + 1)).css('display');
                 if (isShow == 'block') {
@@ -10748,7 +10854,20 @@ var momWidget = {
 
 
         });
-         $(document).on('change', '#' + fileId , function (e) {
+         $(document).on('change', '#' + fileDPId , function (e) {
+            //that.splashShow();
+            let file = $('#'+e.currentTarget.id)[0].files[0];
+            let fileId = '#'+e.currentTarget.id;
+      
+            let fileName = file.name;
+            let extension = fileName.split('.')[1];
+            if(that.uploadFile[index]!= undefined && that.uploadFile[index] != ''){
+			   that.uploadFile[index].length = 0;
+		    }
+	           that.getfileToBlob(index,file,fileId);    
+          
+        });
+          $(document).on('change', '#' + fileFPId , function (e) {
             //that.splashShow();
             let file = $('#'+e.currentTarget.id)[0].files[0];
             let fileId = '#'+e.currentTarget.id;
