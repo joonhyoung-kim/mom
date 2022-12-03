@@ -2,13 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.backend.XUSM9020">
 	<resultMap id="get_findBtn1_result" type="com.mom.backend.dto.LowerHashMap">
-	<result property="COMPANY_CD"       column="COMPANY_CD"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="COMPANY_CD"       column="COMPANY_CD"          jdbcType="NVARCHAR" javaType="String"/>
 	<result property="DIVISION_CD"      column="DIVISION_CD"         jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_ID"          column="FILE_ID"             jdbcType="NVARCHAR" javaType="String"/>
-	<result property="KEY_ID"           column="FILE_ID"             jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_TYPE"        column="FILE_TYPE"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="MENU_ID"          column="MENU_ID"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="GRID_ID"          column="GRID_ID"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="KEY_ID"           column="KEY_ID"              jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_NM"          column="FILE_NM"             jdbcType="NVARCHAR" javaType="String"/>
 	<result property="PARAMETER"        column="PARAMETER"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_PATH"        column="FILE_PATH"           jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_BLOB"        column="FILE_BLOB"           jdbcType="BLOB"     javaType="byte[]"/>
 	<result property="DESCRIPTION"      column="DESCRIPTION"         jdbcType="NVARCHAR" javaType="String"/>
 	<result property="CREATE_BY"        column="CREATE_BY"           jdbcType="NVARCHAR" javaType="String"/>
@@ -20,9 +23,14 @@
     SELECT MF.COMPANY_CD
          , MF.DIVISION_CD
          , MF.FILE_ID
+         , MF.FILE_ID AS KEY_ID
          , MF.FILE_TYPE
+         , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MF.COMPANY_CD, MF.DIVISION_CD, 'SM0025', MF.FILE_TYPE, 'KR') FROM DUAL)  AS FILE_TYPE_NM
+         , MF.MENU_ID
+         , MF.GRID_ID
          , MF.FILE_NM
 		 , MF.PARAMETER
+		 , MF.FILE_PATH
 		 , MF.FILE_BLOB
 		 , MF.DESCRIPTION
 		 , MF.CREATE_BY
@@ -35,6 +43,12 @@
 	AND    MF.FILE_TYPE   = #{fileType, jdbcType=VARCHAR}
     <if test="fileNm != null and fileNm != ''">
     AND   (UPPER(MF.FILE_NM) LIKE '%' || UPPER(#{fileNm , jdbcType=VARCHAR}) || '%' )
+	</if>
+	<if test="menuId != null and menuId != ''">
+    AND    MF.MENU_ID = #{menuId , jdbcType=VARCHAR}
+	</if>
+	<if test="gridId != null and gridId != ''">
+    AND    MF.GRID_ID = #{gridId , jdbcType=VARCHAR}
 	</if>
   </select>
 
@@ -52,6 +66,7 @@
                 , FILE_NM
                 , PARAMETER
                 , FILE_BLOB
+                , FILE_PATH
                 , DESCRIPTION
                 , CREATE_BY
                 , CREATE_DATE
@@ -65,6 +80,7 @@
                 , #{item.fileNm, jdbcType=VARCHAR}
                 , #{item.parameter, jdbcType=VARCHAR}
                 , #{item.fileBlob, jdbcType=VARCHAR}
+                , #{item.filePath, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.userId, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
@@ -78,6 +94,7 @@
      <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close=";END;">
       UPDATE MOM_FILE
       SET    FILE_NM = #{item.fileNm, jdbcType=VARCHAR}
+           , FILE_PATH = #{item.filePath, jdbcType=VARCHAR}
            , PARAMETER = #{item.parameter, jdbcType=VARCHAR}
            , DESCRIPTION = #{item.description, jdbcType=VARCHAR}
            , UPDATE_BY = #{item.userId, jdbcType=VARCHAR}

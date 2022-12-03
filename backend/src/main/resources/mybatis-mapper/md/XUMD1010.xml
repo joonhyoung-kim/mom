@@ -1,39 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.backend.XUMD1010">
-    <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
-	    SELECT MCD.COMPANY_CD
-	         , MCD.COMPANY_NM
-	         , MCD.DIVISION_CD
-			 , MCD.DIVISION_NM
-			 , MP.PLANT_CD
-			 , MP.PLANT_NM
-			 , MP.USE_YN
-			 , MP.DESCRIPTION
-			 , TO_CHAR(ROWNUM) AS KEY_ID
-			 , ROWIDTOCHAR(MP.ROWID) AS GRID_ID
-			 , 'XUMD1010' || '_'  || '1' || '_' || MP.PLANT_CD AS FILE_KEY_ID
-	    FROM   MOM_COM_DIV_V MCD
-	         , MOM_PLANT MP
-		WHERE  MCD.COMPANY_CD  = MP.COMPANY_CD
-		AND    MCD.DIVISION_CD = MP.DIVISION_CD
-		AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
-	    AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}	  
-		<if test="plantCd != null and plantCd != ''">
-		AND (MP.PLANT_CD LIKE '%' || TRIM(UPPER(#{plantCd, jdbcType=VARCHAR})) || '%' )
-		</if>
-		<if test="plantNm != null and plantNm != ''">
-		AND (MP.PLANT_NM LIKE '%' || TRIM(UPPER(#{plantNm, jdbcType=VARCHAR})) || '%' )
-		</if>
-		<if test="useYn != null and useYn != ''">
-		AND MP.USE_YN = #{useYn, jdbcType=VARCHAR}
-		</if>
-		ORDER BY  MP.PLANT_NM							
-	</select>
-	<select id="get_fileUp1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	<resultMap id="get_findBtn1_result" type="com.mom.backend.dto.LowerHashMap">
+	<result property="COMPANY_CD"       column="COMPANY_CD"          jdbcType="NVARCHAR" javaType="String"/>
+	<result property="DIVISION_CD"      column="DIVISION_CD"         jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_ID"          column="FILE_ID"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_TYPE"        column="FILE_TYPE"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="MENU_ID"          column="MENU_ID"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="GRID_ID"          column="GRID_ID"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="KEY_ID"           column="KEY_ID"              jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_NM"          column="FILE_NM"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="PARAMETER"        column="PARAMETER"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_PATH"        column="FILE_PATH"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_BLOB"        column="FILE_BLOB"           jdbcType="BLOB"     javaType="byte[]"/>
+	<result property="DESCRIPTION"      column="DESCRIPTION"         jdbcType="NVARCHAR" javaType="String"/>
+	<result property="CREATE_BY"        column="CREATE_BY"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="CREATE_DATE"      column="CREATE_DATE"         jdbcType="NVARCHAR" javaType="String"/>
+	<result property="UPDATE_BY"        column="UPDATE_BY"           jdbcType="NVARCHAR" javaType="String"/>
+	<result property="UPDATE_DATE"      column="UPDATE_DATE"         jdbcType="NVARCHAR" javaType="String"/>
+	</resultMap>
+   <select id="get_fileUp1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" resultMap="get_findBtn1_result">
       SELECT MF.COMPANY_CD
            , MF.DIVISION_CD
            , MF.FILE_ID
+           , MF.FILE_ID AS KEY_ID
            , MF.FILE_TYPE
            , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MF.COMPANY_CD, MF.DIVISION_CD, 'SM0025', MF.FILE_TYPE, 'KR') FROM DUAL)  AS FILE_TYPE_NM
            , MF.FILE_NM
@@ -51,6 +41,36 @@
 	  AND    MF.GRID_ID      = #{gridId, jdbcType=VARCHAR}	
 	  AND    UPPER(MF.FILE_ID ) LIKE '%' || UPPER(#{fileKeyId, jdbcType=VARCHAR}) || '%'	  
 	</select>
+    <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+	    SELECT MCD.COMPANY_CD
+	         , MCD.COMPANY_NM
+	         , MCD.DIVISION_CD
+			 , MCD.DIVISION_NM
+			 , MP.PLANT_CD
+			 , MP.PLANT_NM
+			 , MP.USE_YN
+			 , MP.DESCRIPTION
+			 , TO_CHAR(ROWNUM) AS KEY_ID
+			 , ROWIDTOCHAR(MP.ROWID) AS GRID_ID
+			 , MP.PLANT_CD AS FILE_KEY_ID
+	    FROM   MOM_COM_DIV_V MCD
+	         , MOM_PLANT MP
+		WHERE  MCD.COMPANY_CD  = MP.COMPANY_CD
+		AND    MCD.DIVISION_CD = MP.DIVISION_CD
+		AND    MCD.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+	    AND    MCD.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}	  
+		<if test="plantCd != null and plantCd != ''">
+		AND (MP.PLANT_CD LIKE '%' || TRIM(UPPER(#{plantCd, jdbcType=VARCHAR})) || '%' )
+		</if>
+		<if test="plantNm != null and plantNm != ''">
+		AND (MP.PLANT_NM LIKE '%' || TRIM(UPPER(#{plantNm, jdbcType=VARCHAR})) || '%' )
+		</if>
+		<if test="useYn != null and useYn != ''">
+		AND MP.USE_YN = #{useYn, jdbcType=VARCHAR}
+		</if>
+		ORDER BY  MP.PLANT_NM							
+	</select>
+
 	<insert id="create_fileUp1" parameterType="java.util.List">
 	  <selectKey keyProperty ="seq" resultType="String" order="BEFORE">
        SELECT '_FM' || LPAD(FILE_UPLOAD_SEQ.NEXTVAL,5,'0') AS SEQ
@@ -62,7 +82,10 @@
                 , DIVISION_CD
                 , FILE_ID
                 , FILE_TYPE
+                , FILE_PATH
                 , FILE_NM
+                , MENU_ID
+                , GRID_ID 
                 , PARAMETER
                 , FILE_BLOB
                 , DESCRIPTION
@@ -73,9 +96,12 @@
       VALUES 
               (   #{item.companyCd, jdbcType=VARCHAR}
                 , #{item.divisionCd, jdbcType=VARCHAR}
-                , #{item.fileKeyId, jdbcType=VARCHAR}+#{seq, jdbcType=VARCHAR}
+                , #{item.fileKeyId, jdbcType=VARCHAR} || #{seq, jdbcType=VARCHAR}
                 , #{item.fileType, jdbcType=VARCHAR}
+                , #{item.filePath, jdbcType=VARCHAR}
                 , #{item.fileNm, jdbcType=VARCHAR}
+                , #{item.menuId, jdbcType=VARCHAR}
+                , #{item.gridId, jdbcType=VARCHAR}
                 , #{item.parameter, jdbcType=VARCHAR}
                 , #{item.fileBlob, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
@@ -92,7 +118,7 @@
        <foreach collection="list" item="item" open="" close="" separator="OR">
         (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
            AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
-           AND  FILE_ID     = #{item.fileKeyId, jdbcType=VARCHAR}
+           AND  FILE_ID     = #{item.fileId, jdbcType=VARCHAR}
         )
        </foreach>
       </where>
