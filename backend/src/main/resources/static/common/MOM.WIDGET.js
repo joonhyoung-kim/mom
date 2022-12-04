@@ -9640,7 +9640,7 @@ var momWidget = {
 		  let filePath   = that.gridExtraProperty[index]['filePath'];
 		  let param      = [{menuId:menuId,gridId:gridId,fileKeyId:fileKeyId,fileNm:fileNm,fileType:fileType,filePath:filePath}];       
 			  mom_ajax('C', menuId+'.'+'fileUp'+gridId, param, function (result, data) {
-                    if (data.length == undefined || data.length == 0 || data[0]['p_err_code'] == 'E') {
+                    if (result == 'ERROR' || data.length == undefined || data.length == 0 || data[0]['p_err_code'] == 'E') {
                         momWidget.messageBox({
                             type: 'danger',
                             width: '400',

@@ -1,16 +1,22 @@
 package com.mom.backend.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +50,7 @@ public class MomController {
 	private final MomServiceImpl momService;
 	private final FrameworkUtil frameworkUtil;
 	private final ReportUtil reportUtil;
+	
 	@GetMapping(value = "/passwordChange")  //비밀번호변경
 	public Map<String,Object> passwordChange(@RequestParam Map<String, Object> param) {		
         String loginId = param.get("loginId").toString();
@@ -113,7 +120,7 @@ public class MomController {
 		}
 		catch (CustomDataAccessException e) {
 			System.out.println(e.getMsg());
-			result = FrameworkUtil.createResponseMap(false,e.getMsg());
+			result = frameworkUtil.createResponseMap(false,e.getMsg());
 			System.out.println(result);
 			
 		}
@@ -151,7 +158,7 @@ public class MomController {
 		}
 		catch (CustomDataAccessException e) {
 			System.out.println(e.getMsg());
-			result = FrameworkUtil.createResponseMap(false,e.getMsg());
+			result = frameworkUtil.createResponseMap(false,e.getMsg());
 			System.out.println(result);
 			
 		}
@@ -161,33 +168,53 @@ public class MomController {
 	}
 	
 @PostMapping("/request/file/{query}/{action}")  //등록 컨트롤러
-public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) { 	
+public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) throws Exception { 	
 	query = frameworkUtil.removeDummy(query, action);
 	List<Map<String,Object>> result =  new ArrayList<>();
 	PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 	PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 	try {		
-		//MultipartFile file = multipartRequest.getFile("blob");
 		 MultipartFile file = multipartRequest;
-		 if(!file.isEmpty()){			
-			 param = frameworkUtil.createFileParam(param, action,file);
+		 byte[] byteFile = frameworkUtil.convertFileToByte(file);
+		 if(!file.isEmpty()){ //파일 존재하면
+			 if(frameworkUtil.createFile(file).equals("")) { //파일 고유식별키 없다면 생성 실패.
+				 result = frameworkUtil.createResponseMap(false,"fileUpload fail"); // 오류메시지 리턴
+			 }
+			 else {
+				 param = frameworkUtil.createFileParam(param, action,byteFile); // DB에 파일 식별키와 경로를 삽입
+				 result = momService.createMapList(query, param);
+			 }
+			
 		}
-		 else {
-			 param = frameworkUtil.createParam(param, action);
+		 else { //파일 존재안하면
+			 result = frameworkUtil.createResponseMap(false,"fileUpload fail"); 
 		 }
-			result = momService.createMapList(query, param);
-			//System.out.println("결과1?"+result);
 	}
 	catch (CustomDataAccessException e) {
 		System.out.println(e.getMsg());
-		result = FrameworkUtil.createResponseMap(false,e.getMsg());
+		result = frameworkUtil.createResponseMap(false,e.getMsg());
 		System.out.println(result);
 		
 	}
 	//System.out.println("결과2?"+result);
 	return result ;
 }
+@GetMapping("/fileDown")
+public void downloadFile(@RequestParam Map<String, Object> param, String filename, HttpServletResponse response) throws IOException {
+    String filePath = param.get("loginId").toString();
+    String fileName = param.get("loginId").toString();
+    File file = new File(filePath + fileName);   
+    if (ObjectUtils.isEmpty(file)) {
+       return;
+    }
+  
+	byte[] byteFile = FileUtils.readFileToByteArray(file);
+    String extension = ".zip";
 
+    response.setContentType("application/zip");
+    response.setHeader("Content-Disposition", "attachment;filename=" + filename + extension);
+    response.getOutputStream().write(byteFile);
+}
 	  
 	  //System.out.println("결과2?"+result); return result ; }
 	 

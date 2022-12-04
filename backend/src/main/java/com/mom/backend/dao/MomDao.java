@@ -35,7 +35,7 @@ public class MomDao {
 	private final SqlSessionFactory sqlSessionFactory;	
 	private final DataSourceTransactionManager dataSourceTransactionManager;
 	private final TestInnerResultHandler testInnerResultHandler;
-
+	private final FrameworkUtil frameworkUtil;
 	boolean debugOn = true;	 // 콘솔 디버깅 출력여부
 	boolean exceptionOn;     // 콘솔 예외 출력여부
 	
@@ -44,7 +44,7 @@ public class MomDao {
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return FrameworkUtil.createResponseListEmpty();
+			return frameworkUtil.createResponseListEmpty();
 		}
 		List<Map<String,Object>> result =  null;
 		long start = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class MomDao {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			System.out.println("#### FAIL : " + simpleDateFormat.format(today) + " Select " + param.get("companyCd") + ", " + query.substring(query.indexOf("get_")) + " = " + DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
 			
-			return FrameworkUtil.createResponseListEmpty();
+			return frameworkUtil.createResponseListEmpty();
 		}
 		finally {			     
 				
@@ -82,7 +82,7 @@ public class MomDao {
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return FrameworkUtil.createResponseListEmpty();
+			return frameworkUtil.createResponseListEmpty();
 		}
 		List<Map<String,Object>> result =  new ArrayList<>();
 		long start = System.currentTimeMillis();
@@ -108,7 +108,7 @@ public class MomDao {
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
-			return FrameworkUtil.createResponseListEmpty();
+			return frameworkUtil.createResponseListEmpty();
 		}
 		finally {			     
 					       			        
@@ -122,7 +122,7 @@ public class MomDao {
 		 //System.out.println("크리에이트!");
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
+			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
         long startTime = System.currentTimeMillis();   		
@@ -149,7 +149,7 @@ public class MomDao {
 	        			else {	   
 	        				   System.out.println("fail count="+resultCount); 
 	        			 	   sqlSession1.flushStatements();
-	        				   return FrameworkUtil.createResponseMap(false,"DB수정 실패");      		 
+	        				   return frameworkUtil.createResponseMap(false,"DB수정 실패");      		 
 	            		}            		       				        			       			
             }	
 
@@ -167,7 +167,7 @@ public class MomDao {
                 long resutTime = endTime - startTime;            
                 PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
         	}  
-        return FrameworkUtil.createResponseMap(resultCount == 0 ? false : true);
+        return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
 	
 
@@ -178,7 +178,7 @@ public class MomDao {
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
+			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
         long startTime = System.currentTimeMillis();
@@ -199,7 +199,7 @@ public class MomDao {
         	        	dataSourceTransactionManager.commit(transactionStatus);
         	        	System.out.println("업데이트후 커밋실행");
         			} else { 
-        				      return FrameworkUtil.createResponseMap(false,"DB수정 실패");      				
+        				      return frameworkUtil.createResponseMap(false,"DB수정 실패");      				
         			}
 
         } catch(Exception e) {        	
@@ -211,7 +211,7 @@ public class MomDao {
             PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);          
     	}
     	
-    	return FrameworkUtil.createResponseMap(resultCount == 0 ? false : true);
+    	return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
 	@Transactional
 	public List<Map<String, Object>> upsertMapList(String query, List<Map<String,Object>> param) { //엑셀 업로드 이벤트 처리
@@ -219,7 +219,7 @@ public class MomDao {
 		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
+			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
         long startTime = System.currentTimeMillis();   		
@@ -307,7 +307,7 @@ public class MomDao {
 	        				sqlSession1.flushStatements();          	
 	                    	sqlSession1.clearCache();
 	                    	ProgressInfo.successCount = 0;	                       	
-	                    	return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
+	                    	return frameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
 	                       	
 	        			}
 	        			else {	
@@ -319,8 +319,8 @@ public class MomDao {
             	sqlSession1.clearCache();
             	ProgressInfo.successCount = 0;
    	
-            	System.out.println("에러사유="+e.getMessage());
-            	return FrameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
+            	//System.out.println("에러사유="+e.getMessage());
+            	return frameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
         		
             } finally {			
             	
@@ -332,7 +332,7 @@ public class MomDao {
                 PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
         	}  
         	System.out.println("최종 카운트="+resultCount); 
-        return FrameworkUtil.createResponseMap(resultCount != 0 ? true : false);
+        return frameworkUtil.createResponseMap(resultCount != 0 ? true : false);
 	}
 	
 	public List<Map<String, Object>> removeMapList(String query, List<Map<String,Object>> param) {
@@ -341,7 +341,7 @@ public class MomDao {
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
 			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return FrameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
+			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
         long startTime = System.currentTimeMillis();
@@ -350,14 +350,13 @@ public class MomDao {
     	SqlSession sqlSession1 = null;
     	try {
     		sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);  	
-
     		resultCount = sqlSession1.delete(query, param);
     		System.out.println("리절트카운트="+resultCount);
     		if(resultCount != 0 ) {
 
 			} else { 
 
-				      return FrameworkUtil.createResponseMap(false,"삭제할 데이터 없음!");      				
+				      return frameworkUtil.createResponseMap(false,"삭제할 데이터 없음!");      				
 			}
         } catch(Exception e) {
         	System.out.println("에러="+resultCount);
@@ -370,6 +369,6 @@ public class MomDao {
             long resutTime = endTime - startTime;            
             PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);     
     	}           
-        return FrameworkUtil.createResponseMap(resultCount == 0 ? false : true);
+        return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
 }

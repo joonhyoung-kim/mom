@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,6 +37,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -55,6 +57,8 @@ import lombok.RequiredArgsConstructor;
 public class FrameworkUtil {
 	private final PasswordEncoder passwordEncoder;
 	private  final JwtUserDetailsService userDetailsService;
+	@Value("${file.dir}")
+	private String fileDir;
 	// private final Map<String, Object> multiLanguage;
 
 	/*
@@ -64,7 +68,7 @@ public class FrameworkUtil {
 	 */
 
 	// Deprecated
-	public static List<Map<String, Object>> toCamelCase(List<Map<String, Object>> oldList) {
+	public  List<Map<String, Object>> toCamelCase(List<Map<String, Object>> oldList) {
 		return oldList;
 		/*
 		 * if(oldList == null || oldList.size() < 1 || 1 == 1) { return oldList; }
@@ -94,7 +98,7 @@ public class FrameworkUtil {
 		 */
 	}
 
-	public static String toCamelCase(String underScore) {
+	public  String toCamelCase(String underScore) {
 		if (underScore.indexOf('_') < 0 && Character.isLowerCase(underScore.charAt(0))) {
 			return underScore;
 		}
@@ -118,7 +122,7 @@ public class FrameworkUtil {
 		return result.toString();
 	}
 
-	public static List<Map<String, Object>> jsonStrToListMap(String strParam)
+	public  List<Map<String, Object>> jsonStrToListMap(String strParam)
 			throws ParseException, JsonMappingException, JsonProcessingException {
 		System.out.println("넘겨받은 문자=" + strParam);
 		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
@@ -133,7 +137,7 @@ public class FrameworkUtil {
 		return listMap;
 	}
 
-	public static List<Map<String, Object>> jsonStrToListMap2(String jsonString)
+	public  List<Map<String, Object>> jsonStrToListMap2(String jsonString)
 			throws ParseException, JsonMappingException, JsonProcessingException {
 		System.out.println("넘겨받은 json문자=" + jsonString);
 		List<Map<String, Object>> listMap = new ObjectMapper().readValue(jsonString,
@@ -142,7 +146,7 @@ public class FrameworkUtil {
 		return listMap;
 	}
 
-	public static Map<String, Object> toCamelCase(Map<String, Object> oldMap) {
+	public  Map<String, Object> toCamelCase(Map<String, Object> oldMap) {
 
 		return oldMap;
 
@@ -167,63 +171,6 @@ public class FrameworkUtil {
 		 */
 	}
 
-	/*
-	 * public String checkMultiLanguage(MomService momService, String companyCd,
-	 * String divisionCd, String locale) {
-	 * 
-	 * if(multiLanguage == null) { multiLanguage = new HashMap<String, Object>(); }
-	 * 
-	 * 
-	 * 
-	 * if(AuthManager.getSessionAttribute("userId") == null) { return null; }
-	 * 
-	 * 
-	 * if( ( FrameworkUtil.multiLanguage.get(companyCd + divisionCd + locale +
-	 * "SERVER") != null && ((Map<String,
-	 * Object>)FrameworkUtil.multiLanguage.get(companyCd + divisionCd + locale +
-	 * "SERVER")).size() > 0 ) || //( //multiLanguage.get(companyCd + divisionCd +
-	 * locale + "XML") != null && //((Map<String,
-	 * Object>)multiLanguage.get(companyCd + divisionCd + locale + "XML")).size() >
-	 * 0 //) ) { return companyCd + divisionCd + locale; }
-	 * 
-	 * String query = "com.thirautech.mom.lang.get_language_list"; Map<String,
-	 * Object> param = new HashMap<String, Object>(); param.put("companyCd",
-	 * companyCd); param.put("divisionCd", divisionCd); param.put("locale", locale);
-	 * param.put("widget", "SERVER");
-	 * 
-	 * Map<String, Object> xmlMap = new HashMap<String, Object>();
-	 * List<Map<String,Object>> list = momService.getMapList(query, param); for(int
-	 * i = 0; i < list.size(); i++) {
-	 * if(list.get(i).get("pageId").toString().equals("SERVER")) {
-	 * serverMap.put(list.get(i).get("codeType").toString(),
-	 * list.get(i).get("keyword").toString()); } else {
-	 * xmlMap.put(list.get(i).get("codeType").toString(),
-	 * list.get(i).get("keyword").toString()); //} }
-	 * 
-	 * //FrameworkUtil.multiLanguage.put(companyCd + divisionCd + locale + "SERVER",
-	 * serverMap); //multiLanguage.put(companyCd + divisionCd + locale + "XML",
-	 * xmlMap);
-	 * 
-	 * return companyCd + divisionCd + locale; }
-	 */
-
-	// flag means "SERVER" or "XML", key1 means key of Multi-Lang
-	/*
-	 * public static String getMultiMessage(String flag, String key1) { String
-	 * companyCd = AuthManager.getSessionAttribute("companyCd").toString(); String
-	 * divisionCd = AuthManager.getSessionAttribute("divisionCd").toString(); String
-	 * locale = AuthManager.getSessionAttribute("locale").toString();
-	 * 
-	 * if(FrameworkUtil.multiLanguage == null ||
-	 * FrameworkUtil.multiLanguage.get(companyCd + divisionCd + locale + flag) ==
-	 * null) { return null; }
-	 * 
-	 * @SuppressWarnings("unchecked") Map<String, Object> map = (Map<String,
-	 * Object>)FrameworkUtil.multiLanguage.get(companyCd + divisionCd + locale +
-	 * flag);
-	 * 
-	 * return map.get(key1) == null ? null : map.get(key1).toString(); }
-	 */
 
 	public  String removeDummy(String query, String crud) {
 		if (query == null || query.equals("")) {
@@ -252,56 +199,6 @@ public class FrameworkUtil {
 
 		return query;
 	}
-
-	// Deprecated.., 이제 사용 안함
-	/*
-	 * public static Map<String, Object> createParam(Map<String, Object> oldParam) {
-	 * Map<String, Object> newParam = new HashMap<String, Object>();
-	 * Iterator<String> iteratorKey = oldParam.keySet().iterator(); String strD =
-	 * ""; while (iteratorKey.hasNext()) { String key = iteratorKey.next();
-	 * 
-	 * try { if(oldParam.get(key) == null) { newParam.put(key, null); } else { //
-	 * 특수문자(+)를 ASCII 코드로 변환 strD = oldParam.get(key).toString().replaceAll("\\+",
-	 * "%2B"); newParam.put(key, URLDecoder.decode(strD,
-	 * StandardCharsets.UTF_8.name())); } } catch (IllegalArgumentException e) { //
-	 * 특수문자 %로 에러 발생 시 [%, +]를 ASCII 코드로 변환 strD =
-	 * oldParam.get(key).toString().replaceAll("\\%", "%25").replaceAll("\\+",
-	 * "%2B"); try { newParam.put(key, URLDecoder.decode(strD,
-	 * StandardCharsets.UTF_8.name())); } catch (Exception ex) {
-	 * ex.printStackTrace(); } } catch (UnsupportedEncodingException e) { // TODO
-	 * Auto-generated catch block PrintUtil.print("FrameworkUtil", "createParam",
-	 * "#", "$", "URLDecoder.decode 오류", oldParam.get(key).toString() +
-	 * "을 디코딩 하려다 오류 발생", true, true, true, true); e.printStackTrace();
-	 * 
-	 * oldParam.clear(); oldParam = null;
-	 * 
-	 * return new HashMap<String, Object>(); } }
-	 * 
-	 * oldParam.clear(); oldParam = null;
-	 * 
-	 * if(AuthManager.getSessionAttribute("userId") != null) { String userId =
-	 * AuthManager.getSessionAttribute("userId").toString(); String companyCd =
-	 * AuthManager.getSessionAttribute("companyCd").toString(); String divisionCd =
-	 * AuthManager.getSessionAttribute("divisionCd").toString(); String locale =
-	 * AuthManager.getSessionAttribute("locale").toString();
-	 * 
-	 * @SuppressWarnings("unchecked") Map<String, Object> map = (Map<String,
-	 * Object>)FrameworkUtil.multiLanguage.get(companyCd + divisionCd + locale +
-	 * "XML");
-	 * 
-	 * newParam.put("userId" , userId); newParam.put("createBy" , userId);
-	 * newParam.put("updateBy" , userId); newParam.put("companyCd" , companyCd);
-	 * newParam.put("divisionCd", divisionCd); if(newParam.get("locale") == null) {
-	 * newParam.put("locale", locale); }
-	 * 
-	 * if(map != null) { iteratorKey = map.keySet().iterator(); while
-	 * (iteratorKey.hasNext()) { String key1 = iteratorKey.next(); String value1 =
-	 * map.get(key1).toString(); newParam.put(key1, value1); } } }
-	 * 
-	 * newParam.put("p_err_code", ""); newParam.put("p_err_msg" , "");
-	 * 
-	 * return newParam; }
-	 */
 
 	public Map<String, Object> createParam(Map<String, Object> param, String crud, Map<String, Object> map,
 			String userId, String divisionCd, String companyCd, String locale) {
@@ -443,27 +340,24 @@ public class FrameworkUtil {
 		//System.out.println("마지막총개수?"+list.size());
 		return listMapParam;
 	}
-	public  List<Map<String, Object>> createFileParam(List<Map<String, Object>> list, String actionType ,MultipartFile file) {
+	public  List<Map<String, Object>> createFileParam(List<Map<String, Object>> list, String actionType ,byte [] file) {
 		List<Map<String, Object>> listMapParam = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (int i = 0; i < list.size(); i++) { 
 			    map = list.get(i);	
 				//System.out.println("리포트파람 생성진입");
 				try {
-					map.put("fileBlob",convertFileToByte(file));
+					map.put("fileBlob",file);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
 				listMapParam.add(map);
-			
-																							 			
-		
 
 		}
 		return listMapParam;
 	}
 
-	public static Map<String, Object> json2Map(String json) {
+	public  Map<String, Object> json2Map(String json) {
 		/*
 		 * java.nio.charset.Charset UTF8_CHARSET =
 		 * java.nio.charset.Charset.forName("UTF-8");
@@ -515,34 +409,16 @@ public class FrameworkUtil {
 		return map;
 	}
 
-	public static List<Map<String, Object>> json2List(String json) {
-		if (json == null || json.toString().length() < 1) {
-			return null;
-		}
 
-		String[] tokens = json.split("},");
 
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		for (int i = 0; i < tokens.length; i++) {
-			Map<String, Object> map = FrameworkUtil.json2Map(tokens[i]);
-			if (map == null) {
-				return list;
-			}
-
-			list.add(map);
-		}
-
-		return list;
-	}
-
-	public static List<Map<String, Object>> map2List(Map<String, Object> map) {
+	public  List<Map<String, Object>> map2List(Map<String, Object> map) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		list.add(map);
 
 		return list;
 	}
 
-	public static String isDirectQuery(String query) {
+	public String isDirectQuery(String query) {
 		// 2019.01.20 hyjeong begin
 		return null;
 		/*
@@ -562,12 +438,12 @@ public class FrameworkUtil {
 		// 2019.01.20 hyjeong end
 	}
 
-	public static Map<String, Object> createResponseMapEmpty() {
+	public  Map<String, Object> createResponseMapEmpty() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		return map;
 	}
 
-	public static List<Map<String, Object>> createResponseMap(boolean result) {
+	public  List<Map<String, Object>> createResponseMap(boolean result) {
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> errMap = new HashMap<String, Object>();
 		if (result) {
@@ -584,7 +460,7 @@ public class FrameworkUtil {
 		return resultList;
 	}
 
-	public static List<Map<String, Object>> createResponseMap(boolean result, String p_err_msg) {
+	public  List<Map<String, Object>> createResponseMap(boolean result, String p_err_msg) {
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> errMap = new HashMap<String, Object>();
 		if (result) {
@@ -601,13 +477,13 @@ public class FrameworkUtil {
 		return resultList;
 	}
 
-	public static List<Map<String, Object>> createResponseListEmpty() {
+	public List<Map<String, Object>> createResponseListEmpty() {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		return list;
 	}
 
-	public static List<Map<String, Object>> createResponseList(List<Map<String, Object>> list, boolean result) {
+	public  List<Map<String, Object>> createResponseList(List<Map<String, Object>> list, boolean result) {
 		if (list == null) {
 			list = new ArrayList<Map<String, Object>>();
 		}
@@ -633,7 +509,7 @@ public class FrameworkUtil {
 		return list;
 	}
 
-	public static Map<String, Object> jsonDataMap(String json) {
+	public  Map<String, Object> jsonDataMap(String json) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -648,9 +524,9 @@ public class FrameworkUtil {
 		return map;
 	}
 
-	public static List<Map<String, Object>> getMapList(List<Map<String, Object>> list, String query) {
+	public  List<Map<String, Object>> getMapList(List<Map<String, Object>> list, String query) {
 		if (list == null) {
-			return FrameworkUtil.createResponseListEmpty();
+			return createResponseListEmpty();
 		}
 
 		if (list.isEmpty() || !query.equals("com.thirautech.mom.plan.plan.planningUpload.get_planningUpload_list")) {
@@ -675,7 +551,7 @@ public class FrameworkUtil {
 		return list;
 	}
 
-	public static String passwordEncription(String password) {
+	public  String passwordEncription(String password) {
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
@@ -737,7 +613,7 @@ public class FrameworkUtil {
 	 * @참조문서 :
 	 *       https://www.it-swarm.dev/ko/java/java%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EB%A1%9C%EC%BB%AC-%EC%BB%B4%ED%93%A8%ED%84%B0%EC%97%90%EC%84%9C-mac-%EC%A3%BC%EC%86%8C-%EA%B0%80%EC%A0%B8-%EC%98%A4%EA%B8%B0/972850791/
 	 */
-	public static String GetAddress(String addressType) {
+	public  String GetAddress(String addressType) {
 		String address = "";
 		InetAddress lanIp = null;
 		try {
@@ -788,7 +664,7 @@ public class FrameworkUtil {
 	}
 
 	// GetAddress 의 부속 메소드
-	private static String getMacAddress(InetAddress ip) {
+	private  String getMacAddress(InetAddress ip) {
 		String address = null;
 		try {
 
@@ -808,7 +684,7 @@ public class FrameworkUtil {
 	}
 
 	// GetAddress 의 부속 메소드
-	private static boolean isVMMac(byte[] mac) {
+	private  boolean isVMMac(byte[] mac) {
 		if (null == mac)
 			return false;
 		byte invalidMacs[][] = { { 0x00, 0x05, 0x69 }, // VMWare
@@ -829,7 +705,7 @@ public class FrameworkUtil {
 		return false;
 	}
 
-	public static String getIp(HttpServletRequest request) { // 호스팅 서버의 특수한 네트워크 환경에서 실제 Client의 내부 IP를 얻어낼수 있다.
+	public  String getIp(HttpServletRequest request) { // 호스팅 서버의 특수한 네트워크 환경에서 실제 Client의 내부 IP를 얻어낼수 있다.
 
 		String ip = request.getHeader("X-Forwarded-For");
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -851,7 +727,7 @@ public class FrameworkUtil {
 
 	}
 
-	public static String ArpMacAddressGet(String originIp) {
+	public  String ArpMacAddressGet(String originIp) {
 		// mac어드레스정보를 가져와야할 ip어드레스
 		String ip = originIp;
 		String macAddress = null;
@@ -881,7 +757,7 @@ public class FrameworkUtil {
 	// ----------------------------------------------------------
 	// End of GetAddress
 	// ----------------------------------------------------------
-	public static String GetRealTime() {
+	public  String GetRealTime() {
 		TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
 		Date now = new Date();
 		Calendar currentDate = Calendar.getInstance();
@@ -892,11 +768,49 @@ public class FrameworkUtil {
 		return df.format(now);
 	}
 	//파일을 byte[] 로 변환
-	public  byte[] convertFileToByte(MultipartFile mfile) throws Exception {
-			return mfile.getBytes();
-			
-			
-			
-		}
+	public byte[] convertFileToByte(MultipartFile uploadFile) throws Exception {		
+			return uploadFile.getBytes();
+					
+	}
+	//실제 파일을 서버에 생성
+	public String createFile(MultipartFile uploadFile) throws Exception {		
+		//String uploadFolder = "C:\\repository\\";
+	
+		 // 원래 파일 이름 추출
+        String origName = uploadFile.getOriginalFilename();
+        // 파일 이름으로 쓸 uuid 생성
+        String uuid = UUID.randomUUID().toString();
+        // 확장자 추출(ex : .png)
+        String extension = origName.substring(origName.lastIndexOf("."));
+        // uuid와 확장자 결합
+        String savedName = uuid + extension;
+        // 파일을 불러올 때 사용할 파일 경로
+        // String savedPath = fileDir + savedName;
+        
+		System.out.println("업로드파일이름:"+uploadFile.getOriginalFilename());
+		System.out.println("업로드파일크기:"+uploadFile.getSize());
+		   // 파일 엔티티 생성
+			/*
+			 * FileEntity file = FileEntity.builder() .orgNm(origName) .savedNm(savedName)
+			 * .savedPath(savedPath) .build();
+			 */
+
+        // 실제로 로컬에 uuid를 파일명으로 저장
+		//uploadFile.transferTo(new File(savedPath));
+        // 데이터베이스에 파일 정보 저장 
+       // FileEntity savedFile = fileRepository.save(file);
+
+       //return savedFile.getId();        
+		System.out.println("최종파일이름:"+uploadFile.getOriginalFilename());		
+		File saveFile = new File(fileDir,savedName);
+		try {
+			uploadFile.transferTo(saveFile);
+			return savedName;
+		} catch(Exception e) {
+			return "";
+		}		
+
+		
+	}
 
 }

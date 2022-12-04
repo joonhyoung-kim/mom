@@ -87,7 +87,6 @@
                 , MENU_ID
                 , GRID_ID 
                 , PARAMETER
-                , FILE_BLOB
                 , DESCRIPTION
                 , CREATE_BY
                 , CREATE_DATE
@@ -103,7 +102,6 @@
                 , #{item.menuId, jdbcType=VARCHAR}
                 , #{item.gridId, jdbcType=VARCHAR}
                 , #{item.parameter, jdbcType=VARCHAR}
-                , #{item.fileBlob, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.userId, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})

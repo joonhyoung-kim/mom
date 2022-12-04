@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class MomServiceImpl  {
 	private final MomDao momDao ;
-
+	private final FrameworkUtil frameworkUtil;
 
 	
 	public List<Map<String,Object>> getMapList(String query, Map<String,Object> param) {
@@ -29,7 +29,7 @@ public class MomServiceImpl  {
 
 		List<Map<String,Object>> result = momDao.getMapList(query, param);
 		
-		return FrameworkUtil.getMapList(result, query);
+		return frameworkUtil.getMapList(result, query);
 	}
 
 	public List<Map<String, Object>> procMapList(String query, List<Map<String,Object>> param) {
