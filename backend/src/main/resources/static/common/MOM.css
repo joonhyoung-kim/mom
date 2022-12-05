@@ -2361,7 +2361,7 @@ border-color: #d8dce3 !important;
     height: 38rem;
 }
 .searcharea-pop.R8-remark-in {
-    height: 44rem;
+    height: 55rem;
 }
 .searcharea-pop.R8-remark-out {
     height: 44rem;
@@ -4503,7 +4503,35 @@ border-color: #d8dce3 !important;
     border-radius: 0.5rem;
     border: 1px solid #bdbdbd !important;
 }
-
+.defaultPop-C5-R8-remark-in {
+	   z-index: 1050;
+    /* display: none; */
+    float: none !important;
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    /* overflow-y: auto !important; */
+    width: 90rem !important;
+    position: relative !important;
+    margin-left: 58rem !important;
+    margin-top: -100rem !important;
+    background: white !important;
+    height: 63.5rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #bdbdbd !important;
+}
+.defaultPop-C5-R8-remark-out {
+	z-index: 1050;
+    float: none !important;
+    width: 90rem !important;
+    position: relative !important;
+    margin-left: 58rem !important;
+    margin-top: -100rem !important;
+    background: white !important;
+    height: 63.5rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid #bdbdbd !important;
+    margin-left: 18vw !important;
+    margin-top: -94vh !important;
+}
 .defaultPop-C5-R9-remark-in {
 	   z-index: 1050;
     /* display: none; */

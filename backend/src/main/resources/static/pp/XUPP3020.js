@@ -12,35 +12,25 @@ var VIEW= {
 	
 	},
 	cellClickCallBack: function(index,rowIndex,target,e) {
-		var item = e.item;	
-		 if(index == 100){
-			if(target=='itemId'){
-				$('#itemId'+'DP1').val(item['itemId']);
+	    var item = e.item;	
+		if(index == 100){
+		    if(target=='itemId'){
+			    $('#itemId'+'DP1').val(item['itemId']);
+				$('#workCenterCd'+'DP1').val(item['workCenterCd']);
 				$('#borId'+'DP1').val(item['borId']);
 				$('#routingId'+'DP1').val(item['routingId']);
-				
 			}
 			else if(target=='workCenterCd'){
 				$('#workCenterCd'+'DP1').val(item['workCenterCd']);
 				$('#borId'+'DP1').val(item['borId']);
 				$('#routingId'+'DP1').val(item['routingId']);
 			}
-			else{
-				
-			}
-				
-			
-			
-      
-           // $('#dropDownGridPop'+(index+1)).remove();
-			//momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080,[]);
-			 //$('#dropDownGridPop'+(index+1)).remove();
 		}
 	
 	},
-		searchCallInit: function(index,your,action,btnId,param,result,event) {		
-			if(index==100 &&  btnId == 'POPUPCLICK' ){
-				if($('#defaultPop1').attr('btnid')=='editBtn1'){
+	searchCallInit: function(index,your,action,btnId,param,result,event) {		
+	    if(index==100 &&  btnId == 'POPUPCLICK' ){
+		    if($('#defaultPop1').attr('btnid')=='editBtn1'){
 				/*	if($('#itemId'+'DP1').val() != ''){
 						result.param  = {itemId:''};
 					}
@@ -51,17 +41,14 @@ var VIEW= {
 						result.result = 'WARN';
 						return;
 					 
-				}
-				else{
-					result.param  = {itemId:$('#itemId'+'DP1').val()};
-				}
-			   
-			
-		   }
-		
+			}
+			else{
+			    result.param  = {itemId:$('#itemId'+'DP1').val()};
+			}
+		}
 	},		
-     savePopCallInit: function(index,your,action,btnId,param,result) {
-	     if(index ==0 && btnId =='saveBtnDP'&& ($('#defaultPop1').attr('btnid')=='createBtn1' || $('#defaultPop1').attr('btnid')=='copyBtn1')){
+    savePopCallInit: function(index,your,action,btnId,param,result) {
+	    if(index ==0 && btnId =='saveBtnDP'&& ($('#defaultPop1').attr('btnid')=='createBtn1' || $('#defaultPop1').attr('btnid')=='copyBtn1')){
 		    let startDate = new Date($('#woStartDateDP1').val());
 		    let endDate = new Date($('#woEndDateDP1').val());
 		    if(startDate>endDate){

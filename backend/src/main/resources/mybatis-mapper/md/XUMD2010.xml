@@ -31,6 +31,8 @@
                  , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.IN_LOCATION_CD) FROM DUAL) AS IN_LOCATION_NM
                  , MI.OUT_LOCATION_CD
                  , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.OUT_LOCATION_CD) FROM DUAL) AS OUT_LOCATION_NM
+                 , MI.STORAGE_LOCATION_CD
+                 , (SELECT MOM_COMMON_PKG.FN_GET_LOCATION_NAME(MI.COMPANY_CD, MI.DIVISION_CD, MI.STORAGE_LOCATION_CD) FROM DUAL) AS STORAGE_LOCATION_NM
                  , MI.ISSUE_TYPE
                  , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MI.COMPANY_CD,MI.DIVISION_CD, 'MD0006', MI.ISSUE_TYPE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS ISSUE_TYPE_NM
                  , MI.ISSUE_UNIT
@@ -89,7 +91,7 @@
             AND    MI.ITEM_TYPE IN (${itemType})
 	        </if>
 	        <if test="itemSpec != null and itemSpec != ''">
-            AND    TRIM(UPPER(MI.ITEM_SPEC)) LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' 
+            AND    UPPER(MI.ITEM_SPEC) LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' 
 	        </if>
 	        <if test="useYn != null and useYn != ''">
             AND    MI.USE_YN = #{useYn, jdbcType=VARCHAR}
@@ -118,6 +120,7 @@
 	                 , GROSS_WEIGHT_UNIT
 	                 , IN_LOCATION_CD
 	                 , OUT_LOCATION_CD
+	                 , STORAGE_LOCATION_CD
 	                 , ISSUE_TYPE
 	                 , ISSUE_UNIT
 	                 , VENDOR_CD
@@ -166,6 +169,7 @@
 	                 , #{item.grossWeightUnit, jdbcType=VARCHAR}
 	                 , #{item.inLocationCd, jdbcType=VARCHAR}
 	                 , #{item.outLocationCd, jdbcType=VARCHAR}
+	                 , #{item.storageLocationCd, jdbcType=VARCHAR}
 	                 , #{item.issueType, jdbcType=VARCHAR}
 	                 , #{item.issueUnit, jdbcType=VARCHAR}
 	                 , #{item.vendorCd, jdbcType=VARCHAR}
@@ -216,6 +220,7 @@
 	         , GROSS_WEIGHT_UNIT = #{item.grossWeightUnit, jdbcType=VARCHAR}
 	         , IN_LOCATION_CD = #{item.inLocationCd, jdbcType=VARCHAR}
 	         , OUT_LOCATION_CD = #{item.outLocationCd, jdbcType=VARCHAR}
+	         , STORAGE_LOCATION_CD = #{item.storageLocationCd, jdbcType=VARCHAR}
 	         , ISSUE_TYPE = #{item.issueType, jdbcType=VARCHAR}
 	         , ISSUE_UNIT = #{item.issueUnit, jdbcType=VARCHAR}
 	         , VENDOR_CD = #{item.vendorCd, jdbcType=VARCHAR}
@@ -280,6 +285,7 @@
                       #{grossWeightUnit, jdbcType=VARCHAR} as grossWeightUnit,
                       #{inLocationCd, jdbcType=VARCHAR} as inLocationCd,
                       #{outLocationCd, jdbcType=VARCHAR} as outLocationCd,
+                      #{storageLocationCd, jdbcType=VARCHAR} as storageLocationCd,
                       #{issueType, jdbcType=VARCHAR} as issueType,
                       #{issueUnit, jdbcType=VARCHAR} as issueUnit,
                       #{vendorCd, jdbcType=VARCHAR} as vendorCd,
@@ -330,6 +336,7 @@
                      , GROSS_WEIGHT_UNIT = PARAM.grossWeightUnit
                      , IN_LOCATION_CD = PARAM.inLocationCd
                      , OUT_LOCATION_CD = PARAM.outLocationCd
+                     , STORAGE_LOCATION_CD = PARAM.storageLocationCd
                      , ISSUE_TYPE = PARAM.issueType
                      , ISSUE_UNIT = PARAM.issueUnit
                      , VENDOR_CD = PARAM.vendorCd
@@ -378,6 +385,7 @@
                   , GROSS_WEIGHT_UNIT
                   , IN_LOCATION_CD
                   , OUT_LOCATION_CD
+                  , STORAGE_LOCATION_CD 
                   , ISSUE_TYPE
                   , ISSUE_UNIT
                   , VENDOR_CD
@@ -425,6 +433,7 @@
                   , PARAM.grossWeightUnit
                   , PARAM.inLocationCd
                   , PARAM.outLocationCd
+                  , PARAM.storageLocationCd
                   , PARAM.issueType
                   , PARAM.issueUnit
                   , PARAM.vendorCd
