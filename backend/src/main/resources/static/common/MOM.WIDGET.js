@@ -7379,7 +7379,8 @@ var momWidget = {
                         for (var j = 0, max2 = data.length; j < max2; j++) {
                             AUIGrid.updateRow(that.grid[index], {id: startPage + j}, j, false);
                         }
-                        let prevNum = Number($('#grid' + (index + 1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
+                        //let prevNum = Number($('#grid' + (index + 1)).find('.aui-grid-paging-panel').find('#click')[0].innerText);
+                        let prevNum = 1;
                         let nextPagingNum = Math.floor(prevNum / 10) * 10 + 1 - 10; //다음에 선택될버튼
    						let nowPageEndCount = that.totalRowCount[index] < nextPagingNum*that.gridProperty[index][0]['pageRowCount'] ? that.totalRowCount[index]:nextPagingNum*that.gridProperty[index][0]['pageRowCount'];
                         $('#grid' + (index + 1)).find('.aui-grid-paging-info-text')[0].innerText = '현재페이징 : ' + '1' + ' / 전체페이징 : ' + pageTotalNum + '( ' + '1' + '~' + nowPageEndCount + ' total: '+that.totalRowCount[index]+' )';

@@ -80,16 +80,16 @@
             WHERE  MI.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
             AND    MI.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
 	        <if test="itemId != null and itemId != ''">
-            AND    (UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' )
+            AND    UPPER(MI.ITEM_ID) LIKE '%' || UPPER(#{itemId, jdbcType=VARCHAR}) || '%' 
 	        </if>
 	        <if test="itemNm != null and itemNm != ''">
-            AND    (UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm , jdbcType=VARCHAR}) || '%' )
+            AND    UPPER(MI.ITEM_NM) LIKE '%' || UPPER(#{itemNm , jdbcType=VARCHAR}) || '%' 
 	        </if>
 	        <if test="itemType != null and itemType != ''">
             AND    MI.ITEM_TYPE IN (${itemType})
 	        </if>
 	        <if test="itemSpec != null and itemSpec != ''">
-            AND    (MI.ITEM_SPEC LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' )
+            AND    TRIM(UPPER(MI.ITEM_SPEC)) LIKE '%' || TRIM(UPPER(#{itemSpec , jdbcType=VARCHAR})) || '%' 
 	        </if>
 	        <if test="useYn != null and useYn != ''">
             AND    MI.USE_YN = #{useYn, jdbcType=VARCHAR}
