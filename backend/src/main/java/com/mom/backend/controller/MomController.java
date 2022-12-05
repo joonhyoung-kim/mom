@@ -2,6 +2,7 @@ package com.mom.backend.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ObjectUtils;
@@ -50,7 +52,8 @@ public class MomController {
 	private final MomServiceImpl momService;
 	private final FrameworkUtil frameworkUtil;
 	private final ReportUtil reportUtil;
-	
+	@Value("${file.dir}")
+	private String fileDir;
 	@GetMapping(value = "/passwordChange")  //비밀번호변경
 	public Map<String,Object> passwordChange(@RequestParam Map<String, Object> param) {		
         String loginId = param.get("loginId").toString();
@@ -146,14 +149,18 @@ public class MomController {
 	}
 
 	@DeleteMapping("/request/{query}/{action}")  //삭제 컨트롤러
-	public List<Map<String,Object>> removeMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) {
+	public List<Map<String,Object>> removeMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) throws Exception {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
 		List<Map<String,Object>> result =  new ArrayList<>();
 		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+	
 		try {			
-				result = momService.removeMapList(query, param);
+			   
+				   result = momService.removeMapList(query, param);
+			   
+				
 
 		}
 		catch (CustomDataAccessException e) {
@@ -166,29 +173,55 @@ public class MomController {
 		return result ;
 		
 	}
+	@DeleteMapping("/request/file/{query}/{action}")  //파일삭제 컨트롤러
+	public List<Map<String,Object>> removeFileMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) throws Exception {
+		query = frameworkUtil.removeDummy(query, action);
+		param = frameworkUtil.createParam(param, action);
+		List<Map<String,Object>> result =  new ArrayList<>();
+		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
+		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		for (Map<String, Object> map : param) {		
+			String deletePath = map.get("filePath").toString();
+			String deleteName = map.get("fileUuid").toString();
+			frameworkUtil.deleteFile(fileDir+deletePath, deleteName);
+		}		
+		try {					   
+			     result = momService.removeMapList(query, param);
+		}
+		catch (CustomDataAccessException e) {
+			System.out.println(e.getMsg());
+			result = frameworkUtil.createResponseMap(false,e.getMsg());
+			System.out.println(result);
+			
+		}
 	
+		return result ;
+		
+	}
 @PostMapping("/request/file/{query}/{action}")  //등록 컨트롤러
-public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) throws Exception { 	
+  public List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestPart(value = "fileInfo") Map<String, Object> fileInfo,@RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) throws Exception { 	
 	query = frameworkUtil.removeDummy(query, action);
 	List<Map<String,Object>> result =  new ArrayList<>();
 	PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 	PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+	String filePath= fileInfo.get("filePath").toString();
 	try {		
 		 MultipartFile file = multipartRequest;
 		 byte[] byteFile = frameworkUtil.convertFileToByte(file);
+		 String fileUuid = frameworkUtil.createFile(filePath,file);
 		 if(!file.isEmpty()){ //파일 존재하면
-			 if(frameworkUtil.createFile(file).equals("")) { //파일 고유식별키 없다면 생성 실패.
+			 if(fileUuid.equals("")) { //파일 고유식별키 없다면 생성 실패.
 				 result = frameworkUtil.createResponseMap(false,"fileUpload fail"); // 오류메시지 리턴
 			 }
 			 else {
-				 param = frameworkUtil.createFileParam(param, action,byteFile); // DB에 파일 식별키와 경로를 삽입
+				 param = frameworkUtil.createFileParam(param, action,byteFile,fileUuid); // DB에 파일 식별키와 경로를 삽입
 				 result = momService.createMapList(query, param);
 			 }
 			
 		}
-		 else { //파일 존재안하면
+		else { //파일 존재안하면
 			 result = frameworkUtil.createResponseMap(false,"fileUpload fail"); 
-		 }
+		}
 	}
 	catch (CustomDataAccessException e) {
 		System.out.println(e.getMsg());
@@ -199,38 +232,26 @@ public   List<Map<String,Object>> createFileMapList(@PathVariable String query,@
 	//System.out.println("결과2?"+result);
 	return result ;
 }
-@GetMapping("/fileDown")
-public void downloadFile(@RequestParam Map<String, Object> param, String filename, HttpServletResponse response) throws IOException {
-    String filePath = param.get("loginId").toString();
-    String fileName = param.get("loginId").toString();
-    File file = new File(filePath + fileName);   
+  @GetMapping("/fileDown")
+  public byte[] downloadFile(@RequestParam Map<String, Object> param, String filename) throws IOException {
+    String filePath = param.get("filePath").toString(); // 서버 파일경로
+    String fileName = param.get("fileName").toString(); // UUID + 확장자 붙여서 이름 완성해서 넘어옴
+    File file = new File(fileDir+filePath + "\\" +fileName);   
     if (ObjectUtils.isEmpty(file)) {
-       return;
+       return null;
     }
-  
+   
 	byte[] byteFile = FileUtils.readFileToByteArray(file);
-    String extension = ".zip";
-
-    response.setContentType("application/zip");
-    response.setHeader("Content-Disposition", "attachment;filename=" + filename + extension);
-    response.getOutputStream().write(byteFile);
+	return byteFile;
+	/*
+	 * response.setContentType("application/octet-stream");
+	 * response.setContentLength(byteFile.length);
+	 * response.setHeader("Content-Disposition", "attachment; fileName=\"" +
+	 * URLEncoder.encode("manual2.pdf","UTF-8")+"\";");
+	 * response.setHeader("Content-Transfer-Encoding", "binary");
+	 * response.getOutputStream().write(byteFile);
+	 * response.getOutputStream().flush(); response.getOutputStream().close();
+	 */
 }
-	  
-	  //System.out.println("결과2?"+result); return result ; }
-	 
-	//@DeleteMapping("/request/{query}/{action}/{param}")
-	//public List<Map<String,Object>> removeMapList(@PathVariable String query,@PathVariable String action, @PathVariable String param) throws JsonMappingException, JsonProcessingException, ParseException {
-		//System.out.println("치환한파람"+param);
-		//System.out.println("받아온액션"+action);
-		//List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-		
-		//listMap = FrameworkUtil.jsonStrToListMap(param);					
-		//query = FrameworkUtil.removeDummy(query, action);
-		//param = FrameworkUtil.createParam(param, action);
-		
-		//PrintUtil.print("MomController", "removeMapList", "#", "$", "query", query, true, false, false, false);
-		//PrintUtil.print(null, null, null, "$", "param", listMap, false, false, true, false);
-		
-		//return momService.removeMapList(query, listMap);
-	//}
+
 }

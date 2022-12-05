@@ -124,7 +124,7 @@ public class FrameworkUtil {
 
 	public  List<Map<String, Object>> jsonStrToListMap(String strParam)
 			throws ParseException, JsonMappingException, JsonProcessingException {
-		System.out.println("넘겨받은 문자=" + strParam);
+		//System.out.println("넘겨받은 문자=" + strParam);
 		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] strArray = strParam.replaceAll("=", ":").replaceAll("&", ",").split(",");
@@ -139,7 +139,7 @@ public class FrameworkUtil {
 
 	public  List<Map<String, Object>> jsonStrToListMap2(String jsonString)
 			throws ParseException, JsonMappingException, JsonProcessingException {
-		System.out.println("넘겨받은 json문자=" + jsonString);
+		//System.out.println("넘겨받은 json문자=" + jsonString);
 		List<Map<String, Object>> listMap = new ObjectMapper().readValue(jsonString,
 				new TypeReference<List<Map<String, Object>>>() {
 				});
@@ -296,41 +296,23 @@ public class FrameworkUtil {
 			//System.out.println("파람사이즈?"+list.size());
 			//Map<String, Object> map = list.get(i);
 			map = list.get(i);
-			/*
-			 * if(map.get("pwEncode")!=null) { if
-			 * (map.get("pwEncode").toString().equals("Y")) { if(map.get("password")== null
-			 * || map.get("password").equals("")) { map.put("encodePw", "1234"); } else {
-			 * map.put("encodePw", passwordEncode(map.get("password").toString())); }
-			 * 
-			 * list.remove(i);
-			 * 
-			 * //System.out.println("맵은?"+map);
-			 * 
-			 * 
-			 * list.add(map); } }
-			 */
 	
 						if(map.get("password")== null || map.get("password").equals("")) {
-							map.put("encodePw", "1234");	
+							// map.put("encodePw", "1234");	
 							//System.out.println("null인코딩실행");
 						}
 						else {
 							map.put("encodePw", passwordEncode(map.get("password").toString()));	
 							//System.out.println("정상인코딩실행");
 						}
-						
-						    //list.remove(i);
-				
-							//System.out.println("맵은?"+map);
-						
-						
+
 						listMapParam.add(map);
 									 			
 			if (map == null || map.isEmpty()) {
 				if (i == 0) {
 					return new ArrayList<Map<String, Object>>();
 				}
-				System.out.println("빈데이터");
+				//System.out.println("빈데이터");
 				break;
 			}
 
@@ -340,14 +322,19 @@ public class FrameworkUtil {
 		//System.out.println("마지막총개수?"+list.size());
 		return listMapParam;
 	}
-	public  List<Map<String, Object>> createFileParam(List<Map<String, Object>> list, String actionType ,byte [] file) {
+	public  List<Map<String, Object>> createFileParam(List<Map<String, Object>> list, String actionType ,byte [] file,String fileUuid) {
 		List<Map<String, Object>> listMapParam = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (int i = 0; i < list.size(); i++) { 
 			    map = list.get(i);	
-				//System.out.println("리포트파람 생성진입");
 				try {
-					map.put("fileBlob",file);
+					if(map.get("fileType").equals("R")) {
+						map.put("fileBlob",file);
+					}
+					else {
+						map.put("fileUuid",fileUuid);
+					}
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
@@ -356,7 +343,21 @@ public class FrameworkUtil {
 		}
 		return listMapParam;
 	}
-
+	public  String getFirstAttrInList(Map<String, Object> map, String attr) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap =  map;	
+		for (int i = 0; i < returnMap.size(); i++) { 			
+				try {
+					if(returnMap.get(i).toString().equals(attr)) {
+						return returnMap.get(i).toString();
+					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}				
+		}
+		return "";
+	}
 	public  Map<String, Object> json2Map(String json) {
 		/*
 		 * java.nio.charset.Charset UTF8_CHARSET =
@@ -773,7 +774,7 @@ public class FrameworkUtil {
 					
 	}
 	//실제 파일을 서버에 생성
-	public String createFile(MultipartFile uploadFile) throws Exception {		
+	public String createFile(String filePath,MultipartFile uploadFile) throws Exception {		
 		//String uploadFolder = "C:\\repository\\";
 	
 		 // 원래 파일 이름 추출
@@ -802,12 +803,27 @@ public class FrameworkUtil {
 
        //return savedFile.getId();        
 		System.out.println("최종파일이름:"+uploadFile.getOriginalFilename());		
-		File saveFile = new File(fileDir,savedName);
+		File saveFile = new File(fileDir+filePath+"\\",savedName);
 		try {
 			uploadFile.transferTo(saveFile);
 			return savedName;
 		} catch(Exception e) {
 			return "";
+		}		
+
+		
+	}
+	//실제 파일을 서버에 생성
+	public Boolean deleteFile(String filePath,String fileName) throws Exception {		
+		try {
+			File file = new File(filePath + "\\" + fileName);
+			System.out.println("삭제될경로="+filePath + "\\" + fileName);
+			if(file.exists()) { // 파일이 존재하면
+				file.delete(); // 파일 삭제	
+			}
+			return true;
+		} catch(Exception e) {
+			return false;
 		}		
 
 		

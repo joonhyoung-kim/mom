@@ -9477,6 +9477,7 @@ var momWidget = {
         var savePopBtnId = 'saveBtn' + 'DP' + (index + 1);
         var dropdownGridId = 'saveBtn' + 'DG' + (index + 1);
         var delBtnId = 'delBtn' + (index + 1);
+        var fileDelBtnId = 'fileDelBtn' + (index + 1);
         let delGridBtnId = 'delGridBtn' + (index + 1);
         var addBtnId = 'addBtn' + (index + 1);
         var showLv1Btn = 'showLv1Btn' + (index + 1);
@@ -9511,8 +9512,8 @@ var momWidget = {
         let fileUpDelBtnId = 'delBtnFP' + (index+1);
         let fileDownBtnId = 'downBtnFP' + (index+1);
         
-           $(document).on('click', '#' + fileDownBtnId, function (e) {
-	         let checkedItem = that.getCheckedRowItems('#fileUpGrid' + (index + 1));	         
+             $(document).on('click', '#' + exportFileBtnId, function (e) {
+	           let checkedItem = that.getCheckedRowItems('#grid' + (index + 1));	         
                 if (checkedItem.length == 0) {
                     momWidget.messageBox({
                         type: 'warning',
@@ -9523,10 +9524,11 @@ var momWidget = {
                     momWidget.splashHide();
                     return;
                 }
-             
-                 checkedItem.forEach((map1, i, list1) => {
+
+               checkedItem.forEach((map1, i, list1) => {
 		            let fileType= map1['fileType'];
 	                let extend = '.txt';
+	               
 	                if(fileType =='EX'){
 		   				extend = '.xlsx';
 				    }
@@ -9539,11 +9541,119 @@ var momWidget = {
 				    else{
 					
 				    }
-	                let byteArray = map1['fileBlob']; //byts 데이터
-	                let base64 = that.arrayBufferToBase64(byteArray); //base64인코딩
-	                let blobFile = that.b64toBlob(base64,"application/octet-stream"); //blob 변환            
-	                that.blobToFile(blobFile,map1['fileNm'],extend);
-		        });
+				      checkedItem[i]['extend']   = extend;
+				      checkedItem[i]['fileName'] = map1['fileUuid'];				      
+				     });
+				     
+				    
+					 /*  checkedItem.forEach((map2, j, list2) => {
+		                let byteArray = map2['fileBlob']; //byts 데이터
+		                let base64 = that.arrayBufferToBase64(byteArray); //base64인코딩
+		                let blobFile = that.b64toBlob(base64,"application/octet-stream"); //blob 변환            
+		                that.blobToFile(blobFile,map2['fileNm'],map2['extend']);
+						});*/
+				     
+				   
+					  checkedItem.forEach((map2, j, list2) => {					
+					$.ajax({
+		                url: mCommon.contextPath() + '/fileDown',
+		                method: "get",
+		                xhrFields: {  //response 데이터를 바이너리로 처리한다.
+	      				responseType: 'blob'
+   					    },
+		                contentType: 'application/json; charset=UTF-8',
+		                data: checkedItem[j],
+		                async: true,
+		                timeout: 30000000,
+	                    beforeSend: function (xhr) {
+	                    xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
+	                    },
+	                    success: function (blobData,result) {          
+							//that.fileDown();
+							that.blobToFile(blobData,map2['fileNm'],map2['extend']);
+	                        momWidget.splashHide();         
+	                    
+		                },
+		                error: function (e) {
+		                    momWidget.splashHide();
+		                    return;
+	                }           		     
+		       
+		         });
+					});
+				    
+				  
+              
+         });
+           $(document).on('click', '#' + fileDownBtnId, function (e) {
+	         let checkedItem = that.getCheckedRowItems('#fileUpGrid' + (index + 1));	         
+                if (checkedItem.length == 0) {
+                    momWidget.messageBox({
+                        type: 'warning',
+                        width: '400',
+                        height: '145',
+                        html: multiLang.transText('MESSAGE', 'MSG00034')
+                    });
+                    momWidget.splashHide();
+                    return;
+                }
+
+               checkedItem.forEach((map1, i, list1) => {
+		            let fileType= map1['fileType'];
+	                let extend = '.txt';
+	               
+	                if(fileType =='EX'){
+		   				extend = '.xlsx';
+				    }
+				    else if(fileType =='RP'){
+					     extend = '.jasper';
+				    }
+				    else if(fileType =='IM'){
+					     extend = '.jpg';
+				    }
+				    else{
+					
+				    }
+				      checkedItem[i]['extend']   = extend;
+				      checkedItem[i]['fileName'] = map1['fileUuid'];				      
+				     });
+				   
+					/*   checkedItem.forEach((map2, j, list2) => {
+		                let byteArray = map2['fileBlob']; //byts 데이터
+		                let base64 = that.arrayBufferToBase64(byteArray); //base64인코딩
+		                let blobFile = that.b64toBlob(base64,"application/octet-stream"); //blob 변환            
+		                that.blobToFile(blobFile,map2['fileNm'],map2['extend']);
+						});				     */
+				  
+					  checkedItem.forEach((map2, j, list2) => {					
+					$.ajax({
+		                url: mCommon.contextPath() + '/fileDown',
+		                method: "get",
+		                xhrFields: {  //response 데이터를 바이너리로 처리한다.
+	      				responseType: 'blob'
+   					    },
+		                contentType: 'application/json; charset=UTF-8',
+		                data: checkedItem[j],
+		                async: true,
+		                timeout: 30000000,
+	                    beforeSend: function (xhr) {
+	                    xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
+	                    },
+	                    success: function (blobData,result) {          
+							//that.fileDown();
+							that.blobToFile(blobData,map2['fileNm'],map2['extend']);
+	                        momWidget.splashHide();         
+	                    
+		                },
+		                error: function (e) {
+		                    momWidget.splashHide();
+		                    return;
+	                }           		     
+		       
+		         });
+					});
+				    
+				  
               
          });
         $(document).on('click', '#'+fileUpDelBtnId, function(e) {
@@ -9564,7 +9674,7 @@ var momWidget = {
 		  let fileKeyId  = $('#fileUploadPop'+(index+1)).attr('file-key-id');
 		  let param =[];
 		  checkedItem.forEach((map1, i, list1) => {
-		       param.push({menuId:checkedItem[i]['menuId'],gridId:checkedItem[i]['gridId'],fileId:checkedItem[i]['fileId']});
+		       param.push({menuId:checkedItem[i]['menuId'],gridId:checkedItem[i]['gridId'],fileId:checkedItem[i]['fileId'],fileUuid:checkedItem[i]['fileUuid'],filePath:checkedItem[i]['filePath']});
 		  });
 	      mom_ajax('D', menuId+'.'+'fileUp'+gridId, param, function (result1, data1) {
 		    if (data1.length == undefined || data1.length == 0 || data1[0]['p_err_code'] == 'E') {
@@ -9572,7 +9682,7 @@ var momWidget = {
                             type: 'danger',
                             width: '400',
                             height: '145',
-                            html: multiLang.transText('MESSAGE', data[0]['p_err_msg'])
+                            html: multiLang.transText('MESSAGE', data1[0]['p_err_msg'])
                         });
                         momWidget.splashHide();
                         return;
@@ -9594,7 +9704,8 @@ var momWidget = {
                         html: multiLang.transText('MESSAGE', 'MSG00001')
                     });
                     momWidget.splashHide();
- 		  }, undefined, index, this, false, undefined, 'D');
+                   
+ 		  }, undefined, index, this, false,'Y','D','Y');
 
 	    });
         $(document).on('click', '#'+fileUpSaveBtnId, function(e) {
@@ -9699,7 +9810,7 @@ var momWidget = {
                     , editable: false
                     , style: 'aui-grid-default-column-left'
                     , visible: true
-                };
+                };               
                 let col2 = {
                       dataField: 'fileTypeNm'
                     , headerText: '타입'
@@ -9732,8 +9843,28 @@ var momWidget = {
                     , style: 'aui-grid-default-column-left'
                     , visible: false
                 };
-            let columnProp = [col1,col2,col3,col4];    
-            let gridProp = {showRowCheckColumn: true,
+                  let col5 = {
+                      dataField: 'filePath'
+                    , headerText: '파일경로'
+                    , headerStyle: "my-header-style-default"
+                    , dataType: "string"
+                    , formatString: ""
+                    , editable: false
+                    , style: 'aui-grid-default-column-left'
+                    , visible: false
+                };
+                  let col6 = {
+                      dataField: 'fileType'
+                    , headerText: '파일타입'
+                    , headerStyle: "my-header-style-default"
+                    , dataType: "string"
+                    , formatString: ""
+                    , editable: false
+                    , style: 'aui-grid-default-column-left'
+                    , visible: false
+                };
+            let columnProp = [col1,col2,col3,col4,col5,col6];    
+            let gridProp = { showRowCheckColumn: true,
                              rowIdField: "keyId"
             };
 			AUIGrid.create('#fileUpGrid' + (index + 1), columnProp, gridProp);	
@@ -9753,39 +9884,7 @@ var momWidget = {
             }, undefined, undefined, that, false);
 			
 		});
-          $(document).on('click', '#' + exportFileBtnId, function (e) {
-	         let checkedItem = that.getCheckedRowItems(that.grid[index]);	         
-                if (checkedItem.length == 0) {
-                    momWidget.messageBox({
-                        type: 'warning',
-                        width: '400',
-                        height: '145',
-                        html: multiLang.transText('MESSAGE', 'MSG00034')
-                    });
-                    momWidget.splashHide();
-                    return;
-                }
-                let fileType= checkedItem[0]['fileType'];
-                let extend = '.txt';
-                if(fileType =='EX'){
-	   				extend = '.xlsx';
-			    }
-			    else if(fileType =='RP'){
-				     extend = '.jasper';
-			    }
-			    else if(fileType =='IM'){
-				     extend = '.jpg';
-			    }
-			    else{
-				
-			    }
-                let byteArray = checkedItem[0]['fileBlob']; //byts 데이터
-                let base64 = that.arrayBufferToBase64(byteArray); //base64인코딩
-                let blobFile = that.b64toBlob(base64,"application/octet-stream"); //blob 변환
-             
-             
-                that.blobToFile(blobFile,checkedItem[0]['fileNm'],extend);
-         });
+
         $(document).on('click', '#' + moveBtnId, function (e) {
             let fromIndex = index; //복사할 인덱스
             let toIndex = fromIndex + 1; //이동할 인덱스
@@ -15942,6 +16041,16 @@ var momWidget = {
 		  a.click()
 		  a.remove()
 		  window.URL.revokeObjectURL(url);
+    },
+        fileDown: function(url){
+	    let fileDownName = '테스트1';
+		  let downUrl = url;
+		  const a = document.createElement("a") //생성하는 태그는 DOM에 붙는 태그가 아닌, 다운로드 기능만을 수행하기 위해 만든다. 따라서 링크, 다운로드 속성을 만드는데 다운로드 속성의 innerText는 자유롭게 작성해도 된다. 다만 파일의 확장자는 제대로 만들어야 제대로된 파일이 만들어져 다운로드 기능을 제공할 수 있다.
+		  a.href = downUrl //URL.revokeObjectURL()은 URL.createObjectURL()을 통해 생성한 기존 URL을 해제(폐기)한다.revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 가비지콜렉터가 동작하지 않는다
+		  a.download = fileDownName;
+		  a.click()
+		  a.remove()
+		  window.URL.revokeObjectURL(downUrl);
     },
     arrayBufferToBase64:function(buffer) {
 		var binary = '';

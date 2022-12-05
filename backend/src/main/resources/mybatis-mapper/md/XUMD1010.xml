@@ -10,6 +10,7 @@
 	<result property="GRID_ID"          column="GRID_ID"             jdbcType="NVARCHAR" javaType="String"/>
 	<result property="KEY_ID"           column="KEY_ID"              jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_NM"          column="FILE_NM"             jdbcType="NVARCHAR" javaType="String"/>
+	<result property="FILE_UUID"        column="FILE_UUID"           jdbcType="NVARCHAR" javaType="String"/>
 	<result property="PARAMETER"        column="PARAMETER"           jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_PATH"        column="FILE_PATH"           jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_BLOB"        column="FILE_BLOB"           jdbcType="BLOB"     javaType="byte[]"/>
@@ -27,6 +28,8 @@
            , MF.FILE_TYPE
            , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MF.COMPANY_CD, MF.DIVISION_CD, 'SM0025', MF.FILE_TYPE, 'KR') FROM DUAL)  AS FILE_TYPE_NM
            , MF.FILE_NM
+           , MF.FILE_UUID
+           , MF.FILE_PATH
            , MF.FILE_BLOB
 		   , MF.PARAMETER
 		   , MF.DESCRIPTION
@@ -84,6 +87,7 @@
                 , FILE_TYPE
                 , FILE_PATH
                 , FILE_NM
+                , FILE_UUID
                 , MENU_ID
                 , GRID_ID 
                 , PARAMETER
@@ -99,6 +103,7 @@
                 , #{item.fileType, jdbcType=VARCHAR}
                 , #{item.filePath, jdbcType=VARCHAR}
                 , #{item.fileNm, jdbcType=VARCHAR}
+                , #{item.fileUuid, jdbcType=VARCHAR}
                 , #{item.menuId, jdbcType=VARCHAR}
                 , #{item.gridId, jdbcType=VARCHAR}
                 , #{item.parameter, jdbcType=VARCHAR}

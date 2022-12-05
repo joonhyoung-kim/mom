@@ -10,6 +10,7 @@
 	<result property="GRID_ID"          column="GRID_ID"             jdbcType="NVARCHAR" javaType="String"/>
 	<result property="KEY_ID"           column="KEY_ID"              jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_NM"          column="FILE_NM"             jdbcType="NVARCHAR" javaType="String"/>
+    <result property="FILE_UUID"        column="FILE_UUID"           jdbcType="NVARCHAR" javaType="String"/>
 	<result property="PARAMETER"        column="PARAMETER"           jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_PATH"        column="FILE_PATH"           jdbcType="NVARCHAR" javaType="String"/>
 	<result property="FILE_BLOB"        column="FILE_BLOB"           jdbcType="BLOB"     javaType="byte[]"/>
@@ -31,6 +32,7 @@
          , MF.FILE_NM
 		 , MF.PARAMETER
 		 , MF.FILE_PATH
+		 , MF.FILE_UUID
 		 , MF.FILE_BLOB
 		 , MF.DESCRIPTION
 		 , MF.CREATE_BY

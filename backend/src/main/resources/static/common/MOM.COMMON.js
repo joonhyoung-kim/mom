@@ -1383,6 +1383,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
     var interval = undefined;
     var paramSize = param.length;
     var that = momWidget;
+    let actionType =  type == '' ? 'R': type;
     let formData = new FormData();
     let urlPath = mCommon.contextPath() + '/request/com.mom.backend.' + url+'/'+type;
     if(index_info != undefined && index_info != null && momWidget.pageProperty[index_info]['param'] != undefined){
@@ -1399,7 +1400,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	if(actionMode == undefined || actionMode == ''){
 		actionMode = type;
 	}
-	if(file != undefined && file != null){
+	if(file != undefined && file != null && actionType =='C'){
 		  //let fileInput = $('#fileBlobDP'+(index_info+1));
 		 // let fileItem = fileInput[0].files[index_info];
 		  let fileItem = file;
@@ -1408,6 +1409,9 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		  //formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
 		  urlPath = mCommon.contextPath() + '/request/file/com.mom.backend.' + url+'/'+type;
 		  
+	}
+	else if(file != undefined && file != null && actionType =='D'){
+		 urlPath = mCommon.contextPath() + '/request/file/com.mom.backend.' + url+'/'+type;
 	}
 	if(type == 'R'){
 		if(sessionStorage.getItem('userInfo') != undefined && sessionStorage.getItem('userInfo') != null){
@@ -1522,7 +1526,8 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 
 			  }
 			  	if(file != undefined && file != null){
-				     formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
+				      formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
+				      formData.append('fileInfo', new Blob([JSON.stringify({filePath:param[0]['filePath']})], {type : "application/json"}));
 				}
 				else{
 					 param = JSON.stringify(param);
@@ -1594,7 +1599,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
     var bar = $('.bar');
     var percent = $('.percent');
     var status = $('#status');
-    if(file != undefined && file != null){
+    if(file != undefined && file != null && actionType == 'C'){
 		    $.ajax({
 			type 		: 'post',
 			url  		: urlPath,
