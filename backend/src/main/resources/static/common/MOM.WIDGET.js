@@ -7911,28 +7911,24 @@ var momWidget = {
                                         $('#' + e.currentTarget.id).jqxComboBox('open');
                                         return;
                                     }
-                                    //$('#'+e.currentTarget.id).val('');
+                                    
                                     let searchStr = $('#' + e.currentTarget.id).val();
-                                    //$('#'+e.currentTarget.id).jqxComboBox('clear');
+                                   
                                     let oldItems = that.searchComboItems[e.currentTarget.id];
-                                    /*	if(that.preComboItems[index][e.currentTarget.id]==undefined){
-	 						that.preComboItems[index][e.currentTarget.id] = oldItems;
-						}*/
+                       
 
                                     let newItems = [];
                                     for (var i = 0, popupLen = oldItems.length; i < popupLen; i++) {
                                         if (oldItems[i]['label'].toUpperCase().indexOf($('#' + e.currentTarget.id).val().toUpperCase()) >= 0) {
-                                            //$("#jqxComboBox").jqxComboBox('removeItem', "List Item" );
+                                           
                                             newItems.push(oldItems[i]);
 
-                                            //$('#'+e.currentTarget.id).jqxComboBox('addItem', { label: oldItems[i]['label'], code: oldItems[i]['code']});
                                         } else {
-                                            //$('#'+e.currentTarget.id).jqxComboBox('removeItem', oldItems[i]['code']);
+                                            
                                         }
 
                                     }
 
-                                    //$('#'+e.currentTarget.id).val(searchStr);
 
 
                                     if (newItems.length == 0) {
@@ -9036,17 +9032,17 @@ var momWidget = {
 
             }
         }
-        var findBtnId = 'findBtn' + (index + 1);                                 // 조회버튼
-        var createBtnId = 'createBtn' + (index + 1);                             // 등록버튼
-        var copyBtnId = 'copyBtn' + (index + 1);                                 // 복사버튼
-        var editBtnId = 'editBtn' + (index + 1);                                 // 수정버튼
-        var cancelBtnId = 'cancelBtn' + 'DP' + (index + 1);                      // 기본 팝업 (닫기)
+        var findBtnId = 'findBtn' + (index + 1);                                 // 조회 버튼
+        var createBtnId = 'createBtn' + (index + 1);                             // 등록 버튼
+        var copyBtnId = 'copyBtn' + (index + 1);                                 // 복사 버튼
+        var editBtnId = 'editBtn' + (index + 1);                                 // 수정 버튼
+        var cancelBtnId = 'cancelBtn' + 'DP' + (index + 1);                      // 기본   팝업 (닫기)
         var cancelCustomPopBtnId = 'cancelCustomPopBtn' + 'DP' + (index + 1);    // 커스텀 팝업 (닫기)
         var saveCustomPopBtnId = 'saveCustomPopBtn' + 'DP' + (index + 1);        // 커스텀 팝업 (저장)
-        var excelDownBtnId = 'excelDownBtn' + (index + 1);
-        var excelTmpBtnId = 'excelTmpBtn' + (index + 1);
-        var excelUpBtnId = 'excelUpBtn' + (index + 1);
-        var excelUpBtnIdV = 'excelUpBtnV' + (index + 1);
+        var excelDownBtnId = 'excelDownBtn' + (index + 1); 					     // 엑셀다운 버튼
+        var excelTmpBtnId = 'excelTmpBtn' + (index + 1);  				         // 엑셀양식 버튼
+        var excelUpBtnId = 'excelUpBtn' + (index + 1);                           // 엑셀업로드 버튼
+        var excelUpBtnIdV = 'excelUpBtnV' + (index + 1);                         // 엑셀업로드(검사) 버튼
         var excelUpCancelBtnId = 'cancelBtnExUp' + (index + 1);
         var saveBtnId = 'saveBtn' + (index + 1);
         var exportFileBtnId = 'fileDownBtn' + (index + 1);;
@@ -10308,7 +10304,7 @@ var momWidget = {
                 method: "get",
                 contentType: 'application/json; charset=UTF-8',
                 data: param[0],
-                async: true,
+                async: false,
                 timeout: 30000000,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
@@ -11233,10 +11229,7 @@ var momWidget = {
                 if (isCheckCol == true) {
                     param = that.getCheckedRowItems(that.grid[index]);
                     if (param.length == 0) {
-                        /* checkedItems = AUIGrid.getGridData(that.grid[index]);
-						  for(let i=0,max=checkedItems.length;i<max;i++){
-						     param.push(checkedItems[i]);
-				          }*/
+                   
                         momWidget.messageBox({
                             type: 'danger',
                             width: '400',
@@ -12727,37 +12720,7 @@ var momWidget = {
 
                 }
             }
-            /*   for(var i=0,max=that.buttonProperty[index].length;i<max;i++){
-					if(that.buttonProperty[index][i]['tempUseYn'] == 'Y'){
-						tmpYn = that.buttonProperty[index][i]['tempUseYn'];
 
-					}
-				 }
-
-					  for(var i=0,max=that.buttonProperty[btnIndex].length;i<max;i++){
-					    if((that.buttonProperty[btnIndex][i]['buttonParameter'] != undefined && that.buttonProperty[btnIndex][i]['buttonParameter'] != '')){
-							buttonParam = JSON.parse(that.buttonProperty[btnIndex][i]['buttonParameter'].replace(/\'/gi, '"'));
-							break;
-					   }
-				}
-				for(var j=0,max2=buttonParam.length;j<max2;j++){
-						if(buttonParam[j]['typeMap']!= undefined && buttonParam[j]['typeMap']!='' && buttonParam[j]['typeList']!= undefined && buttonParam[j]['typeList']!=''){
-
-						extraParam['typeMap'] = buttonParam[j]['typeMap'];
-						extraParam['typeList'] = buttonParam[j]['typeList'];
-					}
-
-
-
-				}
-
-					param = buttonParam.map(function(item1){
-			    var obj = that.getPopupParam(index,your,extraParam).find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);
-			    return item1;
-			});*/
 
             let buttonParamText = {};
             let buttonParamList = [];
@@ -12773,13 +12736,7 @@ var momWidget = {
                 momWidget.splashHide();
                 return;
             }
-            /*	param = param.map(function(item1){
-			    var obj = callInitResult['param'].find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);
-			    return item1;
-			});*/
+
             param = callInitResult['param'];
             if (Array.isArray(param) == true) {
                 param = param.length == 0 ? {} : param;
