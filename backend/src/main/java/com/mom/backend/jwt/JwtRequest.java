@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.stereotype.Component;
+@Component
 public class JwtRequest implements Serializable {
 
     private static final long serialVersionUID = 5926468583005150707L;

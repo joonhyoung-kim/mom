@@ -1649,7 +1649,6 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		dataType 	: type == 'U'? 'text' : (type == 'D' ? 'json' : 'json'),
 		contentType : type == 'U'? 'application/json; charset=UTF-8' : (type == 'D' ? 'application/json; charset=UTF-8' : 'application/json; charset=UTF-8'),
 		beforeSend: function (xhr) {
-			      
 	              xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
 	            if(excelUpYn =='Y'&&param.length>=1000){
 	            	 bar.width('0%');

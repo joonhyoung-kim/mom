@@ -36,14 +36,15 @@ public class MomDao {
 	private final DataSourceTransactionManager dataSourceTransactionManager;
 	private final TestInnerResultHandler testInnerResultHandler;
 	private final FrameworkUtil frameworkUtil;
+	private final PrintUtil printUtil;
 	boolean debugOn = true;	 // 콘솔 디버깅 출력여부
 	boolean exceptionOn;     // 콘솔 예외 출력여부
 	
 	public List<Map<String,Object>> getMapList(String query, Map<String,Object> param) { //조회 이벤트 처리
-		PrintUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
+		printUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return frameworkUtil.createResponseListEmpty();
 		}
 		List<Map<String,Object>> result =  null;
@@ -51,7 +52,7 @@ public class MomDao {
 		try {	
 			 		
 			//System.out.println("parameter="+param);
-			PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+			printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -60,7 +61,7 @@ public class MomDao {
 					  
 		} catch(Exception e) {
 			e.printStackTrace();
-			PrintUtil.print(null, null, null, "$", "getMapList : " + PrintUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
+			printUtil.print(null, null, null, "$", "getMapList : " + printUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -77,11 +78,11 @@ public class MomDao {
 		
 	}
 	public List<Map<String,Object>> procMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		printUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
+		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return frameworkUtil.createResponseListEmpty();
 		}
 		List<Map<String,Object>> result =  new ArrayList<>();
@@ -103,7 +104,7 @@ public class MomDao {
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			PrintUtil.print(null, null, null, "$", "getMapList : " + PrintUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
+			printUtil.print(null, null, null, "$", "getMapList : " + printUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -117,11 +118,11 @@ public class MomDao {
 	}	
 	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param)  {
 		ProgressInfo.successCount = 0;
-		PrintUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		printUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
+		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		 //System.out.println("크리에이트!");
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
@@ -165,7 +166,7 @@ public class MomDao {
 
             	long endTime = System.currentTimeMillis();
                 long resutTime = endTime - startTime;            
-                PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
+                printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
         	}  
         return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
@@ -173,11 +174,11 @@ public class MomDao {
 
 			
 	public List<Map<String, Object>> modifyMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomDao", "modifyMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		printUtil.print("MomDao", "modifyMapList", "#", "$", "query", query, true, true, false, debugOn);
+		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
@@ -208,17 +209,17 @@ public class MomDao {
         	sqlSession1.close();  
         	long endTime = System.currentTimeMillis();
             long resutTime = endTime - startTime;            
-            PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);          
+            printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);          
     	}
     	
     	return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
 	@Transactional
 	public List<Map<String, Object>> upsertMapList(String query, List<Map<String,Object>> param) { //엑셀 업로드 이벤트 처리
-		PrintUtil.print("MomDao", "upsertMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		printUtil.print("MomDao", "upsertMapList", "#", "$", "query", query, true, true, false, debugOn);
+		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
@@ -329,18 +330,18 @@ public class MomDao {
             	sqlSession1.clearCache();
             	long endTime = System.currentTimeMillis();
                 long resutTime = endTime - startTime;            
-                PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
+                printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
         	}  
         	System.out.println("최종 카운트="+resultCount); 
         return frameworkUtil.createResponseMap(resultCount != 0 ? true : false);
 	}
 	
 	public List<Map<String, Object>> removeMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomDao", "removeMapList", "#", "$", "query", query, true, true, false, debugOn);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
+		printUtil.print("MomDao", "removeMapList", "#", "$", "query", query, true, true, false, debugOn);
+		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 		
 		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			PrintUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
 			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
 		}
 		
@@ -367,7 +368,7 @@ public class MomDao {
         	sqlSession1.close();  
         	long endTime = System.currentTimeMillis();
             long resutTime = endTime - startTime;            
-            PrintUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);     
+            printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);     
     	}           
         return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}

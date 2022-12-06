@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mom.backend.util.FrameworkUtil;
-import com.mom.backend.util.InterfaceUtilAdv;
+
 import com.mom.backend.util.PrintUtil;
 import com.mom.backend.util.PropertyEncryptConfiguration;
-import com.mom.backend.util.SMTPUtil;
 import com.mom.backend.dao.MomDao;
 
 import lombok.RequiredArgsConstructor;
@@ -21,11 +20,12 @@ import lombok.RequiredArgsConstructor;
 public class MomServiceImpl  {
 	private final MomDao momDao ;
 	private final FrameworkUtil frameworkUtil;
+	private final PrintUtil printUtil;
 
 	
 	public List<Map<String,Object>> getMapList(String query, Map<String,Object> param) {
-		PrintUtil.print("MomService", "getMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomService", "getMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 
 		List<Map<String,Object>> result = momDao.getMapList(query, param);
 		
@@ -33,8 +33,8 @@ public class MomServiceImpl  {
 	}
 
 	public List<Map<String, Object>> procMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomService", "createMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomService", "createMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		       
        	 List<Map<String,Object>> result = momDao.procMapList(query, param);
         	   return result;	
@@ -42,8 +42,8 @@ public class MomServiceImpl  {
 	}
 
 	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomService", "createMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomService", "createMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		
 
 		/*
@@ -86,8 +86,8 @@ public class MomServiceImpl  {
 	}
 	
 	public List<Map<String,Object>> modifyMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomService", "modifyMap", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, true, false, false);
+		printUtil.print("MomService", "modifyMap", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, true, false, false);
 		
 		// start 20200707 
 		if(param != null && param.size() > 0 && param.get(0).get("encPassword") != null) {
@@ -112,8 +112,8 @@ public class MomServiceImpl  {
 
 
 	public List<Map<String,Object>> removeMapList(String query, List<Map<String,Object>> param) {
-		PrintUtil.print("MomService", "removeMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomService", "removeMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		
 		List<Map<String,Object>> result = momDao.removeMapList(query, param);
 

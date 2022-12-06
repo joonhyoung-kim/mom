@@ -39,13 +39,9 @@ import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 @Component
 public class ReportUtil {
-	  /** The connection. */ 
-	//@Autowired
     private static Connection connection = null;  
    
-    /** 
-     * Connect database. 
-     */  
+
     public void ConnectDatabase() {  
         try {             
             // Load the JDBC driver  
@@ -65,12 +61,7 @@ public class ReportUtil {
         }  
     }   
      
-        
-    /** 
-     * The main method. 
-     *  
-     * @param args the arguments 
-     */  
+
   @SuppressWarnings("deprecation")
 public Map<String,Object> createReport(String fileName,String fileType,Map<String,Object> param ){
         JasperReport jasperReport;  
@@ -99,15 +90,9 @@ public Map<String,Object> createReport(String fileName,String fileType,Map<Strin
             System.out.println("--------");  
                            
             System.out.println("Compile Jasper XML Report");  
-            //URL resource = getClass().getClassLoader().getResource("report1.jrxml");
-           // String filePath = resource.getPath();
-             String rootPath = System.getProperty("user.dir");
-            //String rootPath = "C:\\MOM\\apache-tomcat-8.5.77\\webapps\\MOM\\WEB-INF\\classes\\static";
+            String rootPath = System.getProperty("user.dir");
             System.out.println("현재 프로젝트의 경로 : "+rootPath );
             
-          // jasperReport = JasperCompileManager.compileReport(filePath);  
-           // jasperReport = JasperCompileManager.compileReport(rootPath+"\\src\\main\\resources\\static\\report-design\\report1.jrxml");  
-           // jasperReport = JasperCompileManager.compileReport("C:\\Users\\LG\\git\\repository\\backend\\src\\main\\resources\\static\\report-design\\report1.jrxml"); 
             System.out.println("time : " + (System.currentTimeMillis() - start)+ " ms.");  
                
             System.out.println("Create Database connection");  

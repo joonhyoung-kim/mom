@@ -11,7 +11,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 
 @SpringBootApplication
-//@ComponentScan("com.mom.backend")
+@ComponentScan("com.mom.backend")
 //@ComponentScan(basePackages = {"com.mom","com.mom.jwt"})
 @MapperScan(basePackages = "com.mom")
 public class JwtloginApplication extends  SpringBootServletInitializer {

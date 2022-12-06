@@ -52,6 +52,7 @@ public class MomController {
 	private final MomServiceImpl momService;
 	private final FrameworkUtil frameworkUtil;
 	private final ReportUtil reportUtil;
+	private final PrintUtil printUtil;
 	@Value("${file.dir}")
 	private String fileDir;
 	@GetMapping(value = "/passwordChange")  //비밀번호변경
@@ -71,7 +72,6 @@ public class MomController {
 	@GetMapping(value = "/createReport") //리포트 생성
 	public Map<String,Object> createReport(@RequestParam Map<String, Object> param) {
 		
-        System.out.println("리포트 컨트롤러 진입="+param);     
         String title = param.get("fileName").toString();
         String type  = param.get("fileType").toString();
 		return reportUtil.createReport(title,type,param);
@@ -91,15 +91,11 @@ public class MomController {
 	}
 	@GetMapping("/request/{query}/{action}") //조회 컨트롤러
 	public List<Map<String,Object>> getMapList(@PathVariable String query,@PathVariable String action, @RequestParam Map<String, Object> param) {
-		System.out.println("받아온쿼리="+query);
-		//System.out.println("받아온파람="+param.get("DIVISION_CD"));
-		System.out.println("받아온파람"+param);
-		System.out.println("받아온액션"+action);
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action, null, null, null, null, null);
 		
-		PrintUtil.print("MomController", "getMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomController", "getMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		
 		return momService.getMapList(query, param);
 	}
@@ -109,25 +105,22 @@ public class MomController {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
 		List<Map<String,Object>> result =  new ArrayList<>();
-		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		try {
 			if(action.equals("P")) {
 				result = momService.procMapList(query, param);
 			}
 			else {
 				result = momService.createMapList(query, param);
-				//System.out.println("결과1?"+result);
 			}
 			
 		}
 		catch (CustomDataAccessException e) {
 			System.out.println(e.getMsg());
 			result = frameworkUtil.createResponseMap(false,e.getMsg());
-			System.out.println(result);
 			
 		}
-		//System.out.println("결과2?"+result);
 		return result ;
 	}
 	
@@ -135,15 +128,11 @@ public class MomController {
 	
 	@PutMapping("/request/{query}/{action}") //수정 컨트롤러
 	public List<Map<String,Object>> modifyMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) { 
-		System.out.println("받아온쿼리="+query);
-		//System.out.println("받아온파람="+param.get("DIVISION_CD"));
-		System.out.println("받아온파람"+param);
-		System.out.println("받아온액션"+action);
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
 		
-		PrintUtil.print("MomController", "modifyMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomController", "modifyMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		
 		return momService.modifyMapList(query, param);
 	}
@@ -153,8 +142,8 @@ public class MomController {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
 		List<Map<String,Object>> result =  new ArrayList<>();
-		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 	
 		try {			
 			   
@@ -166,7 +155,6 @@ public class MomController {
 		catch (CustomDataAccessException e) {
 			System.out.println(e.getMsg());
 			result = frameworkUtil.createResponseMap(false,e.getMsg());
-			System.out.println(result);
 			
 		}
 	
@@ -178,8 +166,8 @@ public class MomController {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
 		List<Map<String,Object>> result =  new ArrayList<>();
-		PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
-		PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		for (Map<String, Object> map : param) {		
 			String deletePath = map.get("filePath").toString();
 			String deleteName = map.get("fileUuid").toString();
@@ -191,19 +179,18 @@ public class MomController {
 		catch (CustomDataAccessException e) {
 			System.out.println(e.getMsg());
 			result = frameworkUtil.createResponseMap(false,e.getMsg());
-			System.out.println(result);
 			
 		}
 	
 		return result ;
 		
 	}
-@PostMapping("/request/file/{query}/{action}/{overWrite}")  //등록 컨트롤러
+@PostMapping("/request/file/{query}/{action}/{overWrite}")  //파일첨부 컨트롤러
   public List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @PathVariable String overWrite, @RequestPart(value = "fileInfo") Map<String, Object> fileInfo,@RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) throws Exception { 	
 	query = frameworkUtil.removeDummy(query, action);
 	List<Map<String,Object>> result =  new ArrayList<>();
-	PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
-	PrintUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+	printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
+	printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 	String filePath= fileInfo.get("filePath").toString();
 	try {		
 		 MultipartFile file = multipartRequest;
@@ -229,10 +216,8 @@ public class MomController {
 	catch (CustomDataAccessException e) {
 		System.out.println(e.getMsg());
 		result = frameworkUtil.createResponseMap(false,e.getMsg());
-		System.out.println(result);
 		
 	}
-	//System.out.println("결과2?"+result);
 	return result ;
 }
   @GetMapping("/fileDown")

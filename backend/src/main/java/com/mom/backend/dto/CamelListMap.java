@@ -1,7 +1,8 @@
 package com.mom.backend.dto;
 
 import org.apache.commons.collections4.map.ListOrderedMap;
-
+import org.springframework.stereotype.Component;
+@Component
 public class CamelListMap extends ListOrderedMap {
 
     private String toProperCase(String s, boolean isCapital) {

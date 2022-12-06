@@ -16,7 +16,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.EnvironmentPBEConfig;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.stereotype.Component;
+@Component
 @Configuration
 public class PropertyEncryptConfiguration {
 

@@ -2,6 +2,8 @@ package com.mom.backend.jwt;
 
 import java.io.Serializable;
 
+import org.springframework.stereotype.Component;
+
 public class JwtResponse implements Serializable {
 
     private static final long serialVersionUID = -8091879091924046844L;

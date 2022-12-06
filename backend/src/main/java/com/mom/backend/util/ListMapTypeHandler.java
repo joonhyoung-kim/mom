@@ -16,12 +16,14 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import oracle.jdbc.OracleConnection;
 @Slf4j
+@Component
 public class ListMapTypeHandler implements TypeHandler<Object> {
 
 	//private static final Logger log = LoggerFactory.getLogger(ListMapTypeHandler.class);

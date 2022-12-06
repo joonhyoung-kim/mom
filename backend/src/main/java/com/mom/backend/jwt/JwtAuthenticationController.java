@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,7 @@ import com.mom.backend.jwt.JwtTokenUtil;
 
 @RestController
 @CrossOrigin
+@Component
 public class JwtAuthenticationController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -56,10 +58,6 @@ public class JwtAuthenticationController {
 		String comboType = paramMap.get("comboType");		
 
 		//System.out.println("클라이언트 인코딩pw="+encodedPassword);
-		System.out.println("요청컴퍼니="+companyCd);
-		System.out.println("요청디비전="+divisionCd);
-		System.out.println("요청언어="+languageCd);
-		System.out.println("클라이언트id="+clientId);
 	
 		JwtLoginInfo.divisionCd = divisionCd;
 		JwtLoginInfo.companyCd = companyCd;
@@ -85,7 +83,7 @@ public class JwtAuthenticationController {
 			 //return ResponseEntity(HttpStatus.OK);
 	        }
 		 else {
-			   System.out.println("비밀번호 불일치!");	
+			   //System.out.println("비밀번호 불일치!");	
 			   throw new BadCredentialsException(clientId);
 		 }	
 	}

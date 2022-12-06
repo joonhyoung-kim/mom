@@ -57,6 +57,7 @@ import lombok.RequiredArgsConstructor;
 public class FrameworkUtil {
 	private final PasswordEncoder passwordEncoder;
 	private  final JwtUserDetailsService userDetailsService;
+	private final PrintUtil printUtil;
 	@Value("${file.dir}")
 	private String fileDir;
 	// private final Map<String, Object> multiLanguage;
@@ -226,7 +227,7 @@ public class FrameworkUtil {
 				}
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
-				PrintUtil.print("FrameworkUtil", "createParam", "#", "$", "URLDecoder.decode 오류",
+				printUtil.print("FrameworkUtil", "createParam", "#", "$", "URLDecoder.decode 오류",
 						param.get(key).toString() + "을 디코딩 하려다 오류 발생", true, true, true, true);
 				e.printStackTrace();
 

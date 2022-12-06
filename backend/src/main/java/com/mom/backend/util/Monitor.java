@@ -5,6 +5,8 @@ import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.springframework.stereotype.Component;
+@Component
 public class Monitor {
 	public static String getCPUTime() {
 		OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();

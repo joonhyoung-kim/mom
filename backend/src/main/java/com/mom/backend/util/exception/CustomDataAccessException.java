@@ -9,25 +9,19 @@ public class CustomDataAccessException extends DataAccessException {
     String msg;
     public CustomDataAccessException(String msg){
         super(msg);
-        System.out.println("에러1"+msg);
+      
     }
     public CustomDataAccessException(String msg, String query){
         this(msg);
         this.query = query;
-        System.out.println("에러2"+msg);
+      
     }
     public CustomDataAccessException(String msg, Throwable cause){
 
         super(msg,cause);
         SQLException se = (SQLException) cause;
         int errCode = se.getErrorCode();
-        
-      
-    
-        System.out.println("에러3"+msg);
-        System.out.println("에러Code"+errCode);
-        System.out.println("에러cause="+cause.getMessage());
-        
+
 
         if(errCode==1) {
         	setMsg("MSG00044");

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+@Component
 public class PrintUtil {
 	public static int loopCount 	= 3;
 	public static String space 		= " ";
@@ -15,7 +17,7 @@ public class PrintUtil {
 	public static String newLine 	= "\n";
 	public static String quotation 	= "\'";
 	
-	public static void print(String domain, String function, String mark1, String mark2, String key, Object value, boolean header, boolean start, boolean end, boolean show) {
+	public void print(String domain, String function, String mark1, String mark2, String key, Object value, boolean header, boolean start, boolean end, boolean show) {
 		
 		if(!show){
 			return;
@@ -41,11 +43,11 @@ public class PrintUtil {
 		
 		if(key != null && key.equals("query")) {
 			if(value != null && !value.equals("")) {
-				System.out.println(PrintUtil.queryString(String.valueOf(value), null, 0));
+				System.out.println(queryString(String.valueOf(value), null, 0));
 			}
 		} else {
 			if(value != null && !value.equals("")) {
-				PrintUtil.printMap(value);
+				printMap(value);
 			}
 		}
 		
@@ -54,7 +56,7 @@ public class PrintUtil {
 		}
 	}
 	
-	public static void printMap(Object value) {
+	public  void printMap(Object value) {
 		if(value == null) {
 			return;
 		}
@@ -129,7 +131,7 @@ public class PrintUtil {
 		}
 	}
 	
-	public static String queryString(String query, String crud, int count) {
+	public  String queryString(String query, String crud, int count) {
 		if(query == null || query.equals("")) {
 			return "";
 		}
@@ -160,7 +162,7 @@ public class PrintUtil {
 		return returnString;
 	}
 	
-	public static String errMsgString(String query) {
+	public  String errMsgString(String query) {
 		if(query != null) {
 			if (query.indexOf("ORA-") > 0) {
 				if (query.indexOf("ORA-00913") > 0) {
