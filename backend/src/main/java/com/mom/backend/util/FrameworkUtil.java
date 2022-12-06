@@ -774,7 +774,7 @@ public class FrameworkUtil {
 					
 	}
 	//실제 파일을 서버에 생성
-	public String createFile(String filePath,MultipartFile uploadFile) throws Exception {		
+	public String createFile(String filePath,String overWrite, MultipartFile uploadFile) throws Exception {		
 		//String uploadFolder = "C:\\repository\\";
 	
 		 // 원래 파일 이름 추출
@@ -783,8 +783,13 @@ public class FrameworkUtil {
         String uuid = UUID.randomUUID().toString();
         // 확장자 추출(ex : .png)
         String extension = origName.substring(origName.lastIndexOf("."));
+        String savedName = origName;
+        String returnMsg = "NONE";
         // uuid와 확장자 결합
-        String savedName = uuid + extension;
+        if(overWrite.equals("N")) {
+        	savedName = uuid + extension;
+        }
+
         // 파일을 불러올 때 사용할 파일 경로
         // String savedPath = fileDir + savedName;
         
@@ -804,11 +809,17 @@ public class FrameworkUtil {
        //return savedFile.getId();        
 		System.out.println("최종파일이름:"+uploadFile.getOriginalFilename());		
 		File saveFile = new File(fileDir+filePath+"\\",savedName);
+		if(saveFile.exists()) { // 파일이 존재하면			
+			returnMsg = "OVER";
+		}
+		else {
+			returnMsg = savedName;
+		}
 		try {
 			uploadFile.transferTo(saveFile);
-			return savedName;
+			return returnMsg;
 		} catch(Exception e) {
-			return "";
+			return returnMsg;
 		}		
 
 		

@@ -198,8 +198,8 @@ public class MomController {
 		return result ;
 		
 	}
-@PostMapping("/request/file/{query}/{action}")  //등록 컨트롤러
-  public List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @RequestPart(value = "fileInfo") Map<String, Object> fileInfo,@RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) throws Exception { 	
+@PostMapping("/request/file/{query}/{action}/{overWrite}")  //등록 컨트롤러
+  public List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @PathVariable String overWrite, @RequestPart(value = "fileInfo") Map<String, Object> fileInfo,@RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) throws Exception { 	
 	query = frameworkUtil.removeDummy(query, action);
 	List<Map<String,Object>> result =  new ArrayList<>();
 	PrintUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
@@ -208,10 +208,13 @@ public class MomController {
 	try {		
 		 MultipartFile file = multipartRequest;
 		 byte[] byteFile = frameworkUtil.convertFileToByte(file);
-		 String fileUuid = frameworkUtil.createFile(filePath,file);
+		 String fileUuid = frameworkUtil.createFile(filePath,overWrite,file);
 		 if(!file.isEmpty()){ //파일 존재하면
-			 if(fileUuid.equals("")) { //파일 고유식별키 없다면 생성 실패.
+			 if(fileUuid.equals("NONE")) { //파일 고유식별키 없다면 생성 실패.
 				 result = frameworkUtil.createResponseMap(false,"fileUpload fail"); // 오류메시지 리턴
+			 }
+			 else if(fileUuid.equals("OVER")) {
+				 result = frameworkUtil.createResponseMap(true,"overLap "); // 오류메시지 리턴
 			 }
 			 else {
 				 param = frameworkUtil.createFileParam(param, action,byteFile,fileUuid); // DB에 파일 식별키와 경로를 삽입

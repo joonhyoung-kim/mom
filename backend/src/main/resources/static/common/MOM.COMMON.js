@@ -1407,7 +1407,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		  let blobFile = that.uploadFile[index_info];
 		  formData.append('blob',blobFile , fileItem.name); // (key,value,파일명)
 		  //formData.append('param', new Blob([ JSON.stringify(param) ], {type : "application/json"}));
-		  urlPath = mCommon.contextPath() + '/request/file/com.mom.backend.' + url+'/'+type;
+		  urlPath = mCommon.contextPath() + '/request/file/com.mom.backend.' + url+'/'+type+ '/' + that.gridExtraProperty[index_info]['overWrite'];
 		  
 	}
 	else if(file != undefined && file != null && actionType =='D'){
@@ -1611,6 +1611,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 			enctype : 'multipart/form-data',
 		    beforeSend: function (xhr) {
 	              xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
+	         
 	        },		 
 
 		    success     : function(data) {			
@@ -1648,12 +1649,12 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 		dataType 	: type == 'U'? 'text' : (type == 'D' ? 'json' : 'json'),
 		contentType : type == 'U'? 'application/json; charset=UTF-8' : (type == 'D' ? 'application/json; charset=UTF-8' : 'application/json; charset=UTF-8'),
 		beforeSend: function (xhr) {
+			      
 	              xhr.setRequestHeader("Authorization","Bearer " + localStorage.getItem('token'));
 	            if(excelUpYn =='Y'&&param.length>=1000){
 	            	 bar.width('0%');
                      percent.html('0%');
-                      //console.log("프로그래스최초");
-	            	 // progress Modal 열기
+
 	            	   interval = setInterval(function() {
 	            			$.ajax({
 	            				url:mCommon.contextPath() + '/progressBar',
@@ -1662,10 +1663,10 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	            				data : {sessionId:sessionId,type:'excelUpload'},
 	            				success: function(data){
 		                            if(data.percent==0){
-			                               //console.log("프로그래스0=");
+
 			                               return;
 									}
-	            					//console.log("프로그래스리턴="+data.percent);
+
 	            					var percentComplete = Math.floor((data.percent / paramSize) * 100);
 	  	            		            
 		                        
@@ -1682,7 +1683,7 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 	            					else{
 		                                  bar.width('0%');
 		                                  percent.text('0%');  
-		                                  //console.log("프로그래스에러");
+
 	            						  momWidget.splashHide();
 	            						  return;
 	            					}
@@ -1698,22 +1699,12 @@ function mom_ajax(type, url, param, call_back, call_back_param, index_info, your
 
 
 	    },		 
-/*	    complete:function(){
-	    	 if(excelUpYn =='Y'){
-            // progress Modal 닫기
-            $("#pleaseWaitDialog").modal('hide');
-            }
 
-        },*/
 	
 		success     : function(data) {
 			clearInterval(interval);
 			if(call_back != undefined) {
-			/*	if(data['result'] == 'success') {
-					call_back('SUCCESS', data, param, call_back_param, index_info, your);
-				} else {
-					call_back('FAIL', data, param, call_back_param, index_info, your);
-				}*/
+
 				
 				call_back('SUCCESS', data, param, call_back_param, index_info, your);
 			}
