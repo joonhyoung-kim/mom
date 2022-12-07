@@ -370,7 +370,11 @@ var momWidget = {
                     remarkYn = 'Y';
                 } else if (that.popupProperty[index][i]['popupType'] == 'DG') {
                     labelField = '<select maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '  class="gridPop' + (index + 1) + ' grid-popup popupSelectField"></select>';
-                } else if (that.popupProperty[index][i]['popupType'] == 'FA') {
+                }
+                 else if (that.popupProperty[index][i]['popupType'] == 'PG') {
+					labelField = '<select maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '  class="popGrid' + (index + 1) + ' popupSelectField"></select>';
+				 }
+                 else if (that.popupProperty[index][i]['popupType'] == 'FA') {
                     labelField = '<input id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="file" class="file-input" accept=".xls, .xlsx, .csv, .jasper,.jpg,.png" ></input>';
                 } else {
                     labelField = '<input maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
@@ -1152,7 +1156,13 @@ var momWidget = {
                         remarkYn = 'Y';
                     } else if (that.popupProperty[index][i]['popupType'] == 'DG') {
                         labelField = '<select maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '  class="gridPop' + (index + 1) + ' grid-popup popupSelectField"></select>';
-                    } else {
+                    }
+                      else if (that.popupProperty[index][i]['popupType'] == 'PG') {
+					   labelField = '<select maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '  class="popGrid' + (index + 1) + ' popupSelectField"></select>';
+					   
+					   
+				      }
+                     else {
                         labelField = '<input maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + ' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
                     }
 
@@ -1258,16 +1268,22 @@ var momWidget = {
                     popupAreaHtml = that.createPopup.defaultPop(index + 1, popupColNum, popupRowNum, popupItem, that.gridExtraProperty[index]['popupTitle'], remarkYn, remarkInline);
                     $('body').append(popupAreaHtml);
                 }
+   				for (let i = 0, max = that.popupProperty[index].length; i < max; i++) {
 
+                    if (that.popupProperty[index][i]['popupType'] == 'PG') {
+                        popupAreaHtml = that.createPopup.gridPop(index + 1, gridPopIndex, that.popupProperty[index][i]['dropdownGridList'], that.popupProperty[index][i]['popupId'], '팝업타이틀');
+                        $('body').append(popupAreaHtml);
+                        gridPopIndex = ($('.grid-pop').length + 1) * 10 + 1;
+
+                    } 
+                }
                 for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
 
                     if (that.buttonProperty[index][i]['buttonType'] == 'DG') {
                         popupAreaHtml = that.createPopup.gridPop(index + 1, gridPopIndex, that.buttonProperty[index][i]['popupGridId'], that.buttonProperty[index][i]['buttonId'], '팝업타이틀');
                         $('body').append(popupAreaHtml);
                         gridPopIndex = ($('.grid-pop').length + 1) * 10 + 1;
-                        // gridPopIndex = (index+1)*10 +1;
-                        //that.buttonProperty[index][i]['customType'] = 'DG';
-                        //break;
+                 
                     } else if (that.buttonProperty[index][i]['buttonType'] == 'CP') {
 
                         that.createCustomPop(index, that.buttonProperty[index][i]['popupGridId'], that.buttonProperty[index][i]['buttonId'], that.buttonProperty[index][i]['eventType']);
@@ -6700,7 +6716,11 @@ var momWidget = {
                     remarkYn = 'Y';
                 } else if (popupProperty[i]['popupType'] == 'DG') {
                     labelField = '<select maxlength="256" id=' + popupProperty[i]['popupId'] + 'DP' + (index + 1) + '  class="gridPop' + (index + 1) + ' grid-popup popupSelectField"></select>';
-                } else {
+                }
+                  else if (that.popupProperty[index][i]['popupType'] == 'PG') {
+					labelField = '<select maxlength="256" id=' + that.popupProperty[index][i]['popupId'] + 'DP' + (index + 1) + '  class="popGrid' + (index + 1) + ' popupSelectField"></select>';
+				 }
+                 else {
                     labelField = '<input maxlength="256" id=' + popupProperty[i]['popupId'] + 'DP' + (index + 1) + ' type="text" type="text" class="w-input popupInputField" date-format="date"></input>';
                 }
 
@@ -9071,8 +9091,8 @@ var momWidget = {
         var paginNextBtnClass = 'aui-grid-paging-next';
         let calendarPopSaveBtnId = 'saveBtnDT' + (index + 1);
         let calendarPopCloseBtnId = 'closeBtnDT' + (index + 1);
-        let gridPopSaveBtnId = 'saveBtnCP';
-        
+        let gridPopSaveBtnId = 'saveBtnCP' +(index +1);
+        let popupGridBtnId = 'popGrid' + (index + 1);
         let gridPopCancelBtnId = 'cancelBtnCP' + (index + 1);
         let fileUpCloseBtnId = 'closeBtnFP' + (index + 1);
         let moveBtnId = 'moveBtn' + (index + 1);
@@ -9082,7 +9102,10 @@ var momWidget = {
         let fileUpColId = 'fileUpCol'+ (index+1);  // 첨부파일 컬럼
         let fileUpDelBtnId = 'delBtnFP' + (index+1); //첨부파일 팝업 삭제 컬럼
         let fileDownBtnId = 'downBtnFP' + (index+1); //그리드 첨부파일 컬럼
-        
+         $(document).on('click', '.' + popupGridBtnId, function (e) {
+	
+	   
+	     });
              $(document).on('click', '#' + exportFileBtnId, function (e) {
 	           let checkedItem = that.getCheckedRowItems('#grid' + (index + 1));	         
                 if (checkedItem.length == 0) {
@@ -9529,7 +9552,7 @@ var momWidget = {
 			
            
         });
-        $(document).on('click', '#' + gridPopSaveBtnId + (index + 1), function (e) {
+        $(document).on('click', '#' + gridPopSaveBtnId, function (e) {
             that.wait(0.5);
             let customPopId = e.target.parentElement.parentElement.parentElement.id; //커스텀 팝업 id
             let buttonId = customPopId.split('customBtn')[1]; //커스텀 버튼 id
