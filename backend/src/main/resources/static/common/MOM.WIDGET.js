@@ -10726,8 +10726,8 @@ var momWidget = {
             AUIGrid.destroy(that.excelUpGrid[index]);
             //AUIGrid.clearGridData(that.excelUpGrid[index]);
             //$('#excelUpPop'+(index+1)).css('opacity', '0');
-            $('#excelUpPop' + (index + 1)).modal('hide');
-
+            //$('#excelUpPop' + (index + 1)).modal('hide');
+            that.modalHide('#','excelUpPop' + (index + 1),'1');
         });
         $(document).on('click', '#' + excelUpBtnId, function () {
             //$("#exUpCheck"+(index+1)).prop("disabled", false);
@@ -10842,7 +10842,8 @@ var momWidget = {
             that.excelUpGridProperty[index] = gridPros;
             that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid' + (index + 1), that.excelUploadProperty[index], gridPros);
 
-            $('#' + 'excelUpPop' + (index + 1)).modal('show');
+            //$('#' + 'excelUpPop' + (index + 1)).modal('show');
+            that.modalShow('#','excelUpPop' + (index + 1),'1');
             AUIGrid.resize('#excelUpGrid' + (index + 1));
         });
         $(document).on('click', '#' + addBtnId, function (e) {
