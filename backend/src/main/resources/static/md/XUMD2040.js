@@ -40,5 +40,6 @@ var view= {
 $(document).ready(function(event){	
 	momSetup.init();
 	momWidget.init(1, menuId, view);
+	momWidget.gridPopup.init(1,11,1,'XUSM8030', view);
 	view.init();
 });
