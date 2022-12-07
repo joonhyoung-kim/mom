@@ -10434,22 +10434,16 @@ var momWidget = {
                     }
                     mom_ajax('P', momWidget.pageProperty[0]['programId'] + '.excelUpBtnV' + (index + 1), param[0], function (result3, data3) {
                         if (result3 != 'SUCCESS' || data3[0]['p_err_code']=='E') {
-                            momWidget.splashHide();
-                            momWidget.messageBox({type: 'danger', width: '400', height: '145', html: '프로시저 호출실패!'});
-                            return;
-                        }
-                        if (data3[0]['p_err_code'] == 'E') {
-
                             momWidget.messageBox({
                                 type: 'danger',
                                 width: '400',
                                 height: '145',
-                                html: '검사 불합격! 검사 결과를 다운 받으세요' + multiLang.transText('MESSAGE', data3[0]['p_err_msg'])
+                                html: '검사 불합격! 검사 결과를 다운 받으세요' 
                             });
-                            momWidget.splashHide();
-                            $("#exUpCheckDown" + (index + 1)).prop("disabled", false);
-                            return;
-                        }
+                               $("#exUpCheckDown" + (index + 1)).prop("disabled", false);
+                                 momWidget.splashHide();
+                                 return;
+                        }                    
                         $("#saveBtnExUp" + (index + 1)).prop("disabled", false);
 
                         momWidget.messageBox({type: 'success', width: '400', height: '145', html: '검사통과!'});
