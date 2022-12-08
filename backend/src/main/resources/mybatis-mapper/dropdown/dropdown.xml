@@ -331,7 +331,7 @@
 	AND    MUI.USE_YN       = 'Y'
 	ORDER BY MU.USER_NM
     </select> 
-   <select id="DD00035" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">      
+   <select id="get_DD00035" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">      
     SELECT MPC.PO_TYPE      AS CODE
          , MPC.PO_TYPE       ||'('|| MPC.PO_TYPE_NM          ||')' AS LABEL 
     FROM   MOM_PO_CATEGORY MPC
@@ -346,6 +346,14 @@
                     AND    MIC.USE_YN        = 'Y'
                     AND    MIC.PUR_RETURN_YN = 'Y' )
     ORDER BY MPC.PO_TYPE_NM
-    </select>         
-    
+    </select>  
+    <select id="get_DD00036" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+    SELECT AREA_CD     AS CODE 
+         , AREA_CD  ||'('|| AREA_NM    ||')' AS LABEL
+    FROM   MOM_AREA   
+    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+    AND    USE_YN      = 'Y'
+    ORDER BY AREA_NM    
+    </select>       
 </mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUMD5040">
+    <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">    
+        <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+        SELECT A.*
+        FROM   (
+         </if>
+                SELECT MLP.COMPANY_CD
+                     , MLP.DIVISION_CD
+                     , MLP.LOCATION_CD
+                     , ML.LOCATION_NM
+                     , MLP.PROCESS_TYPE_ID
+                     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MLP.COMPANY_CD,MLP.DIVISION_CD, 'MD0028', MLP.PROCESS_TYPE_ID, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS PROCESS_TYPE_NM
+                     , MLP.USE_YN
+                     , MLP.DESCRIPTION
+                     , MLP.UPDATE_BY      AS UPDATE_USER_NO
+                     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MLP.COMPANY_CD, MLP.DIVISION_CD, MLP.UPDATE_BY) FROM DUAL ) AS UPDATE_USER_NM
+                     , TO_CHAR(MLP.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+                     , ROWIDTOCHAR(MLP.ROWID)            AS KEY_ID
+                     , COUNT(*) OVER()   AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(PARTITION BY MLP.COMPANY_CD,MLP.DIVISION_CD ORDER BY MLP.LOCATION_CD, MLP.PROCESS_TYPE_ID) AS ROW_CNT
+                FROM   MOM_LOCATION_PROCESS_TYPE MLP 
+                     , MOM_LOCATION ML
+                WHERE  MLP.COMPANY_CD  = ML.COMPANY_CD
+                AND    MLP.DIVISION_CD = ML.DIVISION_CD
+                AND    MLP.LOCATION_CD = ML.LOCATION_CD     
+                AND    MLP.COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+                AND    MLP.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}
+                <if test="locationCdNm != null and locationCdNm != ''">
+                AND    (UPPER(MLP.LOCATION_CD) LIKE '%' || UPPER(#{locationCdNm, jdbcType=VARCHAR}) || '%' OR UPPER(ML.LOCATION_NM) LIKE '%' || UPPER(#{locationCdNm, jdbcType=VARCHAR}) || '%')    
+                </if>
+                <if test="processTypeId != null and processTypeId != ''">
+                AND    MLP.PROCESS_TYPE_ID = #{processTypeId, jdbcType=VARCHAR}
+                </if>
+                <if test="useYn != null and useYn != ''">
+                AND    MLP.USE_YN = #{useYn, jdbcType=VARCHAR}
+                </if>    
+                <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+               ) A
+        WHERE ROW_CNT BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+        </if>
+    </select>
+    <delete id="remove_createBtn1" parameterType="java.util.List">
+    DELETE FROM MOM_PROC_LOCATION_PROCESS
+        <where>
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+          (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+             AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+             AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+          )
+            </foreach>
+        </where>
+    </delete>  
+    <insert id="create_createBtn1" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+        INTO MOM_PROC_LOCATION_PROCESS( COMPANY_CD
+                                      , DIVISION_CD
+                                      , LOCATION_CD 
+                                      , PROCESS_TYPE_ID 
+                                      , USE_YN
+                                      , DESCRIPTION
+                                      , DEL_YN
+                                      , VAL_MSG
+                                      , MULTI_MSG
+                                      , CREATE_BY
+                                      , CREATE_DATE
+                                      )
+        VALUES                        ( #{item.companyCd, jdbcType=VARCHAR}
+                                      , #{item.divisionCd, jdbcType=VARCHAR}
+                                      , #{item.locationCd, jdbcType=VARCHAR}
+                                      , #{item.processTypeId , jdbcType=VARCHAR}
+                                      , #{item.useYn, jdbcType=VARCHAR}
+                                      , #{item.description, jdbcType=VARCHAR}
+                                      , #{item.delYn, jdbcType=VARCHAR}
+                                      , #{item.valMsg, jdbcType=VARCHAR}
+                                      , #{item.multiMsg, jdbcType=VARCHAR}
+                                      , #{item.userId, jdbcType=VARCHAR}
+                                      , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                                      )
+        </foreach>
+    </insert>
+    <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+        { CALL MOM_MASTER_INFO_PKG.SP_UPSERT_LOCATION_PROCESS( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+                                                             , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+                                                             , #{companyCd,   jdbcType=VARCHAR, mode=IN}
+                                                             , #{divisionCd,  jdbcType=VARCHAR, mode=IN} 
+                                                             , #{actionMode,  jdbcType=VARCHAR, mode=IN}        
+                                                             , #{userId,      jdbcType=VARCHAR, mode=IN} )}                    
+    </select> 
+        <select id="get_excelUpBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+        SELECT NVL(VAL_MSG,'PASS') AS VAL_MSG
+             , MULTI_MSG      
+        FROM   MOM_PROC_LOCATION_PROCESS
+        WHERE  COMPANY_CD  = #{companyCd , jdbcType=VARCHAR}
+        AND    DIVISION_CD = #{divisionCd , jdbcType=VARCHAR}
+        AND    CREATE_BY    = #{userId , jdbcType=VARCHAR}
+    </select> 
+    <delete id="remove_excelUpBtnV1" parameterType="java.util.List">
+    DELETE FROM MOM_PROC_LOCATION_PROCESS
+        <where>
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+          (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+             AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+             AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+          )
+            </foreach>
+        </where>
+    </delete>  
+    <insert id="create_excelUpBtnV1" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+        INTO MOM_PROC_LOCATION_PROCESS( COMPANY_CD
+                                      , DIVISION_CD
+                                      , LOCATION_CD 
+                                      , PROCESS_TYPE_ID 
+                                      , USE_YN
+                                      , DESCRIPTION
+                                      , DEL_YN
+                                      , VAL_MSG
+                                      , MULTI_MSG
+                                      , CREATE_BY
+                                      , CREATE_DATE
+                                      )
+        VALUES                        ( #{item.companyCd, jdbcType=VARCHAR}
+                                      , #{item.divisionCd, jdbcType=VARCHAR}
+                                      , #{item.locationCd, jdbcType=VARCHAR}
+                                      , #{item.processTypeId , jdbcType=VARCHAR}
+                                      , #{item.useYn, jdbcType=VARCHAR}
+                                      , #{item.description, jdbcType=VARCHAR}
+                                      , 'N'
+                                      , #{item.valMsg, jdbcType=VARCHAR}
+                                      , #{item.multiMsg, jdbcType=VARCHAR}
+                                      , #{item.userId, jdbcType=VARCHAR}
+                                      , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                                      )
+        </foreach>
+    </insert>
+    <select id="proc_excelUpBtnV1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+        { CALL MOM_MASTER_INFO_PKG.SP_UPSERT_LOCATION_PROCESS( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+                                                             , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+                                                             , #{companyCd,   jdbcType=VARCHAR, mode=IN}
+                                                             , #{divisionCd,  jdbcType=VARCHAR, mode=IN} 
+                                                             , #{actionMode,  jdbcType=VARCHAR, mode=IN}        
+                                                             , #{userId,      jdbcType=VARCHAR, mode=IN} )}                    
+    </select> 
+</mapper>       
