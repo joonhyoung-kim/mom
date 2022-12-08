@@ -7964,7 +7964,7 @@ var momWidget = {
                         width: 160,
                         height: 30,
                         dropDownHeight: 120,
-                        disabled: false,
+                        disabled: true,
                         searchMode: 'containsignorecase',
                         placeHolder: 'press click to open'
                     });
@@ -8964,12 +8964,60 @@ var momWidget = {
         let fileUpColId = 'fileUpCol'+ (index+1);  // 첨부파일 컬럼
         let fileUpDelBtnId = 'delBtnFP' + (index+1); //첨부파일 팝업 삭제 컬럼
         let fileDownBtnId = 'downBtnFP' + (index+1); //그리드 첨부파일 컬럼
+        
          $(document).on('click', '.' + popupGridBtnId, function (e) {
-	        let popupTitel = momWidget.gridExtraProperty[10]['popupTitle'];
-	        $('#gridPop-'+e.currentTarget.id).find('.panelheader-gridPop').text(popupTitel);
-	        that.modalShow('#','gridPop-'+e.currentTarget.id,'2');
-	        let gridIndex =  Number($('#gridPop-'+e.currentTarget.id).attr('gridindex'));
-	        AUIGrid.resize(that.grid[gridIndex-1]);
+	        let gridPopIndex =  Number($('#gridPop-'+e.currentTarget.id).attr('gridindex'))-1;
+	        let popupTitle = that.gridExtraProperty[gridPopIndex]['popupTitle'];
+	        $('#gridPop-'+e.currentTarget.id).find('.panelheader-gridPop').text(popupTitle);
+	       
+	        let queryId = that.pageProperty[gridPopIndex]['menuId'] + '.findBtn' + (gridPopIndex+1);;	       
+	        let totalParam = [];
+	        let callInitResult = that.checkActionCallInit(index, 'C', totalParam, 'customGridPopBtn' + btnIndex, your, e);
+
+            if (callInitResult['result'] != 'SUCCESS') {
+            let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
+            momWidget.messageBox({
+                type: msgType,
+                width: '400',
+                height: '145',
+                html: multiLang.transText('MESSAGE', callInitResult['msg'])
+            });
+            momWidget.splashHide();
+            return;
+            }
+	        totalParam = callInitResult['param'];
+	        totalParam = Object.assign(totalParam, that.checkSearchParam(gridPopIndex - 1, {}, your));
+	        callInitResult = that.checkActionCallInit(index, 'R', totalParam, 'customGridPopBtn' + btnIndex, your, e);
+        if (callInitResult['result'] != 'SUCCESS') {
+            momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callInitResult['msg']});
+            momWidget.splashHide();
+            return;
+        }
+        totalParam = Object.assign(callInitResult['param'], totalParam);
+	        mom_ajax('R', queryId, totalParam, function (result1, data1) {
+            if (result1 != 'SUCCESS') {
+                momWidget.splashHide();
+                return;
+            }
+
+            AUIGrid.setGridData(that.grid[gridPopIndex], data1);
+            for (let i = 0; i <= 10; i++) {
+                if ($('#grid' + (gridPopIndex + i)).length > 0) {
+                    AUIGrid.clearFilterAll('#grid' + ((gridPopIndex+1) + i));
+                    AUIGrid.clearSortingAll('#grid' + ((gridPopIndex+1) + i));
+                    AUIGrid.resize('#grid' + ((gridPopIndex+1) + i));
+                }
+            }
+            that.modalShow('#','gridPop-'+e.currentTarget.id,'2');	       
+	        AUIGrid.resize(that.grid[gridPopIndex]);
+            //$('#'+'gridPop-'+btnId).draggable();
+            let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customGridPopBtn' + btnIndex, your, data1);
+            if (callBackResult['result'] != 'SUCCESS') {
+                momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
+                momWidget.splashHide();
+                return;
+            }
+        }, undefined, undefined, that, false);
 	        
 	     });
              $(document).on('click', '#' + exportFileBtnId, function (e) {
