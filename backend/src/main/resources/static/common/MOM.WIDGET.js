@@ -396,7 +396,7 @@ var momWidget = {
             }
 
             // searchAreaHtml = searchAreaHtml.replace(/#{searchAreaClass}/gi, classItem[0].searchAreaClass).replace(/#{searchItemClass}/gi, classItem[0].searchItemClass).replace(/#{labelBoxClass}/gi, classItem[0].labelBoxClass).replace(/#{circelClass}/gi, classItem[0].circelClass).replace(/#{labelTextClass}/gi, classItem[0].labelTextClass)replace(/#{searchNm}/gi, classItem[0].searchNm).replace(/#{labelField}/gi, classItem[0].labelField);
-
+    	
             if (that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['usePaging'] == true) {
                 if (that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['showFooter'] == true) {
                     if (searchStyle == 'h00') {
@@ -491,7 +491,14 @@ var momWidget = {
                 popupAreaHtml = that.createPopup.defaultPop(index + 1, popupColNum, popupRowNum, popupItem, that.gridExtraProperty[index]['popupTitle'], remarkYn, remarkInline);
                 $('body').append(popupAreaHtml);
             }
+			for (let i = 0, max = that.popupProperty[index].length; i < max; i++) {
+                    if (that.popupProperty[index][i]['popupType'] == 'PG') {
+                        popupAreaHtml = that.createPopup.gridPop(index + 1, gridPopIndex, that.popupProperty[index][i]['dropdownGridList'], that.popupProperty[index][i]['popupId']+'DP'+(index+1), '팝업타이틀');
+                        $('body').append(popupAreaHtml);
+                        gridPopIndex = ($('.grid-pop').length + 1) * 10 + 1;
 
+                    } 
+                }
             for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
 
                 if (that.buttonProperty[index][i]['buttonType'] == 'DG') {
@@ -889,7 +896,7 @@ var momWidget = {
     gridPopup: {
         init: function (parentIndex, popupIndex, gridIndex, menuId, your, widgetType) {
             let that = momWidget;
-            
+            let parentGridIndex = parentIndex-1;
             let gridId = gridIndex;
             let index = popupIndex-1;
             that.your[index] = your; //스크립트 객체주입
@@ -1181,51 +1188,56 @@ var momWidget = {
 
                 }
 
-                // searchAreaHtml = searchAreaHtml.replace(/#{searchAreaClass}/gi, classItem[0].searchAreaClass).replace(/#{searchItemClass}/gi, classItem[0].searchItemClass).replace(/#{labelBoxClass}/gi, classItem[0].labelBoxClass).replace(/#{circelClass}/gi, classItem[0].circelClass).replace(/#{labelTextClass}/gi, classItem[0].labelTextClass)replace(/#{searchNm}/gi, classItem[0].searchNm).replace(/#{labelField}/gi, classItem[0].labelField);
+                    let popupGridId = '';
+    				for (let i = 0, max = that.popupProperty[parentGridIndex].length; i < max; i++) {
+                    	if (that.popupProperty[parentGridIndex][i]['popupType'] == 'PG') {
+                            popupGridId =  that.popupProperty[parentGridIndex][i]['dropdownGridList'];
 
+                    	} 
+                    }
                 if (that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['usePaging'] == true) {
-                    if (that.gridProperty[index][0]['showFooter'] == true || that.gridProperty[index][0]['showFooter'] == true) {
+                    if (that.gridProperty[index][0]['showFooter']) {
                         if (searchStyle == 'h00') {
-                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer-paging');
+                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer-paging');
                         } else if (searchStyle == 'h01') {
-                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer-paging');
+                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer-paging');
                         } else if (searchStyle == 'h02') {
-                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer-paging');
+                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer-paging');
                         } else if (searchStyle == 'h03') {
-                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer-paging');
+                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer-paging');
                         }
                     } else {
                         if (searchStyle == 'h00') {
-                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'paging');
+                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'paging');
                         } else if (searchStyle == 'h01') {
-                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'paging');
+                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'paging');
                         } else if (searchStyle == 'h02') {
-                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'paging');
+                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'paging');
                         } else if (searchStyle == 'h03') {
-                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'paging');
+                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'paging');
                         }
                     }
 
                 } else {
                     if (momWidget.gridProperty[index][0]['showFooter']) {
                         if (searchStyle == 'h00') {
-                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer');
+                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer');
                         } else if (searchStyle == 'h01') {
-                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer');
+                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer');
                         } else if (searchStyle == 'h02') {
-                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer');
+                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer');
                         } else if (searchStyle == 'h03') {
-                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1) + '-' + 'footer');
+                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId + '-' + 'footer');
                         }
                     } else {
                         if (searchStyle == 'h00') {
-                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1));
+                            var gridAreaHtml = that.createGridArea.h00(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId);
                         } else if (searchStyle == 'h01') {
-                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1));
+                            var gridAreaHtml = that.createGridArea.h01(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId);
                         } else if (searchStyle == 'h02') {
-                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1));
+                            var gridAreaHtml = that.createGridArea.h02(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId);
                         } else if (searchStyle == 'h03') {
-                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + templateName + '-' + searchStyle + '-' + '0' + (index + 1));
+                            var gridAreaHtml = that.createGridArea.h03(index + 1, 'grid' + (index + 1), 'gridArea-' + popupGridId);
                         }
                     }
 
@@ -1709,179 +1721,6 @@ var momWidget = {
 
     },
 
-    createSearchArea: {
-        h01: function (classItem, searchItem, searchBtn) {
-            var topHtml = '';
-            var midHtml = '';
-            var botHtml = '';
-            topHtml = '<div id="searchArea" class=' + classItem[0].searchAreaClass + '>'
-                // +'<ul id="ul" class="w-list-unstyled w-clearfix b1">';
-                + '<ul id="ul" class="row pe-3 searchRowBox h01">';
-            for (var i = 0; i < searchItem.length; i++) {
-                if (i == (searchItem.length - 1)) {
-                    midHtml += '<li class=' + classItem[0].searchItemClass + '>' +
-                        '<div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>' +
-                        '<div class=' + searchItem[i].circelClass + '></div>' +
-                        searchItem[i].headerField +
-                        '</div>' +
-                        searchItem[i].labelField +
-                        '</li>' +
-                        searchBtn;
-
-
-                } else {
-                    midHtml += '<li class=' + classItem[0].searchItemClass + '>'
-                        + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                        + '        <div class=' + searchItem[i].circelClass + '></div>'
-                        + searchItem[i].headerField
-                        + '       </div>'
-                        + searchItem[i].labelField
-                        + '</li>';
-                }
-
-            }
-            botHtml = '</ul>';
-            +'</div>';
-            return topHtml + midHtml + botHtml;
-        },
-        h02: function (classItem, searchItem, searchBtn) {
-            var topHtml = '';
-            var midHtml = '';
-            var botHtml = '';
-            var topHtml2 = '';
-            var midHtml2 = '';
-            var botHtml2 = '';
-            var searchHtml = '';
-            topHtml = '<div id="searchArea" class=' + classItem[0].searchAreaClass + '>'
-                + '<ul id="ul" class="row pe-3  searchRowBox h02">';
-            for (var i = 0; i < 3; i++) {
-                midHtml += '<li class=' + classItem[0].searchItemClass + '>'
-                    + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                    + '        <div class=' + searchItem[i].circelClass + '></div>'
-                    + searchItem[i].headerField
-                    + '       </div>'
-                    + searchItem[i].labelField
-                    + '</li>';
-            }
-            botHtml = '</ul>'
-
-
-            // + '</div>';
-            searchHtml = topHtml + midHtml + botHtml;
-
-            topHtml2 = '<ul id="ul" class="row pe-3  searchRowBox h02">';
-
-
-            for (var j = 3; j < searchItem.length; j++) {
-                if (j == (searchItem.length - 1)) {
-                    midHtml2 += '<li class=' + classItem[0].searchItemClass + '>'
-                        + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                        + '        <div class=' + searchItem[j].circelClass + '></div>'
-                        + searchItem[j].headerField
-                        + '       </div>'
-                        + searchItem[j].labelField
-                        + '</li>'
-                        + searchBtn;
-
-
-                } else {
-                    midHtml2 += '<li class=' + classItem[0].searchItemClass + '>'
-                        + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                        + '        <div class=' + searchItem[j].circelClass + '></div>'
-                        + searchItem[j].headerField
-                        + '       </div>'
-                        + searchItem[j].labelField
-                        + '</li>';
-                }
-
-            }
-            botHtml2 = '</ul>'
-                + '</div>';
-            return searchHtml + topHtml2 + midHtml2 + botHtml2;
-            // +'<ul id="ul" class="w-list-unstyled w-clearfix b1">';
-
-
-        },
-        h03: function (classItem, searchItem, searchBtn) {
-            var topHtml = '';
-            var midHtml = '';
-            var botHtml = '';
-            var topHtml2 = '';
-            var midHtml2 = '';
-            var botHtml2 = '';
-            var topHtml3 = '';
-            var midHtml3 = '';
-            var botHtml3 = '';
-            var searchHtml = '';
-            var searchHtml2 = '';
-            topHtml = '<div id="searchArea" class=' + classItem[0].searchAreaClass + '>'
-                + '<ul id="ul" class="row pe-3  searchRowBox h03">';
-            for (var i = 0; i < 3; i++) {
-                midHtml += '<li class=' + classItem[0].searchItemClass + '>'
-                    + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                    + '        <div class=' + searchItem[i].circelClass + '></div>'
-                    + searchItem[i].headerField
-                    + '       </div>'
-                    + searchItem[i].labelField
-                    + '</li>';
-            }
-            botHtml = '</ul>'
-
-
-            // + '</div>';
-            searchHtml = topHtml + midHtml + botHtml;
-
-            topHtml2 = '<ul id="ul" class="row pe-3  searchRowBox h03">';
-
-            for (var k = 3; k < 6; k++) {
-                midHtml2 += '<li class=' + classItem[0].searchItemClass + '>'
-                    + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                    + '        <div class=' + searchItem[k].circelClass + '></div>'
-                    + searchItem[k].headerField
-                    + '       </div>'
-                    + searchItem[k].labelField
-                    + '</li>';
-            }
-            botHtml2 = '</ul>'
-
-
-            // + '</div>';
-            searchHtml2 = topHtml2 + midHtml2 + botHtml2;
-
-            topHtml3 = '<ul id="ul" class="row pe-3  searchRowBox h03">';
-
-
-            for (var j = 6; j < searchItem.length; j++) {
-                if (j == (searchItem.length - 1)) {
-                    midHtml3 += '<li class=' + classItem[0].searchItemClass + '>'
-                        + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                        + '        <div class=' + searchItem[j].circelClass + '></div>'
-                        + searchItem[j].headerField
-                        + '       </div>'
-                        + searchItem[j].labelField
-                        + '</li>'
-                        + searchBtn;
-
-
-                } else {
-                    midHtml3 += '<li class=' + classItem[0].searchItemClass + '>'
-                        + '       <div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>'
-                        + '        <div class=' + searchItem[j].circelClass + '></div>'
-                        + searchItem[j].headerField
-                        + '       </div>'
-                        + searchItem[j].labelField
-                        + '</li>';
-                }
-
-            }
-            botHtml3 = '</ul>'
-                + '</div>';
-            return searchHtml + searchHtml2 + topHtml3 + midHtml3 + botHtml3;
-            // +'<ul id="ul" class="w-list-unstyled w-clearfix b1">';
-
-
-        }
-    },
 
     tm1st: function (index, splitRatio, content, target) {
         var html = '<div id =' + content + index + ' class = "row tabcontentarea1"></div>';
@@ -5622,7 +5461,7 @@ var momWidget = {
             for (var i = 0; i < searchItem.length; i++) {
                 if (i == (searchItem.length - 1)) {
                     midHtml += '<li class=' + classItem[0].searchItemClass + '>' +
-                        '<div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important;"' + '>' +
+                        '<div class=' + classItem[0].labelBoxClass + 'style="align-self: center!important; display:flex"' + '>' +
                         '<div class=' + searchItem[i].circelClass + '></div>' +
                         searchItem[i].headerField +
                         '</div>' +
@@ -8118,6 +7957,29 @@ var momWidget = {
 							 }
 							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});*/
                     });
+                }else if (popupType == 'PG') {
+                    $('#' + popupId).jqxComboBox({
+                        displayMember: "label",
+                        valueMember: "code",
+                        width: 160,
+                        height: 30,
+                        dropDownHeight: 120,
+                        disabled: false,
+                        searchMode: 'containsignorecase',
+                        placeHolder: 'press click to open'
+                    });
+                    $('#' + popupId).on('bindingComplete', function (e) {
+                        /*   maxItemWidth = $("#innerListBox" + e.owner.id + " div[role=option] span")[0].style["width"];
+							  maxItemWidthArry = maxItemWidth.split('px');
+							   maxItemWidthNum = Number(maxItemWidthArry[0]);
+							  if(maxItemWidthNum<160){
+								 maxItemWidth = '160px';
+							 }
+							 else{
+								maxItemWidth = maxItemWidthNum+20+'px'
+							 }
+							 $('#'+e.target.id).jqxComboBox({dropDownWidth:maxItemWidth});*/
+                    });
                 } else if (popupType == 'M') {
                     popupComboId.jqxComboBox({
                         displayMember: "label",
@@ -9103,8 +8965,12 @@ var momWidget = {
         let fileUpDelBtnId = 'delBtnFP' + (index+1); //첨부파일 팝업 삭제 컬럼
         let fileDownBtnId = 'downBtnFP' + (index+1); //그리드 첨부파일 컬럼
          $(document).on('click', '.' + popupGridBtnId, function (e) {
-	
-	   
+	        let popupTitel = momWidget.gridExtraProperty[10]['popupTitle'];
+	        $('#gridPop-'+e.currentTarget.id).find('.panelheader-gridPop').text(popupTitel);
+	        that.modalShow('#','gridPop-'+e.currentTarget.id,'2');
+	        let gridIndex =  Number($('#gridPop-'+e.currentTarget.id).attr('gridindex'));
+	        AUIGrid.resize(that.grid[gridIndex-1]);
+	        
 	     });
              $(document).on('click', '#' + exportFileBtnId, function (e) {
 	           let checkedItem = that.getCheckedRowItems('#grid' + (index + 1));	         
@@ -9544,7 +9410,18 @@ var momWidget = {
             that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.id,'1');
         });
         $(document).on('click', '#' + gridPopCancelBtnId, function (e) {
+	      if($('#mask-1').length>0 && $('#mask-2').length == 0){
 			that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id,'1');
+		  }
+		  else if($('#mask-1').length >0  && $('#mask-2').length>0){
+				that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id,'2');
+		  }
+		
+		  else{
+			    that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id,'1');
+				that.modalHide('id',e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id,'2');
+		  }
+		
            
         });
          $(document).on('click', '#' + fileUpCloseBtnId, function (e) {
