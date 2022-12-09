@@ -7817,8 +7817,13 @@ input:focus{
     margin-left: 40vh !important;
 }
 .gridArea-XUSM8030{
-     height: 30rem;
+    
+      height: 30rem; 
 }
+#main-box11{
+	height: 90%;
+}
+
 .btn:hover{
 	position: relative;
     margin-left: 0.4rem;

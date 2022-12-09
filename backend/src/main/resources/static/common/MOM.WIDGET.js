@@ -8391,429 +8391,8 @@ var momWidget = {
         }
         return [param];
     },
-    // 엑셀 업로드 검증 팝업생성
-    createExcelPopUp: function (index, your) {
-        var that = this.grid == undefined ? this.momWidget : this;
-        var excelUpBtnId = 'excelUpBtn' + (index + 1);
-
-        var widthSizes = {1: 400, 2: 700, 3: 776};
-        var wSizeClass = {1: 'w190', 2: 'w190', 3: 'w120'}
-        var modalTitle = 'MESSAGES12565';
-        var modalId = 'listPop49';
-
-        var excelCheckModal = this.createExcelCheckPopUpHtml.modal();
-        excelCheckModal = excelCheckModal.replace(/#{index}/gi, (index)).replace(/#{modalId}/gi, modalId).replace('#{modalTitle}', modalTitle);
-        var rowColCount = 0;
-
-        var rowHtml = '';
-        var $row = null;
-        var col1TextArea = '';
-        var cols = null;
 
 
-        // excelCheckModal = excelCheckModal.replace('#{context}', rowHtml);
-        $('body').append(excelCheckModal);
-        // $('#' + modalId).find('.panel').width('800' || '');
-
-
-        $('#cancelBtn99').on('click', function () {
-            $('#' + modalId).modal('hide');
-        });
-
-        $('#applyBtn99').on('click', function () {
-//				that.splashShow();
-            var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
-            for (var i = 0; i < gridHeaders.length; i++) {
-                if (gridHeaders[i]['headerRenderer'] != undefined) {
-                    if (gridHeaders[i]['headerRenderer']['checked']) {
-                        AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked': false});
-                    }
-                }
-            }
-//					 for(var i = 0; i < that.columnProperty[98].length; i++) {
-//						 if(that.columnProperty[98][i]['visible'] && !that.columnProperty[98][i]['popUpReq']) {
-//							 AUIGrid.setHeaderRendererProp(momWidget.grid[98], checkList[i]['index'], {'checked' : false});
-//						 }
-//					 }
-
-            var checkList = [];
-            var list = $('#checkComboBox').jqxComboBox('getCheckedItems');
-            if (list != undefined) {
-                that.splashShow();
-                if (list.length == 1) {
-                    checkList[0] = list[0]['value'];
-                } else {
-                    $.each(list, function (index) {
-                        checkList.push({index: list[index]['index'], value: list[index]['value']})
-                    });
-
-                }
-            }
-            for (var i = 0; i < checkList.length; i++) {
-                for (var j = 0; j < gridHeaders.length; j++) {
-                    if (checkList[i]['value'] == gridHeaders[j]['dataField']) {
-                        AUIGrid.setHeaderRendererProp(momWidget.grid[98], j, {'checked': true});
-                    }
-                }
-            }
-            setTimeout(function () {
-                that.splashHide();
-            }, 100);
-        });
-        $('#allcheckBtn99').on('click', function () {
-            that.splashShow();
-            var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
-            for (var i = 0; i < gridHeaders.length; i++) {
-                if (gridHeaders[i]['headerRenderer'] != undefined) {
-                    if (!gridHeaders[i]['headerRenderer']['checked']) {
-                        AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked': true});
-                    }
-                }
-            }
-            setTimeout(function () {
-                that.splashHide();
-            }, 10);
-        });
-
-        $('#alluncheckBtn99').on('click', function () {
-            that.splashShow();
-            var gridHeaders = AUIGrid.getColumnLayout(momWidget.grid[98]);
-            for (var i = 0; i < gridHeaders.length; i++) {
-                if (gridHeaders[i]['headerRenderer'] != undefined) {
-                    if (gridHeaders[i]['headerRenderer']['checked']) {
-                        AUIGrid.setHeaderRendererProp(momWidget.grid[98], i, {'checked': false});
-                    }
-                }
-            }
-            setTimeout(function () {
-                that.splashHide();
-            }, 10);
-        });
-
-        this.popUpSetting[99] = modalId;
-        // $('#' + that.popUpSetting[99]).modal('show');
-        // $('#' + that.popUpSetting[index+4]).modal('show');
-        this.popUpSaveCancelBtn(98, your);
-        that.splashHide();
-    },
-    //  RPA 엑셀 업로드 팝업생성
-    createNewExcelPopUp: function (index, your) {
-        var that = this.grid == undefined ? this.momWidget : this;
-        var excelUpBtnId = 'excelNewUpBtn' + (index + 1);
-
-        var widthSizes = {1: 400, 2: 700, 3: 776};
-        var wSizeClass = {1: 'w190', 2: 'w190', 3: 'w120'}
-        var modalTitle = 'MESSAGES12638';
-        var modalId = 'excelNewPop' + (index + 1);
-
-        var excelUpModal = this.createExcelNewPopUpHtml.modal();
-        excelUpModal = excelUpModal.replace(/#{index}/gi, (index + 1)).replace(/#{modalId}/gi, modalId).replace('#{modalTitle}', modalTitle);
-        var rowColCount = 0;
-
-        var rowHtml = '';
-        var $row = null;
-        var col1TextArea = '';
-        var cols = null;
-
-
-        // excelCheckModal = excelCheckModal.replace('#{context}', rowHtml);
-        $('body').append(excelUpModal);
-        // $('#' + modalId).find('.panel').width('800' || '');
-
-
-        $('#' + 'cancelBtn' + (index + 1)).on('click', function () {
-            $('#' + modalId).modal('hide');
-        });
-
-    },
-    // Level 3. 팝업창 생성을 위한 HTML 동적 생성, by createPopUp
-    createPopUpHtml: {
-        modal: function () {
-            var html =
-                '<div id="#{modalId}" class="modal gridPopup">'
-                + '    <div id="panel" class="panel messagebox col2">'
-                + '        <div class="panel-body">'
-                + '            <div class="panelbody">'
-                + '                <div class="w-clearfix panelheader panel-heading">'
-                + '                    <div tmpTabId="two" data-undefined="fa-edit" class="w-icon fa fa-edit icon r5"></div>'
-                + '                    <div class="textblock">#{modalTitle}</div>'
-                + '                    <a href="#" class="w-inline-block bntpopclose pop-close-Btn"></a>'
-                + '                </div>'
-                + '                <div class="searcharea pop">'
-                + '                    <div class="w-form">'
-                + '                        <form name="form" id="form#{modalId}" class="form-inline" data-name="Form">'
-                + '#{context}'
-                + '                        </form>'
-                + '                    </div>'
-                + '                </div>'
-                + '            </div>'
-                + '            <div class="panelfooter">'
-                + '              <div class="footer-pop-btn-area">'
-                + '                <a id="saveBtnEP#{index}" href="#" class="w-inline-block btnpop pop-save-Btn">'
-                + '                    <div class="textblock">' + multiLang.transText('MESSAGE', 'MSG00035') + '</div>'
-                + '                </a>'
-                + '                <a id="cancelBtnEP#{index}" href="#" class="w-inline-block btnpop grey pop-close-Btn">'
-                + '                    <div class="textblock">취소</div>'
-                + '                </a>'
-                + '              </div>'
-                + '            </div>'
-                + '        </div>'
-                + '        <div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
-                + '    </div>'
-                + '</div>';
-
-            return html;
-        },
-
-        row: function () {
-            var html =
-                '<div class="b5">'
-                + '    <div class="w-row">'
-                + '        '
-                + '    </div>'
-                + '</div>';
-
-            return html;
-        },
-
-        col1: function () {
-            var html =
-                '<ul class="w-list-unstyled">'
-                + '   <li>'
-                + '       <div>'
-                + '           <div id="#{labelId}" class="col1-label labelbox" style="white-space: nowrap; text-overflow: ellipsis;">'
-                + '               <div class="circle #{circle_require}"></div>'
-                + '               <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
-                + '           </div>'
-                + '       	#{editBox}'
-                + '       </div>'
-                + '   </li>'
-                + '</ul>';
-
-            return html;
-        },
-
-        colReq: function () {
-            var html =
-                '<ul class="w-list-unstyled">'
-                + '   <li>'
-                + '       <div>'
-                + '           <div id="#{labelId}" class="col1-label labelbox" style="white-space: nowrap; text-overflow: ellipsis;">'
-                + '               <div class="circle bg-orange"></div>'
-                + '               <div class="textblock orange" title="#{headerText}">#{headerText}</div>'
-                + '           </div>'
-                + '       	#{editBox}'
-                + '       </div>'
-                + '   </li>'
-                + '</ul>';
-
-            return html;
-        },
-
-        col2: function () {
-            var html =
-                '<div class="w-col w-col-6">'
-                + '    <div class="w-clearfix listitem">'
-                + '	    <div class="w-col w-col-5">'
-                + '   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'
-                + '	            <div class="circle #{circle_require}"></div>'
-                + '	            <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
-                + '	        </div>'
-                + '       </div>'
-                + '	    <div class="w-col w-col-6">'
-                + '       	#{editBox}'
-                + '       </div>'
-                + '    </div>'
-                + '</div>';
-
-            return html;
-        },
-
-        col3: function () {
-            var html =
-                '<div class="w-col w-col-' + colNum + '">'
-                + '    <div class="w-clearfix listitem">'
-                + '	    <div class="w-col w-col-6">'
-                + '   	     <div id="#{labelId}" class="labelbox" style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'
-                + '	            <div class="circle #{circle_require}"></div>'
-                + '	            <div class="textblock #{textblock_require}" title="#{headerText}">#{headerText}</div>'
-                + '	        </div>'
-                + '       </div>'
-                + '	    <div class="w-col w-col-6">'
-                + '       	#{editBox}'
-                + '       </div>'
-                + '    </div>'
-                + '</div>';
-
-            return html;
-        },
-
-        input: function () {
-            var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';
-            return html;
-        },
-
-        number: function () {
-            var html = '<input style="float:right;" maxlength="100" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
-            return html;
-        },
-
-        number1: function () {
-            var html = '<input style="float:right;" maxlength="1" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
-            return html;
-        },
-
-        number4: function () {
-            var html = '<input style="float:right;" maxlength="4" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
-            return html;
-        },
-
-        number6: function () {
-            var html = '<input style="float:right;" maxlength="6" id="#{id}" input-type="text" type="text" class="w-input fieldbox #{wSize}" autocomplete="off" onkeypress="digit_check(event)" onkeyup="this.value=number_filter(this.value)"></input>';
-            return html;
-        },
-
-        textarea: function () {
-            var html = '<textarea style="resize: none;" id="#{id}" type="text" class="w-input textbox w490px"></textarea>';
-            return html;
-        },
-
-        select: function () {
-            var html = '<select style="float:right;" id="#{id}" class="w-select fieldbox #{wSize}"></select>';
-            return html;
-        },
-
-        calendar: function () {
-            var html = '<input style="float:right;" maxlength="256" id="#{id}" input-type="datepicker" date-format="date" class="w-input fieldbox #{wSize}" autocomplete="off"></input>';
-            return html;
-        },
-
-        file: function () {
-            var html = '<input name="file" id="#{id}" type="file" accept="image" style="float:left; width:100%;">'
-            return html;
-        },
-
-        password: function () {
-            var html = '<input style="float:right;" maxlength="50" id="#{id}" input-type="password" type="password" class="w-input fieldbox #{wSize}"></input>';
-            return html;
-        }
-    },
-    // Level 3. 엑셀 업로드 체크 팝업창 생성을 위한 HTML 동적 생성, by excelUploadPopUp
-    createExcelCheckPopUpHtml: {
-        modal: function () {
-            var html =
-                '<div id="listPop49" class="modal">'
-                + '	<div id="panel" class="panel messagebox w85p excelCheckPopPanel">'
-                + '		<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
-                + '			<h5>Panel</h5>'
-                + '		</div>'
-                + '		<div data-panelToolbar="n" panelToolbar="n" class="panel-toolbar hide"></div>'
-                + '		<div class="panel-body panel-body">'
-                + '			<div class="panelbody">'
-                + '				<div class="w-clearfix panelheader panel-heading">'
-                + '					<div class="w-icon fa fa-cog icon r5"></div>'
-                + '					<div multi-lang="" class="textblock">#{modalTitle}</div>'
-                + '					<a href="#" class="w-inline-block bntpopclose"></a>'
-                + '				</div>'
-                + '				<div class="w-clearfix cardheard"style="position: relative;height: 1.3em;">'
-                + '                 <div id="expArea" style="display:inline-block;float: left;position: relative;right: -%;top: -0.8em;">'
-                + '                  <div multi-lang="" id="uploadIcon"style="background-color : rgb(255 69 69);width: 50px;height: 16px;border: 1px solid gray;" class="textblock"></div>'
-                + '                  <div multi-lang="" style="position: relative;top: -0.3em;" id="uploadErrorCountText" class="textblock">MESSAGES12568</div>'
-                + '                  <div multi-lang=""id="uploadErrorCount"class="textblock"style="position: relative;top: -0.3em;"></div>'
-                + '                  <div multi-lang=""id="uploadErrorCountText2"class="textblock"style="position: relative;top: -0.24em;">MESSAGES12569</div>'
-                + '					<div class="w-clearfix combo-area" id="checkComboArea">'
-                //				+'						<div multi-lang="" style="display:none;" class="textblock floatl"></div>'
-                + '						<select id="checkComboBox" class="w-select fieldbox small"></select>'
-                + '					</div>'
-                + '               </div>'
-                + '				   <a id="excelDownBtn99" href="#" class="w-inline-block btntool floatr"style="position: relative;top: -1.2em;">'
-                + '					<div tmpTabId="two" class="w-icon fa fa-file-excel-o icon"></div>'
-                + '					<div multi-lang="" style="display:none;" class="textblock">MESSAGES10863</div>'
-                + '				   </a>'
-                + '					<div id="checkArea">'
-                + '			   			<a id="applyBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
-                + '							<div tmpTabId="two" class="w-icon fa fa-redo-o icon"></div>'
-                + '							<div multi-lang="" style="display:none;" class="textblock">적용</div>'
-                + '			   			</a>'
-                + '			   			<a id="allcheckBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
-                + '							<div tmpTabId="two" class="w-icon fa fa-check-o icon"></div>'
-                + '							<div multi-lang="" style="display:none;" class="textblock">All+</div>'
-                + '			   			</a>'
-                + '			   			<a id="alluncheckBtn99" href="#" class="w-inline-block btntool floatl"style="position: relative;top: -1.2em;">'
-                + '							<div tmpTabId="two" class="w-icon fa fa-check-o icon"></div>'
-                + '							<div multi-lang="" style="display:none;" class="textblock">All-</div>'
-                + '			   			</a>'
-                + '              	</div>'
-                + '              </div>'
-                + '				<div class="panelcontent2">'
-                + '					<div class="calc100"style="position: relative;height: 30.8em;width: 101.5%;left: -0.7%;">'
-                + '						<div class="card h150"style="position: relative;height: 100%;">'
-                + '							<div class="cardcontent h100per"style="position: relative;height: 100%;">'
-                + '								<div id="grid99" class="w-widget w-dyn-list w-unbound grid w-widget-auigrid"></div>'
-                + '							</div>'
-                + '						</div>'
-                + '					</div>'
-                + '				</div>	'
-                + '			</div>'
-                + '			<div class="w-clearfix panelfooter paddingrl10"style="position: relative;top: -0.5em;right: 0.1%;">'
-                + '			    <a id="verificationBtn99" href="#" class="w-inline-block btnpop"style="position: relative;right: -0.5%;top: 0.2em;">'
-                + '                    <div multi-lang="" class="textblock">재검증</div>'
-                + '              </a>'
-                + '			    <a id="excelUpConfirmBtn99" href="#" class="w-inline-block btnpop"style="position: relative;right: -0.5%;top: 0.2em;">'
-                + '                    <div multi-lang="" class="textblock">MESSAGES10840</div>'
-                + '              </a>'
-                + '				<a id="cancelBtn99" href="#" class="w-inline-block btnpop grey"style="position: relative;width: 6.3%;right: -0.2%;top: 0.2em;">'
-                + '					<div multi-lang="" class="textblock">MESSAGES11457</div>'
-                + '				</a>'
-                + '			</div>'
-                + '		</div>'
-                + '		<div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
-                + '      </div>';
-            return html;
-        }
-
-
-    },
-    // Level 3. 엑셀 업로드 rpa 팝업창 생성을 위한 HTML 동적 생성
-    createExcelNewPopUpHtml: {
-        modal: function () {
-            var html =
-                '<div id="#{modalId}" class="modal">'
-                + '  <div id="panel" class="panel messagebox w400">'
-                + ' 	<div data-panelHeader="n" panelHeader="n" class="panel-heading hide">'
-                + '	  <h5>Panel</h5>'
-                + '  </div>'
-                + '	<div data-panelToolbar="n" panelToolbar="n" class="panel-toolbar hide"></div>'
-                + '    <div class="panel-body">'
-                + '    <div class="panelbody">'
-                + '    <div class="w-clearfix panelheader panel-heading">'
-                + '    <div tmpTabId="two" class="w-icon fa fa-edit icon r5"></div>'
-                + '    <div multi-lang="" style="display:none;" class="textblock">MESSAGES12638</div>'
-                + '    <a href="#" class="w-inline-block bntpopclose"></a>'
-                + '	  </div>'
-                + '    <div class="searcharea pop">'
-                + '    <div class="w-form">'
-                + '    <form name="form" id="form" class="form-inline" data-name="Form"></form>'
-                + '    </div>'
-                + ' 	  </div>'
-                + ' 	  </div>'
-                + '    <div class="panelfooter">'
-                + '    <a id="saveBtnNEX#{index}" href="#" class="w-inline-block btnpop">'
-                + '    <div multi-lang="" style="display:none;" class="textblock">MESSAGES11192</div>'
-                + '    </a>'
-                + '    <a id="cancelBtnNEX#{index}" href="#" class="w-inline-block btnpop grey">'
-                + '    <div multi-lang="" style="display:none;" class="textblock">MESSAGES11457</div>'
-                + '	  </a>'
-                + '	  </div>'
-                + '	  </div>'
-                + '    <div panelFooter="n" class="panel-footer hide" data-panelFooter="n"></div>'
-                + '    </div>'
-                + '    </div>'
-            return html;
-        }
-
-
-    },
     // 등록버튼 이벤트 핸들러
     setBtnEvent: function (index, your) {
         var that = momWidget;
@@ -8832,13 +8411,14 @@ var momWidget = {
                     that.setCustomPopBtn(index, e.currentTarget.id.split('customBtn')[1], e.currentTarget.id, your, e);
                 });
 
-            } else if (that.buttonProperty[index][i]['buttonType'] == 'ST' || that.buttonProperty[index][i]['buttonType'] == 'EX') {
+            } else if (that.buttonProperty[index][i]['buttonType'] == 'ST' || that.buttonProperty[index][i]['buttonType'] == 'EX' || that.buttonProperty[index][i]['buttonType'] == '') {
                 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function (e) {	//커스텀 버튼(팝업없이 ACTION만실행)
                     that.setCustomBtn(index, e.currentTarget.id.split('customBtn')[1], e.currentTarget.id, your, e);
                 });
 
             }
         }
+          
         var findBtnId = 'findBtn' + (index + 1);                                 // 조회 버튼
         var createBtnId = 'createBtn' + (index + 1);                             // 등록 버튼
         var copyBtnId = 'copyBtn' + (index + 1);                                 // 복사 버튼
@@ -8891,15 +8471,17 @@ var momWidget = {
         let fileDownBtnId = 'downBtnFP' + (index+1); //그리드 첨부파일 컬럼
         
          $(document).on('click', '.' + popupGridBtnId, function (e) {
-	        let gridPopId    = Number($('#gridPop-'+e.currentTarget.id).attr('gridindex'));
-	        let gridPopIndex =  gridPopId-1;
-	       
-	        let popupTitle = that.gridExtraProperty[gridPopIndex]['popupTitle'];
-	        $('#gridPop-'+e.currentTarget.id).find('.panelheader-gridPop').text(popupTitle);
+	        let clickedColId = e.currentTarget.id;
+	        let popupId = '#gridPop-'+clickedColId;
+	        let gridPopId    = Number($(popupId).attr('gridindex')); // 드롭다운 팝업 ID
+	        let gridPopIndex =  gridPopId-1; // 드롭다운 팝업 그리드 ID
 	        
-	        let queryId = that.pageProperty[gridPopIndex]['menuId'] + '.findBtn' + gridPopId;	       
-	        let totalParam = {};
-	        let callInitResult = that.checkActionCallInit(index, 'C', totalParam, 'customGridPopBtn' + gridPopId, your, e);
+	        let popupTitle = that.gridExtraProperty[gridPopIndex]['popupTitle']; // 팝업 타이틀
+	        $(popupId).find('.panelheader-gridPop').text(popupTitle); // 팝업 타이틀 세팅 
+	        
+	        let queryId = that.pageProperty[gridPopIndex]['menuId'] + '.findBtn' + gridPopId;// 쿼리 ID 세팅    
+	        let totalParam = {}; // 쿼리 파라미터
+	        let callInitResult = that.checkActionCallInit(index, 'PG', totalParam, clickedColId, your, e); //팝업열기 직전 호출 
             if (callInitResult['result'] != 'SUCCESS') {
             let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
             
@@ -8915,13 +8497,7 @@ var momWidget = {
             
 	        totalParam = callInitResult['param'];
 	        totalParam = Object.assign(totalParam, that.checkSearchParam(gridPopIndex, {}, your));
-	        callInitResult = that.checkActionCallInit(index, 'R', totalParam, 'customGridPopBtn' + gridPopId, your, e);
-        if (callInitResult['result'] != 'SUCCESS') {
-            momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callInitResult['msg']});
-            momWidget.splashHide();
-            return;
-        }
-        totalParam = Object.assign(callInitResult['param'], totalParam);
+
 	        mom_ajax('R', queryId, totalParam, function (result1, data1) {
             if (result1 != 'SUCCESS') {
                 momWidget.splashHide();
@@ -8936,10 +8512,11 @@ var momWidget = {
                     AUIGrid.resize('#grid' + (gridPopId + i));
                 }
             }
-            that.modalShow('#','gridPop-'+e.currentTarget.id,'2');	       
+            that.modalShow('#','gridPop-'+e.currentTarget.id,'2');	                   
 	        AUIGrid.resize(that.grid[gridPopIndex]);
+	        $(popupId).draggable();
             //$('#'+'gridPop-'+btnId).draggable();
-            let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customGridPopBtn' + gridPopId, your, data1);
+            let callBackResult = that.checkActionCallBack(index, 'PG', totalParam, clickedColId, your, data1);
             if (callBackResult['result'] != 'SUCCESS') {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
                 momWidget.splashHide();
@@ -13039,10 +12616,8 @@ var momWidget = {
 
 
         });
-        $(document).on('click', '.bntpopclose, ' + '#' + cancelBtnId, function () {
-            //$('#defaultPop' + (index + 1)).modal("hide");
-            $('#defaultPop' + (index + 1)).css('display', 'none');
-            that.maskHide('1');
+        $(document).on('click', '.bntpopclose, ' + '#' + cancelBtnId, function (e) {
+          that.modalHide('#','defaultPop' + (index + 1),'1');
 
         });
       /*  $(document).on('click', '.bntpopclose, ' + '#' + gridPopCancelBtnId, function () {
@@ -14718,6 +14293,9 @@ var momWidget = {
         else if (your.changePwCallInit != undefined && btnId.indexOf('changePwBtn') >= 0) {
             your.changePwCallInit(index, your, action, btnId, param, result);
         }
+        else if (your.customCallInit != undefined && action == 'PG') {
+            your.customCallInit(index, your, action, btnId, param, result);
+        }
         else if (your.customCallInit != undefined && btnId.indexOf('customGridPopBtn') >= 0) {
             your.customCallInit(index, your, action, btnId, param, result);
         } else if (your.excelDownCallInit != undefined && btnId == 'excelDownBtn') {
@@ -14764,6 +14342,9 @@ var momWidget = {
         } else if (your.customCallBack != undefined && (btnId.indexOf('customBtn') >= 0 && btnId.indexOf('saveBtn') == -1)) {
             your.customCallBack(index, your, action, btnId, param, result, data);
         }
+         else if (your.customCallBack != undefined && action == 'PG') {
+            your.customCallBack(index, your, action, btnId, param, result, data);
+        }     
          else if (your.customCallBack != undefined && btnId.indexOf('customGridPopBtn') >= 0) {
             your.customCallBack(index, your, action, btnId, param, result, data);
         }        
