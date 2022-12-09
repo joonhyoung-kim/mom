@@ -1955,12 +1955,15 @@ border-color: #d8dce3 !important;
 
 .footer-pop-btn-area {
     float: right;
-    padding-top: 0.5rem;
+    top: -0.15rem;
+    position: relative;
 }
 .gridpop-panelfooter {
     position: relative;
     border-top: 1px solid #bdbdbd;
     background: #f0f0f5;
+    height:4rem;
+   
 }
 /* .gridpop-panelfooter {
     height: 7%;
@@ -5104,6 +5107,7 @@ input:focus{
     position: relative;
     border-top: 1px solid #bcbdbd; 
     height: 4.5rem;
+    padding-top: 0.7rem;
 }
 .alert-pop-img{	
     display: flex;

@@ -1,24 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mom.backend.XUSM8030">
-  <select id="get_findBtn1" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
-	 SELECT ATC.COLUMN_NAME
-	      , SUBSTR ( REPLACE ( INITCAP ( '1' || ATC.COLUMN_NAME ), '_' ), 2) AS COLUMN_NAME2
-          , ATC.DATA_TYPE 
-          , DECODE((SELECT B.COLUMN_NAME     
-		            FROM   ALL_CONSTRAINTS  A
-		                 , ALL_CONS_COLUMNS B
-		            WHERE  A.TABLE_NAME      = #{tableId, jdbcType=VARCHAR}
-		            AND    A.OWNER           = B.OWNER 
-		            AND    A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
-		            AND    A.OWNER           = 'MOM_MASTER'
-		            AND    A.CONSTRAINT_TYPE = 'P' 
-		            AND    B.COLUMN_NAME = ATC.COLUMN_NAME             
-            ),'','N','Y') AS IS_PK
-     FROM   ALL_TAB_COLUMNS ATC
-     WHERE  TABLE_NAME = #{tableId, jdbcType=VARCHAR}
-     AND    ATC.OWNER = 'MOM_MASTER'
-     ORDER BY ATC.COLUMN_ID
+  <select id="get_findBtn11" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">
+	SELECT A.UNIT_CATEGORY_NM          
+     , A.UNIT_NM                                                                          
+     , A.CONVERSION_UNIT_NM            
+     , A.UNIT_QTY                                      
+     , A.CONVERSION_UNIT_QTY           
+     , A.UNIT_CATEGORY                        
+     , A.UNIT                                               
+     , A.CONVERSION_UNIT                     
+     , A.KEY_ID 
+FROM   (SELECT (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MC.COMPANY_CD,MC.DIVISION_CD, 'SM0016', MUP.UNIT_CATEGORY, 'KR') FROM DUAL) AS UNIT_CATEGORY_NM 
+             , MUP.UNIT_NM         
+             , MUC.UNIT_NM             AS CONVERSION_UNIT_NM  
+             , MC.UNIT_QTY                               
+             , MC.CONVERSION_UNIT_QTY                    
+             , MUP.UNIT_CATEGORY                         
+             , MC.UNIT                                   
+             , MC.CONVERSION_UNIT         
+             , MUP.UNIT_CATEGORY || '_'|| MC.UNIT || '_' || MC.CONVERSION_UNIT AS KEY_ID                
+        FROM   MOM_UNIT_CONVERSION MC
+             , MOM_UNIT MUP
+             , MOM_UNIT MUC
+        WHERE  MC.COMPANY_CD       = MUP.COMPANY_CD
+        AND    MC.DIVISION_CD      = MUP.DIVISION_CD
+        AND    MC.UNIT             = MUP.UNIT
+        AND    MC.COMPANY_CD       = MUC.COMPANY_CD
+        AND    MC.DIVISION_CD      = MUC.DIVISION_CD
+        AND    MC.COMPANY_CD  = #{companyCd,  jdbcType=VARCHAR}
+	    AND    MC.DIVISION_CD = #{divisionCd, jdbcType=VARCHAR}  
+        <if test="unitCategory != null and unitCategory != ''">
+	    AND    MUP.UNIT_CATEGORY = #{unitCategory, jdbcType=VARCHAR}
+	    </if>
+        AND    MC.CONVERSION_UNIT  = MUC.UNIT  ) A
+  ORDER BY A.UNIT_CATEGORY_NM        
+         , A.UNIT_NM
+         , A.CONVERSION_UNIT_NM
   </select>
 	
 </mapper>

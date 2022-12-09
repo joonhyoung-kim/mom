@@ -3644,7 +3644,8 @@ var momWidget = {
                     }
                 }
                 $('#file' + (index + 1)).val('');
-                $('#' + excelPopId).modal('show');
+                that.modalShow('#',excelPopId,'1');
+
             });
 
             $(document).on('click', '#verificationBtn99', function (e) {
@@ -3739,83 +3740,7 @@ var momWidget = {
             });
         }
     },
-    //RPA 엑셀 업로드
-    procNewExcelUpload: function (index, pageId1, your) {
-        var that = this.grid == undefined ? this.momWidget : this;
 
-        var excelUpBtnId = 'excelNewUpBtn' + (index + 1);
-        var isExist = document.getElementById(excelUpBtnId);
-        if (isExist == undefined) {
-            return;
-        }
-
-        var excelPopExistId = 'excelPopExist' + (index + 1);
-        isExist = document.getElementById(excelPopExistId);
-        if (isExist) {
-            $(document).on('click', '#' + excelUpBtnId, function (e) {
-                if (your != undefined && your.excelUpInit != undefined) {
-                    your.excelUpInit(index, e);
-                    if (your != undefined && your.excelUpInitParam != undefined) {
-                        if (your['initMessage'] != undefined) {
-                            var err = your['initMessage'];
-                            that.messageBox({type: 'warning', width: '400', height: '145', html: err});
-                            your['initMessage'] = undefined;
-                            return;
-                        }
-                    }
-                }
-                $('#file' + (index + 1)).val('');
-                $('#uploadFileName' + (index + 1)).val('');
-                $('#' + excelPopExistId).modal('show');
-            });
-
-            $(document).on('click', '#fileBtn' + (index + 1), function (e) {
-                $('#file' + (index + 1)).click();
-            });
-
-            $(document).on('change', '#file' + (index + 1), function (e) {
-                $('#uploadFileName' + (index + 1)).val('');
-                $('#uploadFileName' + (index + 1)).val($('#file' + (index + 1)).val());
-            });
-
-            $(document).on('click', '#cancelBtnNEX' + (index + 1) + ', ' + '.bntpopclose', function (e) {
-                $('#' + excelPopExistId).modal('hide');
-            });
-
-            return;
-        }
-
-        var excelPopId = 'excelNewPop' + (index + 1);
-        isExist = document.getElementById(excelPopId);
-        var isEnter = false;
-        if (isExist) {
-            isEnter = true;
-            $('#' + excelPopId + ' .searcharea').css({'padding': '5px 5px 0'});
-            $('#' + excelPopId + ' .searcharea from').attr('id', 'fileUploadForm');
-            $('#' + excelPopId + ' .searcharea form').html('<input name="file' + (index + 1) + '" id="excelFile' + (index + 1) + '" type="file" accept=".xlsx, .xls" style="width:100%;">');
-
-            $(document).on('click', '#' + excelUpBtnId, function (e) {
-                if (your != undefined && your.excelUpNewInit != undefined) {
-                    your.excelUpNewInit({index: (index + 1), op: 'excelNewUpBtn' + (index + 1)}, e);
-                    if (your['initMessage'] != undefined) {
-                        var err = your['initMessage'];
-                        that.messageBox({type: 'warning', width: '400', height: '145', html: err});
-                        your['initMessage'] = undefined;
-                        return;
-                    }
-                }
-                $('#file' + (index + 1)).val('');
-                $('#' + excelPopId).modal('show');
-            });
-
-            const pageId = pageId1;
-
-            $(document).on('click', '#cancelBtnNEX' + (index + 1) + ', ' + '.bntpopclose', function (e) {
-                $('#' + excelPopId).modal('hide');
-            });
-
-        }
-    },
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Calendar Component
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8966,16 +8891,18 @@ var momWidget = {
         let fileDownBtnId = 'downBtnFP' + (index+1); //그리드 첨부파일 컬럼
         
          $(document).on('click', '.' + popupGridBtnId, function (e) {
-	        let gridPopIndex =  Number($('#gridPop-'+e.currentTarget.id).attr('gridindex'))-1;
+	        let gridPopId    = Number($('#gridPop-'+e.currentTarget.id).attr('gridindex'));
+	        let gridPopIndex =  gridPopId-1;
+	       
 	        let popupTitle = that.gridExtraProperty[gridPopIndex]['popupTitle'];
 	        $('#gridPop-'+e.currentTarget.id).find('.panelheader-gridPop').text(popupTitle);
-	       
-	        let queryId = that.pageProperty[gridPopIndex]['menuId'] + '.findBtn' + (gridPopIndex+1);;	       
-	        let totalParam = [];
-	        let callInitResult = that.checkActionCallInit(index, 'C', totalParam, 'customGridPopBtn' + btnIndex, your, e);
-
+	        
+	        let queryId = that.pageProperty[gridPopIndex]['menuId'] + '.findBtn' + gridPopId;	       
+	        let totalParam = {};
+	        let callInitResult = that.checkActionCallInit(index, 'C', totalParam, 'customGridPopBtn' + gridPopId, your, e);
             if (callInitResult['result'] != 'SUCCESS') {
             let msgType = callInitResult['result'] == 'WARN' ? 'warning' : 'danger';
+            
             momWidget.messageBox({
                 type: msgType,
                 width: '400',
@@ -8985,9 +8912,10 @@ var momWidget = {
             momWidget.splashHide();
             return;
             }
+            
 	        totalParam = callInitResult['param'];
-	        totalParam = Object.assign(totalParam, that.checkSearchParam(gridPopIndex - 1, {}, your));
-	        callInitResult = that.checkActionCallInit(index, 'R', totalParam, 'customGridPopBtn' + btnIndex, your, e);
+	        totalParam = Object.assign(totalParam, that.checkSearchParam(gridPopIndex, {}, your));
+	        callInitResult = that.checkActionCallInit(index, 'R', totalParam, 'customGridPopBtn' + gridPopId, your, e);
         if (callInitResult['result'] != 'SUCCESS') {
             momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callInitResult['msg']});
             momWidget.splashHide();
@@ -9003,15 +8931,15 @@ var momWidget = {
             AUIGrid.setGridData(that.grid[gridPopIndex], data1);
             for (let i = 0; i <= 10; i++) {
                 if ($('#grid' + (gridPopIndex + i)).length > 0) {
-                    AUIGrid.clearFilterAll('#grid' + ((gridPopIndex+1) + i));
-                    AUIGrid.clearSortingAll('#grid' + ((gridPopIndex+1) + i));
-                    AUIGrid.resize('#grid' + ((gridPopIndex+1) + i));
+                    AUIGrid.clearFilterAll('#grid' + (gridPopId + i));
+                    AUIGrid.clearSortingAll('#grid' + (gridPopId + i));
+                    AUIGrid.resize('#grid' + (gridPopId + i));
                 }
             }
             that.modalShow('#','gridPop-'+e.currentTarget.id,'2');	       
 	        AUIGrid.resize(that.grid[gridPopIndex]);
             //$('#'+'gridPop-'+btnId).draggable();
-            let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customGridPopBtn' + btnIndex, your, data1);
+            let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customGridPopBtn' + gridPopId, your, data1);
             if (callBackResult['result'] != 'SUCCESS') {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
                 momWidget.splashHide();
@@ -10672,9 +10600,6 @@ var momWidget = {
         $(document).on('click', '#' + excelUpCancelBtnId, function () {
             $('#excelFile1').val('')
             AUIGrid.destroy(that.excelUpGrid[index]);
-            //AUIGrid.clearGridData(that.excelUpGrid[index]);
-            //$('#excelUpPop'+(index+1)).css('opacity', '0');
-            //$('#excelUpPop' + (index + 1)).modal('hide');
             that.modalHide('#','excelUpPop' + (index + 1),'1');
         });
         $(document).on('click', '#' + excelUpBtnId, function () {
@@ -10736,7 +10661,7 @@ var momWidget = {
             that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid' + (index + 1), that.excelUploadProperty[index], gridPros);
 
             // AUIGrid.hideColumnByDataField(that.excelUpGrid[index], ["valMsg"] );
-            $('#' + 'excelUpPop' + (index + 1)).modal('show');
+            that.modalShow('#','excelUpPop'+ (index + 1),'1')
             AUIGrid.resize('#excelUpGrid' + (index + 1));
         });
         $(document).on('click', '#' + excelUpBtnIdV, function () {
