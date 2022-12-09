@@ -8438,7 +8438,7 @@ var momWidget = {
         let excelTmpBtnId  = 'excelTmpBtn' + (index + 1);  				              // 엑셀 양식 버튼
         let excelUpBtnId   = 'excelUpBtn' + (index + 1);                              // 엑셀 업로드 버튼
         let excelUpBtnIdV  = 'excelUpBtnV' + (index + 1);                             // 엑셀 업로드 버튼(검사)	
-		let fileDownBtnId  = 'downBtnFP' + (index+1); 								  //그리드 첨부파일 컬럼
+		let fileDownBtnId  = 'downBtnFP' + (index+1); 								  // 그리드 첨부파일 컬럼
 		let moveBtnId = 'moveBtn' + (index + 1);
 		/*
 		----------------------------------------------------------------------------------------------------------------------------------
