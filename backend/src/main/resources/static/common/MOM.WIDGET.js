@@ -8418,57 +8418,123 @@ var momWidget = {
 
             }
         }
-          
-        var findBtnId = 'findBtn' + (index + 1);                                 // 조회 버튼
-        var createBtnId = 'createBtn' + (index + 1);                             // 등록 버튼
-        var copyBtnId = 'copyBtn' + (index + 1);                                 // 복사 버튼
-        var editBtnId = 'editBtn' + (index + 1);                                 // 수정 버튼
-        var cancelBtnId = 'cancelBtn' + 'DP' + (index + 1);                      // 기본 팝업 (닫기)
-        var cancelCustomPopBtnId = 'cancelCustomPopBtn' + 'DP' + (index + 1);    // 커스텀 팝업 (닫기)
-        var saveCustomPopBtnId = 'saveCustomPopBtn' + 'DP' + (index + 1);        // 커스텀 팝업 (저장)
-        var excelDownBtnId = 'excelDownBtn' + (index + 1); 					     // 엑셀 다운 버튼
-        var excelTmpBtnId = 'excelTmpBtn' + (index + 1);  				         // 엑셀 양식 버튼
-        var excelUpBtnId = 'excelUpBtn' + (index + 1);                           // 엑셀 업로드 버튼
-        var excelUpBtnIdV = 'excelUpBtnV' + (index + 1);                         // 엑셀 업로드 버튼(검사)
-        var excelUpCancelBtnId = 'cancelBtnExUp' + (index + 1);                  // 엑셀 업로드 버튼(닫기)
-        var saveBtnId = 'saveBtn' + (index + 1); 							     // 그리드 저장 버튼
-        var exportFileBtnId = 'fileDownBtn' + (index + 1); 					     // 파일 다운 버튼(닫기)
+        let callInitResult = undefined;   // 콜이닛 결과 담을 변수
+        let callBackResult = undefined;   // 콜백 결과 담을 변수
+		/*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 그리드버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/
+        let findBtnId      = 'findBtn' + (index + 1);                                 // 조회 버튼
+        let createBtnId    = 'createBtn' + (index + 1);                               // 등록 버튼
+        let copyBtnId      = 'copyBtn' + (index + 1);                                 // 복사 버튼
+        let editBtnId      = 'editBtn' + (index + 1);                                 // 수정 버튼
+		let saveBtnId      = 'saveBtn' + (index + 1); 							      // 그리드 저장 버튼
+		let delBtnId 	   = 'delBtn' + (index + 1);                                  // 그리드 삭제 버튼
+		let addBtnId       = 'addBtn' + (index + 1);   					    		  // 그리드 행추가 버튼
+        let showLv1Btn     = 'showLv1Btn' + (index + 1);  						      // 그리드 메뉴 펼치기 버튼
+		let reportBtnId    = 'reportBtn' + (index + 1); 					          // 리포트 출력 버튼
+		let excelDownBtnId = 'excelDownBtn' + (index + 1); 					          // 엑셀 다운 버튼
+        let excelTmpBtnId  = 'excelTmpBtn' + (index + 1);  				              // 엑셀 양식 버튼
+        let excelUpBtnId   = 'excelUpBtn' + (index + 1);                              // 엑셀 업로드 버튼
+        let excelUpBtnIdV  = 'excelUpBtnV' + (index + 1);                             // 엑셀 업로드 버튼(검사)	
+		let fileDownBtnId  = 'downBtnFP' + (index+1); 								  //그리드 첨부파일 컬럼
+		let moveBtnId = 'moveBtn' + (index + 1);
+		/*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 표준 팝업버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/
+		let savePopBtnId = 'saveBtn' + 'DP' + (index + 1); 					          // 팝업 저장 버튼
+        let cancelBtnId  = 'cancelBtn' + 'DP' + (index + 1);                          // 기본 팝업 (닫기)
+		/*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 커스텀 팝업 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/
+        let saveCustomPopBtnId = 'saveCustomPopBtn' + 'DP' + (index + 1);             // 커스텀 팝업 (저장)
+		let cancelCustomPopBtnId = 'cancelCustomPopBtn' + 'DP' + (index + 1);         // 커스텀 팝업 (닫기)
+		/*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 엑셀업로드 팝업 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/
+        let excelUpCancelBtnId = 'cancelBtnExUp' + (index + 1);                       // 엑셀 업로드 버튼(닫기)
+		let saveExUpBtnId = 'saveBtnExUp' + (index + 1);                         	  // 엑셀업로드 저장 버튼
+		let excelFile      = 'excelFile' + (index + 1); 						 	  // 엑셀 첨부파일 
+        /*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 엑셀업로드(검사) 팝업 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/
+		let exUpCheckBtnId = 'exUpCheck' + (index + 1);                          	  // 엑셀업로드 검사 버튼
+        let exUpCheckDownBtnId = 'exUpCheckDown' + (index + 1); 			     	  // 엑셀 업로드 검사결과 다운 버튼
+		 /*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 파일업로드 팝업 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/
+        let exportFileBtnId = 'fileDownBtn' + (index + 1); 					          // 그리드 파일 업로드 파일 다운 버튼
+		let fileUpColId = 'fileUpCol'+ (index+1);  								      // 그리드 파일 업로드 팝업 오픈 버튼
+	    let fileUpCloseBtnId = 'closeBtnFP' + (index + 1); 					          // 그리드 파일 업로드 팝업 닫기 버튼
+        let fileUpDelBtnId = 'delBtnFP' + (index+1); 						          // 그리드 파일 업로드 팝업 삭제 버튼
+		let fileUpSaveBtnId = 'saveBtnFP' + (index + 1);                              // 그리드 파일 업로드 팝업 업로드 확정 버튼
+		let fileFPId       = 'fileBlobFP'+ (index + 1);  						      // 첨부파일 매니저(그리드 팝업)
+		let fileDPId = 'fileBlobDP'+ (index + 1);  								      // 첨부파일 매니저(기본 팝업)
+	
+		 어바인피부과
+         /*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 그리드 팝업(그리드버튼오픈) 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/     
+        let delGridBtnId = 'delGridBtn' + (index + 1); 							    // 그리드 팝업 삭제 버튼
+		let gridPopSaveBtnId = 'saveBtnCP' +(index +1);                             // 그리드 팝업 저장 버튼
+		let gridPopCancelBtnId = 'cancelBtnCP' + (index + 1); 					    // 그리드 팝업 닫기 버튼
+		let gridPopXBtnId = 'gridPop-x-btn';   										// 그리드 팝업 x 버튼
+		
+	    /*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 그리드 팝업(팝업컬럼오픈) 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/  
+		let popupGridBtnId = 'popGrid' + (index + 1); 								// 기본팝업에서 그리드팝업 오픈시 누르는 컬럼  
+		/*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 패스워드변경 팝업 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/  
+		let changePwBtnId = 'changePwBtn' + (index + 1);                            // 패스워드 변경 열기 버튼
+		let changePwCencelBtn = 'closeBtnCp' + (index + 1); 					    // 패스워드 변경 닫기 버튼		
+        let changePwSaveBtn = 'saveBtnCp' + (index + 1);                            // 패스워드 변경 확정 버튼
+	    /*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 캘린더 팝업 버튼
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/  
+		let calendarPopSaveBtnId = 'saveBtnDT' + (index + 1);     					// 캘린더 팝업 저장 버튼
+        let calendarPopCloseBtnId = 'closeBtnDT' + (index + 1);   					// 캘린더 팝업 닫기 버튼
+		
+		
+        /*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 페이징
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/     
+         let pagingNumBtnClass = 'aui-grid-paging-number'; 							// 페이징 번호버튼
+        let paginFirstBtnClass = 'aui-grid-paging-first'; 							// 페이징 처음버튼
+        let paginLastBtnClass = 'aui-grid-paging-last';   							// 페이징 마지막버튼
+        let paginPrevBtnClass = 'aui-grid-paging-prev';   							// 페이징 이전버튼
+        let paginNextBtnClass = 'aui-grid-paging-next';   							// 페이징 다음버튼
+	  
+        /*
+		----------------------------------------------------------------------------------------------------------------------------------
+	    * 기타 
+		----------------------------------------------------------------------------------------------------------------------------------
+		*/  
+        let isExpanded = true;													 // 확장 여부    
         let procBtnId = 'procBtn' + (index + 1);  								 // 프로시저 버튼
-        let savePopBtnId = 'saveBtn' + 'DP' + (index + 1); 					     // 팝업 저장 버튼
-        let delBtnId = 'delBtn' + (index + 1);                                   // 그리드 삭제 버튼
-        let delGridBtnId = 'delGridBtn' + (index + 1); 							 // 그리드 팝업 삭제 버튼
-        var addBtnId = 'addBtn' + (index + 1);   					    		 // 그리드 행추가 버튼
-        var showLv1Btn = 'showLv1Btn' + (index + 1);  						     // 그리드 메뉴 펼치기 버튼
-        var excelFile = 'excelFile' + (index + 1); 								 // 엑셀 버튼
-        var isExpanded = true;													 // 확장 여부
-        var saveExUpBtnId = 'saveBtnExUp' + (index + 1);                         // 엑셀업로드 저장 버튼
-        var exUpCheckBtnId = 'exUpCheck' + (index + 1);                          // 엑셀업로드 검사 버튼
-        var exUpCheckDownBtnId = 'exUpCheckDown' + (index + 1); 			     // 엑셀 업로드 검사결과 다운 버튼
-        var reportBtnId = 'reportBtn' + (index + 1); 					         // 리포트 출력 버튼
-        var changePwBtnId = 'changePwBtn' + (index + 1);
-        var changePwSaveBtn = 'saveBtnCp' + (index + 1);
-        var fileUpSaveBtnId = 'saveBtnFP' + (index + 1);
-        var changePwCencelBtn = 'closeBtnCp' + (index + 1);
-        var callInitResult = undefined;
-        var callBackResult = undefined;
-        var pagingNumBtnClass = 'aui-grid-paging-number';
-        var paginFirstBtnClass = 'aui-grid-paging-first';
-        var paginLastBtnClass = 'aui-grid-paging-last';
-        var paginPrevBtnClass = 'aui-grid-paging-prev';
-        var paginNextBtnClass = 'aui-grid-paging-next';
-        let calendarPopSaveBtnId = 'saveBtnDT' + (index + 1);
-        let calendarPopCloseBtnId = 'closeBtnDT' + (index + 1);
-        let gridPopSaveBtnId = 'saveBtnCP' +(index +1);
-        let popupGridBtnId = 'popGrid' + (index + 1);
-        let gridPopCancelBtnId = 'cancelBtnCP' + (index + 1);
-        let fileUpCloseBtnId = 'closeBtnFP' + (index + 1);
-        let moveBtnId = 'moveBtn' + (index + 1);
-        let gridPopXBtnId = 'gridPop-x-btn';
-        let fileDPId = 'fileBlobDP'+ (index + 1);  //기본 팝업 첨부파일 매니저
-        let fileFPId = 'fileBlobFP'+ (index + 1);  //그리드 팝업 첨부파일 매니저
-        let fileUpColId = 'fileUpCol'+ (index+1);  // 첨부파일 컬럼
-        let fileUpDelBtnId = 'delBtnFP' + (index+1); //첨부파일 팝업 삭제 컬럼
-        let fileDownBtnId = 'downBtnFP' + (index+1); //그리드 첨부파일 컬럼
+       
         
          $(document).on('click', '.' + popupGridBtnId, function (e) {
 	        let clickedColId = e.currentTarget.id;
