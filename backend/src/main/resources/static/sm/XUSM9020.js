@@ -13,7 +13,7 @@ var VIEW= {
 			      if(result1 != 'SUCCESS') {
 			    	  momWidget.splashHide();
 				      return;							     
-			      }	 							    					       
+			      }	 							    					     
 				  $('#gridIdSP1').jqxComboBox("clear");	
 				  if(data1.length == 0){
 					  //momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '그리드등록필수!'});
@@ -28,8 +28,16 @@ var VIEW= {
 				   return;
 				   }, undefined, undefined, this, false,'Y','crud');
 });
-	}
-    
+	},
+    savePopCallInit: function(index,your,action,btnId,param,result) { // 팝업저장 직전 호출
+	      if(index ==0 && (btnId =='createBtn' || btnId =='editBtn' || btnId =='copyBtn')){	    			
+			 param[0].menuId = widget.pageProperty[0]['menuId'];
+			 param[0].gridId = '1';
+			 result.param =  param;
+		    
+	     }
+  
+	},
 };
 
 $(document).ready(function(event){	

@@ -65,10 +65,14 @@
                 , DIVISION_CD
                 , FILE_ID
                 , FILE_TYPE
+                , FILE_PATH
                 , FILE_NM
+                , FILE_UUID
                 , PARAMETER
                 , FILE_BLOB
                 , FILE_PATH
+                , MENU_ID
+                , GRID_ID 
                 , DESCRIPTION
                 , CREATE_BY
                 , CREATE_DATE
@@ -79,10 +83,14 @@
                 , #{item.divisionCd, jdbcType=VARCHAR}
                 , #{seq, jdbcType=VARCHAR}
                 , #{item.fileType, jdbcType=VARCHAR}
+                , #{item.filePath, jdbcType=VARCHAR}
                 , #{item.fileNm, jdbcType=VARCHAR}
+                , #{item.fileUuid, jdbcType=VARCHAR}
                 , #{item.parameter, jdbcType=VARCHAR}
                 , #{item.fileBlob, jdbcType=VARCHAR}
                 , #{item.filePath, jdbcType=VARCHAR}
+                , #{item.menuId, jdbcType=VARCHAR}
+                , #{item.gridId, jdbcType=VARCHAR}
                 , #{item.description, jdbcType=VARCHAR}
                 , #{item.userId, jdbcType=VARCHAR}
                 , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})

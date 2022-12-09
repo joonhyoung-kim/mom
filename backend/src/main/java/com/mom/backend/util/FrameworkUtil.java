@@ -329,7 +329,7 @@ public class FrameworkUtil {
 		for (int i = 0; i < list.size(); i++) { 
 			    map = list.get(i);	
 				try {
-					if(map.get("fileType").equals("R")) {
+					if(map.get("fileType").equals("RP")) {
 						map.put("fileBlob",file);
 					}
 					else {
