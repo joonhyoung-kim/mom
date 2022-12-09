@@ -8536,6 +8536,9 @@ var momWidget = {
        
         
          $(document).on('click', '.' + popupGridBtnId, function (e) {
+		     if($('#'+e.currentTarget.id).hasClass("blocked")){
+			   return;
+             }
 	        let clickedColId = e.currentTarget.id;
 	        let popupId = '#gridPop-'+clickedColId;
 	        let gridPopId    = Number($(popupId).attr('gridindex')); // 드롭다운 팝업 ID
@@ -9848,10 +9851,6 @@ var momWidget = {
         });
 
         $(document).on('click', '#' + exUpCheckDownBtnId, function () {
-            /*	var excelData = AUIGrid.getGridData(that.excelUpGrid[index]);
-					AUIGrid.setGridData(that.excelDownGrid[index], excelData);		*/
-
-
             mom_ajax('R', momWidget.pageProperty[0]['programId'] + '.excelUpBtn' + (index + 1), [], function (result1, data1) {
                 if (result1 != 'SUCCESS') {
                     momWidget.splashHide();
@@ -9863,7 +9862,6 @@ var momWidget = {
                     rowIndexes.push(i);
                 }
                 AUIGrid.updateRows(that.excelUpGrid[index], data1, rowIndexes);
-                //AUIGrid.setGridData(that.excelUpGrid[index], data1);
                 var fileName = that.pageProperty[index]['programId'] + '_' + get_current_date('yyyy-mm-dd') + '_검사결과';
                 var excelDownOpt = {
                     fileName: fileName,
@@ -9875,16 +9873,7 @@ var momWidget = {
 
                 excelDownOpt.afterRequestCallback = function () { // 엑셀 만들고 호출되는 콜백함수
                     $('.aui-grid-export-progress-modal').remove();
-                    // AUIGrid.GridData(that.excelGrid[index]);
-
-                    //$('#excelArea' + (index + 1)).remove();
-                    //AUIGrid.destroy(that.excelDownGrid[index]);
-                    //that.exceldownGrid[index] = undefined;
                 }
-                //option.footers = footerProperty;
-                //that.excelDownGrid[index]
-                //  AUIGrid.setColumnPropByDataField(that.excelUpGrid[index], "valMsg", {visible : true});
-                // that.excelUpGrid[index] = AUIGrid.create('#excelUpGrid'+(index+1), that.excelUploadProperty[index], gridPros);
                 validateCol = {
                     dataField: 'valMsg'
                     , headerText: 'Result'
@@ -13351,7 +13340,9 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" for='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+' class="file-label" style="cursor: pointer">파일첨부</label>'); 
                                    
 						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
-                    } else { // 텍스트
+                    }  else if (popupProperty[index][i]['popupType'] == 'PG') { // 파일업로드 그리드
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).addClass('blocked');
+                    }  else { // 텍스트
 
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#ededed');
@@ -13381,6 +13372,8 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" for='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+' class="file-label" style="cursor: pointer">파일첨부</label>'); 
                                    
 						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
+                    } else if (popupProperty[index][i]['popupType'] == 'PG') { // 파일업로드 그리드
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).addClass('passed');
                     }else { // 텍스트
 
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
@@ -13457,6 +13450,9 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr("disabled", true);                            
 						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
                     }
+                    else if (popupProperty[index][i]['popupType'] == 'PG') { // 파일업로드 그리드
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).addClass('blocked');
+                    }
                      else { // 텍스트
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#ededed');
@@ -13484,7 +13480,9 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).parent().prepend('<label type="text" for='+ popupProperty[index][i]['popupId'] + 'DP' + btnIndex+' class="file-label" style="cursor: pointer">파일첨부</label>');      
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr("disabled", true);                                
 						//$('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).prev().attr('for',popupProperty[index][i]['popupId'] + 'DP' + btnIndex);
-                    }else { // 텍스트
+                    }else if (popupProperty[index][i]['popupType'] == 'PG') { // 파일업로드 그리드
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).addClass('passed');
+                    } else { // 텍스트
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('color', 'black');
@@ -13595,7 +13593,9 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#ededed');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background', '#ededed');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({disabled: true});
-                    } else { // 텍스트
+                    } else if (popupProperty[index][i]['popupType'] == 'PG') { // 파일업로드 그리드
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).addClass('blocked');
+                    }else { // 텍스트
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', true);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#ededed');
                     }
@@ -13609,7 +13609,9 @@ var momWidget = {
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).children().children().css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).jqxDateTimeInput({disabled: false});
-                    } else { // 텍스트
+                    } else if (popupProperty[index][i]['popupType'] == 'PG') { // 파일업로드 그리드
+                        $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).addClass('passed');
+                    }else { // 텍스트
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).attr('readonly', false);
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('background', '#fff');
                         $('#' + popupProperty[index][i]['popupId'] + 'DP' + btnIndex).css('color', 'black');
