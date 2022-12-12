@@ -17,25 +17,28 @@ var VIEW= {
 		    }
 		});
 	},
-	  //cellClickCallBack: function(index,rowIndex,target,e) {
-		//if(index == 100){
-			//var item = e.item;	
-			//$('#itemId'+'DP1').val(item['itemId']);
-			//$('#workCenterCd'+'DP1').val(item['workCenterCd']);
-           // $('#dropDownGridPop'+(index+1)).remove();
-			//momWidget.findBtnClicked(1, {routingId:item.routingId}, true, 'INIT',menuId,XUMD1080,[]);
-			 //$('#dropDownGridPop'+(index+1)).remove();
-		//}
-	
-	//},	
+	customCallInit: function(index,your,action,btnId,param,result) {
+	    if(index == 0){ // 팝업에서 드롭다운 컬럼선택하여 열기직전 호출
+	        let checkedItem = AUIGrid.getCheckedRowItems(widget.grid[index]);
+	      if(btnId == 'itemIdDP1'){   
+	             $('#itemIdSP11').val('');
+	      }
+	    }
+	    else if(index == 10){       
+	        if(btnId == 'customBtn11-1'){// 팝업에서 커스텀버튼(선택) 눌렀을떄 호출
+	            let checkItem = widget.getCheckedRowItems(widget.grid[index]);
+	            $('#itemId'+'DP1').val(checkItem[0]['itemId']);      
+	            $('#workCenterCd'+'DP1').val(checkItem[0]['workCenterCd']);
+	            widget.modalHide('#','gridPop-itemIdDP1','2');
+	        }
+	    }
+    }	
 			
-
-	
-	
 };
 
 $(document).ready(function(event){	
 	momSetup.init();
 	momWidget.init(1, menuId, VIEW);	
+	momWidget.gridPopup.init(1,11,1,'XUSM8010', VIEW); 
 	VIEW.init();
 });
