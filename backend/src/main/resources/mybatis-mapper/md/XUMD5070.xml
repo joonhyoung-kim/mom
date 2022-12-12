@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mom.backend.XUMD5070">
+    <select id="get_findBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">    
+        <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+        SELECT A.*
+        FROM   (
+         </if>
+                SELECT MLU.COMPANY_CD
+                     , MLU.DIVISION_CD
+                     , MLU.LOGISTICS_UNIT_CD 
+                     , MLU.LOGISTICS_UNIT_NM
+                     , MLU.STATE                     AS LOGISTICS_UNIT_STATE
+                     , (SELECT MOM_COMMON_PKG.FN_GET_CODE_NAME(MLU.COMPANY_CD, MLU.DIVISION_CD, 'MD0022', MLU.STATE, #{langCd, jdbcType=VARCHAR}) FROM DUAL) AS LOGISTICS_UNIT_STATE_NM
+                     , MLU.IDENTIFICATION_STOCK_ID   AS STOCK_ID 
+                     , MIS.IDENTIFICATION_STOCK_NM   AS STOCK_NM
+                     , MLU.RESOURCE_CD               
+                     , MLR.RESOURCE_NM               
+                     , MLU.MULTI_PRODUCT_YN
+                     , MLU.DESCRIPTION
+                     , MLU.UPDATE_BY       AS UPDATE_USER_NO
+                     , (SELECT MOM_COMMON_PKG.FN_GET_USER_NAME(MLU.COMPANY_CD, MLU.DIVISION_CD, MLU.UPDATE_BY) FROM DUAL ) AS UPDATE_USER_NM
+                     , TO_CHAR(MLU.UPDATE_DATE ,'YYYY-MM-DD HH24:MI:SS') AS UPDATE_DATE
+                     , ROWIDTOCHAR(MLU.ROWID)            AS KEY_ID
+                     , COUNT(*) OVER()   AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(PARTITION BY MLU.COMPANY_CD,MLU.DIVISION_CD ORDER BY MLU.LOGISTICS_UNIT_CD) AS ROW_CNT
+                FROM   MOM_LOGISTICS_UNIT MLU
+                     , MOM_IDENTIFICATION_STOCK MIS
+                     , MOM_LOGISTICS_RESOURCE MLR
+                WHERE  MLU.COMPANY_CD              = MIS.COMPANY_CD(+)
+                AND    MLU.DIVISION_CD             = MIS.DIVISION_CD(+)
+                AND    MLU.IDENTIFICATION_STOCK_ID = MIS.IDENTIFICATION_STOCK_ID(+)
+                AND    MLU.COMPANY_CD              = MLR.COMPANY_CD(+)
+                AND    MLU.DIVISION_CD             = MLR.DIVISION_CD(+)
+                AND    MLU.RESOURCE_CD             = MLR.RESOURCE_CD(+)
+                AND    MLU.COMPANY_CD              = #{companyCd, jdbcType=VARCHAR}
+                AND    MLU.DIVISION_CD             = #{divisionCd, jdbcType=VARCHAR}
+                <if test="logisticsUnitCdNm != null and logisticsUnitCdNm != ''">
+                AND    (UPPER(MLU.LOGISTICS_UNIT_CD) LIKE '%' || UPPER(#{logisticsUnitCdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MLU.LOGISTICS_UNIT_NM) LIKE '%' || UPPER(#{logisticsUnitCdNm, jdbcType=VARCHAR}) || '%')    
+                </if>
+                <if test="resourceCdNm != null and resourceCdNm != ''">
+                AND    (UPPER(MLU.RESOURCE_CD) LIKE '%' || UPPER(#{resourceCdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MLR.RESOURCE_NM) LIKE '%' || UPPER(#{resourceCdNm, jdbcType=VARCHAR}) || '%')    
+                </if>
+                <if test="stockIdNm != null and stockIdNm != ''">
+                AND    (UPPER(MLU.IDENTIFICATION_STOCK_ID) LIKE '%' || UPPER(#{stockIdNm, jdbcType=VARCHAR}) || '%' OR UPPER(MIS.IDENTIFICATION_STOCK_NM) LIKE '%' || UPPER(#{stockIdNm, jdbcType=VARCHAR}) || '%')    
+                </if>
+                <if test="logisticsUnitState != null and logisticsUnitState != ''">
+                AND    MLU.STATE  IN (${logisticsUnitState})
+                </if>  
+                <if test="multiProductYn != null and multiProductYn != ''">
+                 AND   MLU.MULTI_PRODUCT_YN = #{multiProductYn, jdbcType=VARCHAR}
+                </if>  
+        <if test="startPage != null and startPage != '' and endPage != null and endPage != ''">
+               ) A
+        WHERE ROW_CNT BETWEEN #{startPage, jdbcType=INTEGER} AND #{endPage, jdbcType=INTEGER}
+        </if>   
+    </select>
+    <delete id="remove_createBtn1" parameterType="java.util.List">
+    DELETE FROM MOM_PROC_LOGISTICS_UNIT
+        <where>      
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+          (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+             AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+             AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+          )
+            </foreach>
+        </where>
+    </delete>  
+    <insert id="create_createBtn1" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+        INTO MOM_PROC_LOGISTICS_UNIT( COMPANY_CD
+                                    , DIVISION_CD
+                                    , LOGISTICS_UNIT_CD
+                                    , LOGISTICS_UNIT_NM
+                                    , IDENTIFICATION_STOCK_ID
+                                    , RESOURCE_CD
+                                    , MULTI_PRODUCT_YN
+                                    , DESCRIPTION
+                                    , DEL_YN
+                                    , VAL_MSG
+                                    , MULTI_MSG 
+                                    , CREATE_BY
+                                    , CREATE_DATE
+                                    )
+        VALUES                      ( #{item.companyCd, jdbcType=VARCHAR}
+                                    , #{item.divisionCd, jdbcType=VARCHAR}
+                                    , #{item.logisticsUnitCd, jdbcType=VARCHAR}
+                                    , #{item.logisticsUnitNm, jdbcType=VARCHAR}
+                                    , #{item.stockId, jdbcType=VARCHAR}
+                                    , #{item.resourceCd, jdbcType=VARCHAR}
+                                    , #{item.multiProductYn, jdbcType=VARCHAR}
+                                    , #{item.description, jdbcType=VARCHAR}
+                                    , #{item.delYn, jdbcType=VARCHAR}
+                                    , #{item.valMsg, jdbcType=VARCHAR}
+                                    , #{item.multiMsg, jdbcType=VARCHAR}
+                                    , #{item.userId, jdbcType=VARCHAR}
+                                    , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                                    )
+        </foreach>
+    </insert>
+    <select id="proc_createBtn1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+        { CALL MOM_MASTER_INFO_PKG.SP_UPSERT_LOGISTICS_UNIT( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+                                                           , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+                                                           , #{companyCd,   jdbcType=VARCHAR, mode=IN}
+                                                           , #{divisionCd,  jdbcType=VARCHAR, mode=IN} 
+                                                           , #{actionMode,  jdbcType=VARCHAR, mode=IN}        
+                                                           , #{userId,      jdbcType=VARCHAR, mode=IN} )}                    
+    </select> 
+    <select id="get_excelUpBtn1" parameterType="java.util.HashMap"  resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">
+        SELECT NVL(VAL_MSG,'PASS') AS VAL_MSG
+             , MULTI_MSG      
+        FROM   MOM_PROC_LOGISTICS_UNIT
+        WHERE  COMPANY_CD  = #{companyCd , jdbcType=VARCHAR}
+        AND    DIVISION_CD = #{divisionCd , jdbcType=VARCHAR}
+        AND    CREATE_BY    = #{userId , jdbcType=VARCHAR}
+    </select> 
+    <delete id="remove_excelUpBtnV1" parameterType="java.util.List">
+    DELETE FROM MOM_PROC_LOGISTICS_UNIT
+        <where>
+            <foreach collection="list" item="item" open="" close="" separator="OR">
+          (       COMPANY_CD  = #{item.companyCd, jdbcType=VARCHAR}
+             AND  DIVISION_CD = #{item.divisionCd, jdbcType=VARCHAR}
+             AND  CREATE_BY   = #{item.userId, jdbcType=VARCHAR}
+          )
+            </foreach>
+        </where>
+    </delete>  
+    <insert id="create_excelUpBtnV1" parameterType="java.util.List">
+        <foreach item="item" collection="list" index="i" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL"> 
+        INTO MOM_PROC_LOGISTICS_UNIT( COMPANY_CD
+                                    , DIVISION_CD
+                                    , LOGISTICS_UNIT_CD
+                                    , LOGISTICS_UNIT_NM
+                                    , IDENTIFICATION_STOCK_ID
+                                    , RESOURCE_CD
+                                    , MULTI_PRODUCT_YN
+                                    , DESCRIPTION
+                                    , DEL_YN
+                                    , VAL_MSG
+                                    , MULTI_MSG 
+                                    , CREATE_BY
+                                    , CREATE_DATE
+                                    )
+        VALUES                      ( #{item.companyCd, jdbcType=VARCHAR}
+                                    , #{item.divisionCd, jdbcType=VARCHAR}
+                                    , #{item.logisticsUnitCd, jdbcType=VARCHAR}
+                                    , #{item.logisticsUnitNm, jdbcType=VARCHAR}
+                                    , #{item.stockId, jdbcType=VARCHAR}
+                                    , #{item.resourceCd, jdbcType=VARCHAR}
+                                    , #{item.multiProductYn, jdbcType=VARCHAR}
+                                    , #{item.description, jdbcType=VARCHAR}
+                                    , 'N'
+                                    , #{item.valMsg, jdbcType=VARCHAR}
+                                    , #{item.multiMsg, jdbcType=VARCHAR}
+                                    , #{item.userId, jdbcType=VARCHAR}
+                                    , MOM_COMMON_PKG.FN_GET_LOCAL_TIME(#{item.companyCd, jdbcType=VARCHAR},#{item.divisionCd, jdbcType=VARCHAR})
+                                    )
+        </foreach>
+    </insert>
+    <select id="proc_excelUpBtnV1" statementType="CALLABLE" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap">  
+        { CALL MOM_MASTER_INFO_PKG.SP_UPSERT_LOGISTICS_UNIT( #{p_err_code,  jdbcType=VARCHAR, mode=OUT}
+                                                           , #{p_err_msg,   jdbcType=VARCHAR, mode=OUT}
+                                                           , #{companyCd,   jdbcType=VARCHAR, mode=IN}
+                                                           , #{divisionCd,  jdbcType=VARCHAR, mode=IN} 
+                                                           , #{actionMode,  jdbcType=VARCHAR, mode=IN}        
+                                                           , #{userId,      jdbcType=VARCHAR, mode=IN} )}                    
+    </select> 
+</mapper> 

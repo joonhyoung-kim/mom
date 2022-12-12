@@ -355,5 +355,23 @@
     AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
     AND    USE_YN      = 'Y'
     ORDER BY AREA_NM    
+    </select>     
+    <select id="get_DD00037" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+    SELECT IDENTIFICATION_STOCK_ID      AS CODE 
+         , IDENTIFICATION_STOCK_ID  ||'('|| IDENTIFICATION_STOCK_NM     ||')' AS LABEL
+    FROM   MOM_IDENTIFICATION_STOCK   
+    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+    AND    USE_YN      = 'Y'
+    ORDER BY IDENTIFICATION_STOCK_NM    
     </select>       
+    <select id="get_DD00038" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+    SELECT RESOURCE_CD       AS CODE 
+         , RESOURCE_CD  ||'('|| RESOURCE_NM      ||')' AS LABEL
+    FROM   MOM_LOGISTICS_RESOURCE   
+    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+    AND    USE_YN      = 'Y'
+    ORDER BY RESOURCE_NM    
+    </select>         
 </mapper>
