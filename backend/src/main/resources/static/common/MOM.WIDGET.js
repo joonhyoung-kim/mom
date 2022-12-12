@@ -8397,19 +8397,18 @@ var momWidget = {
     setBtnEvent: function (index, your) {
         var that = momWidget;
         for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) { //커스텀 버튼 이벤트 핸들러 추가
-
             if (that.buttonProperty[index].length == 0) {
                 break;
             }
             if (that.buttonProperty[index][i]['buttonType'] == 'DG') {
                 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function (e) {		//커스텀 그리드랍업
                     that.setCustomGridPopBtn(index, e.currentTarget.id.split('customBtn')[1], e.currentTarget.id, your, e);
-                });
+                 });
 
             } else if (that.buttonProperty[index][i]['buttonType'] == 'CP') {
                 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function (e) {	 //커스텀 랍업
                     that.setCustomPopBtn(index, e.currentTarget.id.split('customBtn')[1], e.currentTarget.id, your, e);
-                });
+                 });
 
             } else if (that.buttonProperty[index][i]['buttonType'] == 'ST' || that.buttonProperty[index][i]['buttonType'] == 'EX' || that.buttonProperty[index][i]['buttonType'] == '') {
                 $(document).on('click', '#' + that.buttonProperty[index][i]['buttonId'], function (e) {	//커스텀 버튼(팝업없이 ACTION만실행)
@@ -9976,6 +9975,10 @@ var momWidget = {
             let percentVal = '0%';
             let param = [];
             let checkedItems = AUIGrid.getGridData(that.excelUpGrid[index]);
+            let refindFlag = 'N';
+            let actionType = $('#excelUpPop' + (index + 1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop' + (index + 1)).attr('actiontype');
+            let validateYn = $('#excelUpPop' + (index + 1)).attr('validateyn') == undefined ? 'N' : $('#excelUpPop' + (index + 1)).attr('validateyn');
+            let queryId = validateYn == 'Y' ? that.pageProperty[index]['menuId'] + '.excelUpBtnV' + (index + 1) : that.pageProperty[index]['programId'] + '.excelUpBtn' + (index + 1);
             if (checkedItems.length == 0) {
                 momWidget.messageBox({type: 'warning', width: '400', height: '145', html: '데이터가 없습니다!'});
                 momWidget.splashHide();
@@ -10002,6 +10005,9 @@ var momWidget = {
 			let buttonParamMap  = {};
 			
 			buttonPropArray.forEach((map1, i, list1) => {
+			if(map1['buttonId'] == 'excelUpBtn' || map1['buttonId'] == 'excelUpBtnV'){
+				 refindFlag =  map1['refindFlag'];
+			}
 		    if (map1['buttonId'] == 'excelUpBtnV') {
 			       buttonParamText = map1['buttonParameter'];			   
 				   buttonParamMap = that.getButtonParamArray(buttonParamText);		
@@ -10009,15 +10015,12 @@ var momWidget = {
 		       param[k] = Object.assign(param[k], buttonParamMap);
 		    });
 			}
-		
-		
+			
         });
-            let actionType = $('#excelUpPop' + (index + 1)).attr('actiontype') == undefined ? 'CU' : $('#excelUpPop' + (index + 1)).attr('actiontype');
-            let validateYn = $('#excelUpPop' + (index + 1)).attr('validateyn') == undefined ? 'N' : $('#excelUpPop' + (index + 1)).attr('validateyn');
-            let queryId = validateYn == 'Y' ? that.pageProperty[index]['menuId'] + '.excelUpBtnV' + (index + 1) : that.pageProperty[index]['programId'] + '.excelUpBtn' + (index + 1);
-
+         
+           
             let tmpYn = $('#excelUpPop' + (index + 1)).attr('tmpYn') == undefined ? 'N' : $('#excelUpPop' + (index + 1)).attr('tmpYn');
-          
+    
                 if (validateYn == 'Y') {
                     param[0].excelUpYn = 'Y';
                     param[0].sessionId = Math.floor(Math.random() * 10000000000000001);
@@ -10027,13 +10030,13 @@ var momWidget = {
                         // percent.html(percentVal+' '+paramSize+'/'+data.percent);
                         if (data[0]['p_err_code'] == 'E' || data.length == 0) {
                             $("#pleaseWaitDialog").modal('hide');
-                            momWidget.messageBox({
+                            that.messageBox({
                                 type: 'danger',
                                 width: '400',
                                 height: '145',
                                 html: multiLang.transText('MESSAGE', 'MSG00033')
                             });
-                            momWidget.splashHide();
+                            that.splashHide();
                             return;
                         }
                         if (that.checkActionCallBack(index, 'GS', param, 'createBtn' + index, your)['result'] != 'SUCCESS') {
@@ -10043,18 +10046,21 @@ var momWidget = {
                                 height: '145',
                                 html: 'callBack action fail!'
                             });
-                            momWidget.splashHide();
+                            that.splashHide();
                             return;
                         }
-                        momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1), momWidget.pageProperty[index]['programId'], your);
-                        //$('#excelUpPop'+(index+1)).modal('hide');
-                        momWidget.messageBox({
+                        if(refindFlag == 'Y'){
+	 						that.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1), that.pageProperty[index]['programId'], your);
+						}
+                       
+                 
+                        that.messageBox({
                             type: 'success',
                             width: '400',
                             height: '145',
                             html: multiLang.transText('MESSAGE', 'MSG00001')
                         });
-                        momWidget.splashHide();
+                        that.splashHide();
                         //$("#pleaseWaitDialog").modal('hide');
                         return;
                     }, undefined, index, this, false, undefined, 'EA');
@@ -10096,6 +10102,16 @@ var momWidget = {
                                             height: '145',
                                             html: multiLang.transText('MESSAGE', data3[0]['p_err_code'])
                                         });
+                                        if(refindFlag == 'Y'){
+	 								     that.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1), that.pageProperty[index]['programId'], your);
+										}
+									    that.messageBox({
+			                            type: 'success',
+			                            width: '400',
+			                            height: '145',
+			                            html: multiLang.transText('MESSAGE', 'MSG00001')
+			                        });
+                       
                                         momWidget.splashHide();
                                         return;
                                     }
@@ -10151,20 +10167,19 @@ var momWidget = {
                                 momWidget.splashHide();
                                 return;
                             }
-
-                               //momWidget.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1), momWidget.pageProperty[index]['programId'], your);
-
-
-                            //$('#excelUpPop'+(index+1)).modal('hide');
-                            momWidget.messageBox({
-                                type: 'success',
-                                width: '400',
-                                height: '145',
-                                html: param.length+'건 업로드 성공'
-                               // html: multiLang.transText('MESSAGE', 'MSG00001')
-                            });
+    				    if(refindFlag == 'Y'){
+	 						that.findBtnClicked(index, {}, true, 'saveBtnExUp' + (index + 1), that.pageProperty[index]['programId'], your);
+						}                                     
+                            that.messageBox({
+	                            type: 'success', 
+	                            width: '400',
+	                            height: '145',
+	                            html: multiLang.transText('MESSAGE', 'MSG00001')
+                        });
+                         
+                            
                             momWidget.splashHide();
-                            //$("#pleaseWaitDialog").modal('hide');
+                           
                             return;
                         }, undefined, index, this, false, undefined, 'EA');
                     }
@@ -10699,8 +10714,10 @@ var momWidget = {
             let actionType = 'CU';
             let queryId = that.pageProperty[index]['programId'] + '.saveBtn' + (index + 1);
             let targetParam = '';
+            let refindFlag = 'N';
             for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
                 if (that.buttonProperty[index][i]['buttonId'] == 'saveBtn') {
+					refindFlag = that.buttonProperty[index][i]['refindFlag'];
                     targetParam = that.buttonProperty[index][i]['checkType'];
                     break;
                 }
@@ -10816,8 +10833,10 @@ var momWidget = {
                             if (your.initParam != undefined && your.initParam != '') {
                                 initParam = your.initParam;
                             }
-                            momWidget.findBtnClicked(index, initParam, false, 'findBtn', momWidget.pageProperty[index]['menuId'], your);
-                            // $('#' +'defaultPop'+(index+1)).modal('hide');
+                            if(refindFlag == 'Y'){
+	 							momWidget.findBtnClicked(index, initParam, false, 'findBtn', momWidget.pageProperty[index]['menuId'], your);
+						    }
+
                             momWidget.messageBox({
                                 type: 'success',
                                 width: '400',
@@ -10854,9 +10873,9 @@ var momWidget = {
                         momWidget.splashHide();
                         return;
                     }
-
-
-                    momWidget.findBtnClicked(index, {}, true, 'saveBtn', momWidget.pageProperty[index]['programId'], your);
+   					if(refindFlag == 'Y'){
+	 				    momWidget.findBtnClicked(index, {}, true, 'saveBtn', momWidget.pageProperty[index]['programId'], your);
+					}
 
                     momWidget.messageBox({
                         type: 'success',
@@ -10895,9 +10914,10 @@ var momWidget = {
             let extraParam = {};
             let validateCheck = true;
             let actionMode = 'C';
-
+            let refindFlag = 'N';
             for(let i = 0, max = that.buttonProperty[index].length; i < max; i++){
 				if(that.buttonProperty[index][i]['buttonId']+(index+1) == buttonId){
+			      refindFlag =that.buttonProperty[index][i]['refindFlag'];
 				  if(that.buttonProperty[index][i]['execButtonId'] != undefined && that.buttonProperty[index][i]['execButtonId'] != null && that.buttonProperty[index][i]['execButtonId'] != ''){
 		              queryId = that.pageProperty[index]['programId'] + '.' + that.buttonProperty[index][i]['execButtonId'];
 		              break;
@@ -11476,13 +11496,7 @@ var momWidget = {
                     momWidget.splashHide();
                     return;
                 }
-                /*	param = param.map(function(item1){
-			    var obj = callInitResult['param'].find(function(item2){
-		        return item2;
-		    })
-		    $.extend(item1, obj);
-			    return item1;
-			});*/
+
                 param = callInitResult['param'];
                 if (Array.isArray(param) == true) {
                     param = param.length == 0 ? {} : param;
@@ -11548,27 +11562,30 @@ var momWidget = {
                             }
                             callBackResult = that.checkActionCallBack(index, actionType, {}, buttonId, your);
                             if (callBackResult['result'] != 'SUCCESS') {
-                                momWidget.messageBox({
+                                that.messageBox({
                                     type: 'danger',
                                     width: '400',
                                     height: '145',
                                     html: callBackResult['msg']
                                 });
-                                momWidget.splashHide();
+                                that.splashHide();
                                 return;
                             }
                             if (your.initParam != undefined && your.initParam != '') {
                                 initParam = your.initParam;
                             }
-                            momWidget.findBtnClicked(btnIndex, initParam, false, buttonId, momWidget.pageProperty[btnIndex]['menuId'], your);
-                            // $('#' +'defaultPop'+(index+1)).modal('hide');
-                            momWidget.messageBox({
+                            if(refindFlag=='Y'){
+	 						    that.findBtnClicked(btnIndex, initParam, false, buttonId, that.pageProperty[btnIndex]['menuId'], your);
+						    }
+                          
+                        
+                            that.messageBox({
                                 type: 'success',
                                 width: '400',
                                 height: '145',
                                 html: multiLang.transText('MESSAGE', 'MSG00001')
                             });
-                            momWidget.splashHide();
+                            that.splashHide();
                             return;
                         }, undefined, index, this, false, undefined, actionMode);
 
@@ -11594,33 +11611,36 @@ var momWidget = {
                     }
                     callBackResult = that.checkActionCallBack(index, actionType, {}, 'createBtn' + index, your);
                     if (callBackResult['result'] != 'SUCCESS') {
-                        momWidget.messageBox({
+                        that.messageBox({
                             type: 'danger',
                             width: '400',
                             height: '145',
                             html: callBackResult['msg']
                         });
-                        momWidget.splashHide();
+                        that.splashHide();
                         return;
                     }
                     if (your.initParam != undefined && your.initParam != '') {
                         initParam = your.initParam;
                     }
-                    momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn', momWidget.pageProperty[btnIndex]['menuId'], your);
-                    momWidget.messageBox({
+                    if(refindFlag=='Y'){
+	 					that.findBtnClicked(btnIndex, initParam, false, 'findBtn', that.pageProperty[btnIndex]['menuId'], your);
+					}
+                
+                    that.messageBox({
                         type: 'success',
                         width: '400',
                         height: '145',
                         html: multiLang.transText('MESSAGE', 'MSG00001')
                     });
-                    momWidget.splashHide();
+                    that.splashHide();
                 }, undefined, index, this, false,'Y',actionType,file);
 				  
 				}
 				else{
 					 mom_ajax(actionType, queryId, param, function (result, data) {
                     if (data.length == undefined || data.length == 0 || data[0]['p_err_code'] == 'E') {
-                        momWidget.messageBox({
+                        that.messageBox({
                             type: 'danger',
                             width: '400',
                             height: '145',
@@ -11631,35 +11651,29 @@ var momWidget = {
                     }
                     callBackResult = that.checkActionCallBack(index, actionType, {}, 'createBtn' + index, your);
                     if (callBackResult['result'] != 'SUCCESS') {
-                        momWidget.messageBox({
+                        that.messageBox({
                             type: 'danger',
                             width: '400',
                             height: '145',
                             html: callBackResult['msg']
                         });
-                        momWidget.splashHide();
+                        that.splashHide();
                         return;
                     }
                     if (your.initParam != undefined && your.initParam != '') {
                         initParam = your.initParam;
                     }
-                    momWidget.findBtnClicked(btnIndex, initParam, false, 'findBtn', momWidget.pageProperty[btnIndex]['menuId'], your);
-                  /*  var nowGridData = AUIGrid.getGridData(that.grid[index]);
-                    let prevCheckItem = [];
-                       prevCheckItem = nowGridData.filter(function(e){
-                        return e.gridId === that.prevKeyItem[index] ;
-                    })
-                    if(prevCheckItem.length==1){
-                        AUIGrid.setCheckedRowsByValue(that.grid[index], 'gridId', prevCheckItem[0]['gridId']);
-                    }*/
-                    // $('#' +'defaultPop'+(index+1)).modal('hide');
-                    momWidget.messageBox({
+                   
+     				if(refindFlag=='Y'){
+	 					 that.findBtnClicked(btnIndex, initParam, false, 'findBtn', that.pageProperty[btnIndex]['menuId'], your);
+					}
+                    that.messageBox({
                         type: 'success',
                         width: '400',
                         height: '145',
                         html: multiLang.transText('MESSAGE', 'MSG00001')
                     });
-                    momWidget.splashHide();
+                    that.splashHide();
                 }, undefined, index, this, false);
 				}
                
@@ -12489,7 +12503,7 @@ var momWidget = {
             let buttonParamList = [];
             let buttonParamMap = {};
             var obj = [];
-
+            let refindFlag = 'N';
             param = that.getCheckedRowItems(that.grid[index]);
             if (param.length == 0) {
                 momWidget.messageBox({
@@ -12501,8 +12515,10 @@ var momWidget = {
                 momWidget.splashHide();
                 return;
             }
+            
             for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
                 if (that.buttonProperty[index][i]['buttonId'] + (index + 1) == buttonId) {
+					refindFlag = that.buttonProperty[index][i]['refindFlag'];
                     eventType = that.buttonProperty[index][i]['eventType'];
                     tmpYn = that.buttonProperty[index][i]['tempUseYn'];
                     buttonParamText = that.buttonProperty[index][i]['buttonParameter'];
@@ -12595,8 +12611,18 @@ var momWidget = {
                                     height: '145',
                                     html: multiLang.transText('MESSAGE', data3[0]['p_err_code'])
                                 });
-                                momWidget.splashHide();
-                                return;
+                           if(refindFlag == 'Y'){
+							  momWidget.findBtnClicked(index, {}, true, 'findBtn', momWidget.pageProperty[index]['menuId'], your);
+						   }                   
+                    	    momWidget.messageBox({
+	                        type: 'success',
+	                        width: '400',
+	                        height: '145',
+	                        html: multiLang.transText('MESSAGE', 'MSG00001')
+                    		});
+		                    momWidget.splashHide();
+		                    return;
+                              
                             }
                         }, undefined, undefined, this, false, undefined, 'D');
 
@@ -12613,16 +12639,7 @@ var momWidget = {
                         momWidget.splashHide();
                         return;
                     }
-
-                    momWidget.findBtnClicked(index, {}, true, 'findBtn', momWidget.pageProperty[index]['menuId'], your);
-                    momWidget.messageBox({
-                        type: 'success',
-                        width: '400',
-                        height: '145',
-                        html: multiLang.transText('MESSAGE', 'MSG00001')
-                    });
-                    momWidget.splashHide();
-                    return;
+               
                 }, undefined, undefined, this, false);
             } else {
                 callInitResult = that.checkActionCallInit(index, eventType, param, 'delBtn', your, param, e);
@@ -12656,7 +12673,9 @@ var momWidget = {
                         return;
                     }
                     callBackParam = callBackResult['param'];
-                    momWidget.findBtnClicked(index, callBackParam, false, 'findBtn', momWidget.pageProperty[index]['menuId'], your);
+                    if(refindFlag == 'Y'){
+					    momWidget.findBtnClicked(index, callBackParam, true, 'findBtn', momWidget.pageProperty[index]['menuId'], your);
+					}                   
                     momWidget.messageBox({
                         type: 'success',
                         width: '400',
@@ -12758,8 +12777,10 @@ var momWidget = {
         let buttonParamList = [];
         let buttonParamMap = {};
         let isProcess = 'Y';
+        let refindFlag = 'N';
         for (let i = 0, max = that.buttonProperty[index].length; i < max; i++) {
-            if (that.buttonProperty[index][i]['buttonId'] == btnId) {               
+            if (that.buttonProperty[index][i]['buttonId'] == btnId) {  
+	            refindFlag = that.buttonProperty[index][i]['refindFlag'];
                 if(that.buttonProperty[index][i]['execButtonId'] != undefined && that.buttonProperty[index][i]['execButtonId'] != null && that.buttonProperty[index][i]['execButtonId'] != ''){
 		              queryId = that.pageProperty[index]['menuId'] + '.' + that.buttonProperty[index][i]['execButtonId'];		            
 				}
@@ -12916,8 +12937,18 @@ var momWidget = {
                                 height: '145',
                                 html: multiLang.transText('MESSAGE', data3[0]['p_err_msg'] == null ? '프로시저 에러발생!' : data3[0]['p_err_msg'])
                             });
-                            momWidget.splashHide();
-                            return;
+                            if(refindFlag == 'Y'){
+	 						   momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['menuId'], your);
+							}
+                               
+               				    momWidget.messageBox({
+				                    type: 'success',
+				                    width: '400',
+				                    height: '145',
+				                    html: multiLang.transText('MESSAGE', 'MSG00001')
+            					});
+			                   momWidget.splashHide();
+			                   return;
                         }
                         isProcess = 'N';
                     }, undefined, undefined, this, false, undefined, actionMode);
@@ -12933,15 +12964,7 @@ var momWidget = {
                 if (isProcess == 'Y') {
                     return;
                 }
-                momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['menuId'], your);
-                momWidget.messageBox({
-                    type: 'success',
-                    width: '400',
-                    height: '145',
-                    html: multiLang.transText('MESSAGE', 'MSG00001')
-                });
-                momWidget.splashHide();
-                return;
+            
             }, undefined, undefined, this, false);
 
         } else {
@@ -12973,7 +12996,10 @@ var momWidget = {
 		                momWidget.splashHide();
 		                return;
             	  }
-	                momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['menuId'], your);
+            	  if(refindFlag == 'Y'){
+	               momWidget.findBtnClicked(index, {}, true, btnId, momWidget.pageProperty[index]['menuId'], your);
+				  }
+	               
 	                momWidget.messageBox({
 	                    type: 'success',
 	                    width: '400',
@@ -13047,7 +13073,6 @@ var momWidget = {
 
             AUIGrid.setGridData(that.grid[gridPopIndex - 1], data1);
 
-            // $('#findBtn'+gridPopIndex).attr('id','findBtn'+popupBtnIndex)
             $('#popupTitle' + (index + 1)).text(buttonNm);
             for (let i = 0; i <= 10; i++) {
                 if ($('#grid' + (gridPopIndex + i)).length > 0) {
@@ -13057,10 +13082,7 @@ var momWidget = {
                 }
             }
 
-            //$('#' + 'gridPop-' + btnId).modal('show');
             that.modalShow('id','gridPop-' + btnId,'1');
-            // $('#'+'gridPop-'+btnId).modal('show');
-            //$('#'+'gridPop-'+btnId).draggable();
             let callBackResult = that.checkActionCallBack(index, 'C', totalParam, 'customGridPopBtn' + btnIndex, your, data1);
             if (callBackResult['result'] != 'SUCCESS') {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
