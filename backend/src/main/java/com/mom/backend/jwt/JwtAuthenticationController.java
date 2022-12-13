@@ -46,47 +46,45 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String,String> paramMap) throws Exception {
-		  HttpHeaders headers = new HttpHeaders();
-		  headers.set("ContentType", "application/json;charset=UTF-8");
-		  Map<String, Object> tokenMap = new HashMap<String, Object>();    
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> paramMap) throws Exception {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("ContentType", "application/json;charset=UTF-8");
 		String clientId = paramMap.get("userId");
 		String clientPw = paramMap.get("password");
 		String companyCd = paramMap.get("companyCd");
 		String divisionCd = paramMap.get("divisionCd");
 		String languageCd = paramMap.get("languageCd");
-		String comboType = paramMap.get("comboType");		
+		String comboType = paramMap.get("comboType");
 
-		//System.out.println("클라이언트 인코딩pw="+encodedPassword);
-	
+		// System.out.println("클라이언트 인코딩pw="+encodedPassword);
+
 		JwtLoginInfo.divisionCd = divisionCd;
 		JwtLoginInfo.companyCd = companyCd;
 		JwtLoginInfo.languageCd = languageCd;
 		JwtLoginInfo.comboType = comboType;
-		//authenticate(clientId, clientPw); //사용자 인증    
+		// authenticate(clientId, clientPw); //사용자 인증
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(clientId);
-		 if(passwordEncoder.matches(clientPw,userDetails.getPassword())){
-			 System.out.println("비밀번호 일치!");			 			 
-			 final String token = jwtTokenUtil.generateToken(userDetails); //토큰생성
+		if (passwordEncoder.matches(clientPw, userDetails.getPassword())) {
+			// System.out.println("비밀번호 일치!");
+			final String token = jwtTokenUtil.generateToken(userDetails); // 토큰생성
 
 			// tokenMap.put("token", token);
 			// JwtLoginInfo.resultMapList.add(tokenMap);
-			 if(clientId.equals("master")) {
-				 
-				 return ResponseEntity.ok().headers(headers).body(JwtLoginInfo.resultMapList);
-			 }
-			 else {
-				 return ResponseEntity.ok(new JwtResponse(token));
-			 }
-			
+			if (clientId.equals("master")) {
+
+				return ResponseEntity.ok().headers(headers).body(JwtLoginInfo.resultMapList);
+			} else {
+				return ResponseEntity.ok(new JwtResponse(token));
+			}
+
 			// return ResponseEntity.ok().headers(headers).body(JwtLoginInfo.resultMapList);
-			 //return ResponseEntity(HttpStatus.OK);
-	        }
-		 else {
-			   //System.out.println("비밀번호 불일치!");	
-			   throw new BadCredentialsException(clientId);
-		 }	
+			// return ResponseEntity(HttpStatus.OK);
+		} else {
+			// System.out.println("비밀번호 불일치!");
+			throw new BadCredentialsException(clientId);
+		}
 	}
+
 	@PostMapping(value = "/loginCheck")
 	private void authenticate(String username, String password) throws Exception {
 		try {

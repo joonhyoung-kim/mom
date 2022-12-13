@@ -27,349 +27,350 @@ import com.mom.backend.util.TestInnerResultHandler;
 import com.mom.backend.util.exception.CustomDataAccessException;
 
 import lombok.RequiredArgsConstructor;
+
 @Repository("momDao")
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class MomDao {
-	
-	private final SqlSessionTemplate sqlSession ;
-	private final SqlSessionFactory sqlSessionFactory;	
+
+	private final SqlSessionTemplate sqlSession;
+	private final SqlSessionFactory sqlSessionFactory;
 	private final DataSourceTransactionManager dataSourceTransactionManager;
 	private final TestInnerResultHandler testInnerResultHandler;
 	private final FrameworkUtil frameworkUtil;
 	private final PrintUtil printUtil;
-	boolean debugOn = true;	 // 콘솔 디버깅 출력여부
-	boolean exceptionOn;     // 콘솔 예외 출력여부
-	
-	public List<Map<String,Object>> getMapList(String query, Map<String,Object> param) { //조회 이벤트 처리
+	boolean debugOn = true; // 콘솔 디버깅 출력여부
+	boolean exceptionOn; // 콘솔 예외 출력여부
+
+	public List<Map<String, Object>> getMapList(String query, Map<String, Object> param) { // 조회 이벤트 처리
 		printUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
-		
-		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+
+		if (query == null || query.length() < 1 || param == null || param.isEmpty()) {
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true,
+					exceptionOn);
 			return frameworkUtil.createResponseListEmpty();
 		}
-		List<Map<String,Object>> result =  null;
+		List<Map<String, Object>> result = null;
 		long start = System.currentTimeMillis();
-		try {	
-			 		
-			//System.out.println("parameter="+param);
+		try {
+
+			// System.out.println("parameter="+param);
 			printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			System.out.println("#### " + simpleDateFormat.format(today) + " Select " + param.get("companyCd") + ", " + query.substring(query.indexOf("get_")) + " = " + DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
+			System.out.println("#### " + simpleDateFormat.format(today) + " Select " + param.get("companyCd") + ", "
+					+ query.substring(query.indexOf("get_")) + " = "
+					+ DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
 			result = sqlSession.selectList(query.trim(), param);
-					  
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
-			printUtil.print(null, null, null, "$", "getMapList : " + printUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
+			printUtil.print(null, null, null, "$", "getMapList : " + printUtil.queryString(query, "E", 0), null, false,
+					true, true, debugOn);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			System.out.println("#### FAIL : " + simpleDateFormat.format(today) + " Select " + param.get("companyCd") + ", " + query.substring(query.indexOf("get_")) + " = " + DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
-			
+			System.out.println("#### FAIL : " + simpleDateFormat.format(today) + " Select " + param.get("companyCd")
+					+ ", " + query.substring(query.indexOf("get_")) + " = "
+					+ DurationFormatUtils.formatDuration(diff, "HH:mm:ss:SS"));
+
 			return frameworkUtil.createResponseListEmpty();
+		} finally {
+
 		}
-		finally {			     
-				
-			
-		}
-		 
+
 		return result;
-		
+
 	}
-	public List<Map<String,Object>> procMapList(String query, List<Map<String,Object>> param) {
+
+	public List<Map<String, Object>> procMapList(String query, List<Map<String, Object>> param) {
 		printUtil.print("MomDao", "getMapList", "#", "$", "query", query, true, true, false, debugOn);
 		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
-		
-		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
+
+		if (query == null || query.length() < 1 || param == null || param.isEmpty()) {
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true,
+					exceptionOn);
 			return frameworkUtil.createResponseListEmpty();
 		}
-		List<Map<String,Object>> result =  new ArrayList<>();
+		List<Map<String, Object>> result = new ArrayList<>();
 		long start = System.currentTimeMillis();
-		try {	
-			
-			if(param.size()>1) {
+		try {
+
+			if (param.size() > 1) {
 				sqlSession.select(query.trim(), param, new TestInnerResultHandler(result));
-			}
-			else {
+			} else {
 				sqlSession.select(query.trim(), param.get(0), new TestInnerResultHandler(result));
 			}
-				result = param;
+			result = param;
 
-			System.out.println("조회파람="+param);
+			System.out.println("조회파람=" + param);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
-			printUtil.print(null, null, null, "$", "getMapList : " + printUtil.queryString(query, "E", 0), null, false, true, true, debugOn);
+			printUtil.print(null, null, null, "$", "getMapList : " + printUtil.queryString(query, "E", 0), null, false,
+					true, true, debugOn);
 			long diff = System.currentTimeMillis() - start;
 			Date today = new Date(System.currentTimeMillis() + (9 * 3600 * 1000));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
+
 			return frameworkUtil.createResponseListEmpty();
-		}
-		finally {			     
-					       			        
+		} finally {
+
 		}
 		return result;
-	}	
-	public List<Map<String, Object>> createMapList(String query, List<Map<String,Object>> param)  {
+	}
+
+	public List<Map<String, Object>> createMapList(String query, List<Map<String, Object>> param) {
 		ProgressInfo.successCount = 0;
 		printUtil.print("MomDao", "createMapList", "#", "$", "query", query, true, true, false, debugOn);
 		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
-		 //System.out.println("크리에이트!");
-		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
+		// System.out.println("크리에이트!");
+		if (query == null || query.length() < 1 || param == null || param.isEmpty()) {
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true,
+					exceptionOn);
+			return frameworkUtil.createResponseMap(false, "query가 null 이거나 param이 null입니다.");
 		}
-		
-        long startTime = System.currentTimeMillis();   		
-		int resultCount = 0;	
+
+		long startTime = System.currentTimeMillis();
+		int resultCount = 0;
 		int paramSize = param.size();
 
-        SqlSession sqlSession1 = null;
-        	try {
-        	      sqlSession1 = sqlSessionFactory.openSession(); 		
-        	 
-        	     
-        	      resultCount = sqlSession1.insert(query, param);
-    			  System.out.println("insert count="+resultCount);
-	        			if(resultCount != 0) {	        				
-	        				if(param.get(0).get("commitYn")!=null) {
-	        					if(param.get(0).get("commitYn").toString().equals("Y")) {
-		        					sqlSession1.flushStatements();          	
-		        		        	System.out.println("commit success!");
-		        				} 
-	        				}
-	        			       	        	
-	        			
-	            		}
-	        			else {	   
-	        				   System.out.println("fail count="+resultCount); 
-	        			 	   sqlSession1.flushStatements();
-	        				   return frameworkUtil.createResponseMap(false,"DB수정 실패");      		 
-	            		}            		       				        			       			
-            }	
+		SqlSession sqlSession1 = null;
+		try {
+			sqlSession1 = sqlSessionFactory.openSession();
 
-        	catch(Exception e) {
-        		sqlSession1.rollback();
-        		CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage(),e.getCause());
-        		throw cdae;
-            	
-            } 
-        
-        	
-        	finally {			
+			resultCount = sqlSession1.insert(query, param);
+			System.out.println("insert count=" + resultCount);
+			if (resultCount != 0) {
+				if (param.get(0).get("commitYn") != null) {
+					if (param.get(0).get("commitYn").toString().equals("Y")) {
+						sqlSession1.flushStatements();
+						System.out.println("commit success!");
+					}
+				}
 
-            	long endTime = System.currentTimeMillis();
-                long resutTime = endTime - startTime;            
-                printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
-        	}  
-        return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
+			} else {
+				System.out.println("fail count=" + resultCount);
+				sqlSession1.flushStatements();
+				return frameworkUtil.createResponseMap(false, "DB수정 실패");
+			}
+		}
+
+		catch (Exception e) {
+			sqlSession1.rollback();
+			CustomDataAccessException cdae = new CustomDataAccessException(e.getMessage(), e.getCause());
+			throw cdae;
+
+		}
+
+		finally {
+
+			long endTime = System.currentTimeMillis();
+			long resutTime = endTime - startTime;
+			printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime / 1000 + "(ms)", false, true, true,
+					debugOn);
+		}
+		return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
-	
 
-			
-	public List<Map<String, Object>> modifyMapList(String query, List<Map<String,Object>> param) {
+	public List<Map<String, Object>> modifyMapList(String query, List<Map<String, Object>> param) {
 		printUtil.print("MomDao", "modifyMapList", "#", "$", "query", query, true, true, false, debugOn);
 		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
-		
-		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
-		}
-		
-        long startTime = System.currentTimeMillis();
-        int resultCount = 0;
-    	
-    	DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
-    	defaultTransactionDefinition.setName("Transaction");
-    	defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-    	
-    	TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
-    	SqlSession sqlSession1 = null;
-    	try {
-    		sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);   		 			
-    				resultCount = sqlSession1.update(query, param);
-    				System.out.println("카운트"+resultCount);
-        			if(resultCount != 0 ) {
-        				sqlSession1.flushStatements();
-        	        	dataSourceTransactionManager.commit(transactionStatus);
-        	        	System.out.println("업데이트후 커밋실행");
-        			} else { 
-        				      return frameworkUtil.createResponseMap(false,"DB수정 실패");      				
-        			}
 
-        } catch(Exception e) {        	
-        	dataSourceTransactionManager.rollback(transactionStatus);
-        } finally {
-        	sqlSession1.close();  
-        	long endTime = System.currentTimeMillis();
-            long resutTime = endTime - startTime;            
-            printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);          
-    	}
-    	
-    	return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
+		if (query == null || query.length() < 1 || param == null || param.isEmpty()) {
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true,
+					exceptionOn);
+			return frameworkUtil.createResponseMap(false, "query가 null 이거나 param이 null입니다.");
+		}
+
+		long startTime = System.currentTimeMillis();
+		int resultCount = 0;
+
+		DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
+		defaultTransactionDefinition.setName("Transaction");
+		defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(defaultTransactionDefinition);
+		SqlSession sqlSession1 = null;
+		try {
+			sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);
+			resultCount = sqlSession1.update(query, param);
+			System.out.println("카운트" + resultCount);
+			if (resultCount != 0) {
+				sqlSession1.flushStatements();
+				dataSourceTransactionManager.commit(transactionStatus);
+				System.out.println("업데이트후 커밋실행");
+			} else {
+				return frameworkUtil.createResponseMap(false, "DB수정 실패");
+			}
+
+		} catch (Exception e) {
+			dataSourceTransactionManager.rollback(transactionStatus);
+		} finally {
+			sqlSession1.close();
+			long endTime = System.currentTimeMillis();
+			long resutTime = endTime - startTime;
+			printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime / 1000 + "(ms)", false, true, true,
+					debugOn);
+		}
+
+		return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
+
 	@Transactional
-	public List<Map<String, Object>> upsertMapList(String query, List<Map<String,Object>> param) { //엑셀 업로드 이벤트 처리
+	public List<Map<String, Object>> upsertMapList(String query, List<Map<String, Object>> param) { // 엑셀 업로드 이벤트 처리
 		printUtil.print("MomDao", "upsertMapList", "#", "$", "query", query, true, true, false, debugOn);
 		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
-		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
+		if (query == null || query.length() < 1 || param == null || param.isEmpty()) {
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true,
+					exceptionOn);
+			return frameworkUtil.createResponseMap(false, "query가 null 이거나 param이 null입니다.");
 		}
-		
-        long startTime = System.currentTimeMillis();   		
-		int resultCount = 0;	
+
+		long startTime = System.currentTimeMillis();
+		int resultCount = 0;
 		int paramSize = param.size();
-        SqlSession sqlSession1 = null;
-        	try {
-        	      sqlSession1 = sqlSessionFactory.openSession(ExecutorType.BATCH); 		
+		SqlSession sqlSession1 = null;
+		try {
+			sqlSession1 = sqlSessionFactory.openSession(ExecutorType.BATCH);
 
-        	      if(paramSize>=1000) {
-        	    	  ProgressInfo.useYn = true;
-        	    	  int upsertCount = paramSize/1000;                     // 총 upsert 실행횟수
-        	    	  int upsertRemainCount = paramSize - upsertCount*1000; // 잔여 데이터 개수
-        	    	  int splitCount  = 0;                                  // 누적 upsert 실행횟수
-						/*
-						 * System.out.println("1000개단위 쿼리실행수="+upsertCount);
-						 * System.out.println("1000개단위 잔여개수="+upsertRemainCount);
-						 * System.out.println("누적 스플릿 카운트="+splitCount);
-						 */
-        	    	  List<Map<String,Object>> splitParam = new ArrayList<>();
-        	    	  
-        	    	  for(int i=0;i<upsertCount;i++) {                     
-        	    		  splitParam.clear();
-        	    		  for(int j=splitCount;j<=splitCount+1000;j++) {
-        	    			  splitParam.add(param.get(j));
-        	    		  }
-        	    		  splitCount += 1000; // 스플릿 카운트 누적 
-        	    		  for (Map<String, Object> param1 : splitParam) {
-							  try{
-								  sqlSession1.insert(query, param1); //  쿼리 실행결과 카운트 누적
-							  }
-							  finally {
-								  sqlSession.flushStatements();
+			if (paramSize >= 1000) {
+				ProgressInfo.useYn = true;
+				int upsertCount = paramSize / 1000; // 총 upsert 실행횟수
+				int upsertRemainCount = paramSize - upsertCount * 1000; // 잔여 데이터 개수
+				int splitCount = 0; // 누적 upsert 실행횟수
+				/*
+				 * System.out.println("1000개단위 쿼리실행수="+upsertCount);
+				 * System.out.println("1000개단위 잔여개수="+upsertRemainCount);
+				 * System.out.println("누적 스플릿 카운트="+splitCount);
+				 */
+				List<Map<String, Object>> splitParam = new ArrayList<>();
 
-							  }
+				for (int i = 0; i < upsertCount; i++) {
+					splitParam.clear();
+					for (int j = splitCount; j <= splitCount + 1000; j++) {
+						splitParam.add(param.get(j));
+					}
+					splitCount += 1000; // 스플릿 카운트 누적
+					for (Map<String, Object> param1 : splitParam) {
+						try {
+							sqlSession1.insert(query, param1); // 쿼리 실행결과 카운트 누적
+						} finally {
+							sqlSession.flushStatements();
 
-        	    		  }
+						}
 
-            	    	  ProgressInfo.successCount = resultCount+=1000;
-            	    	  
-            	      }       	    	  
-        	    	
-        	    	  if(upsertRemainCount>0) {
-						  System.out.println("upsert count="+upsertCount);
-						  System.out.println("parameter size="+paramSize);
-        	    		  for(int k=(upsertCount*1000)+1;k<paramSize;k++) {            
-        	    			  splitParam.clear();
-            	    		  splitParam.add(param.get(k));
-            	    		  
-            	    
-            	    		  for (Map<String, Object> param2 : splitParam) {
-								  try {
-									  sqlSession1.insert(query, param2);
-								  }
-								  finally {
-									  sqlSession.flushStatements();
-								
-								  }
-            	    		  }
+					}
 
-							  sqlSession.clearCache();
-							  splitParam.clear();
-            	    		  ProgressInfo.successCount = paramSize;
-                	    	
-                	      }     
-        	    	  }
-        	    	  ProgressInfo.useYn = false; 
-        	      }
-        	      else {        	    
+					ProgressInfo.successCount = resultCount += 1000;
 
-        	    	     for (Map<String, Object> param3 : param) {
-        	    	    	  sqlSession1.insert(query, param3);
-        	    	    	  resultCount++;
-        	    	     
-        	    	     }
-        	    	     
-        	      }
-    			
+				}
 
-	        			if(resultCount == param.size()) {	 
-	      
+				if (upsertRemainCount > 0) {
+					System.out.println("upsert count=" + upsertCount);
+					System.out.println("parameter size=" + paramSize);
+					for (int k = (upsertCount * 1000) + 1; k < paramSize; k++) {
+						splitParam.clear();
+						splitParam.add(param.get(k));
 
-	            		}
-	        			else if(resultCount <param.size()) {
-	        				sqlSession1.flushStatements();          	
-	                    	sqlSession1.clearCache();
-	                    	ProgressInfo.successCount = 0;	                       	
-	                    	return frameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
-	                       	
-	        			}
-	        			else {	
-	        		
-					  		 
-	            		}            		       				        			       			
-            } catch(Exception e) {
-            	sqlSession1.flushStatements();          	
-            	sqlSession1.clearCache();
-            	ProgressInfo.successCount = 0;
-   	
-            	//System.out.println("에러사유="+e.getMessage());
-            	return frameworkUtil.createResponseMap(false,"DB UPSERT 실패");  
-        		
-            } finally {			
-            	
-            	sqlSession1.flushStatements();          	
-            	//sqlSession1.close();
-            	sqlSession1.clearCache();
-            	long endTime = System.currentTimeMillis();
-                long resutTime = endTime - startTime;            
-                printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);                         
-        	}  
-        	System.out.println("최종 카운트="+resultCount); 
-        return frameworkUtil.createResponseMap(resultCount != 0 ? true : false);
+						for (Map<String, Object> param2 : splitParam) {
+							try {
+								sqlSession1.insert(query, param2);
+							} finally {
+								sqlSession.flushStatements();
+
+							}
+						}
+
+						sqlSession.clearCache();
+						splitParam.clear();
+						ProgressInfo.successCount = paramSize;
+
+					}
+				}
+				ProgressInfo.useYn = false;
+			} else {
+
+				for (Map<String, Object> param3 : param) {
+					sqlSession1.insert(query, param3);
+					resultCount++;
+
+				}
+
+			}
+
+			if (resultCount == param.size()) {
+
+			} else if (resultCount < param.size()) {
+				sqlSession1.flushStatements();
+				sqlSession1.clearCache();
+				ProgressInfo.successCount = 0;
+				return frameworkUtil.createResponseMap(false, "DB UPSERT 실패");
+
+			} else {
+
+			}
+		} catch (Exception e) {
+			sqlSession1.flushStatements();
+			sqlSession1.clearCache();
+			ProgressInfo.successCount = 0;
+
+			// System.out.println("에러사유="+e.getMessage());
+			return frameworkUtil.createResponseMap(false, "DB UPSERT 실패");
+
+		} finally {
+
+			sqlSession1.flushStatements();
+			// sqlSession1.close();
+			sqlSession1.clearCache();
+			long endTime = System.currentTimeMillis();
+			long resutTime = endTime - startTime;
+			printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime / 1000 + "(ms)", false, true, true,
+					debugOn);
+		}
+		System.out.println("최종 카운트=" + resultCount);
+		return frameworkUtil.createResponseMap(resultCount != 0 ? true : false);
 	}
-	
-	public List<Map<String, Object>> removeMapList(String query, List<Map<String,Object>> param) {
+
+	public List<Map<String, Object>> removeMapList(String query, List<Map<String, Object>> param) {
 		printUtil.print("MomDao", "removeMapList", "#", "$", "query", query, true, true, false, debugOn);
 		printUtil.print(null, null, null, "$", "param", param, false, true, false, debugOn);
-		
-		if(query == null || query.length() < 1 || param == null || param.isEmpty()) {
-			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true, exceptionOn);
-			return frameworkUtil.createResponseMap(false,"query가 null 이거나 param이 null입니다.");
+
+		if (query == null || query.length() < 1 || param == null || param.isEmpty()) {
+			printUtil.print(null, null, null, "$", "query가 null 이거나 param이 null입니다.", null, false, true, true,
+					exceptionOn);
+			return frameworkUtil.createResponseMap(false, "query가 null 이거나 param이 null입니다.");
 		}
-		
-        long startTime = System.currentTimeMillis();
-        int resultCount = 0;
 
-    	SqlSession sqlSession1 = null;
-    	try {
-    		sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);  	
-    		resultCount = sqlSession1.delete(query, param);
-    		System.out.println("리절트카운트="+resultCount);
-    		if(resultCount != 0 ) {
+		long startTime = System.currentTimeMillis();
+		int resultCount = 0;
 
-			} else { 
+		SqlSession sqlSession1 = null;
+		try {
+			sqlSession1 = sqlSessionFactory.openSession(ExecutorType.SIMPLE);
+			resultCount = sqlSession1.delete(query, param);
+			System.out.println("리절트카운트=" + resultCount);
+			if (resultCount != 0) {
 
-				      return frameworkUtil.createResponseMap(false,"삭제할 데이터 없음!");      				
+			} else {
+
+				return frameworkUtil.createResponseMap(false, "삭제할 데이터 없음!");
 			}
-        } catch(Exception e) {
-        	System.out.println("에러="+resultCount);
-        	CustomDataAccessException cdae =  new CustomDataAccessException(e.getMessage(),e.getCause());
-    		throw cdae;
-        } finally {
-        	sqlSession1.flushStatements();
-        	sqlSession1.close();  
-        	long endTime = System.currentTimeMillis();
-            long resutTime = endTime - startTime;            
-            printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime/1000 + "(ms)", false, true, true, debugOn);     
-    	}           
-        return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
+		} catch (Exception e) {
+			System.out.println("에러=" + resultCount);
+			CustomDataAccessException cdae = new CustomDataAccessException(e.getMessage(), e.getCause());
+			throw cdae;
+		} finally {
+			sqlSession1.flushStatements();
+			sqlSession1.close();
+			long endTime = System.currentTimeMillis();
+			long resutTime = endTime - startTime;
+			printUtil.print(null, null, null, "$", "Transaction 소요시간", resutTime / 1000 + "(ms)", false, true, true,
+					debugOn);
+		}
+		return frameworkUtil.createResponseMap(resultCount == 0 ? false : true);
 	}
 }

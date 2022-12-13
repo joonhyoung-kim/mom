@@ -47,199 +47,200 @@ import com.mom.backend.serviceimpl.MomServiceImpl;
 @RestController
 @CrossOrigin
 @RequestMapping("/mom")
-@RequiredArgsConstructor 
-public class MomController {	
+@RequiredArgsConstructor
+public class MomController {
 	private final MomServiceImpl momService;
 	private final FrameworkUtil frameworkUtil;
 	private final ReportUtil reportUtil;
 	private final PrintUtil printUtil;
 	@Value("${file.dir}")
 	private String fileDir;
-	@GetMapping(value = "/passwordChange")  //비밀번호변경
-	public Map<String,Object> passwordChange(@RequestParam Map<String, Object> param) {		
-        String loginId = param.get("loginId").toString();
-        String nowPass  = param.get("nowPass").toString();
-        Map<String,Object> returnMap = new HashMap<String, Object>();
-        if (frameworkUtil.comparePassword(loginId,nowPass)) {
-        	returnMap.put("result", "Y");
-        }
-        else {
-        	returnMap.put("result", "N");
-        }
 
-        return returnMap;
-	}
-	@GetMapping(value = "/createReport") //리포트 생성
-	public Map<String,Object> createReport(@RequestParam Map<String, Object> param) {
-		
-        String title = param.get("fileName").toString();
-        String type  = param.get("fileType").toString();
-		return reportUtil.createReport(title,type,param);
-	}
-	@GetMapping(value = "/progressBar")
-	public Map<String,Object> getProgress(@RequestParam Map<String, Object> param) {
-		//System.out.println("받아온파람"+param);
-		Map<String,Object> returnMap = new HashMap<String, Object>();
-		if(ProgressInfo.useYn == true) {
-			returnMap.put("percent", ProgressInfo.successCount);
+	@GetMapping(value = "/passwordChange") // 비밀번호변경
+	public Map<String, Object> passwordChange(@RequestParam Map<String, Object> param) {
+		String loginId = param.get("loginId").toString();
+		String nowPass = param.get("nowPass").toString();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		if (frameworkUtil.comparePassword(loginId, nowPass)) {
+			returnMap.put("result", "Y");
+		} else {
+			returnMap.put("result", "N");
 		}
-		else {
+
+		return returnMap;
+	}
+
+	@GetMapping(value = "/createReport") // 리포트 생성
+	public Map<String, Object> createReport(@RequestParam Map<String, Object> param) {
+
+		String title = param.get("fileName").toString();
+		String type = param.get("fileType").toString();
+		return reportUtil.createReport(title, type, param);
+	}
+
+	@GetMapping(value = "/progressBar")
+	public Map<String, Object> getProgress(@RequestParam Map<String, Object> param) {
+		// System.out.println("받아온파람"+param);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		if (ProgressInfo.useYn == true) {
+			returnMap.put("percent", ProgressInfo.successCount);
+		} else {
 			returnMap.put("percent", 0);
 		}
 
 		return returnMap;
 	}
-	@GetMapping("/request/{query}/{action}") //조회 컨트롤러
-	public List<Map<String,Object>> getMapList(@PathVariable String query,@PathVariable String action, @RequestParam Map<String, Object> param) {
+
+	@GetMapping("/request/{query}/{action}") // 조회 컨트롤러
+	public List<Map<String, Object>> getMapList(@PathVariable String query, @PathVariable String action,
+			@RequestParam Map<String, Object> param) {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action, null, null, null, null, null);
-		
+
 		printUtil.print("MomController", "getMapList", "#", "$", "query", query, true, false, false, false);
 		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-		
+
 		return momService.getMapList(query, param);
 	}
-		
-	@PostMapping("/request/{query}/{action}")  //등록 컨트롤러
-	public List<Map<String,Object>> createMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) {
+
+	@PostMapping("/request/{query}/{action}") // 등록 컨트롤러
+	public List<Map<String, Object>> createMapList(@PathVariable String query, @PathVariable String action,
+			@RequestBody List<Map<String, Object>> param) {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
-		List<Map<String,Object>> result =  new ArrayList<>();
+		List<Map<String, Object>> result = new ArrayList<>();
 		printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
 		try {
-			if(action.equals("P")) {
+			if (action.equals("P")) {
 				result = momService.procMapList(query, param);
-			}
-			else {
+			} else {
 				result = momService.createMapList(query, param);
 			}
-			
-		}
-		catch (CustomDataAccessException e) {
-			System.out.println(e.getMsg());
-			result = frameworkUtil.createResponseMap(false,e.getMsg());
-			
-		}
-		return result ;
-	}
-	
 
-	
-	@PutMapping("/request/{query}/{action}") //수정 컨트롤러
-	public List<Map<String,Object>> modifyMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) { 
+		} catch (CustomDataAccessException e) {
+			System.out.println(e.getMsg());
+			result = frameworkUtil.createResponseMap(false, e.getMsg());
+
+		}
+		return result;
+	}
+
+	@PutMapping("/request/{query}/{action}") // 수정 컨트롤러
+	public List<Map<String, Object>> modifyMapList(@PathVariable String query, @PathVariable String action,
+			@RequestBody List<Map<String, Object>> param) {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
-		
+
 		printUtil.print("MomController", "modifyMapList", "#", "$", "query", query, true, false, false, false);
 		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-		
+
 		return momService.modifyMapList(query, param);
 	}
 
-	@DeleteMapping("/request/{query}/{action}")  //삭제 컨트롤러
-	public List<Map<String,Object>> removeMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) throws Exception {
+	@DeleteMapping("/request/{query}/{action}") // 삭제 컨트롤러
+	public List<Map<String, Object>> removeMapList(@PathVariable String query, @PathVariable String action,
+			@RequestBody List<Map<String, Object>> param) throws Exception {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
-		List<Map<String,Object>> result =  new ArrayList<>();
+		List<Map<String, Object>> result = new ArrayList<>();
 		printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-	
-		try {			
-			   
-				   result = momService.removeMapList(query, param);
-			   
-				
+
+		try {
+
+			result = momService.removeMapList(query, param);
+
+		} catch (CustomDataAccessException e) {
+			System.out.println(e.getMsg());
+			result = frameworkUtil.createResponseMap(false, e.getMsg());
 
 		}
-		catch (CustomDataAccessException e) {
-			System.out.println(e.getMsg());
-			result = frameworkUtil.createResponseMap(false,e.getMsg());
-			
-		}
-	
-		return result ;
-		
+
+		return result;
+
 	}
-	@DeleteMapping("/request/file/{query}/{action}")  //파일삭제 컨트롤러
-	public List<Map<String,Object>> removeFileMapList(@PathVariable String query,@PathVariable String action, @RequestBody List<Map<String,Object>> param) throws Exception {
+
+	@DeleteMapping("/request/file/{query}/{action}") // 파일삭제 컨트롤러
+	public List<Map<String, Object>> removeFileMapList(@PathVariable String query, @PathVariable String action,
+			@RequestBody List<Map<String, Object>> param) throws Exception {
 		query = frameworkUtil.removeDummy(query, action);
 		param = frameworkUtil.createParam(param, action);
-		List<Map<String,Object>> result =  new ArrayList<>();
+		List<Map<String, Object>> result = new ArrayList<>();
 		printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
 		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-		for (Map<String, Object> map : param) {		
+		for (Map<String, Object> map : param) {
 			String deletePath = map.get("filePath").toString();
 			String deleteName = map.get("fileUuid").toString();
-			frameworkUtil.deleteFile(fileDir+deletePath, deleteName);
-		}		
-		try {					   
-			     result = momService.removeMapList(query, param);
+			frameworkUtil.deleteFile(fileDir + deletePath, deleteName);
 		}
-		catch (CustomDataAccessException e) {
+		try {
+			result = momService.removeMapList(query, param);
+		} catch (CustomDataAccessException e) {
 			System.out.println(e.getMsg());
-			result = frameworkUtil.createResponseMap(false,e.getMsg());
-			
+			result = frameworkUtil.createResponseMap(false, e.getMsg());
+
 		}
-	
-		return result ;
-		
+
+		return result;
+
 	}
-@PostMapping("/request/file/{query}/{action}/{overWrite}")  //파일첨부 컨트롤러
-  public List<Map<String,Object>> createFileMapList(@PathVariable String query,@PathVariable String action, @PathVariable String overWrite, @RequestPart(value = "fileInfo") Map<String, Object> fileInfo,@RequestPart(value = "param") List<Map<String,Object>> param, @RequestPart(value="blob", required=true) MultipartFile  multipartRequest) throws Exception { 	
-	query = frameworkUtil.removeDummy(query, action);
-	List<Map<String,Object>> result =  new ArrayList<>();
-	printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
-	printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
-	String filePath= fileInfo.get("filePath").toString();
-	try {		
-		 MultipartFile file = multipartRequest;
-		 byte[] byteFile = frameworkUtil.convertFileToByte(file);
-		 String fileUuid = frameworkUtil.createFile(filePath,overWrite,file);
-		 if(!file.isEmpty()){ //파일 존재하면
-			 if(fileUuid.equals("NONE")) { //파일 고유식별키 없다면 생성 실패.
-				 result = frameworkUtil.createResponseMap(false,"fileUpload fail"); // 오류메시지 리턴
-			 }
-			 else if(fileUuid.equals("OVER")) {
-				 result = frameworkUtil.createResponseMap(true,"overLap "); // 오류메시지 리턴
-			 }
-			 else {
-				 param = frameworkUtil.createFileParam(param, action,byteFile,fileUuid); // DB에 파일 식별키와 경로를 삽입
-				 result = momService.createMapList(query, param);
-			 }
-			
+
+	@PostMapping("/request/file/{query}/{action}/{overWrite}") // 파일첨부 컨트롤러
+	public List<Map<String, Object>> createFileMapList(@PathVariable String query, @PathVariable String action,
+			@PathVariable String overWrite, @RequestPart(value = "fileInfo") Map<String, Object> fileInfo,
+			@RequestPart(value = "param") List<Map<String, Object>> param,
+			@RequestPart(value = "blob", required = true) MultipartFile multipartRequest) throws Exception {
+		query = frameworkUtil.removeDummy(query, action);
+		List<Map<String, Object>> result = new ArrayList<>();
+		printUtil.print("MomController", "createMapList", "#", "$", "query", query, true, false, false, false);
+		printUtil.print(null, null, null, "$", "param", param, false, false, true, false);
+		String filePath = fileInfo.get("filePath").toString();
+		try {
+			MultipartFile file = multipartRequest;
+			byte[] byteFile = frameworkUtil.convertFileToByte(file);
+			String fileUuid = frameworkUtil.createFile(filePath, overWrite, file);
+			if (!file.isEmpty()) { // 파일 존재하면
+				if (fileUuid.equals("NONE")) { // 파일 고유식별키 없다면 생성 실패.
+					result = frameworkUtil.createResponseMap(false, "fileUpload fail"); // 오류메시지 리턴
+				} else if (fileUuid.equals("OVER")) {
+					result = frameworkUtil.createResponseMap(true, "overLap "); // 오류메시지 리턴
+				} else {
+					param = frameworkUtil.createFileParam(param, action, byteFile, fileUuid); // DB에 파일 식별키와 경로를 삽입
+					result = momService.createMapList(query, param);
+				}
+
+			} else { // 파일 존재안하면
+				result = frameworkUtil.createResponseMap(false, "fileUpload fail");
+			}
+		} catch (CustomDataAccessException e) {
+			System.out.println(e.getMsg());
+			result = frameworkUtil.createResponseMap(false, e.getMsg());
+
 		}
-		else { //파일 존재안하면
-			 result = frameworkUtil.createResponseMap(false,"fileUpload fail"); 
+		return result;
+	}
+
+	@GetMapping("/fileDown")
+	public byte[] downloadFile(@RequestParam Map<String, Object> param, String filename) throws IOException {
+		String filePath = param.get("filePath").toString(); // 서버 파일경로
+		String fileName = param.get("fileName").toString(); // UUID + 확장자 붙여서 이름 완성해서 넘어옴
+		File file = new File(fileDir + filePath + "\\" + fileName);
+		if (ObjectUtils.isEmpty(file)) {
+			return null;
 		}
+
+		byte[] byteFile = FileUtils.readFileToByteArray(file);
+		return byteFile;
+		/*
+		 * response.setContentType("application/octet-stream");
+		 * response.setContentLength(byteFile.length);
+		 * response.setHeader("Content-Disposition", "attachment; fileName=\"" +
+		 * URLEncoder.encode("manual2.pdf","UTF-8")+"\";");
+		 * response.setHeader("Content-Transfer-Encoding", "binary");
+		 * response.getOutputStream().write(byteFile);
+		 * response.getOutputStream().flush(); response.getOutputStream().close();
+		 */
 	}
-	catch (CustomDataAccessException e) {
-		System.out.println(e.getMsg());
-		result = frameworkUtil.createResponseMap(false,e.getMsg());
-		
-	}
-	return result ;
-}
-  @GetMapping("/fileDown")
-  public byte[] downloadFile(@RequestParam Map<String, Object> param, String filename) throws IOException {
-    String filePath = param.get("filePath").toString(); // 서버 파일경로
-    String fileName = param.get("fileName").toString(); // UUID + 확장자 붙여서 이름 완성해서 넘어옴
-    File file = new File(fileDir+filePath + "\\" +fileName);   
-    if (ObjectUtils.isEmpty(file)) {
-       return null;
-    }
-   
-	byte[] byteFile = FileUtils.readFileToByteArray(file);
-	return byteFile;
-	/*
-	 * response.setContentType("application/octet-stream");
-	 * response.setContentLength(byteFile.length);
-	 * response.setHeader("Content-Disposition", "attachment; fileName=\"" +
-	 * URLEncoder.encode("manual2.pdf","UTF-8")+"\";");
-	 * response.setHeader("Content-Transfer-Encoding", "binary");
-	 * response.getOutputStream().write(byteFile);
-	 * response.getOutputStream().flush(); response.getOutputStream().close();
-	 */
-}
 
 }

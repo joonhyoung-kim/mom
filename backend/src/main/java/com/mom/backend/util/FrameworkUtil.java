@@ -56,7 +56,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FrameworkUtil {
 	private final PasswordEncoder passwordEncoder;
-	private  final JwtUserDetailsService userDetailsService;
+	private final JwtUserDetailsService userDetailsService;
 	private final PrintUtil printUtil;
 	@Value("${file.dir}")
 	private String fileDir;
@@ -69,7 +69,7 @@ public class FrameworkUtil {
 	 */
 
 	// Deprecated
-	public  List<Map<String, Object>> toCamelCase(List<Map<String, Object>> oldList) {
+	public List<Map<String, Object>> toCamelCase(List<Map<String, Object>> oldList) {
 		return oldList;
 		/*
 		 * if(oldList == null || oldList.size() < 1 || 1 == 1) { return oldList; }
@@ -99,7 +99,7 @@ public class FrameworkUtil {
 		 */
 	}
 
-	public  String toCamelCase(String underScore) {
+	public String toCamelCase(String underScore) {
 		if (underScore.indexOf('_') < 0 && Character.isLowerCase(underScore.charAt(0))) {
 			return underScore;
 		}
@@ -123,9 +123,9 @@ public class FrameworkUtil {
 		return result.toString();
 	}
 
-	public  List<Map<String, Object>> jsonStrToListMap(String strParam)
+	public List<Map<String, Object>> jsonStrToListMap(String strParam)
 			throws ParseException, JsonMappingException, JsonProcessingException {
-		//System.out.println("넘겨받은 문자=" + strParam);
+		// System.out.println("넘겨받은 문자=" + strParam);
 		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] strArray = strParam.replaceAll("=", ":").replaceAll("&", ",").split(",");
@@ -138,16 +138,16 @@ public class FrameworkUtil {
 		return listMap;
 	}
 
-	public  List<Map<String, Object>> jsonStrToListMap2(String jsonString)
+	public List<Map<String, Object>> jsonStrToListMap2(String jsonString)
 			throws ParseException, JsonMappingException, JsonProcessingException {
-		//System.out.println("넘겨받은 json문자=" + jsonString);
+		// System.out.println("넘겨받은 json문자=" + jsonString);
 		List<Map<String, Object>> listMap = new ObjectMapper().readValue(jsonString,
 				new TypeReference<List<Map<String, Object>>>() {
 				});
 		return listMap;
 	}
 
-	public  Map<String, Object> toCamelCase(Map<String, Object> oldMap) {
+	public Map<String, Object> toCamelCase(Map<String, Object> oldMap) {
 
 		return oldMap;
 
@@ -172,8 +172,7 @@ public class FrameworkUtil {
 		 */
 	}
 
-
-	public  String removeDummy(String query, String crud) {
+	public String removeDummy(String query, String crud) {
 		if (query == null || query.equals("")) {
 			return "";
 		}
@@ -183,7 +182,7 @@ public class FrameworkUtil {
 			query = query.substring(0, pos) + "get_" + query.substring(pos);
 		} else if (crud.equals("C")) {
 			query = query.substring(0, pos) + "create_" + query.substring(pos);
-		}else if (crud.equals("CP")) {
+		} else if (crud.equals("CP")) {
 			query = query.substring(0, pos) + "create_" + query.substring(pos);
 		} else if (crud.equals("CU")) {
 			query = query.substring(0, pos) + "upsert_" + query.substring(pos);
@@ -193,8 +192,7 @@ public class FrameworkUtil {
 			query = query.substring(0, pos) + "remove_" + query.substring(pos);
 		} else if (crud.equals("P")) {
 			query = query.substring(0, pos) + "proc_" + query.substring(pos);
-		}
-		else {
+		} else {
 			query = query.substring(0, pos) + "get_" + query.substring(pos);
 		}
 
@@ -276,7 +274,7 @@ public class FrameworkUtil {
 		return param;
 	}
 
-	public  List<Map<String, Object>> createParam(List<Map<String, Object>> list, String crud) {
+	public List<Map<String, Object>> createParam(List<Map<String, Object>> list, String crud) {
 		/*
 		 * String userId = AuthManager.getSessionAttribute("userId").toString(); String
 		 * companyCd = AuthManager.getSessionAttribute("companyCd").toString(); String
@@ -293,73 +291,75 @@ public class FrameworkUtil {
 		 */
 		List<Map<String, Object>> listMapParam = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
-		for (int i = 0; i < list.size(); i++) { 
-			//System.out.println("파람사이즈?"+list.size());
-			//Map<String, Object> map = list.get(i);
+		for (int i = 0; i < list.size(); i++) {
+			// System.out.println("파람사이즈?"+list.size());
+			// Map<String, Object> map = list.get(i);
 			map = list.get(i);
-	
-						if(map.get("password")== null || map.get("password").equals("")) {
-							// map.put("encodePw", "1234");	
-							//System.out.println("null인코딩실행");
-						}
-						else {
-							map.put("encodePw", passwordEncode(map.get("password").toString()));	
-							//System.out.println("정상인코딩실행");
-						}
 
-						listMapParam.add(map);
-									 			
+			if (map.get("password") == null || map.get("password").equals("")) {
+				// map.put("encodePw", "1234");
+				// System.out.println("null인코딩실행");
+			} else {
+				map.put("encodePw", passwordEncode(map.get("password").toString()));
+				// System.out.println("정상인코딩실행");
+			}
+
+			listMapParam.add(map);
+
 			if (map == null || map.isEmpty()) {
 				if (i == 0) {
 					return new ArrayList<Map<String, Object>>();
 				}
-				//System.out.println("빈데이터");
+				// System.out.println("빈데이터");
 				break;
 			}
 
 			// FrameworkUtil.createParam(map, crud, multiMap, userId, divisionCd, companyCd,
 			// locale);
 		}
-		//System.out.println("마지막총개수?"+list.size());
+		// System.out.println("마지막총개수?"+list.size());
 		return listMapParam;
 	}
-	public  List<Map<String, Object>> createFileParam(List<Map<String, Object>> list, String actionType ,byte [] file,String fileUuid) {
+
+	public List<Map<String, Object>> createFileParam(List<Map<String, Object>> list, String actionType, byte[] file,
+			String fileUuid) {
 		List<Map<String, Object>> listMapParam = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
-		for (int i = 0; i < list.size(); i++) { 
-			    map = list.get(i);	
-				try {
-					if(map.get("fileType").equals("RP")) {
-						map.put("fileBlob",file);
-					}
-					else {
-						map.put("fileUuid",fileUuid);
-					}
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}	
-				listMapParam.add(map);
+		for (int i = 0; i < list.size(); i++) {
+			map = list.get(i);
+			try {
+				if (map.get("fileType").equals("RP")) {
+					map.put("fileBlob", file);
+				} else {
+					map.put("fileUuid", fileUuid);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			listMapParam.add(map);
 
 		}
 		return listMapParam;
 	}
-	public  String getFirstAttrInList(Map<String, Object> map, String attr) {
+
+	public String getFirstAttrInList(Map<String, Object> map, String attr) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap =  map;	
-		for (int i = 0; i < returnMap.size(); i++) { 			
-				try {
-					if(returnMap.get(i).toString().equals(attr)) {
-						return returnMap.get(i).toString();
-					}
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}				
+		returnMap = map;
+		for (int i = 0; i < returnMap.size(); i++) {
+			try {
+				if (returnMap.get(i).toString().equals(attr)) {
+					return returnMap.get(i).toString();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return "";
 	}
-	public  Map<String, Object> json2Map(String json) {
+
+	public Map<String, Object> json2Map(String json) {
 		/*
 		 * java.nio.charset.Charset UTF8_CHARSET =
 		 * java.nio.charset.Charset.forName("UTF-8");
@@ -411,9 +411,7 @@ public class FrameworkUtil {
 		return map;
 	}
 
-
-
-	public  List<Map<String, Object>> map2List(Map<String, Object> map) {
+	public List<Map<String, Object>> map2List(Map<String, Object> map) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		list.add(map);
 
@@ -440,12 +438,12 @@ public class FrameworkUtil {
 		// 2019.01.20 hyjeong end
 	}
 
-	public  Map<String, Object> createResponseMapEmpty() {
+	public Map<String, Object> createResponseMapEmpty() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		return map;
 	}
 
-	public  List<Map<String, Object>> createResponseMap(boolean result) {
+	public List<Map<String, Object>> createResponseMap(boolean result) {
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> errMap = new HashMap<String, Object>();
 		if (result) {
@@ -462,7 +460,7 @@ public class FrameworkUtil {
 		return resultList;
 	}
 
-	public  List<Map<String, Object>> createResponseMap(boolean result, String p_err_msg) {
+	public List<Map<String, Object>> createResponseMap(boolean result, String p_err_msg) {
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> errMap = new HashMap<String, Object>();
 		if (result) {
@@ -485,7 +483,7 @@ public class FrameworkUtil {
 		return list;
 	}
 
-	public  List<Map<String, Object>> createResponseList(List<Map<String, Object>> list, boolean result) {
+	public List<Map<String, Object>> createResponseList(List<Map<String, Object>> list, boolean result) {
 		if (list == null) {
 			list = new ArrayList<Map<String, Object>>();
 		}
@@ -511,7 +509,7 @@ public class FrameworkUtil {
 		return list;
 	}
 
-	public  Map<String, Object> jsonDataMap(String json) {
+	public Map<String, Object> jsonDataMap(String json) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -526,7 +524,7 @@ public class FrameworkUtil {
 		return map;
 	}
 
-	public  List<Map<String, Object>> getMapList(List<Map<String, Object>> list, String query) {
+	public List<Map<String, Object>> getMapList(List<Map<String, Object>> list, String query) {
 		if (list == null) {
 			return createResponseListEmpty();
 		}
@@ -553,7 +551,7 @@ public class FrameworkUtil {
 		return list;
 	}
 
-	public  String passwordEncription(String password) {
+	public String passwordEncription(String password) {
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
@@ -586,36 +584,23 @@ public class FrameworkUtil {
 
 		return password;
 	}
-	public boolean comparePassword(String loginId,String password) {
-		    boolean result = false;
+
+	public boolean comparePassword(String loginId, String password) {
+		boolean result = false;
 		try {
-			
+
 			UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
-			if(passwordEncoder.matches(password, userDetails.getPassword())) {
+			if (passwordEncoder.matches(password, userDetails.getPassword())) {
 				result = true;
-			}
-			else {
-				
+			} else {
+
 			}
 		} catch (Exception e) {
-		}		     
-			return result;       			        
+		}
+		return result;
 	}
-	/**
-	 * @메소드명 : GetAddress
-	 * @작성일 : 2020.06.16
-	 * @작성자 : gs.seo
-	 * @변경이력 :
-	 * @메소드 설명 : 로컬 IP주소 or 로컬MAC주소 Get
-	 * @param addressType : ip:IP주소, mac:MAC주소
-	 * @return String 로컬 IP주소 or 로컬MAC주소
-	 * @throws @사용예 FrameworkUtil.GetAddress("ip") IP주소Get :
-	 *              FrameworkUtil.GetAddress("ip") MAC주소Get :
-	 *              FrameworkUtil.GetAddress("mac")
-	 * @참조문서 :
-	 *       https://www.it-swarm.dev/ko/java/java%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EB%A1%9C%EC%BB%AC-%EC%BB%B4%ED%93%A8%ED%84%B0%EC%97%90%EC%84%9C-mac-%EC%A3%BC%EC%86%8C-%EA%B0%80%EC%A0%B8-%EC%98%A4%EA%B8%B0/972850791/
-	 */
-	public  String GetAddress(String addressType) {
+
+	public String GetAddress(String addressType) {
 		String address = "";
 		InetAddress lanIp = null;
 		try {
@@ -666,7 +651,7 @@ public class FrameworkUtil {
 	}
 
 	// GetAddress 의 부속 메소드
-	private  String getMacAddress(InetAddress ip) {
+	private String getMacAddress(InetAddress ip) {
 		String address = null;
 		try {
 
@@ -686,7 +671,7 @@ public class FrameworkUtil {
 	}
 
 	// GetAddress 의 부속 메소드
-	private  boolean isVMMac(byte[] mac) {
+	private boolean isVMMac(byte[] mac) {
 		if (null == mac)
 			return false;
 		byte invalidMacs[][] = { { 0x00, 0x05, 0x69 }, // VMWare
@@ -707,7 +692,7 @@ public class FrameworkUtil {
 		return false;
 	}
 
-	public  String getIp(HttpServletRequest request) { // 호스팅 서버의 특수한 네트워크 환경에서 실제 Client의 내부 IP를 얻어낼수 있다.
+	public String getIp(HttpServletRequest request) { // 호스팅 서버의 특수한 네트워크 환경에서 실제 Client의 내부 IP를 얻어낼수 있다.
 
 		String ip = request.getHeader("X-Forwarded-For");
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -729,7 +714,7 @@ public class FrameworkUtil {
 
 	}
 
-	public  String ArpMacAddressGet(String originIp) {
+	public String ArpMacAddressGet(String originIp) {
 		// mac어드레스정보를 가져와야할 ip어드레스
 		String ip = originIp;
 		String macAddress = null;
@@ -759,7 +744,7 @@ public class FrameworkUtil {
 	// ----------------------------------------------------------
 	// End of GetAddress
 	// ----------------------------------------------------------
-	public  String GetRealTime() {
+	public String GetRealTime() {
 		TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
 		Date now = new Date();
 		Calendar currentDate = Calendar.getInstance();
@@ -769,76 +754,76 @@ public class FrameworkUtil {
 		// System.out.println(df.format(currentDate.getTime()));
 		return df.format(now);
 	}
-	//파일을 byte[] 로 변환
-	public byte[] convertFileToByte(MultipartFile uploadFile) throws Exception {		
-			return uploadFile.getBytes();
-					
+
+	// 파일을 byte[] 로 변환
+	public byte[] convertFileToByte(MultipartFile uploadFile) throws Exception {
+		return uploadFile.getBytes();
+
 	}
-	//실제 파일을 서버에 생성
-	public String createFile(String filePath,String overWrite, MultipartFile uploadFile) throws Exception {		
-		//String uploadFolder = "C:\\repository\\";
-	
-		 // 원래 파일 이름 추출
-        String origName = uploadFile.getOriginalFilename();
-        // 파일 이름으로 쓸 uuid 생성
-        String uuid = UUID.randomUUID().toString();
-        // 확장자 추출(ex : .png)
-        String extension = origName.substring(origName.lastIndexOf("."));
-        String savedName = origName;
-        String returnMsg = "NONE";
-        // uuid와 확장자 결합
-        if(overWrite.equals("N")) {
-        	savedName = uuid + extension;
-        }
 
-        // 파일을 불러올 때 사용할 파일 경로
-        // String savedPath = fileDir + savedName;
-        
-		System.out.println("업로드파일이름:"+uploadFile.getOriginalFilename());
-		System.out.println("업로드파일크기:"+uploadFile.getSize());
-		   // 파일 엔티티 생성
-			/*
-			 * FileEntity file = FileEntity.builder() .orgNm(origName) .savedNm(savedName)
-			 * .savedPath(savedPath) .build();
-			 */
+	// 실제 파일을 서버에 생성
+	public String createFile(String filePath, String overWrite, MultipartFile uploadFile) throws Exception {
+		// String uploadFolder = "C:\\repository\\";
 
-        // 실제로 로컬에 uuid를 파일명으로 저장
-		//uploadFile.transferTo(new File(savedPath));
-        // 데이터베이스에 파일 정보 저장 
-       // FileEntity savedFile = fileRepository.save(file);
-
-       //return savedFile.getId();        
-		System.out.println("최종파일이름:"+uploadFile.getOriginalFilename());		
-		File saveFile = new File(fileDir+filePath+"\\",savedName);
-		if(saveFile.exists()) { // 파일이 존재하면			
-			returnMsg = "OVER";
+		// 원래 파일 이름 추출
+		String origName = uploadFile.getOriginalFilename();
+		// 파일 이름으로 쓸 uuid 생성
+		String uuid = UUID.randomUUID().toString();
+		// 확장자 추출(ex : .png)
+		String extension = origName.substring(origName.lastIndexOf("."));
+		String savedName = origName;
+		String returnMsg = "NONE";
+		// uuid와 확장자 결합
+		if (overWrite.equals("N")) {
+			savedName = uuid + extension;
 		}
-		else {
+
+		// 파일을 불러올 때 사용할 파일 경로
+		// String savedPath = fileDir + savedName;
+
+		System.out.println("업로드파일이름:" + uploadFile.getOriginalFilename());
+		System.out.println("업로드파일크기:" + uploadFile.getSize());
+		// 파일 엔티티 생성
+		/*
+		 * FileEntity file = FileEntity.builder() .orgNm(origName) .savedNm(savedName)
+		 * .savedPath(savedPath) .build();
+		 */
+
+		// 실제로 로컬에 uuid를 파일명으로 저장
+		// uploadFile.transferTo(new File(savedPath));
+		// 데이터베이스에 파일 정보 저장
+		// FileEntity savedFile = fileRepository.save(file);
+
+		// return savedFile.getId();
+		System.out.println("최종파일이름:" + uploadFile.getOriginalFilename());
+		File saveFile = new File(fileDir + filePath + "\\", savedName);
+		if (saveFile.exists()) { // 파일이 존재하면
+			returnMsg = "OVER";
+		} else {
 			returnMsg = savedName;
 		}
 		try {
 			uploadFile.transferTo(saveFile);
 			return returnMsg;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return returnMsg;
-		}		
+		}
 
-		
 	}
-	//실제 파일을 서버에 생성
-	public Boolean deleteFile(String filePath,String fileName) throws Exception {		
+
+	// 실제 파일을 서버에 생성
+	public Boolean deleteFile(String filePath, String fileName) throws Exception {
 		try {
 			File file = new File(filePath + "\\" + fileName);
-			System.out.println("삭제될경로="+filePath + "\\" + fileName);
-			if(file.exists()) { // 파일이 존재하면
-				file.delete(); // 파일 삭제	
+			System.out.println("삭제될경로=" + filePath + "\\" + fileName);
+			if (file.exists()) { // 파일이 존재하면
+				file.delete(); // 파일 삭제
 			}
 			return true;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return false;
-		}		
+		}
 
-		
 	}
 
 }
