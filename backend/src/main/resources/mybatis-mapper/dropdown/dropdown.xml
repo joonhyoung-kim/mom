@@ -373,5 +373,14 @@
     AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
     AND    USE_YN      = 'Y'
     ORDER BY RESOURCE_NM    
-    </select>         
+    </select>  
+    <select id="get_DD00039" parameterType="java.util.HashMap" resultType="com.mom.backend.dto.LowerHashMap" fetchSize="1000">   
+    SELECT RECEIPT_TYPE_CD       AS CODE 
+         , RECEIPT_TYPE_CD  ||'('|| RECEIPT_TYPE_NM       ||')' AS LABEL
+    FROM   MOM_LOCATION_RECEIPT_TYPE   
+    WHERE  COMPANY_CD  = #{companyCd, jdbcType=VARCHAR}
+    AND    DIVISION_CD = #{divisionCd, jdbcType=VARCHAR} 
+    AND    USE_YN      = 'Y'
+    ORDER BY RECEIPT_TYPE_NM    
+    </select>           
 </mapper>
