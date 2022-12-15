@@ -2635,7 +2635,7 @@ function base64toBlob(base64Data, contentType) {
 		var bytes = new Array(end - begin);
 		for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
 			bytes[i] = byteCharacters[offset].charCodeAt(0);
-		}
+		}                
 		byteArrays[sliceIndex] = new Uint8Array(bytes);
 	}
 	return new Blob(byteArrays, { type: contentType });

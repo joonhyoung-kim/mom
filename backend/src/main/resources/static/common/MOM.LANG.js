@@ -84,6 +84,6 @@ var multiLang = {
 	},
 	
 	contextPath: function() {
-		return '/TU_Platform';
+		return '';
 	}
 };

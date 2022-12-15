@@ -3884,33 +3884,7 @@ var momWidget = {
         return result;
     },
 
-    procGridWidget: function (index, pageId) {
-        var that = this;
-
-        var simpleWidgetFlag = "";
-
-        if (sessionStorage.parameters != null) {
-            var parameters = JSON.parse(sessionStorage.parameters);
-            simpleWidgetFlag = parameters.simpleWidgetFlag;
-        }
-
-        if (simpleWidgetFlag == "Y") {
-            $('#grid' + (index + 1)).parent().siblings('.cardheard').prepend('<a id="gridWidgetSetBtn' + (index + 1) + '" href="#" class="gridWidgetSetBtns w-inline-block btntool floatr"><div class="w-icon fa fa-cog icon"></div><div class="textblock"></div></a>');
-            $(document).on('click', '#gridWidgetSetBtn' + (index + 1), function () {
-                if ($(this).closest('.card').find('.w-widget-auigrid')) {
-                    window.open('/TU_Platform/admin/MOMXX011.html?pageId=' + pageId + (index + 1), 'Widget Setup', 'width=1600,height=800');
-                }
-            });
-
-            var btns = $('.gridWidgetSetBtns')
-            for (var i = 0; i < btns.length; i++) {
-                if ($(btns[i]).closest('.card, .wcalc320').find('.w-widget-auigrid').length < 1) {
-                    $(btns[i]).hide();
-                }
-
-            }
-        }
-    },
+  
 
     createDropDown: function (id, data, width1, height1) {
         var width = $('#' + id).width() + 26;
@@ -4829,7 +4803,7 @@ var momWidget = {
         }, undefined, undefined, this, 'sync');
     },
 
-    // Deprecated -> date2StringData19 in TU_MOM.common.js
+ 
     setDueDate: function (index) {
         var that = this.grid == undefined ? this.momWidget : this;
 
@@ -6865,7 +6839,7 @@ var momWidget = {
                 $('td').removeClass('aui-grid-default-column');
                // that.wait(0.5);
                that.splashHide();
-            }, undefined, undefined, this, false);
+            }, undefined, undefined, this, true);
                
 
         }
@@ -10181,7 +10155,7 @@ var momWidget = {
                             momWidget.splashHide();
                            
                             return;
-                        }, undefined, index, this, false, undefined, 'EA');
+                        }, undefined, index, this, true, undefined, 'EA');
                     }
 
 
@@ -10492,7 +10466,7 @@ var momWidget = {
                 $('#changePwBtn' + (index + 1)).css('display', 'none');
             }
             
-	            that.setPopup(index, actionType, 'createBtn' + (index + 1), 'N');
+	          that.setPopup(index, actionType, 'createBtn' + (index + 1), 'N');
             
            
             $('#defaultPop' + (index + 1)).attr('actionType', actionType);
@@ -10507,10 +10481,8 @@ var momWidget = {
             let popupTitle = that.gridExtraProperty[index]['popupTitle'];
             $('#popupTitle' + (index + 1)).text('');
             $('#popupTitle' + (index + 1)).append(popupTitle + '(' + multiLang.transText('MESSAGE', 'MSG00039') + ')');
-            //$('#' + 'defaultPop' + (index + 1)).modal("show");
-            that.maskShow('1');
-            $('#' + 'defaultPop' + (index + 1)).css('display', 'block');
-
+            //$('#' + 'defaultPop' + (index + 1)).modal("show");          
+            that.modalShow('#' , 'defaultPop' + (index + 1),'1');
             // AUIGrid.resize('#grid'+index+1);
             that.htmlResize(index, your);
             //that.popUpSizeSet(index);
@@ -10573,10 +10545,10 @@ var momWidget = {
             if ($('#changePwBtn' + (index + 1)).length) {
                 $('#changePwBtn' + (index + 1)).css('display', 'none');
             }
-            //$('#' + 'defaultPop' + (index + 1)).modal("show");
-            $('#' + 'defaultPop' + (index + 1)).css('display', 'block');
-            that.maskShow('1');
+
+            that.modalShow('#','defaultPop' + (index + 1),'1');
             that.htmlResize(index, your);
+            
             //that.popUpSizeSet(index);
 
             callBackResult = that.checkActionCallBack(index, actionType, param, 'copyBtn', your, param);
@@ -12422,7 +12394,9 @@ var momWidget = {
 
         });
         $(document).on('click', '#' + editBtnId, function (e) {
+	       
             let that = momWidget;
+            that.splashShow();
             let isCheckCol = that.gridProperty[index][0]['showRowCheckColumn'];
             let param = that.getCheckedRowItems(that.grid[index]);
             let targetArray = e.currentTarget.id.split('DP');
@@ -12460,10 +12434,8 @@ var momWidget = {
 
 
             }
-            //$('#' + 'defaultPop' + (index + 1)).modal("show");
-            that.maskShow('1');
-            $('#' + 'defaultPop' + (index + 1)).css('display', 'block');
-  		    
+       
+  		    that.modalShow('#','defaultPop' + (index + 1),'1');
             that.setPopup(index, 'U', 'editBtn' + (index + 1), 'N');
             $('#defaultPop' + (index + 1)).attr('actionType', actionType);
             $('#defaultPop' + (index + 1)).attr('btnId', buttonId);
@@ -12479,6 +12451,7 @@ var momWidget = {
             $('#popupTitle' + (index + 1)).append(popupTitle + '(' + multiLang.transText('MESSAGE', 'MSG00040') + ')');
 
             that.htmlResize(index, your);
+            that.splashHide();
             callBackResult = that.checkActionCallBack(index, actionType, {}, 'editBtn', your, param);
             if (callBackResult['result'] != 'SUCCESS') {
                 momWidget.messageBox({type: 'danger', width: '400', height: '145', html: callBackResult['msg']});
@@ -14551,7 +14524,6 @@ var momWidget = {
             var popTop = ($(window).height() / 2) - (popHeight.replace('px', '') / 2) + 'px';
             var popType = (typeof options.type == undefined ? 'panel-' + 'primary' : 'panel-' + options.type);
             var warningType = options.type == undefined ? 'success' : options.type;
-            // from. 김대성
             var fadeStr = '';
             if (null == options.isFade || options.isFade) {
                 fadeStr = ' fade';// 앞에 공백 한칸 꼭 주세요
@@ -14954,7 +14926,7 @@ var momWidget = {
 
        // $('#mask').hide();
     },
-    modalShow: function (selector,modal,depth) {
+    modalShow: function (selector,modal,depth) {	  
         let selectorId = '#';
         let modalId = '#'+modal;
         let depthId = depth;
@@ -14973,7 +14945,6 @@ var momWidget = {
         modalId = selectorId + modal;
         momWidget.maskShow(depth);
         $(modalId).css('display','block');
-
 
     },
     modalHide: function (selector,modal,depth) {
